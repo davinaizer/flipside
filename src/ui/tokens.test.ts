@@ -54,7 +54,8 @@ describe("tokens", () => {
     expect(css).toContain(":root,\n[data-theme=\"light\"]");
     expect(css).toContain('[data-theme="dark"]');
     const layout = readFileSync(join(__dirname, "../app/layout.tsx"), "utf8");
-    expect(layout).toContain('data-theme="light"');
+    expect(layout).toContain('"light"');
+    expect(layout).toContain("data-theme={theme}");
   });
 
   it("has box tokens for New, Not yet, Nearly and Got it", () => {

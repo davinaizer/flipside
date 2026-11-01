@@ -997,7 +997,7 @@
           ],
           "area": "src/ui/settings/provider, theme toggle, src/app/layout.tsx",
           "done_when": "Component or e2e tests: the toggle switches data-theme at once with no reload and saves to the profile; another browser context for that profile picks it up; switching profile applies that profile's theme; default is light; a reload of a dark profile does not flash light (local cache, with the server value winning).",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F5.3",
