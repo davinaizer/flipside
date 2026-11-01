@@ -1491,7 +1491,7 @@
           ],
           "area": "ops/launchd/*.plist (app, Podman machine and Postgres, nightly backup), docs/operations.md, README.md",
           "done_when": "plutil -lint passes on every plist; one job starts the Podman machine and then the Postgres container, and the app job waits until the database accepts connections; the runbook gives install steps, the iPad address and shortcut, and the manual AC11 reboot and restore checklist. Agents do not install anything on the host; AC11 stays MANUAL 0e6c390.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F8.4",
