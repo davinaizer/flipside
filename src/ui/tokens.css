@@ -33,6 +33,12 @@
   --card-sage: #cdeede;
   --card-lavender: #e4e1ff;
   --card-night: #2b3550;
+  --on-card-mist: #0d1c2e;
+  --on-card-cream: #0d1c2e;
+  --on-card-peach: #0d1c2e;
+  --on-card-sage: #0d1c2e;
+  --on-card-lavender: #0d1c2e;
+  --on-card-night: #f8f9ff;
 }
 
 [data-theme="dark"] {
@@ -66,6 +72,12 @@
   --card-sage: #1f4a3a;
   --card-lavender: #3a3c78;
   --card-night: #0b1326;
+  --on-card-mist: #dae2fd;
+  --on-card-cream: #dae2fd;
+  --on-card-peach: #dae2fd;
+  --on-card-sage: #dae2fd;
+  --on-card-lavender: #dae2fd;
+  --on-card-night: #dae2fd;
 }
 
 @theme inline {
@@ -99,4 +111,10 @@
   --color-card-sage: var(--card-sage);
   --color-card-lavender: var(--card-lavender);
   --color-card-night: var(--card-night);
+  --color-on-card-mist: var(--on-card-mist);
+  --color-on-card-cream: var(--on-card-cream);
+  --color-on-card-peach: var(--on-card-peach);
+  --color-on-card-sage: var(--on-card-sage);
+  --color-on-card-lavender: var(--on-card-lavender);
+  --color-on-card-night: var(--on-card-night);
 }

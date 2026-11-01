@@ -64,3 +64,13 @@ REVIEW F4 round 1: GAPS at 3eb9d84
 - F4.9: Deck e2e covers the loading skeleton (client navigation held open) and the error with Retry (stream's page row swapped for an error row), with axe and 44 px in both themes (e2e/deck.spec.ts).
 REVIEW F4 round 2: PASS at 31f9481
 F4 done: PR #9. MANUAL PENDING: none
+- F5.1: GET/PUT /api/v1/settings (src/server/settings.ts); PUT replaces all settings with strict validation; tests in tests/settings-api.test.ts.
+- F5.2: SettingsProvider and sidebar theme switch apply and save the theme at once; root layout renders the profile's theme (src/ui/settings/*, e2e/theme.spec.ts).
+- F5.3: Reading settings with live preview (font, size, spacing, card colour, reset) at /settings; shared ReadingCard and --on-card-* tokens (src/ui/reading-card, src/ui/settings/reading).
+- F5.4: Practice settings (session length, new cards per day with validation, read aloud, reading speed) on /settings (src/ui/settings/practice).
+- F5.5: e2e/settings.spec.ts covers live preview, persistence (reload, new context, second server), theme toggle per screen, axe and 44 px on Settings in both themes, on desktop and iPad.
+REVIEW F5 round 1: GAPS at 5fc8d5a
+- F5 review fix: settings saves now serialized in order with a rollback guard (src/ui/settings/saver.ts). Each queued save sends the latest settings when it runs; a failed save rolls back only if no newer change exists.
+REVIEW F5 round 2: GAPS at c7361a1
+REVIEW F5 round 3: PASS at 0fd2cbf
+F5 done: PR #10. MANUAL PENDING: none

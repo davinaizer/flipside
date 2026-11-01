@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Avatar } from "@/ui/avatars";
+import { ThemeToggle } from "@/ui/settings/ThemeToggle";
 
 const SECTIONS = [
   { href: "/library", label: "Library", match: ["/library", "/decks", "/import"] },
@@ -42,6 +43,7 @@ export function Sidebar({ name, avatar }: { name: string; avatar: string }) {
           <Avatar id={avatar} size={44} />
           <span className="font-semibold">{name}</span>
         </div>
+        <ThemeToggle />
         <Link
           href="/?switch=1"
           className="flex min-h-11 items-center rounded-full px-4 text-on-surface hover:bg-surface-container-high"

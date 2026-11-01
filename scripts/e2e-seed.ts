@@ -1,6 +1,9 @@
 // e2e only: one deck per seeded profile (no create API exists yet). Run after db:seed.
 import { eq } from "drizzle-orm";
 import { getDb } from "@/server/db/client";
+import { AVATAR_IDS, DEFAULT_ACCENT } from "@/shared/avatars";
+import { DEFAULT_DAY_START_HOUR, DEFAULT_TIMEZONE } from "@/shared/constants";
+import { DEFAULT_SETTINGS } from "@/shared/settings";
 import { cardState, cards, decks, profiles } from "@/server/db/schema";
 
 const DECKS = { Davi: "Davi Science", Nicole: "Nicole History" } as const;
@@ -26,6 +29,17 @@ for (const [owner, name] of Object.entries(DECKS)) {
       dueDate: r.topic === "Cells" ? "2000-01-01" : "2999-01-01",
     })),
   );
+}
+// settings.spec.ts changes settings, so each project gets its own profile and cannot disturb Davi or Nicole.
+for (const name of ["Settings Desktop", "Settings iPad"]) {
+  await db.insert(profiles).values({
+    name,
+    avatar: AVATAR_IDS[2] ?? AVATAR_IDS[0],
+    accent: DEFAULT_ACCENT,
+    timezone: DEFAULT_TIMEZONE,
+    dayStartHour: DEFAULT_DAY_START_HOUR,
+    settings: DEFAULT_SETTINGS,
+  });
 }
 console.log("Seeded e2e decks.");
 process.exit(0);

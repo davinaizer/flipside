@@ -1,5 +1,6 @@
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
+import { CARD_COLORS } from "../shared/enums";
 import { describe, expect, it } from "vitest";
 
 const css = readFileSync(join(__dirname, "tokens.css"), "utf8");
@@ -42,6 +43,7 @@ const pairs: [string, string][] = [
   ["on-box-not-yet", "box-not-yet"],
   ["on-box-nearly", "box-nearly"],
   ["on-box-got-it", "box-got-it"],
+  ...CARD_COLORS.map((c): [string, string] => [`on-card-${c}`, `card-${c}`]),
 ];
 
 describe("tokens", () => {
@@ -54,7 +56,8 @@ describe("tokens", () => {
     expect(css).toContain(":root,\n[data-theme=\"light\"]");
     expect(css).toContain('[data-theme="dark"]');
     const layout = readFileSync(join(__dirname, "../app/layout.tsx"), "utf8");
-    expect(layout).toContain('data-theme="light"');
+    expect(layout).toContain('"light"');
+    expect(layout).toContain("data-theme={theme}");
   });
 
   it("has box tokens for New, Not yet, Nearly and Got it", () => {

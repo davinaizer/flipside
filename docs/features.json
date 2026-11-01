@@ -965,9 +965,9 @@
         "11"
       ],
       "notes": "",
-      "status": "todo",
-      "branch": null,
-      "pr": null,
+      "status": "done",
+      "branch": "feat/F5-settings-and-theme",
+      "pr": 10,
       "tasks": [
         {
           "id": "F5.1",
@@ -982,7 +982,7 @@
           ],
           "area": "src/app/api/v1/settings/route.ts, src/server/settings.ts",
           "done_when": "Integration tests: GET returns stored values merged over defaults; PUT validates with the shared schema and rejects unknown font ids, sizes and colours; values are per profile and the other profile is untouched; a new client sees the saved value.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F5.2",
@@ -997,7 +997,7 @@
           ],
           "area": "src/ui/settings/provider, theme toggle, src/app/layout.tsx",
           "done_when": "Component or e2e tests: the toggle switches data-theme at once with no reload and saves to the profile; another browser context for that profile picks it up; switching profile applies that profile's theme; default is light; a reload of a dark profile does not flash light (local cache, with the server value winning).",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F5.3",
@@ -1013,7 +1013,7 @@
           ],
           "area": "src/app/(app)/settings, src/ui/settings/reading, src/ui/reading-card (reused by Practice), card colour tokens in src/ui/tokens.css; screen settings, README item 8",
           "done_when": "Tests: all T1 options exist (three fonts including System Sans, 4 sizes, 3 letter and 3 line spacings, Mist, Cream, Peach, Sage, Lavender, Night); the preview changes at once and only card text changes, not chrome; each card colour reaches 4.5:1 with its text (values not in the design files logged as ASSUMED); minimum 16 px; Reset to defaults works.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F5.4",
@@ -1029,7 +1029,7 @@
           ],
           "area": "src/ui/settings/practice",
           "done_when": "Component or e2e tests: cards per session 5, 10, 20, All due (default 5), new cards per day (default 10), read aloud off and reading speed Normal all save per profile; the new-card value is validated as a non-negative whole number; the Library Today panel shows the configured session length.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F5.5",
@@ -1046,7 +1046,7 @@
           ],
           "area": "e2e/settings.spec.ts",
           "done_when": "On both viewports: changing reading settings changes preview text at once; settings and theme persist per profile, across a new browser context and across an app server restart; the theme toggles on every screen built so far (F8 repeats this on all of them); axe and 44 px checks pass on Settings in both themes.",
-          "status": "todo"
+          "status": "done"
         }
       ],
       "design_screens": [

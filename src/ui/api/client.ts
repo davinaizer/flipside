@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { librarySchema, type Library } from "@/shared/schemas/library";
 import { importResultSchema, type ImportResult } from "@/shared/schemas/import";
+import { settingsSchema, type Settings } from "@/shared/settings";
 import {
   meSchema,
   profileListSchema,
@@ -48,6 +49,11 @@ export const api = {
       body: JSON.stringify({ profileId }),
     }),
   library: (): Promise<Library> => call("/library", librarySchema),
+  saveSettings: (settings: Settings): Promise<Settings> =>
+    call("/settings", z.object({ settings: settingsSchema }), {
+      method: "PUT",
+      body: JSON.stringify(settings),
+    }).then((r) => r.settings),
   me: (): Promise<Me> => call("/me", meSchema),
   /** Commit step of the import (PRD section 6, step 4): the file plus deck details, or a deckId to re-import. */
   commitImport: (form: FormData): Promise<ImportResult> =>
