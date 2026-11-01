@@ -200,8 +200,8 @@
         "14"
       ],
       "notes": "Pure functions in src/domain with table-driven JSON fixtures (N4): scheduler, session builder, re-queue, undo maths, day boundary, CSV validation, stats definitions. Provides the logic behind AC4 to AC8; those ACs close in F6 and F7.",
-      "status": "todo",
-      "branch": null,
+      "status": "in_progress",
+      "branch": "feat/F1-domain-core",
       "pr": null,
       "tasks": [
         {
@@ -215,7 +215,8 @@
           ],
           "area": "src/domain/day.ts, fixtures/domain/day-boundary.json",
           "done_when": "Table-driven JSON fixtures pass: 06:30 local counts as the previous day and 07:00 as the new one; both Europe/London clock changes; a non-London timezone; date addition across month and year; Monday week start on the local day. Uses Intl only, with no new dependency.",
-          "status": "todo",
+          "status": "done",
+          "commit": "792e758",
           "model": "opus"
         },
         {
@@ -230,7 +231,8 @@
           ],
           "area": "src/domain/scheduler.ts, fixtures/domain/scheduler.json",
           "done_when": "JSON fixtures cover every state (New, boxes 1 to 5) times every grade under both LAPSE_RULE values, asserting box, due date, lapses, reps, last grade and re-queue; lapses only rise for box 2 or higher; box 5 Got it stays 5; status becomes leech at 8 lapses and the card stays scheduled.",
-          "status": "todo",
+          "status": "done",
+          "commit": "fc0699e",
           "model": "opus"
         },
         {
@@ -245,7 +247,8 @@
           ],
           "area": "src/domain/grade-labels.ts, fixtures/domain/grade-labels.json",
           "done_when": "Fixtures assert the three labels for every state (Again today, Tomorrow, In 3 days and so on); a test over all states proves each label is derived from the applyGrade due date, so label and outcome cannot disagree.",
-          "status": "todo"
+          "status": "done",
+          "commit": "f6e97fc"
         },
         {
           "id": "F1.4",
@@ -260,7 +263,8 @@
           ],
           "area": "src/domain/session-builder.ts, fixtures/domain/session-builder.json",
           "done_when": "Fixtures with an injected random source cover: scopes all, deck, topics, weak, topics ignoring due dates (D3) and an explicit card list (misses, R11); order by lowest box, oldest due, shuffled ties, new last; lengths 5, 10, 20 and all; suspended excluded; weak means box 1 graded at least once plus leeches; with 16 new cards and 10 remaining, never more than 10 new, in every scope.",
-          "status": "todo",
+          "status": "done",
+          "commit": "69b439d",
           "model": "opus"
         },
         {
@@ -277,7 +281,8 @@
           ],
           "area": "src/domain/session-queue.ts, fixtures/domain/session-queue.json",
           "done_when": "Fixtures prove: Not yet reappears after four other cards, or at the end when fewer remain; at most two re-queues per card; undoing any step restores the exact previous queue and position back to the session start; done, current and remaining counts stay correct. Pure and importable by client and server.",
-          "status": "todo",
+          "status": "done",
+          "commit": "d56782e",
           "model": "opus"
         },
         {
@@ -292,7 +297,8 @@
           ],
           "area": "src/domain/csv-import.ts, fixtures/csv/ (one broken CSV per rule), papaparse",
           "done_when": "Table-driven tests run one broken file per validation rule and assert block, row error or warning with the row number; free column order, trimmed cells, unknown columns warned, CO₂ and → preserved, duplicate id skips the later row, missing id derives a stable id with the warning; 2,001 rows blocks; a bullet helper returns a list only for bullets style with two or more non-empty lines. Browser-safe, no Node APIs.",
-          "status": "todo"
+          "status": "done",
+          "commit": "c50210e"
         },
         {
           "id": "F1.7",
@@ -307,7 +313,8 @@
           ],
           "area": "src/domain/zip-import.ts, src/domain/image-check.ts, fflate, file-type",
           "done_when": "Tests build zips in memory and prove: absolute path, .. segment and symlink entries block the import (the symlink check reads entry attributes from the zip directory if fflate does not expose them); over 2,000 entries or 200 MB uncompressed blocks; a missing image, a wrong type by bytes with a misleading extension, SVG, over 5 MB and over 4,096 px each warn and drop the image; a CSV image name matches a zip entry by base file name, so q02-back.png finds images/q02-back.png as in the school zip, and two entries with the same base name warn and drop the image; width and height are read from PNG, JPEG, WebP and GIF headers with no new dependency; sha256 and storage key are computed. Browser-safe.",
-          "status": "todo"
+          "status": "done",
+          "commit": "0957c9b"
         },
         {
           "id": "F1.8",
@@ -324,7 +331,8 @@
           ],
           "area": "src/domain/stats.ts, fixtures/domain/stats.json",
           "done_when": "Hand-computed JSON fixtures over review rows cover: first-attempt-only counting, undone rows excluded, Got it rate with Nearly as not Got it, median time with the 120 s cap using all attempts, days practised, mastery including New, mastery bar buckets, week and four-week windows aligned to the Monday of the local day, previous-period change in plain words, Focus next (at least 3 cards, tie to more lapses).",
-          "status": "todo",
+          "status": "done",
+          "commit": "97cda69",
           "model": "opus"
         }
       ]

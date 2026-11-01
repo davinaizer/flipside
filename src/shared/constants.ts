@@ -28,6 +28,14 @@ export const DEFAULT_SESSION_LENGTH = 5;
 /** Each attempt duration is capped at this many seconds for statistics. */
 export const DURATION_CAP_SECONDS = 120;
 
+/** The month range on the progress screen is this many Monday-aligned weeks. */
+export const STATS_MONTH_WEEKS = 4;
+/** Focus next lists this many topics, among topics with at least the minimum cards. */
+export const FOCUS_NEXT_COUNT = 3;
+export const FOCUS_NEXT_MIN_CARDS = 3;
+/** Boxes counted as mastered (Got it segment of the mastery bar). */
+export const MASTERED_MIN_BOX = 4;
+
 export const IMPORT_MAX_ROWS = 2000;
 export const IMPORT_MAX_ZIP_ENTRIES = 2000;
 export const IMPORT_MAX_ZIP_UNCOMPRESSED_BYTES = 200 * 1024 * 1024;
