@@ -33,3 +33,4 @@ F2.5: app shell (src/app/(app)/layout, src/ui/shell/Sidebar, src/ui/states), stu
 F2.6: e2e/profiles.spec.ts closes AC1 (pick, isolation, 404 by URL and API, switch, axe and 44 px); scripts/e2e-seed.ts adds one deck per profile for e2e.
 REVIEW F2 round 1: GAPS at 4fcc11a
 F2.7: src/app/error.tsx root boundary (ErrorState with Retry and Switch profile) for (app) layout and / failures; src/app/error.test.ts.
+F2.8: picker loading state uses Skeleton cards in role=status aria-label Loading; e2e matches the label.

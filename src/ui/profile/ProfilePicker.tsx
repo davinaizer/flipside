@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { api } from "@/ui/api/client";
 import { Avatar } from "@/ui/avatars";
+import { Skeleton } from "@/ui/states/Skeleton";
 import type { ProfileSummary } from "@/shared/schemas/profile";
 
 type State =
@@ -43,9 +44,10 @@ export function ProfilePicker() {
     <main className="flex min-h-screen flex-col items-center justify-center gap-10 bg-surface p-8">
       <h1 className="text-4xl font-semibold text-on-surface">Who is studying?</h1>
       {state.kind === "loading" && (
-        <p role="status" className="text-on-surface-variant">
-          Loading profiles...
-        </p>
+        <div role="status" aria-label="Loading" className="flex flex-wrap justify-center gap-8">
+          <Skeleton className="h-52 w-44 rounded-3xl" />
+          <Skeleton className="h-52 w-44 rounded-3xl" />
+        </div>
       )}
       {state.kind === "error" && (
         <div role="alert" className="flex flex-col items-center gap-4 text-center">

@@ -47,7 +47,7 @@ test("loading and error states render, and Retry recovers", async ({ page }) => 
     return route.continue();
   });
   await page.goto("/");
-  await expect(page.getByRole("status")).toContainText("Loading");
+  await expect(page.getByRole("status", { name: "Loading" })).toBeVisible();
   release();
   await expect(page.getByRole("alert").filter({ hasText: "home server" })).toBeVisible();
   await setTheme(page, "dark");

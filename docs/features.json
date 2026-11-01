@@ -488,7 +488,7 @@
           ],
           "area": "src/ui/profile/ProfilePicker.tsx",
           "done_when": "The picker loading state renders Skeleton blocks sized like the avatar cards inside a role=status element with aria-label Loading, not a text line; the e2e check matches the label; axe and 44 px checks still pass in both themes.",
-          "status": "todo"
+          "status": "done"
         }
       ],
       "design_screens": [
