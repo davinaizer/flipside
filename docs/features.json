@@ -412,7 +412,7 @@
           ],
           "area": "src/app/api/v1/library, src/app/api/v1/decks/[id], src/server/decks.ts",
           "done_when": "Integration tests with factory data for both profiles (AC1, ahead of import): GET /library lists only the current profile's non-deleted decks, with no counts from the other profile; GET /decks/{id} for the other profile's deck returns 404, the same as an unknown id. Counts are completed in F4.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F2.4",
