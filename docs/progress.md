@@ -69,3 +69,4 @@ F4 done: PR #9. MANUAL PENDING: none
 - F5.3: Reading settings with live preview (font, size, spacing, card colour, reset) at /settings; shared ReadingCard and --on-card-* tokens (src/ui/reading-card, src/ui/settings/reading).
 - F5.4: Practice settings (session length, new cards per day with validation, read aloud, reading speed) on /settings (src/ui/settings/practice).
 - F5.5: e2e/settings.spec.ts covers live preview, persistence (reload, new context, second server), theme toggle per screen, axe and 44 px on Settings in both themes, on desktop and iPad.
+REVIEW F5 round 1: GAPS at 5fc8d5a
