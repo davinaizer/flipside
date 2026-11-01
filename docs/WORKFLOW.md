@@ -24,12 +24,22 @@ Agents are stateless between sessions; these files are the memory.
 - `docs/PRD.md` section 18: product decisions.
 - `git log`.
 
+## Resuming
+`/run-feature` can be cancelled and run again. A cancelled run loses at most the task in flight.
+- The feature in progress is the one with an unmerged `feat/<id>-*` branch. Its ledger lives on that branch; `develop` only learns about it at the merge.
+- A dirty tree after a cancel is the interrupted task: the orchestrator asks whether to keep or discard it.
+- Each review result is logged in `docs/progress.md`, so rounds are counted and a PASS is not repeated. An existing PR is reused.
+- GitHub decides whether a feature is merged, not the ledger.
+
 ## Gates
 - **Task gate (every task):** `bash scripts/verify.sh` green, then one commit. Deterministic, no extra agent.
 - **Feature gate:** verify, e2e and axe for the feature's screens, then one fresh Opus review. Max two review rounds, then it asks you.
 - **Merge condition:** verify, e2e and axe green, reviewer PASS, all tasks done, PR base `develop`. Any failure means no merge and a question to you.
 - **Done:** all ACs that agents can verify pass. `manual_acs` (AC10 read-aloud on the iPad, AC11 reboot and restore) are logged as `MANUAL PENDING` and listed in the final report for you.
 - **Stop hook:** a turn that leaves changed code with red checks cannot end.
+
+## Visibility
+`scripts/statusline.sh` is the Claude Code status line. Line one comes from the ledger: feature, task progress and stage. Line two is the session: model, context, tokens and time. Context is the orchestrator's own window, not the current subagent's.
 
 ## Stop rules
 Kept in `CLAUDE.md` so every agent loads them. Everything outside them is logged as ASSUMED and reviewed in the PR.

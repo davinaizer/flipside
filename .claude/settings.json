@@ -26,5 +26,9 @@
         ]
       }
     ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "bash scripts/statusline.sh"
   }
 }
