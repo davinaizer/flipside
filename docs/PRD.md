@@ -96,7 +96,7 @@ The model is multi-profile, not two hard-coded users: adding a profile later is 
 | avatar | first unused | Id from the built-in set |
 | accent colour | blue | Used in the profile picker and sidebar only |
 | timezone | Europe/London | Decides what "today" is for due dates and statistics |
-| day start hour | 04:00 | A review at 01:30 still counts toward the previous day |
+| day start hour | 07:00 | A review at 06:30 still counts toward the previous day |
 | settings | see section 4 | Reading and practice settings, stored as JSON |
 
 ### Security stance for the MVP
@@ -273,11 +273,22 @@ Intervals are named constants in one configuration file, not scattered through t
 
 | Grade | Effect on the box | Due date | Other effects |
 | --- | --- | --- | --- |
-| Not yet | Moves to box 1 | Today | Lapses +1 if the card was in box 2 or higher; re-queued in the session |
+| Not yet | Moves to box 1 (default lapse rule, see below) | Today | Lapses +1 if the card was in box 2 or higher; re-queued in the session |
 | Nearly | Stays in the same box (a new card enters box 1) | Today plus the interval of its current box; box 1 stays due today | None |
 | Got it | Moves up one box, to a maximum of 5 (a new card enters box 2) | Today plus the interval of its new box | Lapses unchanged |
 
 Only Got it moves a card up. "Today" is the profile's local day, using its day start hour (section 2).
+
+### Lapse rule
+
+What Not yet does to a card in box 2 or higher is one named constant in the same configuration file as the intervals, `LAPSE_RULE`:
+
+| Value | Effect of Not yet on a card in box 2 or higher | Status |
+| --- | --- | --- |
+| `reset` | Moves to box 1 | Default for the MVP |
+| `drop_one` | Moves down one box (box 1 stays in box 1) | Available, not enabled |
+
+The two differ for a mature card: a box 5 card (14-day interval) that is missed once loses all its progress under `reset`, and only one step under `drop_one`. Anki exposes the same choice (its default resets the interval; the user can have it reduced instead, per the [Anki FAQ](https://docs.ankiweb.net/faqs/what-spaced-repetition-algorithm)). Which suits the two learners is not known, so the MVP keeps `reset` (D8) and the choice is revisited after real use (OQ9). In both cases the card is re-queued in the session and lapses increase by 1, so leech counting is unaffected. Scheduler fixtures cover both values.
 
 ### Building a session
 
@@ -303,6 +314,8 @@ A card is flagged as a leech when its lapses reach 8, a threshold borrowed from 
 Each review record stores the card's state before the grade. Undo deletes the latest record (marking it undone), restores that state, and returns to the card's front. It can step back through the whole session.
 
 ### Not in the MVP, but reserved
+
+- **A different scheduler (for example FSRS):** not built, but nothing in the MVP blocks it. The scheduler is a pure function in `src/domain` (section 9), and `review_log` already stores, for every review, the grade, `reviewed_at`, `duration_ms`, `box_before`, `box_after` and `prev_state` (section 10). That history is enough to replay a different scheduler over past reviews. The MVP must keep these fields complete and must not delete or rewrite review records, other than marking an undo. Whether a different scheduler would help at this scale is unknown (OQ10); secondary sources report fewer reviews at equal retention on large review histories, which is not evidence for a few hundred cards.
 
 - **Confidence tap:** a nullable `confidence` column is reserved in the review record. Phase 1.5 asks for a one-tap rating before the answer is shown and re-tests high-confidence errors sooner, because those errors are corrected more readily but return after a week if the answer is forgotten.
 - **Test-date cram mode:** ignores due dates for cards in a chosen scope until an exam date.
@@ -492,7 +505,7 @@ The browser and, later, the SwiftUI app reach the same Route Handlers; services 
 | --- | --- | --- |
 | Language | TypeScript (strict) | One language across UI, API and scheduler |
 | App framework | Next.js, App Router | Chosen by the owner; Route Handlers provide the API |
-| UI | React client components with CSS variables for the design tokens | Practice screens are interactive; tokens map cleanly to SwiftUI later |
+| UI | React client components styled with Tailwind CSS; the design tokens are defined once and feed the Tailwind theme | Practice screens are interactive; tokens stay in one file, so they can map to SwiftUI later |
 | Data fetching | `fetch` through a thin typed client; TanStack Query optional | The UI uses the same API a native app will |
 | Validation and types | Zod schemas shared by UI and API | One source of truth for request and response shapes |
 | Database | Postgres 17 in Docker | Chosen by the owner |
@@ -865,14 +878,15 @@ The biggest risk is not technical: the app may be ignored if practising feels li
 
 | ID | Question | Needed by |
 | --- | --- | --- |
-| OQ1 | Which avatars? A built-in set of about ten illustrations, chosen with the learner | Profile picker build |
 | OQ2 | Default new cards per day: 10 assumed | After first week of use |
-| OQ3 | Day start hour: 04:00 assumed | Scheduler build |
 | OQ4 | Which iPad and iOS version is the primary device? | Device testing |
 | OQ5 | Who writes the System Design deck, and in what form (CSV directly, or converted from notes)? | Before engineering decks are tested |
-| OQ6 | Styling approach: CSS variables with CSS Modules assumed; Tailwind is the alternative | First UI work |
 | OQ7 | Should weak cards also include cards the learner marks "Nearly" repeatedly? | After first week of use |
 | OQ8 | Should sessions mix decks or stay within one by default? Mixed assumed for Today | After first week of use |
+| OQ9 | Should Not yet on a mature card drop one box (`drop_one`) instead of resetting to box 1 (`reset`)? `reset` assumed | After four weeks of use, if mature cards are lost too often |
+| OQ10 | Is the boxed scheduler good enough, or does review load justify trying FSRS? Boxed assumed | After four weeks of use, using `review_log` |
+
+OQ1 (avatars), OQ3 (day start hour) and OQ6 (styling) were resolved on 2026-11-01; see D15 to D17. The assumed defaults for OQ2 and OQ7 to OQ10 were confirmed on the same day (D18). OQ4 and OQ5 do not block the build.
 
 ## 18. Decision log, glossary and references
 
@@ -894,6 +908,12 @@ These are the decisions taken so far; change one here first, then update the sec
 | D10 | A SwiftUI app is a later phase, motivated by reminders; the owner has an Apple developer account | 2026-11-01 |
 | D11 | Voice and LLM feedback is an experimental phase, randomised and guarded | 2026-11-01 |
 | D12 | Content comes in as CSV; the school PPT was converted to the first fixture deck | 2026-11-01 |
+| D13 | The lapse rule is a configuration constant (`reset` default, `drop_one` available); MVP behaviour is unchanged | 2026-11-01 |
+| D14 | `review_log` is kept complete and append-only so a different scheduler can be replayed over it later; no FSRS in the MVP | 2026-11-01 |
+| D15 | Avatars: build the profile picker against a placeholder set behind one registry file; the final illustrations are chosen with the learner and swapped in later (resolves OQ1) | 2026-11-01 |
+| D16 | Day start hour is 07:00 (resolves OQ3) | 2026-11-01 |
+| D17 | Styling is Tailwind CSS, with the design tokens defined once and fed into the Tailwind theme (resolves OQ6) | 2026-11-01 |
+| D18 | The assumed defaults for OQ2, OQ7, OQ8, OQ9 and OQ10 stand until their review triggers; OQ4 and OQ5 are not build blockers | 2026-11-01 |
 
 ### Glossary
 
@@ -917,5 +937,6 @@ These are the decisions taken so far; change one here first, then update the sec
 - Design mockup v2 (current): [Flipside v2 canvas](https://claude.ai/artifact/C2dqjpab7V7Jseiwr8k5L9)
 - Design mockup v1 (first pass): [GCSE Flashcards canvas](https://claude.ai/artifact/Me41FufM8usUznonLJu6Nd)
 - First fixture deck: `science-w2.csv` and `science-w2-deck.zip` (16 cards, 7 images), converted from the school slides
+- Anki scheduling: [SM-2 and FSRS FAQ](https://docs.ankiweb.net/faqs/what-spaced-repetition-algorithm)
 - Anki manual: [Studying](https://docs.ankiweb.net/studying.html), [Deck options](https://docs.ankiweb.net/deck-options.html), [Statistics](https://docs.ankiweb.net/stats.html)
 - Dyslexia guidance: [British Dyslexia Association style guide summary](https://www.bumc.bu.edu/jmedday/files/2025/05/Dyslexia-friendly-style-guide.docx), [Dyslexia Scotland on fonts](https://dyslexiascotland.org.uk/?p=21280)

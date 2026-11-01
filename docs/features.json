@@ -1,0 +1,278 @@
+{
+  "version": 1,
+  "base_branch": "develop",
+  "note": "Agents may change only status, commit, branch, pr. manual_acs cannot be verified by an agent and go on the PR checklist.",
+  "features": [
+    {
+      "id": "F0",
+      "name": "Foundation",
+      "depends_on": [],
+      "reqs": [
+        "X1",
+        "P5"
+      ],
+      "acs": [],
+      "manual_acs": [],
+      "prd_sections": [
+        "9",
+        "10",
+        "11",
+        "13",
+        "16"
+      ],
+      "notes": "Scaffold, schema for PRD section 10, Docker Postgres, verify/test/e2e harness, seed, health. Land the full schema here so later features do not collide on migrations.",
+      "status": "todo",
+      "branch": null,
+      "pr": null,
+      "tasks": []
+    },
+    {
+      "id": "F1",
+      "name": "Domain core",
+      "depends_on": [
+        "F0"
+      ],
+      "reqs": [],
+      "acs": [],
+      "manual_acs": [],
+      "prd_sections": [
+        "5",
+        "6",
+        "7",
+        "14"
+      ],
+      "notes": "Pure functions in src/domain with table-driven JSON fixtures (N4): scheduler, session builder, re-queue, undo maths, day boundary, CSV validation, stats definitions. Provides the logic behind AC4 to AC8; those ACs close in F6 and F7.",
+      "status": "todo",
+      "branch": null,
+      "pr": null,
+      "tasks": []
+    },
+    {
+      "id": "F2",
+      "name": "Profiles",
+      "depends_on": [
+        "F0"
+      ],
+      "reqs": [
+        "P1",
+        "P2",
+        "P3",
+        "P4"
+      ],
+      "acs": [
+        "AC1"
+      ],
+      "manual_acs": [],
+      "prd_sections": [
+        "2",
+        "4",
+        "11",
+        "14"
+      ],
+      "notes": "",
+      "status": "todo",
+      "branch": null,
+      "pr": null,
+      "tasks": []
+    },
+    {
+      "id": "F3",
+      "name": "Import and image storage",
+      "depends_on": [
+        "F1",
+        "F2"
+      ],
+      "reqs": [
+        "I1",
+        "I2",
+        "I3",
+        "I4",
+        "I5",
+        "I6"
+      ],
+      "acs": [
+        "AC2",
+        "AC3"
+      ],
+      "manual_acs": [],
+      "prd_sections": [
+        "4",
+        "6",
+        "11",
+        "12"
+      ],
+      "notes": "Includes the ImageStore interface, disk driver and contract tests.",
+      "status": "todo",
+      "branch": null,
+      "pr": null,
+      "tasks": []
+    },
+    {
+      "id": "F4",
+      "name": "Library and deck page",
+      "depends_on": [
+        "F3"
+      ],
+      "reqs": [
+        "L1",
+        "L2",
+        "L3",
+        "L4",
+        "L5",
+        "L6",
+        "L7",
+        "L8",
+        "D1",
+        "D2",
+        "D3",
+        "D4",
+        "D5",
+        "D6",
+        "D7"
+      ],
+      "acs": [],
+      "manual_acs": [],
+      "prd_sections": [
+        "4",
+        "5",
+        "7",
+        "8",
+        "11"
+      ],
+      "notes": "",
+      "status": "todo",
+      "branch": null,
+      "pr": null,
+      "tasks": []
+    },
+    {
+      "id": "F5",
+      "name": "Settings",
+      "depends_on": [
+        "F2"
+      ],
+      "reqs": [
+        "T1",
+        "T2",
+        "T3",
+        "T4"
+      ],
+      "acs": [
+        "AC9"
+      ],
+      "manual_acs": [],
+      "prd_sections": [
+        "4",
+        "8",
+        "11"
+      ],
+      "notes": "",
+      "status": "todo",
+      "branch": null,
+      "pr": null,
+      "tasks": []
+    },
+    {
+      "id": "F6",
+      "name": "Practice",
+      "depends_on": [
+        "F1",
+        "F4",
+        "F5"
+      ],
+      "reqs": [
+        "R1",
+        "R2",
+        "R3",
+        "R4",
+        "R5",
+        "R6",
+        "R7",
+        "R8",
+        "R9",
+        "R10",
+        "R11",
+        "R12",
+        "R13",
+        "R14"
+      ],
+      "acs": [
+        "AC4",
+        "AC5",
+        "AC6",
+        "AC7",
+        "AC10"
+      ],
+      "manual_acs": [
+        "AC10"
+      ],
+      "prd_sections": [
+        "4",
+        "5",
+        "8",
+        "11"
+      ],
+      "notes": "AC10 (read aloud on the target iPad) is manual.",
+      "status": "todo",
+      "branch": null,
+      "pr": null,
+      "tasks": []
+    },
+    {
+      "id": "F7",
+      "name": "Progress",
+      "depends_on": [
+        "F1",
+        "F6"
+      ],
+      "reqs": [
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "S5"
+      ],
+      "acs": [
+        "AC8"
+      ],
+      "manual_acs": [],
+      "prd_sections": [
+        "4",
+        "7",
+        "8",
+        "11"
+      ],
+      "notes": "",
+      "status": "todo",
+      "branch": null,
+      "pr": null,
+      "tasks": []
+    },
+    {
+      "id": "F8",
+      "name": "Operations and hardening",
+      "depends_on": [
+        "F7"
+      ],
+      "reqs": [
+        "X2"
+      ],
+      "acs": [
+        "AC11",
+        "AC12"
+      ],
+      "manual_acs": [
+        "AC11"
+      ],
+      "prd_sections": [
+        "13",
+        "16"
+      ],
+      "notes": "Backup/restore scripts, launchd service, full e2e journey, axe on every screen. AC11 (reboot, restore drill) is manual.",
+      "status": "todo",
+      "branch": null,
+      "pr": null,
+      "tasks": []
+    }
+  ]
+}
