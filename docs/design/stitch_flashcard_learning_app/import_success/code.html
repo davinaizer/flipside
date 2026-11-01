@@ -1,0 +1,193 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<meta content="web_dashboard" name="shell-type">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+    @layer base {
+      html, body { margin: 0; padding: 0; }
+      body { overscroll-behavior: none; }
+      main > :first-child { margin-top: 0 !important; }
+      main > :last-child { margin-bottom: 0 !important; }
+    }
+    ::-webkit-scrollbar { display: none; }
+  </style>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-canvas": "#f4f7fb",
+            "surface-sidebar": "#ebf1f9",
+            "surface-card": "#ffffff",
+            "surface-container": "#e8eef8",
+            "surface-container-high": "#dbe4f3",
+            "on-surface": "#1e293b",
+            "on-surface-variant": "#64748b",
+            "primary": "#5c67f2",
+            "primary-container": "#6366f1",
+            "on-primary": "#ffffff",
+            "pastel-lavender": "#f1efff",
+            "pastel-lavender-border": "#ddd7ff",
+            "pastel-lavender-accent": "#6d6ef5",
+            "pastel-blue": "#edf6ff",
+            "pastel-blue-border": "#d2e7ff",
+            "pastel-blue-accent": "#3b82f6",
+            "pastel-mint": "#ecfbf5",
+            "pastel-mint-border": "#c9f3e1",
+            "pastel-mint-accent": "#10b981",
+            "pastel-peach": "#fff3eb",
+            "pastel-peach-border": "#fedcc7",
+            "pastel-peach-accent": "#f97316"
+          },
+          borderRadius: {
+            DEFAULT: "1rem",
+            "lg": "1.5rem",
+            "xl": "2rem",
+            "full": "9999px"
+          },
+          fontFamily: {
+            sans: ["'Lexend'", "sans-serif"],
+            body: ["'Plus Jakarta Sans'", "sans-serif"],
+            display: ["'Lexend'", "sans-serif"]
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-surface-canvas font-body text-on-surface antialiased min-h-screen">
+<!-- Sidebar -->
+<aside class="fixed left-0 top-0 h-full w-60 bg-surface-sidebar z-50 flex flex-col justify-between py-8 px-4 border-r border-slate-200/60">
+<div class="flex flex-col gap-8">
+<!-- App Brand -->
+<div class="flex items-center gap-3 px-2">
+<div class="w-8 h-8 rounded-xl bg-primary flex items-center justify-center text-white shrink-0 shadow-sm"><span class="material-symbols-outlined text-[20px]">style</span></div>
+<span class="font-display font-bold text-xl tracking-tight text-slate-800">Flashcards</span>
+</div>
+<!-- Navigation -->
+<nav class="flex flex-col gap-1.5" data-active-classes="bg-primary text-on-primary font-semibold shadow-sm"><a aria-current="page" class="flex items-center gap-3 px-4 py-2.5 rounded-full transition-all min-h-[46px] bg-primary text-on-primary font-semibold shadow-sm" data-path="library" href="#"><span class="material-symbols-outlined text-[22px]">style</span><span class="font-display font-semibold text-sm">Library</span></a><a class="flex items-center gap-3 px-4 py-2.5 rounded-full text-on-surface-variant hover:bg-white/80 hover:text-on-surface transition-all min-h-[46px]" data-path="progress" href="#"><span class="material-symbols-outlined text-[22px]">insights</span><span class="font-display font-medium text-sm">Progress</span></a><a class="flex items-center gap-3 px-4 py-2.5 rounded-full text-on-surface-variant hover:bg-white/80 hover:text-on-surface transition-all min-h-[46px]" data-path="settings" href="#"><span class="material-symbols-outlined text-[22px]">tune</span><span class="font-display font-medium text-sm">Settings</span></a></nav>
+</div>
+<!-- Footnote Badge -->
+<div class="p-3 bg-white/80 backdrop-blur-sm rounded-2xl border border-slate-200/60 shadow-sm flex items-center justify-between gap-3"><div class="flex items-center gap-3 min-w-0"><div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white font-display font-bold text-sm shrink-0 shadow-sm">N</div><div class="flex flex-col min-w-0"><span class="font-display font-semibold text-sm text-slate-900 truncate">Nicole</span><span class="font-body text-xs text-slate-600 truncate">GCSE Revision</span></div></div><button aria-label="Switch profile" class="min-h-[48px] min-w-[48px] flex items-center justify-center rounded-xl text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-colors shrink-0" type="button"><span class="material-symbols-outlined text-[20px]">unfold_more</span></button></div>
+</aside>
+<!-- Main Content Area -->
+<div class="pl-60">
+<!-- Header -->
+<header class="fixed top-0 left-60 right-0 h-16 bg-surface-canvas/80 backdrop-blur-xl z-40 border-b border-slate-200/40">
+<div class="h-16 w-full px-8 flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<div class="w-7 h-7 rounded-lg bg-primary flex items-center justify-center text-white shrink-0 shadow-sm"><span class="material-symbols-outlined text-[18px]">style</span></div>
+<span class="font-display font-bold text-base text-slate-800">Flipside</span>
+</div>
+<div class="flex items-center gap-4">
+<div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white shadow-sm ring-2 ring-white">
+<span class="material-symbols-outlined text-[18px]">person</span>
+</div>
+</div>
+</div>
+</header>
+<main class="relative pt-20 w-full px-8 pb-16 bg-surface-canvas"><div class="flex flex-col w-full">
+<!-- Sub-header Breadcrumb & Action Banner -->
+<div class="flex items-center justify-between pb-6">
+<div class="flex items-center gap-3">
+<a class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface-container-low text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all text-label-md font-label-md min-h-[48px]" href="#">
+<span class="material-symbols-outlined text-[18px]">arrow_back</span>
+<span class="">Back to Library</span>
+</a>
+<span class="text-outline-variant font-label-sm">/</span>
+<span class="text-on-surface-variant font-label-md text-label-md">Add or Re-import Deck</span>
+</div>
+<div class="hidden sm:flex items-center gap-2 px-3 py-1 rounded-full bg-pastel-mint text-tertiary font-label-sm text-label-sm shadow-sm">
+<span class="material-symbols-outlined text-[16px] text-pastel-mint-accent" style="font-variation-settings: 'FILL' 1;">dns</span>
+<span class="">Local storage active</span>
+</div>
+</div>
+<!-- Main Content Stage -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start max-w-6xl mx-auto w-full pt-2">
+<!-- Left Column: Primary Celebratory & Action Center (7 cols) -->
+<section class="lg:col-span-7 flex flex-col gap-6">
+<!-- Affirmation Hero Card -->
+<div class="relative overflow-hidden bg-surface-container-lowest rounded-xl p-8 shadow-sm flex flex-col gap-6">
+<!-- Ambient decorative diffusion -->
+<div class="absolute -top-16 -right-16 w-56 h-56 rounded-full bg-pastel-mint blur-3xl pointer-events-none opacity-70"></div>
+<div class="absolute -bottom-16 -left-16 w-56 h-56 rounded-full bg-pastel-lavender blur-3xl pointer-events-none opacity-70"></div>
+<div class="relative flex items-start gap-5">
+<!-- Gentle checkmark badge -->
+<div class="w-16 h-16 rounded-full bg-pastel-mint flex items-center justify-center shrink-0 shadow-sm">
+<div class="w-11 h-11 rounded-full bg-white flex items-center justify-center shadow-xs">
+<span class="material-symbols-outlined text-[28px] text-pastel-mint-accent" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+</div>
+<div class="flex flex-col gap-1.5 pt-1">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-pastel-lavender-accent font-semibold">Import Complete</span>
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Deck imported successfully</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Your flashcards have been indexed and merged into your local repository without friction.</p>
+</div>
+</div>
+<!-- Detailed Deck Capsule -->
+<div class="relative bg-surface-container-low rounded-lg p-6 flex flex-col gap-5"><div class="flex items-center justify-between gap-4"><div class="flex items-center gap-3 min-w-0"><span class="w-4 h-4 rounded-full bg-pastel-lavender-accent shrink-0 shadow-xs"></span><h2 class="font-headline-md text-headline-md text-on-surface truncate">System Design</h2></div><span class="px-3.5 py-1.5 rounded-full bg-surface-container text-on-surface-variant font-label-md text-label-md shrink-0">Interview prep</span></div><div class="grid grid-cols-2 gap-3 pt-2"><div class="p-4 rounded-DEFAULT bg-surface-container-lowest shadow-xs flex flex-col gap-1"><div class="flex items-center gap-1.5 text-on-surface-variant font-label-sm text-label-sm"><span class="material-symbols-outlined text-[18px] text-primary">style</span><span class="">Cards Added</span></div><span class="font-headline-sm text-headline-sm text-on-surface">35 cards ready</span><span class="font-body-sm text-body-sm text-on-surface-variant">1 duplicate updated • 0 errors</span></div><div class="p-4 rounded-DEFAULT bg-surface-container-lowest shadow-xs flex flex-col gap-1"><div class="flex items-center gap-1.5 text-on-surface-variant font-label-sm text-label-sm"><span class="material-symbols-outlined text-[18px] text-pastel-peach-accent">inventory_2</span><span class="">Initial Placement</span></div><span class="font-headline-sm text-headline-sm text-on-surface">Box 1</span><span class="font-body-sm text-body-sm text-on-surface-variant">Ready for initial review</span></div></div><div class="flex items-center justify-between p-3.5 rounded-DEFAULT bg-pastel-blue text-on-surface"><div class="flex items-center gap-2.5"><span class="material-symbols-outlined text-[20px] text-pastel-blue-accent">dns</span><span class="font-label-md text-label-md text-on-surface">Storage location</span></div><span class="font-label-md text-label-md text-pastel-blue-accent font-semibold">Saved to local repository</span></div></div>
+<!-- CTA Action Cluster (Touch target >= 48px guaranteed) -->
+<div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-2"><button class="flex-1 min-h-[52px] px-8 rounded-full bg-primary hover:bg-primary-container text-on-primary font-label-lg text-label-lg shadow-sm flex items-center justify-center gap-2.5 transition-all focus:outline-none" type="button"><span class="material-symbols-outlined text-[22px]">play_circle</span><span class="">Start practice</span></button><button class="min-h-[52px] px-7 rounded-full bg-pastel-lavender hover:bg-surface-container text-on-primary-fixed-variant font-label-lg text-label-lg flex items-center justify-center gap-2 transition-all focus:outline-none" type="button"><span class="material-symbols-outlined text-[20px]">collections_bookmark</span><span class="">View in Library</span></button></div>
+</div>
+<!-- Quick Guidance & Accessibility Note -->
+
+</section>
+<!-- Right Column: Deck Visual Preview & Spaced Repetition Blueprint (5 cols) -->
+<aside class="lg:col-span-5 flex flex-col gap-6">
+<!-- Preview Card Visual Deck -->
+<div class="bg-surface-container-lowest rounded-xl p-6 shadow-sm flex flex-col gap-5">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-semibold">First Card Preview</span>
+<span class="font-label-sm text-label-sm px-2.5 py-1 rounded-full bg-surface-container text-on-surface-variant">Card #1 of 35</span>
+</div>
+<!-- Rendered Flashcard Mimic -->
+<div class="relative bg-pastel-lavender rounded-lg p-6 flex flex-col justify-between min-h-[220px] shadow-xs">
+<div class="flex items-start justify-between">
+<span class="px-2.5 py-0.5 rounded-full bg-white text-pastel-lavender-accent font-label-sm text-label-sm shadow-xs">Prompt</span>
+<span class="material-symbols-outlined text-[20px] text-on-surface-variant/40">flip</span>
+</div>
+<div class="py-4">
+<p class="font-headline-sm text-headline-sm text-on-surface">
+              What are the core trade-offs between horizontal and vertical scaling in distributed databases?
+            </p>
+</div>
+<div class="flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm pt-2">
+<span class="">Leitner Level: New</span>
+<span class="">Tap to reveal answer</span>
+</div>
+</div>
+<!-- Curated Learning Track Image -->
+
+</div>
+<!-- Spaced Repetition Box Distribution -->
+
+</aside>
+</div>
+</div></main>
+</div>
+<script>
+    (function() {
+      const btnWeek = document.getElementById('btn-week');
+      const btnMonth = document.getElementById('btn-month');
+
+      if (btnWeek && btnMonth) {
+        btnWeek.addEventListener('click', () => {
+          btnWeek.className = 'px-5 py-1.5 rounded-full font-display font-semibold text-xs bg-white text-slate-900 shadow-sm transition-all duration-200';
+          btnMonth.className = 'px-5 py-1.5 rounded-full font-display font-medium text-xs text-slate-600 hover:text-slate-900 transition-all duration-200';
+        });
+
+        btnMonth.addEventListener('click', () => {
+          btnMonth.className = 'px-5 py-1.5 rounded-full font-display font-semibold text-xs bg-white text-slate-900 shadow-sm transition-all duration-200';
+          btnWeek.className = 'px-5 py-1.5 rounded-full font-display font-medium text-xs text-slate-600 hover:text-slate-900 transition-all duration-200';
+        });
+      }
+    })();
+  </script>
+
+
+</body></html>

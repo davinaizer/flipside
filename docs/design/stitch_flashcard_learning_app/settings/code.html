@@ -1,0 +1,519 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><meta content="web_dashboard" name="shell-type"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:ital,wght@0,200..800;1,200..800&amp;family=Lexend:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{margin:0;padding:0;font-family:'Atkinson Hyperlegible Next',sans-serif;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"surface-canvas":"#f4f6fc","on-primary-container":"#ffffff","surface-tint-cream":"#fdf8ee","on-background":"#0d1c2e","on-surface":"#0d1c2e","surface-tint":"#6366f1","tertiary-container":"#616870","inverse-surface":"#223144","surface-container-low":"#eff3fa","secondary-container":"#e0e7ff","primary-fixed":"#e0e3ff","surface-container-lowest":"#ffffff","border-strong":"#c7d3ea","surface-card":"#ffffff","on-primary":"#ffffff","primary-container":"#6366f1","surface":"#f8faff","status-not-yet":"#ea8341","primary":"#5457e5","avatar-maths":"#f5d4e4","primary-fixed-dim":"#c3c7fc","on-error-container":"#93000a","error-container":"#ffdad6","secondary-fixed-dim":"#c4ceed","surface-variant":"#e2e8f6","tertiary":"#4b5563","inverse-on-surface":"#eaf1ff","badge-dark":"#1e293b","on-surface-variant":"#475569","background":"#f8faff","surface-sidebar":"#eef2f9","secondary-fixed":"#e0e7ff","surface-container-high":"#e2eaf7","on-tertiary":"#ffffff","surface-tint-mist":"#edf3fc","surface-tint-peach":"#fdf1ec","surface-tint-night":"#1e2536","surface-container":"#e8effb","outline":"#71798f","status-nearly":"#eab308","outline-variant":"#cbd5e1","surface-dim":"#d2def2","surface-bright":"#f8faff","on-error":"#ffffff","on-secondary":"#ffffff","error":"#ba1a1a","secondary":"#5a677f"},borderRadius:{DEFAULT:"0.75rem",lg:"1.25rem",xl:"1.75rem","2xl":"2rem","3xl":"2.5rem",full:"9999px"},spacing:{"space-sm":"0.625rem","space-xs":"0.375rem","space-md":"1rem","space-xl":"2rem",margin:"2rem","space-2xl":"3rem","space-lg":"1.5rem",gutter:"1.25rem"},fontFamily:{"label-sm":["Lexend","sans-serif"],"label-lg":["Lexend","sans-serif"],"body-sm":["Atkinson Hyperlegible Next","sans-serif"],"label-md":["Lexend","sans-serif"],"body-xl":["Atkinson Hyperlegible Next","sans-serif"],"body-lg":["Atkinson Hyperlegible Next","sans-serif"],"body-md":["Atkinson Hyperlegible Next","sans-serif"],"headline-sm":["Lexend","sans-serif"],"headline-lg":["Lexend","sans-serif"],"headline-xl":["Lexend","sans-serif"],"headline-md":["Lexend","sans-serif"],"display-hero":["Lexend","sans-serif"]},fontSize:{"label-sm":["12px",{lineHeight:"16px",letterSpacing:"0.02em",fontWeight:"500"}],"label-lg":["16px",{lineHeight:"22px",letterSpacing:"0.01em",fontWeight:"600"}],"body-sm":["13px",{lineHeight:"19px",letterSpacing:"0.01em",fontWeight:"400"}],"label-md":["14px",{lineHeight:"18px",letterSpacing:"0.015em",fontWeight:"500"}],"body-xl":["22px",{lineHeight:"34px",letterSpacing:"0.02em",fontWeight:"400"}],"body-lg":["17px",{lineHeight:"26px",letterSpacing:"0.015em",fontWeight:"400"}],"body-md":["15px",{lineHeight:"23px",letterSpacing:"0.01em",fontWeight:"400"}],"headline-sm":["18px",{lineHeight:"24px",letterSpacing:"-0.01em",fontWeight:"600"}],"headline-lg":["24px",{lineHeight:"32px",letterSpacing:"-0.015em",fontWeight:"600"}],"headline-xl":["30px",{lineHeight:"38px",letterSpacing:"-0.02em",fontWeight:"700"}],"headline-md":["20px",{lineHeight:"26px",letterSpacing:"-0.01em",fontWeight:"600"}],"display-hero":["36px",{lineHeight:"44px",letterSpacing:"-0.02em",fontWeight:"700"}]}}}}</script></head><body class="bg-surface-canvas font-body-md text-body-md text-on-surface antialiased min-h-screen selection:bg-indigo-100 selection:text-indigo-900"><aside class="fixed left-0 top-0 h-full w-60 bg-surface-sidebar z-50 flex flex-col justify-between py-space-xl px-space-md border-r border-indigo-100/60 shadow-[0_1px_12px_rgba(99,102,241,0.03)]"><div class="flex flex-col gap-space-xl"><div class="flex items-center gap-space-sm px-space-sm"><div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-400 flex items-center justify-center shadow-sm text-white"><span class="material-symbols-outlined text-[20px]">style</span></div><span class="font-headline-md text-headline-md font-semibold text-on-surface tracking-tight">Flipside</span></div><nav class="flex flex-col gap-space-xs"><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-2xl text-on-surface-variant hover:bg-white/80 hover:text-indigo-900 transition-all min-h-[48px]" data-path="library" href="#"><span class="material-symbols-outlined text-[22px]">folder_open</span><span class="font-label-lg text-label-lg font-medium">Library</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-2xl text-on-surface-variant hover:bg-white/80 hover:text-indigo-900 transition-all min-h-[48px]" data-path="progress" href="#"><span class="material-symbols-outlined text-[22px]">bar_chart</span><span class="font-label-lg text-label-lg font-medium">Progress</span></a><a aria-current="page" class="flex items-center gap-space-sm px-space-md py-space-sm rounded-2xl transition-all min-h-[48px] bg-indigo-500 text-white font-semibold shadow-[0_4px_14px_rgba(99,102,241,0.28)]" data-path="settings" href="#"><span class="material-symbols-outlined text-[22px]">tune</span><span class="font-label-lg text-label-lg">Settings</span></a></nav></div><div class="flex flex-col gap-2 p-3 bg-white/80 rounded-2xl border border-indigo-100/70 shadow-sm"><div class="flex items-center gap-2.5"><div class="w-9 h-9 rounded-full bg-indigo-500 text-white font-semibold flex items-center justify-center text-sm shadow-sm shrink-0">N</div><div class="flex flex-col min-w-0"><span class="font-label-md text-label-md text-on-surface font-semibold truncate">Nicole</span><span class="font-label-sm text-label-sm text-secondary truncate">GCSE Revision</span></div></div><button type="button" class="mt-1 w-full min-h-[48px] px-3 py-2 rounded-xl bg-surface-canvas hover:bg-indigo-50 text-indigo-700 hover:text-indigo-900 border border-indigo-100 font-label-sm text-label-sm font-semibold flex items-center justify-center gap-1.5 transition-colors focus:outline-none"><span class="material-symbols-outlined text-[18px]">switch_account</span><span class="">Switch profile</span></button></div></aside><div class="pl-60"><header class="fixed top-0 left-60 right-0 h-16 bg-surface-canvas/80 backdrop-blur-xl z-40 border-b border-indigo-100/60 shadow-[0_1px_6px_rgba(0,0,0,0.02)]"><div class="h-16 w-full px-margin flex items-center justify-between"><div class="flex items-center gap-space-sm"><span class="font-headline-sm text-headline-sm text-on-surface font-semibold tracking-tight">Flashcards Studio</span></div><div class="flex items-center gap-space-md"><div class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-700 font-semibold flex items-center justify-center border border-indigo-200/60 text-xs shadow-sm"><span class="material-symbols-outlined text-[18px]">person</span></div></div></div></header><main class="relative pt-16 w-full px-margin pb-space-2xl bg-surface-canvas"><div class="flex flex-col w-full">
+<div class="flex flex-col gap-space-xl max-w-6xl mx-auto w-full pt-space-xs">
+<div class="flex flex-col gap-1.5">
+<h1 class="font-headline-xl text-headline-xl text-on-surface font-bold tracking-tight">Settings</h1>
+<p class="font-body-md text-body-md text-secondary leading-relaxed">Customise reading accessibility and spaced-repetition preferences for your iPad.</p>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-xl items-start">
+<!-- Controls Column (Left) -->
+<div class="lg:col-span-7 flex flex-col gap-space-2xl">
+<!-- Section: Reading -->
+<section class="flex flex-col gap-space-lg">
+<div class="flex items-center gap-2 pb-space-xs border-b border-indigo-100/60">
+<div class="w-7 h-7 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center"><span class="material-symbols-outlined text-[18px]">visibility</span></div>
+<h2 class="font-headline-md text-headline-md text-on-surface font-semibold">Reading</h2>
+</div><div class="flex flex-col gap-2"><span class="font-label-md text-label-md text-on-surface font-semibold">Theme</span><div aria-label="Theme selection" class="flex flex-wrap items-center gap-2.5" role="radiogroup"><button type="button" class="min-h-[48px] px-5 py-2.5 rounded-full font-label-md text-label-md transition-all shadow-[0_2px_8px_rgba(99,102,241,0.22)] bg-indigo-500 text-white font-medium flex items-center gap-2"><span class="material-symbols-outlined text-[18px]">light_mode</span>Light</button><button type="button" class="min-h-[48px] px-5 py-2.5 rounded-full font-label-md text-label-md transition-all shadow-sm bg-white text-secondary hover:text-on-surface hover:bg-indigo-50/50 border border-indigo-100/80 font-medium flex items-center gap-2"><span class="material-symbols-outlined text-[18px]">dark_mode</span>Dark</button></div></div>
+<!-- Font Selector -->
+<div class="flex flex-col gap-2">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Font</span>
+<div aria-label="Font Selection" class="flex flex-wrap items-center gap-2.5" id="font-group" role="radiogroup">
+<button class="font-btn px-5 py-2.5 rounded-full font-label-md text-label-md transition-all shadow-[0_2px_8px_rgba(99,102,241,0.22)] bg-indigo-500 text-white font-medium min-h-[48px]" data-font="atkinson" type="button">
+                Atkinson Hyperlegible
+              </button>
+<button class="font-btn px-5 py-2.5 rounded-full font-label-md text-label-md transition-all shadow-sm bg-white text-secondary hover:text-on-surface hover:bg-indigo-50/50 border border-indigo-100/80 min-h-[48px]" data-font="lexend" type="button">
+                Lexend
+              </button>
+<button class="font-btn min-h-[48px] px-5 py-2.5 rounded-full font-label-md text-label-md transition-all shadow-sm bg-white text-secondary hover:text-on-surface hover:bg-indigo-50/50 border border-indigo-100/80" data-font="system-sans" type="button">
+                System Sans
+              </button>
+</div>
+</div>
+<!-- Text Size -->
+<div class="flex flex-col gap-2">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Text size</span>
+<div class="flex items-center gap-3">
+<button aria-label="Decrease text size" class="w-11 h-11 rounded-full bg-white hover:bg-indigo-50 text-indigo-700 flex items-center justify-center transition-all shadow-sm border border-indigo-100/80 active:scale-95" id="btn-decrease-size" type="button">
+<span class="material-symbols-outlined text-[19px]">remove</span>
+</button>
+<div class="h-11 px-6 rounded-full bg-white border border-indigo-100/80 flex items-center justify-center shadow-sm">
+<span class="font-label-md text-label-md text-on-surface font-semibold select-none min-w-[70px] text-center" id="text-size-label">Large</span>
+</div>
+<button aria-label="Increase text size" class="w-11 h-11 rounded-full bg-white hover:bg-indigo-50 text-indigo-700 flex items-center justify-center transition-all shadow-sm border border-indigo-100/80 active:scale-95" id="btn-increase-size" type="button">
+<span class="material-symbols-outlined text-[19px]">add</span>
+</button>
+</div>
+</div>
+<!-- Letter Spacing -->
+<div class="flex flex-col gap-2">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Letter spacing</span>
+<div aria-label="Letter Spacing" class="flex flex-wrap items-center gap-2.5" id="spacing-group" role="radiogroup">
+<button class="spacing-btn px-5 py-2.5 rounded-full font-label-md text-label-md transition-all shadow-sm bg-white text-secondary hover:text-on-surface hover:bg-indigo-50/50 border border-indigo-100/80 min-h-[48px]" data-spacing="normal" type="button">
+                Normal
+              </button>
+<button class="spacing-btn px-5 py-2.5 rounded-full font-label-md text-label-md transition-all shadow-[0_2px_8px_rgba(99,102,241,0.22)] bg-indigo-500 text-white font-medium min-h-[48px]" data-spacing="wide" type="button">
+                Wide
+              </button>
+<button class="spacing-btn px-5 py-2.5 rounded-full font-label-md text-label-md transition-all shadow-sm bg-white text-secondary hover:text-on-surface hover:bg-indigo-50/50 border border-indigo-100/80 min-h-[48px]" data-spacing="wider" type="button">
+                Wider
+              </button>
+</div>
+</div>
+<!-- Line Spacing -->
+<div class="flex flex-col gap-2">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Line spacing</span>
+<div aria-label="Line Spacing" class="flex flex-wrap items-center gap-2.5" id="line-group" role="radiogroup">
+<button class="line-btn px-5 py-2.5 rounded-full font-label-md text-label-md transition-all shadow-sm bg-white text-secondary hover:text-on-surface hover:bg-indigo-50/50 border border-indigo-100/80 min-h-[48px]" data-line="normal" type="button">
+                Normal
+              </button>
+<button class="line-btn px-5 py-2.5 rounded-full font-label-md text-label-md transition-all shadow-[0_2px_8px_rgba(99,102,241,0.22)] bg-indigo-500 text-white font-medium min-h-[48px]" data-line="roomy" type="button">
+                Roomy
+              </button>
+<button class="line-btn px-5 py-2.5 rounded-full font-label-md text-label-md transition-all shadow-sm bg-white text-secondary hover:text-on-surface hover:bg-indigo-50/50 border border-indigo-100/80 min-h-[48px]" data-line="extra" type="button">
+                Extra roomy
+              </button>
+</div>
+</div>
+<!-- Card Colour Palette -->
+<div class="flex flex-col gap-2">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Card colour</span>
+<div class="flex items-center gap-6 pt-1 flex-wrap">
+<!-- Mist Swatch -->
+<button class="color-swatch flex flex-col items-center gap-2 group focus:outline-none cursor-pointer" data-color="mist" type="button">
+<span class="w-13 h-13 p-1 rounded-full flex items-center justify-center transition-all group-hover:scale-105 ring-4 ring-indigo-400 ring-offset-2 ring-offset-surface-canvas shadow-sm">
+<span class="w-11 h-11 rounded-full bg-[#eef3fb] border border-indigo-200/50 block"></span>
+</span>
+<span class="font-label-sm text-label-sm text-indigo-900 font-semibold">Mist</span>
+</button>
+<!-- Cream Swatch -->
+<button class="color-swatch flex flex-col items-center gap-2 group focus:outline-none cursor-pointer" data-color="cream" type="button">
+<span class="w-13 h-13 p-1 rounded-full flex items-center justify-center transition-all group-hover:scale-105 shadow-sm">
+<span class="w-11 h-11 rounded-full bg-[#fcf8ec] border border-amber-100 block"></span>
+</span>
+<span class="font-label-sm text-label-sm text-secondary font-medium">Cream</span>
+</button>
+<!-- Peach Swatch -->
+<button class="color-swatch flex flex-col items-center gap-2 group focus:outline-none cursor-pointer" data-color="peach" type="button">
+<span class="w-13 h-13 p-1 rounded-full flex items-center justify-center transition-all group-hover:scale-105 shadow-sm">
+<span class="w-11 h-11 rounded-full bg-[#fdf0e8] border border-orange-100 block"></span>
+</span>
+<span class="font-label-sm text-label-sm text-secondary font-medium">Peach</span>
+</button>
+<!-- Night Swatch -->
+<!-- Sage Swatch -->
+<button class="color-swatch flex flex-col items-center gap-2 group focus:outline-none cursor-pointer" data-color="sage" type="button">
+<span class="w-13 h-13 p-1 rounded-full flex items-center justify-center transition-all group-hover:scale-105 shadow-sm">
+<span class="w-11 h-11 rounded-full bg-[#e8f5ee] border border-emerald-200/60 block"></span>
+</span>
+<span class="font-label-sm text-label-sm text-secondary font-medium">Sage</span>
+</button>
+<!-- Lavender Swatch -->
+<button class="color-swatch flex flex-col items-center gap-2 group focus:outline-none cursor-pointer" data-color="lavender" type="button">
+<span class="w-13 h-13 p-1 rounded-full flex items-center justify-center transition-all group-hover:scale-105 shadow-sm">
+<span class="w-11 h-11 rounded-full bg-[#f1edfa] border border-indigo-200/60 block"></span>
+</span>
+<span class="font-label-sm text-label-sm text-secondary font-medium">Lavender</span>
+</button><button class="color-swatch flex flex-col items-center gap-2 group focus:outline-none cursor-pointer" data-color="night" type="button">
+<span class="w-13 h-13 p-1 rounded-full flex items-center justify-center transition-all group-hover:scale-105 shadow-sm">
+<span class="w-11 h-11 rounded-full bg-[#1e2536] border border-slate-700 block"></span>
+</span>
+<span class="font-label-sm text-label-sm text-secondary font-medium">Night</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Section: Practice -->
+<section class="flex flex-col gap-space-lg">
+<div class="flex items-center gap-2 pb-space-xs border-b border-indigo-100/60">
+<div class="w-7 h-7 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center"><span class="material-symbols-outlined text-[18px]">school</span></div>
+<h2 class="font-headline-md text-headline-md text-on-surface font-semibold">Practice</h2>
+</div>
+<!-- Cards Per Session -->
+<div class="flex flex-col gap-2"><span class="font-label-md text-label-md text-on-surface font-semibold">New cards per day</span><div aria-label="New cards per day" class="flex flex-wrap items-center gap-2.5" role="radiogroup"><button type="button" class="min-h-[48px] px-5 py-2.5 rounded-full font-label-md text-label-md transition-all shadow-sm bg-white text-secondary hover:text-on-surface hover:bg-indigo-50/50 border border-indigo-100/80 font-medium">5</button><button type="button" class="min-h-[48px] px-5 py-2.5 rounded-full font-label-md text-label-md transition-all shadow-[0_2px_8px_rgba(99,102,241,0.22)] bg-indigo-500 text-white font-medium">10</button><button type="button" class="min-h-[48px] px-5 py-2.5 rounded-full font-label-md text-label-md transition-all shadow-sm bg-white text-secondary hover:text-on-surface hover:bg-indigo-50/50 border border-indigo-100/80 font-medium">15</button><button type="button" class="min-h-[48px] px-5 py-2.5 rounded-full font-label-md text-label-md transition-all shadow-sm bg-white text-secondary hover:text-on-surface hover:bg-indigo-50/50 border border-indigo-100/80 font-medium">20</button></div></div><div class="flex flex-col gap-2">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Cards per session</span>
+<div aria-label="Cards per session" class="flex flex-wrap items-center gap-2.5" id="session-group" role="radiogroup">
+<button class="session-btn px-5 py-2.5 rounded-full font-label-md text-label-md transition-all shadow-[0_2px_8px_rgba(99,102,241,0.22)] bg-indigo-500 text-white font-medium min-h-[48px]" data-session="5" type="button">
+                5
+              </button>
+<button class="session-btn px-5 py-2.5 rounded-full font-label-md text-label-md transition-all shadow-sm bg-white text-secondary hover:text-on-surface hover:bg-indigo-50/50 border border-indigo-100/80 min-h-[48px]" data-session="10" type="button">
+                10
+              </button>
+<button class="session-btn px-5 py-2.5 rounded-full font-label-md text-label-md transition-all shadow-sm bg-white text-secondary hover:text-on-surface hover:bg-indigo-50/50 border border-indigo-100/80 min-h-[48px]" data-session="20" type="button">
+                20
+              </button>
+<button class="session-btn px-5 py-2.5 rounded-full font-label-md text-label-md transition-all shadow-sm bg-white text-secondary hover:text-on-surface hover:bg-indigo-50/50 border border-indigo-100/80 min-h-[48px]" data-session="all" type="button">
+                All due
+              </button>
+</div>
+</div>
+<!-- Read Questions Aloud Switch -->
+<div class="flex items-center justify-between py-2.5 px-4 bg-white/70 border border-indigo-100/70 rounded-2xl shadow-sm">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Read questions aloud</span>
+<span class="font-body-sm text-body-sm text-secondary" id="speech-state-desc">Plays when a new card appears. Off</span>
+</div>
+<button aria-checked="false" class="w-13 h-7.5 w-[52px] h-[30px] bg-slate-200 hover:bg-slate-300 rounded-full p-[3px] transition-colors relative flex items-center focus:outline-none cursor-pointer" id="toggle-aloud" role="switch" type="button">
+<span class="w-6 h-6 rounded-full bg-white shadow-md transition-transform transform translate-x-0 block pointer-events-none" id="toggle-knob"></span>
+</button>
+</div>
+<!-- Reading Speed -->
+<div class="flex flex-col gap-2">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Reading speed</span>
+<div aria-label="Reading Speed" class="flex flex-wrap items-center gap-2.5" id="speed-group" role="radiogroup">
+<button class="speed-btn px-5 py-2.5 rounded-full font-label-md text-label-md transition-all shadow-sm bg-white text-secondary hover:text-on-surface hover:bg-indigo-50/50 border border-indigo-100/80 min-h-[48px]" data-speed="slow" type="button">
+                Slow
+              </button>
+<button class="speed-btn px-5 py-2.5 rounded-full font-label-md text-label-md transition-all shadow-[0_2px_8px_rgba(99,102,241,0.22)] bg-indigo-500 text-white font-medium min-h-[48px]" data-speed="normal" type="button">
+                Normal
+              </button>
+<button class="speed-btn px-5 py-2.5 rounded-full font-label-md text-label-md transition-all shadow-sm bg-white text-secondary hover:text-on-surface hover:bg-indigo-50/50 border border-indigo-100/80 min-h-[48px]" data-speed="fast" type="button">
+                Fast
+              </button>
+</div>
+</div>
+<!-- Reset Button -->
+<div class="pt-space-xs">
+<button class="px-6 py-2.5 rounded-full bg-white text-secondary hover:text-on-surface font-label-md text-label-md border border-indigo-100 hover:bg-indigo-50/60 shadow-sm active:scale-95 transition-all flex items-center gap-2 font-medium min-h-[48px]" id="btn-reset" type="button">
+<span class="material-symbols-outlined text-[18px]">restart_alt</span>
+              Reset to defaults
+            </button>
+</div>
+</section>
+</div>
+<!-- Preview Column (Right) -->
+<div class="lg:col-span-5 flex flex-col gap-space-md lg:sticky lg:top-24">
+<div class="flex items-center justify-between">
+<span class="font-headline-sm text-headline-sm text-on-surface font-semibold">Preview</span>
+<span class="font-label-sm text-label-sm text-indigo-700 bg-indigo-50 border border-indigo-100/80 px-3 py-1 rounded-full flex items-center gap-1.5 font-medium">
+<span class="material-symbols-outlined text-[15px] text-indigo-500">auto_awesome</span> Live rendering
+          </span>
+</div>
+<!-- Live Preview Flashcard Container -->
+<div class="w-full rounded-3xl p-8 sm:p-9 border border-indigo-100/70 shadow-[0_10px_30px_rgba(99,102,241,0.06)] min-h-[390px] flex flex-col justify-start gap-5 transition-all duration-300" id="preview-card" style="font-family: &quot;Atkinson Hyperlegible Next&quot;, sans-serif; border-color: rgba(199, 210, 254, 0.6); background-color: rgb(238, 243, 251);">
+<!-- Card Header / Metainfo -->
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md text-slate-500 font-semibold tracking-wider uppercase text-xs" id="preview-tag-question" style="color: rgb(100, 116, 139);">QUESTION</span>
+<button aria-label="Play question audio" class="w-9 h-9 rounded-full bg-white/90 text-indigo-600 flex items-center justify-center shadow-sm hover:scale-105 active:scale-95 transition-all border border-indigo-100" id="preview-speak-btn" type="button">
+<span class="material-symbols-outlined text-[19px]">volume_up</span>
+</button>
+</div>
+<!-- Question Content (Sans-Serif Clean Headline) -->
+<h3 class="text-headline-xl font-headline-xl font-bold tracking-wide" id="preview-question" style="letter-spacing: 0.04em; line-height: 1.45; color: rgb(15, 23, 42);">
+            Why use a cache?
+          </h3>
+<!-- Answer Section -->
+<div class="flex flex-col gap-2 pt-1">
+<span class="font-label-md text-label-md text-indigo-600 font-semibold" id="preview-tag-answer" style="color: rgb(99, 102, 241);">Answer</span>
+<ul class="flex flex-col gap-2 text-slate-800 font-body-xl text-body-xl leading-relaxed" id="preview-answers">
+<li class="flex items-start gap-3">
+<span class="w-2 h-2 rounded-full bg-indigo-500 mt-2.5 shrink-0" id="bullet-1" style="background-color: rgb(99, 102, 241);"></span>
+<span class="preview-answer-text text-body-xl font-body-xl" style="letter-spacing: 0.03em; line-height: 1.75; color: rgb(30, 41, 59);">Faster reads</span>
+</li>
+<li class="flex items-start gap-3">
+<span class="w-2 h-2 rounded-full bg-indigo-500 mt-2.5 shrink-0" id="bullet-2" style="background-color: rgb(99, 102, 241);"></span>
+<span class="preview-answer-text text-body-xl font-body-xl" style="letter-spacing: 0.03em; line-height: 1.75; color: rgb(30, 41, 59);">Less load on the database</span>
+</li>
+</ul>
+</div>
+<!-- Tactile feedback footer indicator -->
+<div class="mt-auto pt-4 border-t border-indigo-100/50 flex items-center justify-between text-slate-500 text-xs font-label-sm">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-indigo-400">touch_app</span>
+<span class="font-label-sm">Tap anywhere to flip</span>
+</div>
+<span class="font-label-sm opacity-70 font-medium">Card 1 of 5</span>
+</div>
+</div>
+<!-- iPad accessibility tip -->
+
+</div>
+</div>
+</div>
+</div>
+<script>
+  (function initSettingsInteractive() {
+    const previewCard = document.getElementById('preview-card');
+    const previewQuestion = document.getElementById('preview-question');
+    const previewAnswers = document.getElementById('preview-answers');
+    const previewTagQuestion = document.getElementById('preview-tag-question');
+    const previewTagAnswer = document.getElementById('preview-tag-answer');
+    const textSizeLabel = document.getElementById('text-size-label');
+    const btnDecreaseSize = document.getElementById('btn-decrease-size');
+    const btnIncreaseSize = document.getElementById('btn-increase-size');
+    const toggleAloud = document.getElementById('toggle-aloud');
+    const toggleKnob = document.getElementById('toggle-knob');
+    const speechStateDesc = document.getElementById('speech-state-desc');
+    const previewSpeakBtn = document.getElementById('preview-speak-btn');
+    const btnReset = document.getElementById('btn-reset');
+    const bullet1 = document.getElementById('bullet-1');
+    const bullet2 = document.getElementById('bullet-2');
+
+    const state = {
+      font: 'atkinson',
+      textSizeIndex: 2, // 0: Small, 1: Medium, 2: Large, 3: Extra Large
+      letterSpacing: 'wide',
+      lineSpacing: 'roomy',
+      color: 'mist',
+      sessionCards: '5',
+      readAloud: false,
+      readingSpeed: 'normal'
+    };
+
+    const textSizes = [
+      { name: 'Small', qClass: 'text-headline-md font-headline-md font-bold', aClass: 'text-body-md font-body-md' },
+      { name: 'Medium', qClass: 'text-headline-lg font-headline-lg font-bold', aClass: 'text-body-lg font-body-lg' },
+      { name: 'Large', qClass: 'text-headline-xl font-headline-xl font-bold', aClass: 'text-body-xl font-body-xl' },
+      { name: 'X-Large', qClass: 'text-display-hero font-display-hero font-bold', aClass: 'text-body-xl font-body-xl text-[24px]' }
+    ];
+
+    function applyPillStyles(groupContainer, activeValue, dataAttr) {
+      const buttons = groupContainer.querySelectorAll('button');
+      buttons.forEach(btn => {
+        const val = btn.getAttribute(dataAttr);
+        if (val === activeValue) {
+          btn.className = `${dataAttr}-btn px-5 py-2.5 rounded-full font-label-md text-label-md transition-all shadow-[0_2px_8px_rgba(99,102,241,0.22)] bg-indigo-500 text-white font-medium`;
+        } else {
+          btn.className = `${dataAttr}-btn px-5 py-2.5 rounded-full font-label-md text-label-md transition-all shadow-sm bg-white text-secondary hover:text-on-surface hover:bg-indigo-50/50 border border-indigo-100/80 font-medium`;
+        }
+      });
+    }
+
+    function updatePreviewStyles() {
+      // Font application (Strictly sans-serif)
+      if (state.font === 'atkinson') {
+        previewCard.style.fontFamily = "'Atkinson Hyperlegible Next', sans-serif";
+      } else if (state.font === 'lexend') {
+        previewCard.style.fontFamily = "'Lexend', sans-serif";
+      } else {
+        previewCard.style.fontFamily = "Arial, -apple-system, BlinkMacSystemFont, sans-serif";
+      }
+
+      // Letter spacing
+      if (state.letterSpacing === 'normal') {
+        previewQuestion.style.letterSpacing = 'normal';
+        previewAnswers.querySelectorAll('.preview-answer-text').forEach(el => el.style.letterSpacing = 'normal');
+      } else if (state.letterSpacing === 'wide') {
+        previewQuestion.style.letterSpacing = '0.04em';
+        previewAnswers.querySelectorAll('.preview-answer-text').forEach(el => el.style.letterSpacing = '0.03em');
+      } else if (state.letterSpacing === 'wider') {
+        previewQuestion.style.letterSpacing = '0.08em';
+        previewAnswers.querySelectorAll('.preview-answer-text').forEach(el => el.style.letterSpacing = '0.06em');
+      }
+
+      // Line spacing
+      if (state.lineSpacing === 'normal') {
+        previewQuestion.style.lineHeight = '1.25';
+        previewAnswers.querySelectorAll('.preview-answer-text').forEach(el => el.style.lineHeight = '1.45');
+      } else if (state.lineSpacing === 'roomy') {
+        previewQuestion.style.lineHeight = '1.45';
+        previewAnswers.querySelectorAll('.preview-answer-text').forEach(el => el.style.lineHeight = '1.75');
+      } else if (state.lineSpacing === 'extra') {
+        previewQuestion.style.lineHeight = '1.75';
+        previewAnswers.querySelectorAll('.preview-answer-text').forEach(el => el.style.lineHeight = '2.1');
+      }
+
+      // Text size classes
+      const currentSize = textSizes[state.textSizeIndex];
+      textSizeLabel.textContent = currentSize.name;
+      previewQuestion.className = `${currentSize.qClass} tracking-wide`;
+      
+      const answerItems = previewAnswers.querySelectorAll('.preview-answer-text');
+      answerItems.forEach(el => {
+        el.className = `preview-answer-text ${currentSize.aClass}`;
+      });
+
+      // Card color themes (Delicate soft pastel hues)
+      previewCard.style.backgroundColor = '';
+      previewCard.classList.remove('bg-[#eef3fb]', 'bg-[#fcf8ec]', 'bg-[#fdf0e8]', 'bg-[#1e2536]');
+
+      if (state.color === 'mist') {
+        previewCard.style.backgroundColor = '#eef3fb';
+        previewCard.style.borderColor = 'rgba(199, 210, 254, 0.6)';
+        previewQuestion.style.color = '#0f172a';
+        previewTagQuestion.style.color = '#64748b';
+        previewTagAnswer.style.color = '#6366f1';
+        answerItems.forEach(el => el.style.color = '#1e293b');
+        if (bullet1) bullet1.style.backgroundColor = '#6366f1';
+        if (bullet2) bullet2.style.backgroundColor = '#6366f1';
+      } else if (state.color === 'cream') {
+        previewCard.style.backgroundColor = '#fcf8ec';
+        previewCard.style.borderColor = 'rgba(254, 243, 199, 0.8)';
+        previewQuestion.style.color = '#292524';
+        previewTagQuestion.style.color = '#78716c';
+        previewTagAnswer.style.color = '#8b5cf6';
+        answerItems.forEach(el => el.style.color = '#292524');
+        if (bullet1) bullet1.style.backgroundColor = '#8b5cf6';
+        if (bullet2) bullet2.style.backgroundColor = '#8b5cf6';
+      } else if (state.color === 'peach') {
+        previewCard.style.backgroundColor = '#fdf0e8';
+        previewCard.style.borderColor = 'rgba(255, 237, 213, 0.8)';
+        previewQuestion.style.color = '#292524';
+        previewTagQuestion.style.color = '#78716c';
+        previewTagAnswer.style.color = '#6366f1';
+        answerItems.forEach(el => el.style.color = '#292524');
+        if (bullet1) bullet1.style.backgroundColor = '#6366f1';
+        if (bullet2) bullet2.style.backgroundColor = '#6366f1';
+      } else if (state.color === 'night') {
+        previewCard.style.backgroundColor = '#1e2536';
+        previewCard.style.borderColor = '#334155';
+        previewQuestion.style.color = '#f8fafc';
+        previewTagQuestion.style.color = '#94a3b8';
+        previewTagAnswer.style.color = '#a5b4fc';
+        answerItems.forEach(el => el.style.color = '#e2e8f0');
+        if (bullet1) bullet1.style.backgroundColor = '#818cf8';
+        if (bullet2) bullet2.style.backgroundColor = '#818cf8';
+      }
+
+      // Color swatches rings
+      document.querySelectorAll('.color-swatch').forEach(swatch => {
+        const c = swatch.getAttribute('data-color');
+        const ringWrapper = swatch.querySelector('span');
+        const label = swatch.querySelectorAll('span')[2];
+        if (c === state.color) {
+          ringWrapper.classList.add('ring-4', 'ring-indigo-400', 'ring-offset-2', 'ring-offset-surface-canvas');
+          if (label) {
+            label.className = 'font-label-sm text-label-sm text-indigo-900 font-semibold';
+          }
+        } else {
+          ringWrapper.classList.remove('ring-4', 'ring-indigo-400', 'ring-offset-2', 'ring-offset-surface-canvas');
+          if (label) {
+            label.className = 'font-label-sm text-label-sm text-secondary font-medium';
+          }
+        }
+      });
+    }
+
+    // Font selection event
+    const fontGroup = document.getElementById('font-group');
+    fontGroup.addEventListener('click', (e) => {
+      const btn = e.target.closest('button');
+      if (!btn) return;
+      state.font = btn.getAttribute('data-font');
+      applyPillStyles(fontGroup, state.font, 'data-font');
+      updatePreviewStyles();
+    });
+
+    // Text size steppers
+    btnDecreaseSize.addEventListener('click', () => {
+      if (state.textSizeIndex > 0) {
+        state.textSizeIndex--;
+        updatePreviewStyles();
+      }
+    });
+
+    btnIncreaseSize.addEventListener('click', () => {
+      if (state.textSizeIndex < textSizes.length - 1) {
+        state.textSizeIndex++;
+        updatePreviewStyles();
+      }
+    });
+
+    // Letter spacing event
+    const spacingGroup = document.getElementById('spacing-group');
+    spacingGroup.addEventListener('click', (e) => {
+      const btn = e.target.closest('button');
+      if (!btn) return;
+      state.letterSpacing = btn.getAttribute('data-spacing');
+      applyPillStyles(spacingGroup, state.letterSpacing, 'data-spacing');
+      updatePreviewStyles();
+    });
+
+    // Line spacing event
+    const lineGroup = document.getElementById('line-group');
+    lineGroup.addEventListener('click', (e) => {
+      const btn = e.target.closest('button');
+      if (!btn) return;
+      state.lineSpacing = btn.getAttribute('data-line');
+      applyPillStyles(lineGroup, state.lineSpacing, 'data-line');
+      updatePreviewStyles();
+    });
+
+    // Color Swatches event
+    document.querySelectorAll('.color-swatch').forEach(swatch => {
+      swatch.addEventListener('click', () => {
+        state.color = swatch.getAttribute('data-color');
+        updatePreviewStyles();
+      });
+    });
+
+    // Session cards event
+    const sessionGroup = document.getElementById('session-group');
+    sessionGroup.addEventListener('click', (e) => {
+      const btn = e.target.closest('button');
+      if (!btn) return;
+      state.sessionCards = btn.getAttribute('data-session');
+      applyPillStyles(sessionGroup, state.sessionCards, 'data-session');
+    });
+
+    // Speed event
+    const speedGroup = document.getElementById('speed-group');
+    speedGroup.addEventListener('click', (e) => {
+      const btn = e.target.closest('button');
+      if (!btn) return;
+      state.readingSpeed = btn.getAttribute('data-speed');
+      applyPillStyles(speedGroup, state.readingSpeed, 'data-speed');
+    });
+
+    // Toggle Read aloud with lavender/periwinkle activation
+    toggleAloud.addEventListener('click', () => {
+      state.readAloud = !state.readAloud;
+      toggleAloud.setAttribute('aria-checked', state.readAloud ? 'true' : 'false');
+      if (state.readAloud) {
+        toggleAloud.classList.remove('bg-slate-200', 'hover:bg-slate-300');
+        toggleAloud.classList.add('bg-indigo-500');
+        toggleKnob.classList.add('translate-x-[22px]');
+        speechStateDesc.textContent = 'Plays when a new card appears. On';
+      } else {
+        toggleAloud.classList.add('bg-slate-200', 'hover:bg-slate-300');
+        toggleAloud.classList.remove('bg-indigo-500');
+        toggleKnob.classList.remove('translate-x-[22px]');
+        speechStateDesc.textContent = 'Plays when a new card appears. Off';
+      }
+    });
+
+    // Preview audio simulation
+    previewSpeakBtn.addEventListener('click', () => {
+      const originalIcon = previewSpeakBtn.innerHTML;
+      previewSpeakBtn.innerHTML = '<span class="material-symbols-outlined text-[19px] animate-pulse text-indigo-500">graphic_eq</span>';
+      setTimeout(() => {
+        previewSpeakBtn.innerHTML = originalIcon;
+      }, 1400);
+    });
+
+    // Reset to Defaults
+    btnReset.addEventListener('click', () => {
+      state.font = 'atkinson';
+      state.textSizeIndex = 2; // Large
+      state.letterSpacing = 'wide';
+      state.lineSpacing = 'roomy';
+      state.color = 'mist';
+      state.sessionCards = '5';
+      state.readAloud = false;
+      state.readingSpeed = 'normal';
+
+      applyPillStyles(fontGroup, state.font, 'data-font');
+      applyPillStyles(spacingGroup, state.letterSpacing, 'data-spacing');
+      applyPillStyles(lineGroup, state.lineSpacing, 'data-line');
+      applyPillStyles(sessionGroup, state.sessionCards, 'data-session');
+      applyPillStyles(speedGroup, state.readingSpeed, 'data-speed');
+
+      toggleAloud.classList.add('bg-slate-200', 'hover:bg-slate-300');
+      toggleAloud.classList.remove('bg-indigo-500');
+      toggleKnob.classList.remove('translate-x-[22px]');
+      speechStateDesc.textContent = 'Plays when a new card appears. Off';
+      toggleAloud.setAttribute('aria-checked', 'false');
+
+      updatePreviewStyles();
+    });
+
+    // Initial render
+    updatePreviewStyles();
+  })();
+</script></main></div>
+
+
+
+
+
+</body></html>

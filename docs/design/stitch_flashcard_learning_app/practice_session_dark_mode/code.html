@@ -1,0 +1,174 @@
+<!DOCTYPE html><html class="dark" lang="en" style=""><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><meta content="web_blank" name="shell-type"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"><link href="https://fonts.googleapis.com" rel="preconnect"><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"><link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:ital,wght@0,400..700;1,400..700&amp;family=Lexend:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"on-background":"#dae2fd","on-tertiary-fixed":"#301400","on-surface":"#dae2fd","secondary-fixed":"#80f9c8","on-surface-variant":"#c6c5d5","error":"#ffb4ab","tertiary-container":"#df7c27","on-secondary":"#003827","outline-variant":"#454653","surface-container-lowest":"#060e20","on-primary-fixed-variant":"#2f3aa3","primary-fixed":"#e0e0ff","on-tertiary-fixed-variant":"#713700","surface-container-high":"#222a3d","on-error":"#690005","surface-container":"#171f33","tertiary-fixed":"#ffdcc5","inverse-surface":"#dae2fd","background":"#0b1326","inverse-primary":"#4953bc","on-secondary-container":"#003121","outline":"#908f9e","on-primary":"#131e8c","secondary-fixed-dim":"#62dcad","on-primary-container":"#101b8a","on-error-container":"#ffdad6","surface-dim":"#0b1326","on-secondary-fixed":"#002115","surface-container-highest":"#2d3449","on-tertiary":"#4f2500","inverse-on-surface":"#283044","primary-container":"#818cf8","surface-variant":"#2d3449","tertiary-fixed-dim":"#ffb783","error-container":"#93000a","primary":"#bdc2ff","secondary":"#62dcad","surface-container-low":"#131b2e","on-primary-fixed":"#000767","surface-tint":"#bdc2ff","tertiary":"#ffb783","secondary-container":"#18a479","on-secondary-fixed-variant":"#00513a","primary-fixed-dim":"#bdc2ff","on-tertiary-container":"#4c2300","surface":"#0b1326","surface-bright":"#31394d"},borderRadius:{DEFAULT:"0.25rem",lg:"0.5rem",xl:"0.75rem",full:"9999px"},spacing:{"space-lg":"2rem","space-sm":"0.75rem","gutter-desktop":"2.5rem","margin-tablet":"2.5rem",gutter:"1.5rem",margin:"1.25rem","space-xs":"0.375rem","space-xl":"3rem","gutter-tablet":"2rem","space-md":"1.25rem","margin-desktop":"4rem"},fontFamily:{"label-lg":["Lexend"],"display-lg":["Lexend"],"headline-lg":["Lexend"],"label-md":["Lexend"],"body-md":["Atkinson Hyperlegible Next"],"body-xl":["Atkinson Hyperlegible Next"],"headline-md":["Lexend"],"body-lg":["Atkinson Hyperlegible Next"],"label-sm":["Lexend"],"display-lg-mobile":["Lexend"],"body-sm":["Atkinson Hyperlegible Next"],"headline-sm":["Lexend"]},fontSize:{"label-lg":["15px",{lineHeight:"20px",letterSpacing:"0.02em",fontWeight:"500"}],"display-lg":["40px",{lineHeight:"52px",letterSpacing:"-0.02em",fontWeight:"600"}],"headline-lg":["28px",{lineHeight:"38px",letterSpacing:"-0.01em",fontWeight:"600"}],"label-md":["13px",{lineHeight:"18px",letterSpacing:"0.025em",fontWeight:"500"}],"body-md":["16px",{lineHeight:"26px",letterSpacing:"0.015em",fontWeight:"400"}],"body-xl":["22px",{lineHeight:"36px",letterSpacing:"0.02em",fontWeight:"400"}],"headline-md":["22px",{lineHeight:"32px",letterSpacing:"0em",fontWeight:"500"}],"body-lg":["18px",{lineHeight:"30px",letterSpacing:"0.02em",fontWeight:"400"}],"label-sm":["11px",{lineHeight:"16px",letterSpacing:"0.04em",fontWeight:"600"}],"display-lg-mobile":["30px",{lineHeight:"40px",letterSpacing:"-0.01em",fontWeight:"600"}],"body-sm":["14px",{lineHeight:"22px",letterSpacing:"0.015em",fontWeight:"400"}],"headline-sm":["18px",{lineHeight:"26px",letterSpacing:"0.01em",fontWeight:"500"}]}}}};</script></head><body class="bg-background font-body-md text-on-surface antialiased min-h-screen"><main class="w-full min-h-screen bg-background flex flex-col"><div class="flex flex-col w-full px-4 sm:px-8 py-6 max-w-4xl mx-auto">
+<!-- Top Navigation & Study Header -->
+<header class="flex items-center justify-between w-full mb-6">
+<!-- Left: End session pill -->
+<button class="group flex items-center gap-2 px-4 py-2 rounded-full bg-surface-container hover:bg-surface-container-high transition-colors text-on-surface-variant hover:text-on-surface" type="button">
+<span class="material-symbols-outlined text-[18px]">close</span>
+<span class="font-label-md text-label-md">End session</span>
+</button>
+<!-- Center: Deck & Progress indicator -->
+<div class="flex items-center gap-2 px-4 py-1.5 rounded-full bg-surface-container-low text-on-surface">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+<span class="font-headline-sm text-headline-sm">System Design</span>
+<span class="font-label-md text-label-md text-on-surface-variant">· 1 of 5</span>
+</div>
+<!-- Right: Study Preferences -->
+<button aria-label="Session settings" class="p-2.5 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface transition-colors flex items-center justify-center" type="button">
+<span class="material-symbols-outlined text-[20px]">tune</span>
+</button>
+</header>
+<!-- Segmented Progress Bar -->
+<div class="w-full grid grid-cols-5 gap-2 mb-10">
+<div class="h-1.5 rounded-full bg-primary shadow-sm shadow-primary/30 transition-all duration-300"></div>
+<div class="h-1.5 rounded-full bg-surface-container-high transition-all duration-300"></div>
+<div class="h-1.5 rounded-full bg-surface-container-high transition-all duration-300"></div>
+<div class="h-1.5 rounded-full bg-surface-container-high transition-all duration-300"></div>
+<div class="h-1.5 rounded-full bg-surface-container-high transition-all duration-300"></div>
+</div>
+<!-- Flashcard Interactive Stage -->
+<div class="relative w-full [perspective:1200px] mb-8">
+<div class="relative w-full min-h-[380px] sm:min-h-[420px] rounded-xl bg-surface-container-low p-6 sm:p-10 flex flex-col justify-between cursor-pointer transition-all duration-500 ease-out shadow-xl hover:shadow-primary/10 select-none" id="flashcard">
+<!-- Top Card Header: Topic tag & Audio button -->
+<div class="flex items-center justify-between w-full mb-6">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm font-semibold tracking-wider uppercase">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary-container"></span>
+          Caching
+        </span>
+<button aria-label="Listen to question" class="flex items-center justify-center w-11 h-11 rounded-full bg-surface-container hover:bg-surface-container-highest text-primary transition-all transform hover:scale-105" id="ttsButton" onclick="event.stopPropagation();" type="button">
+<span class="material-symbols-outlined text-[22px]">volume_up</span>
+</button>
+</div>
+<!-- Core Question Content (Front View) -->
+<div class="flex flex-col justify-center flex-1 my-4" id="cardContentFront">
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest mb-3">
+          Question
+        </p>
+<h1 class="font-headline-lg text-headline-lg sm:font-display-lg sm:text-display-lg text-on-surface tracking-normal leading-relaxed">
+          When would you choose write-through caching over write-back?
+        </h1>
+</div>
+<!-- Back of Card Content (Hidden State by Default) -->
+<div class="hidden flex-col justify-center flex-1 my-4" id="cardContentBack">
+<div class="h-1 w-12 rounded-full bg-secondary mb-4"></div>
+<p class="font-label-sm text-label-sm text-secondary uppercase tracking-widest mb-3">
+          Key Takeaways
+        </p>
+<div class="space-y-3 font-body-lg text-body-lg text-on-surface leading-relaxed">
+<p class="">
+            Choose <strong class="text-secondary-fixed">write-through</strong> when data consistency is strictly non-negotiable and resilience against crash loss is critical (e.g., financial transactions).
+          </p>
+<p class="text-on-surface-variant font-body-md text-body-md">
+            Write-back delivers higher write throughput with lower latency by lazily flushing dirty entries, but risks data loss during unexpected crashes or network partitions.
+          </p>
+</div>
+</div>
+<!-- Card Metadata Footer -->
+<div class="flex items-center justify-between pt-6 mt-4 border-t-0 text-on-surface-variant font-label-md text-label-md">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">flip</span>
+<span id="flipHintText" class="">Tap card or press space to flip</span>
+</div>
+<div class="flex items-center gap-2 px-2.5 py-1 rounded-full bg-surface-container">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span>
+<span class="text-on-surface">Review stage</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Action Stage -->
+<div class="flex flex-col items-center justify-center w-full gap-4">
+<!-- Unflipped CTA Button -->
+<div class="w-full flex justify-center" id="primaryActionContainer">
+<button class="w-full sm:w-auto min-w-[280px] h-14 px-10 rounded-full bg-primary-container hover:bg-primary text-on-primary-container hover:text-on-primary font-headline-sm text-headline-sm font-semibold tracking-wide transition-all transform active:scale-95 shadow-md flex items-center justify-center gap-2" id="showAnswerBtn" type="button">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+<span class="">Show answer</span>
+</button>
+</div>
+<!-- Rating Array (Revealed when card flips) -->
+<div class="hidden grid-cols-2 sm:grid-cols-4 gap-3 w-full max-w-2xl" id="ratingControls">
+<button class="group flex flex-col items-center justify-center py-3.5 px-4 rounded-xl bg-surface-container hover:bg-error-container/20 text-error transition-all active:scale-95" type="button">
+<span class="font-headline-sm text-headline-sm font-semibold">Again</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">&lt; 1 min</span>
+</button>
+<button class="group flex flex-col items-center justify-center py-3.5 px-4 rounded-xl bg-surface-container hover:bg-tertiary-container/20 text-tertiary transition-all active:scale-95" type="button">
+<span class="font-headline-sm text-headline-sm font-semibold">Hard</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">2 days</span>
+</button>
+<button class="group flex flex-col items-center justify-center py-3.5 px-4 rounded-xl bg-surface-container hover:bg-primary-container/20 text-primary transition-all active:scale-95" type="button">
+<span class="font-headline-sm text-headline-sm font-semibold">Good</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">5 days</span>
+</button>
+<button class="group flex flex-col items-center justify-center py-3.5 px-4 rounded-xl bg-surface-container hover:bg-secondary-container/20 text-secondary transition-all active:scale-95" type="button">
+<span class="font-headline-sm text-headline-sm font-semibold">Easy</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">12 days</span>
+</button>
+</div>
+<!-- Dyslexic / Ergonomic Guidance Prompt -->
+<p class="font-body-sm text-body-sm text-on-surface-variant text-center transition-opacity duration-200" id="helperMicrocopy">
+      Say your answer out loud first, then show it.
+    </p>
+</div>
+</div>
+<script>
+  (function() {
+    const card = document.getElementById('flashcard');
+    const front = document.getElementById('cardContentFront');
+    const back = document.getElementById('cardContentBack');
+    const showBtn = document.getElementById('showAnswerBtn');
+    const primaryBox = document.getElementById('primaryActionContainer');
+    const ratingControls = document.getElementById('ratingControls');
+    const flipHint = document.getElementById('flipHintText');
+    const microcopy = document.getElementById('helperMicrocopy');
+    const ttsBtn = document.getElementById('ttsButton');
+
+    let isFlipped = false;
+
+    function toggleFlip() {
+      isFlipped = !isFlipped;
+      if (isFlipped) {
+        front.classList.add('hidden');
+        back.classList.remove('hidden');
+        back.classList.add('flex');
+        card.classList.add('bg-surface-container-high');
+        card.classList.remove('bg-surface-container-low');
+        flipHint.textContent = 'Tap card to review question';
+        primaryBox.classList.add('hidden');
+        ratingControls.classList.remove('hidden');
+        ratingControls.classList.add('grid');
+        microcopy.textContent = 'Rate how accurately and effortlessly you recalled the concept.';
+      } else {
+        back.classList.add('hidden');
+        back.classList.remove('flex');
+        front.classList.remove('hidden');
+        card.classList.remove('bg-surface-container-high');
+        card.classList.add('bg-surface-container-low');
+        flipHint.textContent = 'Tap card or press space to flip';
+        ratingControls.classList.add('hidden');
+        ratingControls.classList.remove('grid');
+        primaryBox.classList.remove('hidden');
+        microcopy.textContent = 'Say your answer out loud first, then show it.';
+      }
+    }
+
+    card.addEventListener('click', toggleFlip);
+    showBtn.addEventListener('click', toggleFlip);
+
+    window.addEventListener('keydown', (e) => {
+      if (e.code === 'Space' && e.target === document.body) {
+        e.preventDefault();
+        toggleFlip();
+      }
+    });
+
+    ttsBtn.addEventListener('click', () => {
+      const icon = ttsBtn.querySelector('.material-symbols-outlined');
+      icon.textContent = 'graphic_eq';
+      setTimeout(() => {
+        icon.textContent = 'volume_up';
+      }, 1600);
+    });
+  })();
+</script></main>
+
+</body></html>

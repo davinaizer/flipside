@@ -1,0 +1,393 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<meta content="web_dashboard" name="shell-type">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+    @layer base {
+      html, body { margin: 0; padding: 0; }
+      body { overscroll-behavior: none; }
+      main > :first-child { margin-top: 0 !important; }
+      main > :last-child { margin-bottom: 0 !important; }
+    }
+    ::-webkit-scrollbar { display: none; }
+  </style>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-canvas": "#f4f7fb",
+            "surface-sidebar": "#ebf1f9",
+            "surface-card": "#ffffff",
+            "surface-container": "#e8eef8",
+            "surface-container-high": "#dbe4f3",
+            "on-surface": "#1e293b",
+            "on-surface-variant": "#64748b",
+            "primary": "#5c67f2",
+            "primary-container": "#6366f1",
+            "on-primary": "#ffffff",
+            "pastel-lavender": "#f1efff",
+            "pastel-lavender-border": "#ddd7ff",
+            "pastel-lavender-accent": "#6d6ef5",
+            "pastel-blue": "#edf6ff",
+            "pastel-blue-border": "#d2e7ff",
+            "pastel-blue-accent": "#3b82f6",
+            "pastel-mint": "#ecfbf5",
+            "pastel-mint-border": "#c9f3e1",
+            "pastel-mint-accent": "#10b981",
+            "pastel-peach": "#fff3eb",
+            "pastel-peach-border": "#fedcc7",
+            "pastel-peach-accent": "#f97316"
+          },
+          borderRadius: {
+            DEFAULT: "1rem",
+            "lg": "1.5rem",
+            "xl": "2rem",
+            "full": "9999px"
+          },
+          fontFamily: {
+            sans: ["'Lexend'", "sans-serif"],
+            body: ["'Plus Jakarta Sans'", "sans-serif"],
+            display: ["'Lexend'", "sans-serif"]
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-surface-canvas font-body text-on-surface antialiased min-h-screen">
+<!-- Sidebar -->
+<aside class="fixed left-0 top-0 h-full w-60 bg-surface-sidebar z-50 flex flex-col justify-between py-8 px-4 border-r border-slate-200/60">
+<div class="flex flex-col gap-8">
+<!-- App Brand -->
+<div class="flex items-center gap-3 px-2">
+<img alt="Flipside Flashcards Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1U8lax6RTGNh7XvK5XlJvfPrTNAndmqr33-iqKXsbBIUJXxmBQk91hLeeI_Zn7CjavumcHVFtuMSi26skIjiNvX-Yha50HGmJ463lAZM02-ysO5o0G-g_tdFW_L-eBomrtVMmTpWc_qRXm6NUBGS4iN3yPKqgOqkX1rcr8DpgYK7zWlRruQHZxzDfoLtn_ORIcUhl86_V3ChuNhdNhnn_tomvEbzd_k33SFQgCkoVNX">
+<span class="font-display font-bold text-xl tracking-tight text-slate-800">Flashcards</span>
+</div>
+<!-- Navigation -->
+<nav class="flex flex-col gap-1.5" data-active-classes="bg-primary text-on-primary font-semibold shadow-sm">
+<a class="flex items-center gap-3 px-4 py-2.5 rounded-full text-on-surface-variant hover:bg-white/80 hover:text-on-surface transition-all min-h-[46px]" data-path="library" href="#">
+<span class="material-symbols-outlined text-[22px]">style</span>
+<span class="font-display font-medium text-sm">Library</span>
+</a>
+<a aria-current="page" class="flex items-center gap-3 px-4 py-2.5 rounded-full bg-primary text-on-primary font-semibold shadow-md shadow-indigo-500/20 transition-all min-h-[46px]" data-path="progress" href="#">
+<span class="material-symbols-outlined text-[22px]">insights</span>
+<span class="font-display font-semibold text-sm">Progress</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2.5 rounded-full text-on-surface-variant hover:bg-white/80 hover:text-on-surface transition-all min-h-[46px]" data-path="settings" href="#">
+<span class="material-symbols-outlined text-[22px]">tune</span>
+<span class="font-display font-medium text-sm">Settings</span>
+</a>
+</nav>
+</div>
+<!-- Footnote Badge -->
+<div class="p-3 bg-white/80 backdrop-blur-sm rounded-2xl border border-slate-200/60 shadow-sm flex items-center justify-between gap-3"><div class="flex items-center gap-3 min-w-0"><div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white font-display font-bold text-sm shrink-0 shadow-sm">N</div><div class="flex flex-col min-w-0"><span class="font-display font-semibold text-sm text-slate-900 truncate">Nicole</span><span class="font-body text-xs text-slate-600 truncate">GCSE Revision</span></div></div><button type="button" aria-label="Switch profile" class="min-h-[48px] min-w-[48px] flex items-center justify-center rounded-xl text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-colors shrink-0"><span class="material-symbols-outlined text-[20px]">unfold_more</span></button></div>
+</aside>
+<!-- Main Content Area -->
+<div class="pl-60">
+<!-- Header -->
+<header class="fixed top-0 left-60 right-0 h-16 bg-surface-canvas/80 backdrop-blur-xl z-40 border-b border-slate-200/40">
+<div class="h-16 w-full px-8 flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<img alt="Flipside Flashcards Logo" class="h-7 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1U8lax6RTGNh7XvK5XlJvfPrTNAndmqr33-iqKXsbBIUJXxmBQk91hLeeI_Zn7CjavumcHVFtuMSi26skIjiNvX-Yha50HGmJ463lAZM02-ysO5o0G-g_tdFW_L-eBomrtVMmTpWc_qRXm6NUBGS4iN3yPKqgOqkX1rcr8DpgYK7zWlRruQHZxzDfoLtn_ORIcUhl86_V3ChuNhdNhnn_tomvEbzd_k33SFQgCkoVNX">
+<span class="font-display font-bold text-base text-slate-800">Flipside</span>
+</div>
+<div class="flex items-center gap-4">
+
+<div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white shadow-sm ring-2 ring-white">
+<span class="material-symbols-outlined text-[18px]">person</span>
+</div>
+</div>
+</div>
+</header>
+<main class="relative pt-20 w-full px-8 pb-16 bg-surface-canvas">
+<div class="flex flex-col gap-7 w-full max-w-[1140px] mx-auto">
+<!-- Top Action / Title Row -->
+<section class="flex flex-wrap items-center justify-between gap-4">
+<div>
+<h1 class="font-display font-bold text-3xl text-slate-900 tracking-tight">Progress</h1>
+<p class="font-body text-xs text-on-surface-variant mt-1">Review activity and knowledge retention snapshot</p>
+</div>
+<!-- Time Range Toggle -->
+<div class="inline-flex items-center p-1 rounded-full bg-slate-200/70 border border-slate-300/40 shadow-inner">
+<button class="px-5 py-1.5 rounded-full font-display font-semibold text-xs bg-white text-slate-900 shadow-sm transition-all duration-200 min-h-[48px]" id="btn-week">
+              This week
+            </button>
+<button class="px-5 py-1.5 rounded-full font-display font-medium text-xs text-slate-600 hover:text-slate-900 transition-all duration-200 min-h-[48px]" id="btn-month">
+              This month
+            </button>
+</div>
+</section>
+<!-- 4 Pastel Stat Cards -->
+<section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 w-full">
+<!-- Stat 1: Pastel Lavender -->
+<div class="flex flex-col justify-between p-6 rounded-2xl bg-pastel-lavender/70 border border-pastel-lavender-border shadow-[0_2px_12px_rgba(109,110,245,0.06)] hover:shadow-md transition-all duration-200">
+<div class="flex items-center justify-between">
+<span class="font-display font-semibold text-xs uppercase tracking-wider text-indigo-900/70">Cards reviewed</span>
+<span class="w-7 h-7 rounded-lg bg-pastel-lavender flex items-center justify-center text-pastel-lavender-accent">
+<span class="material-symbols-outlined text-[18px]">layers</span>
+</span>
+</div>
+<div class="my-4">
+<span class="font-display font-bold text-4xl text-slate-900 tracking-tight">214</span>
+</div>
+<p class="font-body text-xs font-medium text-indigo-700/80 flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px]">arrow_upward</span>
+              38 more than last week
+            </p>
+</div>
+<!-- Stat 2: Soft Sky Blue -->
+<div class="flex flex-col justify-between p-6 rounded-2xl bg-pastel-blue/70 border border-pastel-blue-border shadow-[0_2px_12px_rgba(59,130,246,0.06)] hover:shadow-md transition-all duration-200">
+<div class="flex items-center justify-between">
+<span class="font-display font-semibold text-xs uppercase tracking-wider text-sky-900/70">Got it rate</span>
+<span class="w-7 h-7 rounded-lg bg-pastel-blue flex items-center justify-center text-pastel-blue-accent">
+<span class="material-symbols-outlined text-[18px]">check_circle</span>
+</span>
+</div>
+<div class="my-4">
+<span class="font-display font-bold text-4xl text-slate-900 tracking-tight">74%</span>
+</div>
+<p class="font-body text-xs font-medium text-sky-700/80 flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px]">trending_up</span>
+              6 points up on last week
+            </p>
+</div>
+<!-- Stat 3: Gentle Mint -->
+<div class="flex flex-col justify-between p-6 rounded-2xl bg-pastel-mint/70 border border-pastel-mint-border shadow-[0_2px_12px_rgba(16,185,129,0.06)] hover:shadow-md transition-all duration-200">
+<div class="flex items-center justify-between">
+<span class="font-display font-semibold text-xs uppercase tracking-wider text-emerald-900/70">Time per card</span>
+<span class="w-7 h-7 rounded-lg bg-pastel-mint flex items-center justify-center text-pastel-mint-accent">
+<span class="material-symbols-outlined text-[18px]">timer</span>
+</span>
+</div>
+<div class="my-4 flex items-baseline gap-1">
+<span class="font-display font-bold text-4xl text-slate-900 tracking-tight">11</span>
+<span class="font-display font-semibold text-lg text-emerald-800">s</span>
+</div>
+<p class="font-body text-xs font-medium text-emerald-700/80 flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px]">bolt</span>
+              2 s faster than last week
+            </p>
+</div>
+<!-- Stat 4: Pastel Peach -->
+<div class="flex flex-col justify-between p-6 rounded-2xl bg-pastel-peach/70 border border-pastel-peach-border shadow-[0_2px_12px_rgba(249,115,22,0.06)] hover:shadow-md transition-all duration-200"><div class="flex items-center justify-between"><span class="font-display font-semibold text-xs uppercase tracking-wider text-orange-950/70">Active days</span><span class="w-7 h-7 rounded-lg bg-pastel-peach flex items-center justify-center text-pastel-peach-accent"><span class="material-symbols-outlined text-[18px]">calendar_today</span></span></div><div class="my-4 flex items-baseline gap-1.5"><span class="font-display font-bold text-4xl text-slate-900 tracking-tight">5</span><span class="font-display font-medium text-lg text-orange-900/60">of 7</span></div><p class="font-body text-xs font-medium text-orange-800/80 flex items-center gap-1"><span class="material-symbols-outlined text-[15px]">schedule</span>Study sessions: 5 this week</p></div>
+</section>
+<!-- Two-Column Section: Pastel Bar Chart + Focus List -->
+<section class="grid grid-cols-1 lg:grid-cols-12 gap-5 w-full items-stretch">
+<!-- Refined Pastel Bar Chart Card -->
+<div class="lg:col-span-7 flex flex-col justify-between p-7 rounded-2xl bg-white border border-slate-200/70 shadow-[0_2px_12px_rgba(15,23,42,0.03)]">
+<div class="flex items-start justify-between">
+<div>
+<h2 class="font-display font-bold text-lg text-slate-900">How often you practise</h2>
+<p class="font-body text-xs text-on-surface-variant mt-1">Cards reviewed per day, this week</p>
+</div>
+<span class="text-xs font-display font-semibold text-primary bg-indigo-50 px-2.5 py-1 rounded-full border border-indigo-100">Daily average: 30</span>
+</div>
+<!-- Vertical Bar Chart with Pastel Gradients -->
+<div class="pt-10 pb-2">
+<div class="h-48 w-full flex items-end justify-between px-2 gap-3">
+<!-- Mon (Pastel Lavender) -->
+<div class="flex-1 flex flex-col items-center gap-2 group">
+<span class="font-display font-bold text-xs text-slate-700">18</span>
+<div class="w-full max-w-[42px] bg-gradient-to-t from-[#c4b5fd] to-[#ddd6fe] rounded-xl transition-all duration-300 group-hover:brightness-95 group-hover:scale-y-105 origin-bottom" style="height: 54px;"></div>
+<span class="font-display font-medium text-xs text-slate-500 pt-1">Mon</span>
+</div>
+<!-- Tue (Pastel Blue) -->
+<div class="flex-1 flex flex-col items-center gap-2 group">
+<span class="font-display font-bold text-xs text-slate-700">42</span>
+<div class="w-full max-w-[42px] bg-gradient-to-t from-[#93c5fd] to-[#bfdbfe] rounded-xl transition-all duration-300 group-hover:brightness-95 group-hover:scale-y-105 origin-bottom" style="height: 126px;"></div>
+<span class="font-display font-medium text-xs text-slate-500 pt-1">Tue</span>
+</div>
+<!-- Wed (0) -->
+<div class="flex-1 flex flex-col items-center gap-2 group">
+<span class="font-display font-medium text-xs text-slate-400">0</span>
+<div class="w-full max-w-[42px] bg-slate-100 rounded-full" style="height: 6px;"></div>
+<span class="font-display font-medium text-xs text-slate-400 pt-1">Wed</span>
+</div>
+<!-- Thu (Pastel Mint) -->
+<div class="flex-1 flex flex-col items-center gap-2 group">
+<span class="font-display font-bold text-xs text-slate-700">36</span>
+<div class="w-full max-w-[42px] bg-gradient-to-t from-[#6ee7b7] to-[#a7f3d0] rounded-xl transition-all duration-300 group-hover:brightness-95 group-hover:scale-y-105 origin-bottom" style="height: 108px;"></div>
+<span class="font-display font-medium text-xs text-slate-500 pt-1">Thu</span>
+</div>
+<!-- Fri (Pastel Peach) -->
+<div class="flex-1 flex flex-col items-center gap-2 group">
+<span class="font-display font-bold text-xs text-slate-700">28</span>
+<div class="w-full max-w-[42px] bg-gradient-to-t from-[#fdba74] to-[#fed7aa] rounded-xl transition-all duration-300 group-hover:brightness-95 group-hover:scale-y-105 origin-bottom" style="height: 84px;"></div>
+<span class="font-display font-medium text-xs text-slate-500 pt-1">Fri</span>
+</div>
+<!-- Sat (Pastel Lavender Accent) -->
+<div class="flex-1 flex flex-col items-center gap-2 group">
+<span class="font-display font-bold text-xs text-slate-700">52</span>
+<div class="w-full max-w-[42px] bg-gradient-to-t from-[#a78bfa] to-[#c4b5fd] rounded-xl transition-all duration-300 group-hover:brightness-95 group-hover:scale-y-105 origin-bottom" style="height: 154px;"></div>
+<span class="font-display font-medium text-xs text-slate-500 pt-1">Sat</span>
+</div>
+<!-- Today (Vibrant Accent with Soft Pastel Ring) -->
+<div class="flex-1 flex flex-col items-center gap-2 group">
+<span class="font-display font-bold text-xs text-indigo-700">38</span>
+<div class="w-full max-w-[42px] bg-gradient-to-t from-primary to-[#818cf8] rounded-xl shadow-md shadow-indigo-200 transition-all duration-300 group-hover:brightness-95 group-hover:scale-y-105 origin-bottom ring-2 ring-indigo-200/50" style="height: 114px;"></div>
+<span class="font-display font-bold text-xs text-indigo-700 pt-1">Today</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Focus Next Card with Pastel Touches -->
+<div class="lg:col-span-5 flex flex-col justify-between p-7 rounded-2xl bg-white border border-slate-200/70 shadow-[0_2px_12px_rgba(15,23,42,0.03)]">
+<div>
+<div class="flex items-center justify-between">
+<h2 class="font-display font-bold text-lg text-slate-900">Focus next</h2>
+<span class="material-symbols-outlined text-[20px] text-amber-500">priority_high</span>
+</div>
+<p class="font-body text-xs text-on-surface-variant mt-1">Topics with the lowest mastery</p>
+</div>
+<div class="flex flex-col gap-2.5 mt-4">
+<!-- Item 1: Soft Peach Alert -->
+<a class="group flex items-center justify-between p-3.5 rounded-xl bg-pastel-peach/50 border border-pastel-peach-border/70 hover:bg-pastel-peach transition-all" href="#">
+<div class="flex items-center gap-3 min-w-0 pr-2">
+<div class="w-2 h-8 rounded-full bg-pastel-peach-accent shrink-0"></div>
+<div class="flex flex-col min-w-0">
+<span class="font-display font-semibold text-xs text-slate-900 truncate">Back-of-envelope estimates</span>
+<span class="font-body text-xs text-slate-600 truncate mt-0.5">System Design · <span class="font-semibold text-orange-600">14% mastery</span></span>
+</div>
+</div>
+<span class="material-symbols-outlined text-[18px] text-slate-400 group-hover:translate-x-0.5 group-hover:text-slate-700 transition-all flex-shrink-0">chevron_right</span>
+</a>
+<!-- Item 2: Soft Blue Alert -->
+<a class="group flex items-center justify-between p-3.5 rounded-xl bg-pastel-blue/50 border border-pastel-blue-border/70 hover:bg-pastel-blue transition-all" href="#">
+<div class="flex items-center gap-3 min-w-0 pr-2">
+<div class="w-2 h-8 rounded-full bg-pastel-blue-accent shrink-0"></div>
+<div class="flex flex-col min-w-0">
+<span class="font-display font-semibold text-xs text-slate-900 truncate">Databases and indexing</span>
+<span class="font-body text-xs text-slate-600 truncate mt-0.5">System Design · <span class="font-semibold text-blue-600">20% mastery</span></span>
+</div>
+</div>
+<span class="material-symbols-outlined text-[18px] text-slate-400 group-hover:translate-x-0.5 group-hover:text-slate-700 transition-all flex-shrink-0">chevron_right</span>
+</a>
+<!-- Item 3: Soft Lavender Alert -->
+<a class="group flex items-center justify-between p-3.5 rounded-xl bg-pastel-lavender/50 border border-pastel-lavender-border/70 hover:bg-pastel-lavender transition-all" href="#">
+<div class="flex items-center gap-3 min-w-0 pr-2">
+<div class="w-2 h-8 rounded-full bg-pastel-lavender-accent shrink-0"></div>
+<div class="flex flex-col min-w-0">
+<span class="font-display font-semibold text-xs text-slate-900 truncate">Electricity and circuits</span>
+<span class="font-body text-xs text-slate-600 truncate mt-0.5">Physics · <span class="font-semibold text-indigo-600">29% mastery</span></span>
+</div>
+</div>
+<span class="material-symbols-outlined text-[18px] text-slate-400 group-hover:translate-x-0.5 group-hover:text-slate-700 transition-all flex-shrink-0">chevron_right</span>
+</a>
+</div>
+</div>
+</section>
+<!-- Bottom Section: Deck Performance Table -->
+<section class="flex flex-col gap-3.5 mt-2">
+<div class="flex items-baseline justify-between px-1">
+<div class="flex items-baseline gap-2.5">
+<h2 class="font-display font-bold text-lg text-slate-900">By deck</h2>
+<span class="font-body text-xs text-on-surface-variant">Sorted by lowest mastery</span>
+</div>
+<span class="font-display text-xs text-indigo-600 font-semibold cursor-pointer hover:underline">View all decks</span>
+</div>
+<div class="w-full bg-white rounded-2xl border border-slate-200/70 shadow-[0_2px_12px_rgba(15,23,42,0.03)] overflow-hidden">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-slate-50/80 border-b border-slate-200/60 font-display text-xs uppercase tracking-wider text-slate-500">
+<th class="py-3.5 px-6 font-semibold">Deck</th>
+<th class="py-3.5 px-4 font-semibold">Cards</th>
+<th class="py-3.5 px-6 font-semibold min-w-[200px]">Mastery</th>
+<th class="py-3.5 px-4 font-semibold">Time per card</th>
+<th class="py-3.5 px-6 font-semibold text-right sm:text-left">Last practised</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100">
+<!-- Row 1: System Design -->
+<tr class="group hover:bg-slate-50/70 transition-colors">
+<td class="py-4 px-6 font-display font-semibold text-sm text-slate-800 flex items-center gap-2.5">
+<span class="w-2.5 h-2.5 rounded-full bg-pastel-peach-accent"></span>
+                      System Design
+                    </td>
+<td class="py-4 px-4 font-body font-medium text-xs text-slate-600">36</td>
+<td class="py-4 px-6"><div class="flex items-center gap-3"><span class="font-display font-bold text-xs text-slate-800 w-10">42%</span><div class="h-2.5 w-36 max-w-full bg-slate-100 rounded-full overflow-hidden flex gap-0.5" title="Got it: 42%, Nearly: 25%, Not yet: 20%, New: 13%"><div class="bg-[#818cf8] h-full rounded-l-full" style="width: 42%;"></div><div class="bg-amber-400 h-full" style="width: 25%;"></div><div class="bg-[#f87171] h-full" style="width: 20%;"></div><div class="bg-slate-300 h-full rounded-r-full" style="width: 13%;"></div></div></div></td>
+<td class="py-4 px-4 font-body font-medium text-xs text-slate-600">38 s</td>
+<td class="py-4 px-6 font-body text-xs text-slate-600 text-right sm:text-left">Today</td>
+</tr>
+<!-- Row 2: Physics -->
+<tr class="group hover:bg-slate-50/70 transition-colors">
+<td class="py-4 px-6 font-display font-semibold text-sm text-slate-800 flex items-center gap-2.5">
+<span class="w-2.5 h-2.5 rounded-full bg-pastel-lavender-accent"></span>
+                      Physics
+                    </td>
+<td class="py-4 px-4 font-body font-medium text-xs text-slate-600">41</td>
+<td class="py-4 px-6"><div class="flex items-center gap-3"><span class="font-display font-bold text-xs text-slate-800 w-10">44%</span><div class="h-2.5 w-36 max-w-full bg-slate-100 rounded-full overflow-hidden flex gap-0.5" title="Got it: 44%, Nearly: 22%, Not yet: 18%, New: 16%"><div class="bg-[#818cf8] h-full rounded-l-full" style="width: 44%;"></div><div class="bg-amber-400 h-full" style="width: 22%;"></div><div class="bg-[#f87171] h-full" style="width: 18%;"></div><div class="bg-slate-300 h-full rounded-r-full" style="width: 16%;"></div></div></div></td>
+<td class="py-4 px-4 font-body font-medium text-xs text-slate-600">13 s</td>
+<td class="py-4 px-6 font-body text-xs text-slate-600 text-right sm:text-left">3 days ago</td>
+</tr>
+<!-- Row 3: History -->
+<tr class="group hover:bg-slate-50/70 transition-colors">
+<td class="py-4 px-6 font-display font-semibold text-sm text-slate-800 flex items-center gap-2.5">
+<span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
+                      History
+                    </td>
+<td class="py-4 px-4 font-body font-medium text-xs text-slate-600">88</td>
+<td class="py-4 px-6"><div class="flex items-center gap-3"><span class="font-display font-bold text-xs text-slate-800 w-10">49%</span><div class="h-2.5 w-36 max-w-full bg-slate-100 rounded-full overflow-hidden flex gap-0.5" title="Got it: 49%, Nearly: 21%, Not yet: 15%, New: 15%"><div class="bg-[#818cf8] h-full rounded-l-full" style="width: 49%;"></div><div class="bg-amber-400 h-full" style="width: 21%;"></div><div class="bg-[#f87171] h-full" style="width: 15%;"></div><div class="bg-slate-300 h-full rounded-r-full" style="width: 15%;"></div></div></div></td>
+<td class="py-4 px-4 font-body font-medium text-xs text-slate-600">16 s</td>
+<td class="py-4 px-6 font-body text-xs text-slate-600 text-right sm:text-left">2 days ago</td>
+</tr>
+<!-- Row 4: Chemistry -->
+<tr class="group hover:bg-slate-50/70 transition-colors">
+<td class="py-4 px-6 font-display font-semibold text-sm text-slate-800 flex items-center gap-2.5">
+<span class="w-2.5 h-2.5 rounded-full bg-pastel-blue-accent"></span>
+                      Chemistry
+                    </td>
+<td class="py-4 px-4 font-body font-medium text-xs text-slate-600">72</td>
+<td class="py-4 px-6"><div class="flex items-center gap-3"><span class="font-display font-bold text-xs text-slate-800 w-10">53%</span><div class="h-2.5 w-36 max-w-full bg-slate-100 rounded-full overflow-hidden flex gap-0.5" title="Got it: 53%, Nearly: 23%, Not yet: 14%, New: 10%"><div class="bg-[#818cf8] h-full rounded-l-full" style="width: 53%;"></div><div class="bg-amber-400 h-full" style="width: 23%;"></div><div class="bg-[#f87171] h-full" style="width: 14%;"></div><div class="bg-slate-300 h-full rounded-r-full" style="width: 10%;"></div></div></div></td>
+<td class="py-4 px-4 font-body font-medium text-xs text-slate-600">14 s</td>
+<td class="py-4 px-6 font-body text-xs text-slate-600 text-right sm:text-left">Yesterday</td>
+</tr>
+<!-- Row 5: Biology -->
+<tr class="group hover:bg-slate-50/70 transition-colors">
+<td class="py-4 px-6 font-display font-semibold text-sm text-slate-800 flex items-center gap-2.5">
+<span class="w-2.5 h-2.5 rounded-full bg-pastel-mint-accent"></span>
+                      Biology
+                    </td>
+<td class="py-4 px-4 font-body font-medium text-xs text-slate-600">64</td>
+<td class="py-4 px-6"><div class="flex items-center gap-3"><span class="font-display font-bold text-xs text-slate-800 w-10">77%</span><div class="h-2.5 w-36 max-w-full bg-slate-100 rounded-full overflow-hidden flex gap-0.5" title="Got it: 77%, Nearly: 12%, Not yet: 6%, New: 5%"><div class="bg-[#818cf8] h-full rounded-l-full" style="width: 77%;"></div><div class="bg-amber-400 h-full" style="width: 12%;"></div><div class="bg-[#f87171] h-full" style="width: 6%;"></div><div class="bg-slate-300 h-full rounded-r-full" style="width: 5%;"></div></div></div></td>
+<td class="py-4 px-4 font-body font-medium text-xs text-slate-600">9 s</td>
+<td class="py-4 px-6 font-body text-xs text-slate-600 text-right sm:text-left">Today</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section><footer class="pt-4 pb-2 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500 font-display border-t border-slate-200/50"><div class="flex items-center gap-2"><span class="material-symbols-outlined text-[18px] text-primary">favorite</span><span class="">Consistent practice builds lasting retention.</span></div><div class="flex items-center gap-4 text-slate-600"><div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#818cf8]"></span><span class="">Got it</span></div><div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-amber-400"></span><span class="">Nearly</span></div><div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-[#f87171]"></span><span class="">Not yet</span></div><div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-slate-300"></span><span class="">New</span></div></div></footer>
+</div>
+</main>
+</div>
+<script>
+    (function() {
+      const btnWeek = document.getElementById('btn-week');
+      const btnMonth = document.getElementById('btn-month');
+
+      if (btnWeek && btnMonth) {
+        btnWeek.addEventListener('click', () => {
+          btnWeek.className = 'px-5 py-1.5 rounded-full font-display font-semibold text-xs bg-white text-slate-900 shadow-sm transition-all duration-200';
+          btnMonth.className = 'px-5 py-1.5 rounded-full font-display font-medium text-xs text-slate-600 hover:text-slate-900 transition-all duration-200';
+        });
+
+        btnMonth.addEventListener('click', () => {
+          btnMonth.className = 'px-5 py-1.5 rounded-full font-display font-semibold text-xs bg-white text-slate-900 shadow-sm transition-all duration-200';
+          btnWeek.className = 'px-5 py-1.5 rounded-full font-display font-medium text-xs text-slate-600 hover:text-slate-900 transition-all duration-200';
+        });
+      }
+    })();
+  </script>
+
+
+
+
+
+
+</body></html>

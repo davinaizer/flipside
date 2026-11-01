@@ -1,0 +1,270 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><meta content="web_blank" name="shell-type"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&amp;family=Atkinson+Hyperlegible+Next:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "outline-variant": "#c7c4d7",
+          "on-secondary-fixed": "#2f1400",
+          "on-error": "#ffffff",
+          "on-primary": "#ffffff",
+          "on-secondary-container": "#783d01",
+          "error": "#ba1a1a",
+          "surface-dim": "#ccdbf3",
+          "surface-container-high": "#dce9ff",
+          "on-tertiary-fixed": "#00201c",
+          "secondary-fixed-dim": "#ffb780",
+          "on-primary-container": "#fffbff",
+          "tertiary-fixed": "#8cf5e4",
+          "surface-container-low": "#eff4ff",
+          "on-tertiary-fixed-variant": "#005048",
+          "on-surface-variant": "#5a596e",
+          "background": "#f5f6ff",
+          "on-secondary-fixed-variant": "#6f3800",
+          "tertiary-container": "#008376",
+          "on-surface": "#121b2d",
+          "error-container": "#ffdad6",
+          "surface-container": "#e6eeff",
+          "on-secondary": "#ffffff",
+          "inverse-on-surface": "#eaf1ff",
+          "surface-container-highest": "#d5e3fc",
+          "surface-container-lowest": "#ffffff",
+          "surface-tint": "#494bd6",
+          "on-error-container": "#93000a",
+          "primary-container": "#5254e3",
+          "primary-fixed": "#e1e0ff",
+          "on-primary-fixed-variant": "#2f2ebe",
+          "on-tertiary-container": "#f4fffb",
+          "surface-variant": "#d5e3fc",
+          "on-primary-fixed": "#07006c",
+          "on-tertiary": "#ffffff",
+          "primary": "#4648d4",
+          "primary-fixed-dim": "#c0c1ff",
+          "secondary": "#7a5538",
+          "tertiary-fixed-dim": "#6fd8c8",
+          "tertiary": "#00685d",
+          "inverse-surface": "#233144",
+          "secondary-fixed": "#ffdcc4",
+          "outline": "#767586",
+          "secondary-container": "#ffab69",
+          "surface": "#f8f9ff",
+          "inverse-primary": "#c0c1ff",
+          "on-background": "#0d1c2e",
+          "surface-bright": "#f8f9ff",
+          "status-not-yet": "#e27339",
+          "status-nearly": "#dfa435",
+          "status-got-it": "#4648d4",
+          "badge-soft": "#fdf5eb",
+          "badge-text": "#754b20",
+          "lavender-subtle": "#eceeff",
+          "card-warm": "#fffdfa",
+          "card-tint-cream": "#fefaf0",
+          "card-tint-peach": "#fef4ed"
+        },
+        "borderRadius": {
+          "DEFAULT": "1rem",
+          "lg": "2rem",
+          "xl": "3rem",
+          "full": "9999px"
+        },
+        "spacing": {
+          "margin-sm": "1rem",
+          "gutter-lg": "2rem",
+          "space-xl": "2.5rem",
+          "space-md": "1rem",
+          "space-sm": "0.5rem",
+          "gutter": "1.5rem",
+          "gutter-sm": "1rem",
+          "space-xs": "0.25rem",
+          "margin-lg": "3rem",
+          "space-lg": "1.5rem",
+          "margin": "1.5rem"
+        },
+        "fontFamily": {
+          "headline-lg": ["Lexend", "sans-serif"],
+          "headline-md": ["Lexend", "sans-serif"],
+          "label-lg": ["Lexend", "sans-serif"],
+          "label-sm": ["Lexend", "sans-serif"],
+          "headline-sm": ["Lexend", "sans-serif"],
+          "display-mobile": ["Lexend", "sans-serif"],
+          "headline-lg-mobile": ["Lexend", "sans-serif"],
+          "body-sm": ["Atkinson Hyperlegible Next", "sans-serif"],
+          "label-md": ["Lexend", "sans-serif"],
+          "body-md": ["Atkinson Hyperlegible Next", "sans-serif"],
+          "body-lg": ["Atkinson Hyperlegible Next", "sans-serif"],
+          "display": ["Lexend", "sans-serif"],
+          "sans": ["Lexend", "sans-serif"]
+        },
+        "fontSize": {
+          "headline-lg": ["2.25rem", {"lineHeight": "2.875rem", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+          "headline-md": ["1.75rem", {"lineHeight": "2.375rem", "letterSpacing": "-0.005em", "fontWeight": "600"}],
+          "label-lg": ["0.9375rem", {"lineHeight": "1.25rem", "letterSpacing": "0.01em", "fontWeight": "600"}],
+          "label-sm": ["0.75rem", {"lineHeight": "1rem", "letterSpacing": "0.03em", "fontWeight": "500"}],
+          "headline-sm": ["1.25rem", {"lineHeight": "1.75rem", "letterSpacing": "0.005em", "fontWeight": "600"}],
+          "display-mobile": ["2.25rem", {"lineHeight": "2.875rem", "letterSpacing": "-0.015em", "fontWeight": "700"}],
+          "headline-lg-mobile": ["1.75rem", {"lineHeight": "2.375rem", "letterSpacing": "0em", "fontWeight": "600"}],
+          "body-sm": ["0.875rem", {"lineHeight": "1.375rem", "letterSpacing": "0.025em", "fontWeight": "400"}],
+          "label-md": ["0.8125rem", {"lineHeight": "1.125rem", "letterSpacing": "0.02em", "fontWeight": "600"}],
+          "body-md": ["1rem", {"lineHeight": "1.625rem", "letterSpacing": "0.02em", "fontWeight": "400"}],
+          "body-lg": ["1.125rem", {"lineHeight": "1.875rem", "letterSpacing": "0.015em", "fontWeight": "400"}],
+          "display": ["2.75rem", {"lineHeight": "3.5rem", "letterSpacing": "-0.025em", "fontWeight": "600"}]
+        }
+      }
+    }
+  };
+</script></head><body class="bg-[#f3f5fc] font-body-md text-body-md text-on-surface antialiased min-h-screen selection:bg-primary-fixed selection:text-on-primary-fixed"><main class="w-full min-h-screen bg-gradient-to-b from-[#f3f5fc] via-[#f5f6ff] to-[#f0f3fb] flex items-center justify-center p-4 md:p-8"><div class="flex flex-col w-full">
+<div class="w-full max-w-[1040px] mx-auto flex flex-col gap-6 md:gap-8 py-2 md:py-6">
+<!-- Top Header Area -->
+<header class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 px-2">
+<div class="flex flex-col gap-1">
+
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Session Summary</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Great revision focus today. Take a steady breath before continuing.</p>
+</div>
+<!-- Dyslexia / Audio Comfort Mini-Bar -->
+<div class="flex items-center gap-2 p-1.5 rounded-full bg-surface-container-low shadow-sm self-start sm:self-end">
+<button aria-label="Audio readout" class="w-10 h-10 rounded-full flex items-center justify-center bg-surface hover:bg-surface-container-high transition-colors text-primary" title="Listen to summary" type="button">
+<span class="material-symbols-outlined text-[20px]">volume_up</span>
+</button>
+<button aria-label="Toggle focus line" class="w-10 h-10 rounded-full flex items-center justify-center bg-surface hover:bg-surface-container-high transition-colors text-on-surface-variant" title="Line focus ruler" type="button">
+<span class="material-symbols-outlined text-[20px]">view_day</span>
+</button>
+<button aria-label="Text readability size" class="w-10 h-10 rounded-full flex items-center justify-center bg-surface hover:bg-surface-container-high transition-colors text-on-surface-variant" title="Adjust spacing" type="button">
+<span class="material-symbols-outlined text-[20px]">text_fields</span>
+</button>
+</div>
+</header>
+<!-- Main Content Grid -->
+<main class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+<!-- Left Column: Session Overview Card (5 cols on desktop) -->
+<section class="lg:col-span-5 flex flex-col gap-6">
+<article class="bg-surface-container-lowest rounded-lg p-6 md:p-8 shadow-sm flex flex-col gap-6 relative overflow-hidden">
+<!-- Ambient tint circle -->
+<div class="absolute -top-16 -right-16 w-44 h-44 rounded-full bg-primary-fixed opacity-40 blur-2xl pointer-events-none"></div>
+<div class="flex items-start justify-between z-10">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant tracking-wider uppercase">Deck revision</span>
+<h2 class="font-headline-md text-headline-md text-on-surface mt-0.5">System Design</h2>
+</div>
+<div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[26px]">account_tree</span>
+</div>
+</div>
+<!-- Gentle Progress Ring Visualization -->
+<div class="bg-surface-container-low rounded-2xl p-5 flex items-center gap-5 z-10">
+<div class="relative w-20 h-20 shrink-0">
+<svg class="w-full h-full transform -rotate-90" viewBox="0 0 72 72">
+<circle class="text-surface-container" cx="36" cy="36" fill="transparent" r="30" stroke="currentColor" stroke-width="7"></circle>
+<!-- Got it: 3/5 = 60% of 188.4 = 113 -->
+<circle class="text-primary" cx="36" cy="36" fill="transparent" r="30" stroke="currentColor" stroke-dasharray="188.4" stroke-dashoffset="75.36" stroke-linecap="round" stroke-width="7"></circle>
+<!-- Nearly: 1/5 = 20% = 37.6 -->
+<circle class="opacity-80" cx="36" cy="36" fill="transparent" r="30" stroke="currentColor" stroke-dasharray="188.4" stroke-dashoffset="150.7" stroke-linecap="round" stroke-width="7"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="font-headline-sm text-headline-sm text-on-surface leading-none">5</span>
+<span class="font-label-sm text-[0.65rem] text-on-surface-variant mt-0.5">cards</span>
+</div>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-tertiary">schedule</span>
+<span class="font-label-lg text-label-lg text-on-surface">Time spent: 4 mins</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Reflective pace. No timer rush, just deliberate practice.</p>
+</div>
+</div>
+<!-- Grade Breakdown Pills -->
+<div class="flex flex-col gap-3 z-10">
+<h3 class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Breakdown by status</h3>
+<div class="flex flex-wrap gap-2.5">
+<!-- Got It Badge -->
+<div class="flex items-center gap-2 px-3.5 py-2 rounded-full bg-lavender-subtle text-primary shadow-xs">
+<span class="w-2.5 h-2.5 rounded-full bg-primary shrink-0"></span>
+<span class="font-label-md text-label-md text-on-surface">3 Got it</span>
+</div>
+<!-- Nearly Badge -->
+<div class="flex items-center gap-2 px-3.5 py-2 rounded-full bg-card-tint-cream text-on-secondary-container shadow-xs">
+<span class="w-2.5 h-2.5 rounded-full bg-status-nearly shrink-0"></span>
+<span class="font-label-md text-label-md text-on-secondary-container">1 Nearly</span>
+</div>
+<!-- Not Yet Badge -->
+<div class="flex items-center gap-2 px-3.5 py-2 rounded-full bg-card-tint-peach text-secondary shadow-xs">
+<span class="w-2.5 h-2.5 rounded-full bg-status-not-yet shrink-0"></span>
+<span class="font-label-md text-label-md text-secondary">1 Not yet</span>
+</div>
+</div>
+</div>
+<!-- Gentle encouragement note -->
+<div class="border-0 bg-surface-container-low rounded-2xl p-4 flex items-start gap-3 mt-1 z-10">
+<span class="material-symbols-outlined text-[20px] text-tertiary shrink-0 mt-0.5" style="font-variation-settings: 'FILL' 1;">spa</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Spacing out repetition lets concepts settle naturally into memory.</p>
+</div>
+</article>
+</section>
+<!-- Right Column: Cards to Revisit & Active Retest (7 cols on desktop) -->
+<section class="lg:col-span-7 flex flex-col gap-5">
+<article class="bg-surface-container-lowest rounded-lg p-6 md:p-8 shadow-sm flex flex-col gap-6">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+<div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[22px] text-secondary">restart_alt</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Cards to revisit</h2>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">These cards will come back soon to strengthen recall.</p>
+</div>
+<span class="font-label-sm text-label-sm px-3 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed self-start sm:self-auto">3 for review</span>
+</div>
+<!-- Cards Stack -->
+<div class="flex flex-col gap-3.5" role="list">
+<!-- Card Item 1: Write-through caching -->
+<div class="p-5 rounded-2xl bg-card-tint-peach transition-transform duration-200 hover:-translate-y-0.5 flex flex-col gap-3" role="listitem">
+<div class="flex items-start justify-between gap-3">
+<div class="flex flex-wrap items-center gap-2">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-lowest text-secondary font-label-sm text-label-sm shadow-xs">
+<span class="w-2 h-2 rounded-full bg-status-not-yet"></span>
+                    Not yet
+                  </span>
+
+</div>
+<button aria-label="Card details preview" class="w-12 h-12 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container-lowest transition-colors" type="button"><span class="material-symbols-outlined text-[20px]">chevron_right</span></button>
+</div>
+<p class="font-body-lg text-body-lg text-on-surface font-medium leading-snug">
+                Caching: When would you choose write-through caching over write-back?
+              </p>
+
+</div>
+<!-- Card Item 2: Database sharding -->
+<div class="p-5 rounded-2xl bg-card-tint-cream transition-transform duration-200 hover:-translate-y-0.5 flex flex-col gap-3" role="listitem">
+<div class="flex items-start justify-between gap-3">
+<div class="flex flex-wrap items-center gap-2">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-lowest text-on-secondary-container font-label-sm text-label-sm shadow-xs">
+<span class="w-2 h-2 rounded-full bg-status-nearly"></span>
+                    Nearly
+                  </span>
+
+</div>
+<button aria-label="Card details preview" class="w-12 h-12 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container-lowest transition-colors" type="button"><span class="material-symbols-outlined text-[20px]">chevron_right</span></button>
+</div>
+<p class="font-body-lg text-body-lg text-on-surface font-medium leading-snug">
+                Database sharding: What problem does consistent hashing solve?
+              </p>
+
+</div>
+<div class="p-5 rounded-2xl bg-card-tint-peach transition-transform duration-200 hover:-translate-y-0.5 flex flex-col gap-3" role="listitem"><div class="flex items-start justify-between gap-3"><div class="flex flex-wrap items-center gap-2"><span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-lowest text-secondary font-label-sm text-label-sm shadow-xs"><span class="w-2 h-2 rounded-full bg-status-not-yet"></span>Not yet</span></div><button aria-label="Card details preview" class="w-12 h-12 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container-lowest transition-colors" type="button"><span class="material-symbols-outlined text-[20px]">chevron_right</span></button></div><p class="font-body-lg text-body-lg text-on-surface font-medium leading-snug">CAP Theorem: Which property is prioritized in an AP system during network partition?</p></div></div>
+<!-- Quick Action inside section: Practise those now -->
+<div class="pt-2">
+<button class="w-full min-h-[48px] px-6 py-3.5 rounded-full bg-surface-container-low hover:bg-surface-container text-primary font-label-lg text-label-lg flex items-center justify-center gap-2.5 transition-colors shadow-xs active:scale-[0.99]" type="button"><span class="material-symbols-outlined text-[20px]">play_circle</span> Practise those now (3 cards)</button>
+</div>
+</article>
+</section>
+</main>
+<!-- Footer Action Bar -->
+<footer class="mt-2 pt-4 flex flex-col-reverse sm:flex-row items-center justify-between gap-4"><div class="flex items-center justify-end w-full"><button class="w-full sm:w-auto min-h-[52px] px-8 py-3.5 rounded-full bg-primary hover:bg-primary-container text-on-primary font-label-lg text-label-lg flex items-center justify-center gap-2.5 shadow-sm transition-all hover:shadow-md active:scale-[0.98]" type="button"><span class="material-symbols-outlined text-[20px]">home</span> Back to Library</button></div></footer>
+</div>
+</div></main>
+
+
+</body></html>
