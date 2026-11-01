@@ -35,7 +35,7 @@
           ],
           "area": "package.json, tsconfig, eslint, prettier, vitest config, src/{app,server,domain,shared,ui}, .gitignore",
           "done_when": "verify.sh runs green with pnpm scripts typecheck, lint and test plus one smoke test; dev and start scripts bind 0.0.0.0:3000 and next build succeeds; ESLint fails on a test sample where src/domain imports src/server, a database module or node:fs; git check-ignore matches .DS_Store, .env, .env.local, data/x, CLAUDE.local.md and .claude/settings.local.json, and .env.example is not ignored.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F0.2",
