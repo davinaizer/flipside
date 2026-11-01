@@ -107,7 +107,8 @@
           ],
           "area": "src/instrumentation.ts, src/server/db/migrate.ts, src/app/api/v1/health/route.ts, src/server/http (error format), pnpm db:migrate",
           "done_when": "Integration tests: GET /api/v1/health returns 200 with the database check, and 503 in the section 11 error format when the database is unreachable; migrate is safe to run twice. Check: next start against an empty database creates the tables and health returns 200.",
-          "status": "todo"
+          "status": "done",
+          "commit": "14af137"
         },
         {
           "id": "F0.7",

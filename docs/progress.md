@@ -8,3 +8,4 @@ F0.2: shared constants, enums, settings schema (Zod added per PRD section 9) and
 F0.3: scripts/db.sh (podman run, named volume, idempotent), .env.example, zod env parsing in src/server/env.ts.
 F0.4: vitest global setup starts a disposable tmpfs Postgres 17 via podman, removed on exit.
 F0.5: Drizzle schema for all nine section 10 tables, migration 0000, postgres-js client, schema introspection test.
+F0.6: migrations run on start via instrumentation, pnpm db:migrate, GET /api/v1/health with 503 section 11 error format.

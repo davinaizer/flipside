@@ -11,3 +11,4 @@ ASSUMED: settings ids (atkinson, lexend, system; textSize 1-4, spacing 1-3, defa
 ASSUMED: container user/db/password flipside/flipside/flipside (local-only, 127.0.0.1 bound), container removed on db:down while the named volume stays.
 ASSUMED: integration tests read the server version via podman exec psql, since the Postgres driver arrives in F0.5 and none is allowed yet; container name is flipside-test-<pid>-<random>, port from a free-port probe.
 ASSUMED: Postgres driver is `postgres` (postgres-js) with drizzle-orm/drizzle-kit; enums are checked text columns; box range 1-5 checked on card_state and review_log; migration journal lives in public.schema_migrations; sessions and review_log ids are client-supplied (no default).
+ASSUMED: pnpm db:migrate uses drizzle-kit migrate (no new dependency); start-up migration runs from src/instrumentation.ts via the same drizzle migrator.
