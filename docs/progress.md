@@ -70,3 +70,4 @@ F4 done: PR #9. MANUAL PENDING: none
 - F5.4: Practice settings (session length, new cards per day with validation, read aloud, reading speed) on /settings (src/ui/settings/practice).
 - F5.5: e2e/settings.spec.ts covers live preview, persistence (reload, new context, second server), theme toggle per screen, axe and 44 px on Settings in both themes, on desktop and iPad.
 REVIEW F5 round 1: GAPS at 5fc8d5a
+- F5 review fix: settings saves now serialized in order with a rollback guard (src/ui/settings/saver.ts). Each queued save sends the latest settings when it runs; a failed save rolls back only if no newer change exists.

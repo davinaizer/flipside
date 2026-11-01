@@ -1,8 +1,9 @@
 "use client";
 
-import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import type { Settings } from "@/shared/settings";
 import { api } from "@/ui/api/client";
+import { createSettingsSaver } from "./saver";
 
 type Value = {
   settings: Settings;
@@ -25,21 +26,7 @@ export function SettingsProvider({ initial, children }: { initial: Settings; chi
     document.documentElement.setAttribute("data-theme", settings.theme);
   }, [settings.theme]);
 
-  const update = useCallback(
-    async (patch: Partial<Settings>) => {
-      const previous = settings;
-      const next = { ...settings, ...patch };
-      setSettings(next);
-      try {
-        // PUT replaces the whole object, so send the full merged settings.
-        await api.saveSettings(next);
-      } catch (e) {
-        setSettings(previous);
-        throw e;
-      }
-    },
-    [settings],
-  );
+  const [update] = useState(() => createSettingsSaver(initial, api.saveSettings, setSettings));
 
   return <Ctx.Provider value={{ settings, update }}>{children}</Ctx.Provider>;
 }
