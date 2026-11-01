@@ -30,6 +30,7 @@ Agents are stateless between sessions; these files are the memory.
 - A dirty tree after a cancel is the interrupted task: the orchestrator asks whether to keep or discard it.
 - Each review result is logged in `docs/progress.md`, so rounds are counted and a PASS is not repeated. An existing PR is reused.
 - GitHub decides whether a feature is merged, not the ledger.
+- Any other open PR into `develop` is raised at the start of a run, because neither the ledger nor a clean tree shows it. The orchestrator asks whether to merge it first or carry on.
 
 ## Gates
 - **Task gate (every task):** `bash scripts/verify.sh` green, then one commit. Deterministic, no extra agent.
