@@ -2,7 +2,10 @@
 // Used by Playwright's webServer; cleans the container up on exit.
 import { execFileSync, spawn } from "node:child_process";
 import { randomBytes } from "node:crypto";
+import { rmSync, writeFileSync } from "node:fs";
 import { createServer } from "node:net";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 
 const appPort = process.env.E2E_PORT ?? "3100";
 const name = `flipside-e2e-${process.pid}-${randomBytes(3).toString("hex")}`;
@@ -20,11 +23,14 @@ function freePort() {
   });
 }
 
+// The settings e2e starts a second app server against this database to prove a restart keeps settings.
+const urlFile = join(tmpdir(), `flipside-e2e-${appPort}.dburl`);
 let child;
 let removed = false;
 function cleanup() {
   if (removed) return;
   removed = true;
+  rmSync(urlFile, { force: true });
   child?.kill("SIGTERM");
   try {
     podman(["rm", "-f", "-t", "0", name]);
@@ -73,6 +79,7 @@ const env = {
   DATABASE_URL: `postgres://flipside:flipside@127.0.0.1:${dbPort}/flipside_e2e`,
   PORT: appPort,
 };
+writeFileSync(urlFile, env.DATABASE_URL);
 const run = (args) =>
   new Promise((resolve, reject) => {
     child = spawn("pnpm", args, { env, stdio: "inherit" });

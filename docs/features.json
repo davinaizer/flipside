@@ -1046,7 +1046,7 @@
           ],
           "area": "e2e/settings.spec.ts",
           "done_when": "On both viewports: changing reading settings changes preview text at once; settings and theme persist per profile, across a new browser context and across an app server restart; the theme toggles on every screen built so far (F8 repeats this on all of them); axe and 44 px checks pass on Settings in both themes.",
-          "status": "todo"
+          "status": "done"
         }
       ],
       "design_screens": [
