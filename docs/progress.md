@@ -88,3 +88,4 @@ F6.10: e2e/practice.spec.ts closes AC4 to AC7 and AC2 images on both viewports w
 REVIEW F6 round 1: GAPS at c0a7e33
 REVIEW F6 round 2: PASS at 930e9f1
 F6 done: PR #11. MANUAL PENDING: AC10
+- F7.1: GET /api/v1/stats (src/server/stats.ts over domain/stats) with tiles, changes, bars, Focus next and By deck; AC8 integration test over fixtures/stats-history.json (tests/stats-api.test.ts, seeder in tests/helpers/stats-history.ts).

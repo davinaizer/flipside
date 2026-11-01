@@ -1329,7 +1329,7 @@
           ],
           "area": "src/app/api/v1/stats/route.ts, src/server/stats.ts, src/shared/schemas/stats.ts, fixtures/stats-history",
           "done_when": "Integration test (AC8) over a seeded history with hand-computed expected values: week and month tiles and changes, per-day and per-week bars, first-attempt-only counting, undone rows excluded, median with the 120 s cap, Focus next, by-deck. Reviews from deleted decks stay in tiles and bars but deleted decks are out of Focus next and by-deck. The other profile's data never appears.",
-          "status": "todo",
+          "status": "done",
           "model": "opus"
         },
         {
