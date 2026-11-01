@@ -56,3 +56,4 @@ F3 done (PR #8). MANUAL PENDING: none
 - F4.2: GET/PATCH/DELETE /decks/{id} and GET /decks/{id}/leeches; topics carry due, buckets and mastered percent, deck carries cardCount and reviewCount (tests/deck-manage-api.test.ts).
 - F4.3: Library page (Today panel, grouped decks, mastery bar with counts, skeleton and Retry); Start practice and Weak cards PUT /sessions/{uuid} and open the /practice/{id} stub (src/ui/library, e2e/library.spec.ts).
 - F4.4: Library search (deck and topic names, case and accent blind via src/domain/text-match.ts), neutral no-match line, and a single-action empty state (src/ui/library/library-view.test.ts).
+- F4.5: Deck page lists topics with counts, mastery bar and mastered percent; tick topics to scope Practise (label states topics and due) and practise-anyway for topics with nothing due (src/ui/deck, e2e/deck.spec.ts).

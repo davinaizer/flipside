@@ -858,7 +858,7 @@
           ],
           "area": "src/app/(app)/decks/[id], src/ui/deck; screen deck_detail",
           "done_when": "Component or e2e tests: topics show counts, mastery bar and mastered percentage; with none ticked Practise scopes the deck, with some ticked those topics, and the label states topic and due counts; a ticked topic with no due cards offers a clearly labelled practise-anyway that sends ignoring due dates. Session requests asserted by intercept as in the Library task; not-found, loading and error states render.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F4.6",
