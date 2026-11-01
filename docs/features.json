@@ -930,7 +930,7 @@
           ],
           "area": "e2e/deck.spec.ts",
           "done_when": "Review gap 2: e2e shows the /decks/[id] route rendering the loading skeleton and the error-with-Retry state, with axe and 44 px checks in both themes on both viewports.",
-          "status": "todo"
+          "status": "done"
         }
       ],
       "design_screens": [

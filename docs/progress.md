@@ -61,3 +61,4 @@ F3 done (PR #8). MANUAL PENDING: none
 - F4.7: Library e2e covers loading, error with Retry, empty, populated and search; Deck e2e adds edit panel, delete confirmation (DELETE mocked) and not-found, all with axe and 44 px in both themes (e2e/library.spec.ts, e2e/deck.spec.ts).
 REVIEW F4 round 1: GAPS at 3eb9d84
 - F4.8: Start practice and Practise deck enable on candidates = due + New up to the remaining daily cap (domain sessionCandidateCount); library today.startableCount and deck.newRemaining added (tests/library-counts.test.ts, practice-plan test).
+- F4.9: Deck e2e covers the loading skeleton (client navigation held open) and the error with Retry (stream's page row swapped for an error row), with axe and 44 px in both themes (e2e/deck.spec.ts).

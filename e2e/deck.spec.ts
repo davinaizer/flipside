@@ -13,7 +13,9 @@ async function openSeededDeck(page: Page) {
 /** Click and return the body of the PUT /sessions/{id} request it sends. */
 async function practise(page: Page, name: string | RegExp) {
   await page.route("**/api/v1/sessions/*", (r) => r.fulfill({ status: 200, json: {} }));
-  const put = page.waitForRequest((r) => r.method() === "PUT" && r.url().includes("/api/v1/sessions/"));
+  const put = page.waitForRequest(
+    (r) => r.method() === "PUT" && r.url().includes("/api/v1/sessions/"),
+  );
   await page.getByRole("button", { name }).click();
   const body = (await put).postDataJSON();
   await page.waitForURL("**/practice/*");
@@ -32,9 +34,14 @@ test("topics show counts and mastered percentage in both themes", async ({ page 
   }
 });
 
-test("Practise scopes the deck, then ticked topics, and practise-anyway ignores due dates", async ({ page }) => {
+test("Practise scopes the deck, then ticked topics, and practise-anyway ignores due dates", async ({
+  page,
+}) => {
   const id = await openSeededDeck(page);
-  expect(await practise(page, "Practise deck (1 due)")).toEqual({ scope: { kind: "deck", deckId: id }, length: 5 });
+  expect(await practise(page, "Practise deck (1 due)")).toEqual({
+    scope: { kind: "deck", deckId: id },
+    length: 5,
+  });
 
   await page.goto(`/decks/${id}`);
   await page.getByRole("checkbox", { name: "Cells" }).check();
@@ -99,7 +106,9 @@ test("edit panel passes axe and 44 px in both themes", async ({ page }) => {
   }
 });
 
-test("delete confirms, sends DELETE, returns to the Library; Keep deck cancels", async ({ page }) => {
+test("delete confirms, sends DELETE, returns to the Library; Keep deck cancels", async ({
+  page,
+}) => {
   const id = await openSeededDeck(page);
   // Mocked so the shared seeded deck survives the other tests.
   await page.route(`**/api/v1/decks/${id}`, (r) =>
@@ -131,4 +140,56 @@ test("not-found page passes axe in both themes", async ({ page }) => {
     await expectNoSeriousA11y(page);
     await expectTargetsAtLeast44(page);
   }
+});
+
+async function checkBothThemes(page: Page) {
+  for (const theme of ["light", "dark"] as const) {
+    await setTheme(page, theme);
+    await expectNoSeriousA11y(page);
+    await expectTargetsAtLeast44(page);
+  }
+}
+
+test("the deck route shows the loading skeleton while the page loads", async ({ page }) => {
+  // Hold the server render of the client-side navigation (not the prefetch) so loading.tsx stays on screen.
+  let release!: () => void;
+  const gate = new Promise<void>((res) => (release = res));
+  await page.route(/\/decks\/[^/?]+(\?|$)/, async (r) => {
+    const h = r.request().headers();
+    if (h["rsc"] && !h["next-router-prefetch"]) await gate;
+    await r.continue();
+  });
+  await page.goto("/");
+  await page.getByRole("button", { name: "Davi" }).click();
+  await page.waitForURL("**/library");
+  await page.getByRole("link", { name: /Davi (Science|Biology)/ }).click();
+  await expect(page.getByRole("status", { name: "Loading" })).toBeVisible();
+  await checkBothThemes(page);
+  release();
+  await expect(page.getByRole("heading", { name: /Davi (Science|Biology)/ })).toBeVisible();
+});
+
+test("a deck that fails to load shows the error with Retry", async ({ page }) => {
+  // The page cannot be made to fail on the server without breaking the shared seed, so the client-side
+  // navigation gets the real stream with the page row swapped for an error row, as a thrown render looks.
+  await page.route(/\/decks\/[^/?]+(\?|$)/, async (r) => {
+    const h = r.request().headers();
+    if (!h["rsc"] || h["next-router-prefetch"]) return r.continue();
+    const res = await r.fetch();
+    const body = await res.text();
+    const pageRow = /"s":"__PAGE__".*?"children":\["\$L(\w+)"/.exec(body)?.[1];
+    expect(pageRow, "page row in the stream").toBeTruthy();
+    const failed = body.replace(
+      new RegExp(`^${pageRow}:.*$`, "m"),
+      `${pageRow}:E{"digest":"e2e-deck-failure"}`,
+    );
+    await r.fulfill({ response: res, body: failed });
+  });
+  await page.goto("/");
+  await page.getByRole("button", { name: "Davi" }).click();
+  await page.waitForURL("**/library");
+  await page.getByRole("link", { name: /Davi (Science|Biology)/ }).click();
+  await expect(page.getByRole("heading", { name: /home server/ })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Retry" })).toBeVisible();
+  await checkBothThemes(page);
 });
