@@ -1181,7 +1181,7 @@
           ],
           "area": "src/app/practice/[sessionId], src/ui/practice; screens practice_session and practice_answer_revealed, README items 1, 3, 4 and 18",
           "done_when": "Component or e2e tests: full screen with no sidebar; front shows chip, question, exact hint and Show answer; back shows small question, paragraph or bullets per the deck's style, and images on the correct side; segmented progress shows done, current and remaining with a text count; HTML in card text renders as literal text; reading settings from F5 apply to card text; loading skeleton and error state render.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F6.6",
