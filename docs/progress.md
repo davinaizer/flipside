@@ -74,3 +74,17 @@ REVIEW F5 round 1: GAPS at 5fc8d5a
 REVIEW F5 round 2: GAPS at c7361a1
 REVIEW F5 round 3: PASS at 0fd2cbf
 F5 done: PR #10. MANUAL PENDING: none
+- F6.1: PUT /api/v1/sessions/{id} builds the queue (src/server/sessions.ts) for every scope and length, stores the ordered card ids in sessions.meta, and returns card text, images, grade labels and grades so far; an empty body resumes (tests/sessions-api.test.ts, AC7 cap).
+- F6.2: PUT /api/v1/reviews/{id} records a grade in one transaction (src/server/reviews.ts): scheduler, card_state upsert, complete review_log (prev_state, first attempt, introduced_new), re-queue at most twice, idempotent retry (tests/reviews-api.test.ts).
+- F6.3: DELETE /api/v1/reviews/{id} undoes the latest live grade of a session (src/server/reviews.ts): restores card_state from prev_state or removes it for a New card, marks undone_at, keeps the row, returns the restored state and labels; repeat-safe (tests/reviews-undo.test.ts).
+- F6.4: POST /api/v1/sessions/{id}/end and GET /api/v1/sessions/{id}/summary (src/server/sessions.ts); the last grade marks the session completed (src/server/reviews.ts) (tests/sessions-end-summary.test.ts).
+- F6.5: full-screen practice front and back views with segmented progress, reading settings, skeleton and error state (src/ui/practice, src/app/practice/[sessionId]); grading is F6.6.
+- F6.6: grade buttons, Not yet re-queue, Undo last, End session and resume in the practice screen (src/ui/practice/use-session.ts controller over domain/session-queue, GradeBar.tsx; tests with a mocked clock and API).
+F6.7: session summary (counts, time, go-again cards, Practise the misses via cards scope, Back to Library) shown from PracticeScreen.
+- F6.8: Read aloud button and optional auto-read in practice (src/ui/practice/speech.ts; rates, cancel and unsupported-browser tests with a mocked speechSynthesis). Real iPad check is manual AC10.
+- F6.9: Reading settings shortcut (overlay dialog, live via SettingsProvider, same card kept) and Space/1/2/3 shortcuts (src/ui/practice/SettingsPopover.tsx, shortcuts.ts); tests are pure-function and static-markup, no e2e.
+F6.10: e2e/practice.spec.ts closes AC4 to AC7 and AC2 images on both viewports with axe and 44 px; seeds eight Practice profiles.
+- F6.11 (review fix): tests for cards scope and Practise the misses e2e, undo locks the card row, explicit timeouts on slow tests.
+REVIEW F6 round 1: GAPS at c0a7e33
+REVIEW F6 round 2: PASS at 930e9f1
+F6 done: PR #11. MANUAL PENDING: AC10

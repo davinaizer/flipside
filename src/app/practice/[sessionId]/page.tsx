@@ -1,9 +1,23 @@
-/** Stub: the practice screen lands in F6. Start practice already opens this route. */
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+import { PROFILE_COOKIE, profileFromCookie } from "@/server/profile";
+import { readSettings } from "@/server/settings";
+import { SettingsProvider } from "@/ui/settings/SettingsProvider";
+import { PracticeScreen } from "@/ui/practice/PracticeScreen";
+
+export const dynamic = "force-dynamic";
+
+/** Full screen, outside the app shell (no sidebar). Needs a profile for its reading settings. */
 export default async function PracticePage({ params }: { params: Promise<{ sessionId: string }> }) {
+  const profile = await profileFromCookie((await cookies()).get(PROFILE_COOKIE)?.value);
+  if (!profile) redirect("/");
   const { sessionId } = await params;
+  const settings = readSettings(profile.settings);
   return (
-    <main className="min-h-screen bg-surface p-8 text-on-surface" data-session={sessionId}>
-      <h1 className="text-3xl font-semibold">Practice</h1>
+    <main className="min-h-screen bg-surface text-on-surface">
+      <SettingsProvider key={profile.id} initial={settings}>
+        <PracticeScreen sessionId={sessionId} />
+      </SettingsProvider>
     </main>
   );
 }

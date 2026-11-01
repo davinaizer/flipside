@@ -1094,9 +1094,9 @@
         "11"
       ],
       "notes": "AC10 (read aloud on the target iPad) is manual.",
-      "status": "todo",
-      "branch": null,
-      "pr": null,
+      "status": "done",
+      "branch": "feat/F6-practice",
+      "pr": 11,
       "tasks": [
         {
           "id": "F6.1",
@@ -1112,7 +1112,7 @@
           ],
           "area": "src/app/api/v1/sessions/[id]/route.ts, src/server/sessions.ts, src/shared/schemas/session.ts",
           "done_when": "Integration tests: PUT builds the queue for every scope and length and returns each card's text, images and grade labels; the ordered queue is stored in sessions.meta, with no schema change, so a retry with the same id returns the identical queue and an empty-body PUT resumes it with grades so far; the new-card allowance is the setting minus today's non-undone introduced_new (AC7, 16 new with cap 10); other profile's scope returns 404; no candidates returns an empty queue.",
-          "status": "todo",
+          "status": "done",
           "model": "opus"
         },
         {
@@ -1132,7 +1132,7 @@
           ],
           "area": "src/app/api/v1/reviews/[id]/route.ts, src/server/reviews.ts, src/shared/schemas/review.ts",
           "done_when": "Integration tests (AC4): PUT applies the scheduler in one transaction and returns state, next due, re-queue and fresh labels for a re-queued card; all review_log fields are complete, including prev_state, is_first_attempt_today and introduced_new; a retry returns the original without double-counting; rejects a card outside the queue and another profile's session; a card's profile mismatch is refused (section 10); no more than two re-queues per card.",
-          "status": "todo",
+          "status": "done",
           "model": "opus"
         },
         {
@@ -1148,7 +1148,7 @@
           ],
           "area": "DELETE /reviews/{id} in src/server/reviews.ts",
           "done_when": "Integration tests (AC6): undo marks undone_at, keeps the row, and restores box, due date, lapses, reps and status, removing the state row for a card that was New; the new-card allowance and first-attempt flag recover, so regrading is a first attempt; stepping back through the whole session works; only the latest live review of a session can be undone, others return 409; a repeated DELETE is safe; another profile gets 404; the response has the card's labels.",
-          "status": "todo",
+          "status": "done",
           "model": "opus"
         },
         {
@@ -1165,7 +1165,7 @@
           ],
           "area": "POST /sessions/{id}/end, GET /sessions/{id}/summary, src/server/sessions.ts",
           "done_when": "Integration tests: end marks ended_early and keeps grades; grading the last card marks completed; summary gives counts by grade from each card's first grade in the session (ASSUMED if the PRD stays silent), session time, up to three cards to go again and the ids for Practise the misses; undone reviews never count; other profile gets 404.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F6.5",
@@ -1181,7 +1181,7 @@
           ],
           "area": "src/app/practice/[sessionId], src/ui/practice; screens practice_session and practice_answer_revealed, README items 1, 3, 4 and 18",
           "done_when": "Component or e2e tests: full screen with no sidebar; front shows chip, question, exact hint and Show answer; back shows small question, paragraph or bullets per the deck's style, and images on the correct side; segmented progress shows done, current and remaining with a text count; HTML in card text renders as literal text; reading settings from F5 apply to card text; loading skeleton and error state render.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F6.6",
@@ -1201,7 +1201,7 @@
           ],
           "area": "src/ui/practice/use-session.ts (uses src/domain/session-queue)",
           "done_when": "Component or e2e tests with a mocked clock: three buttons with icon, label and server sublabel; Not yet reappears per the queue with fresh labels; Undo last returns to the previous front and repeats to the start; End session leaves at once; duration runs from front shown to grade with no visible timer; a failed grade retries with the same id; reloading the page resumes at the same card.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F6.7",
@@ -1215,7 +1215,7 @@
           ],
           "area": "src/ui/practice/summary; screen practice_session_summary",
           "done_when": "Component or e2e tests: counts by grade with text labels, session time, up to three cards, Back to Library; Practise the misses starts a new session from an explicit card list; the action is hidden with no misses; no streak or pressure copy.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F6.8",
@@ -1231,7 +1231,7 @@
           ],
           "area": "src/ui/practice/speech.ts",
           "done_when": "Unit tests with a mocked speechSynthesis: the button speaks the question on the front and answer on the back; auto-read speaks each new question only when enabled; Slow, Normal and Fast map to rates; navigating cancels speech; unsupported browsers hide the button with no error. Real-device behaviour is manual AC10.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F6.9",
@@ -1246,7 +1246,7 @@
           ],
           "area": "src/ui/practice/settings-popover, src/ui/practice/shortcuts",
           "done_when": "Component or e2e tests: the top-bar shortcut opens reading settings over the session, changes apply live, and closing returns to the same card and side; Space shows the answer, 1, 2 and 3 grade only when the answer is visible; shortcuts do not fire inside inputs or while a dialog is open.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F6.10",
@@ -1274,7 +1274,7 @@
           ],
           "area": "e2e/practice.spec.ts, using the school fixture",
           "done_when": "On both viewports: Start practice, Weak cards and Deck Practise each open a real session (closing the F4 intercepts); a 5-card session shows sublabels and box and due updates match section 5 (AC4); Not yet reappears after about four cards, at most twice (AC5); undo restores state (AC6); 16 new cards with cap 10 yields no more than 10 in a local day (AC7); images appear on the correct side (AC2); front, back and summary pass axe and 44 px in both themes.",
-          "status": "todo"
+          "status": "done"
         }
       ],
       "design_screens": [

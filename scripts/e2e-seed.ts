@@ -31,7 +31,9 @@ for (const [owner, name] of Object.entries(DECKS)) {
   );
 }
 // settings.spec.ts changes settings, so each project gets its own profile and cannot disturb Davi or Nicole.
-for (const name of ["Settings Desktop", "Settings iPad"]) {
+// practice.spec.ts grades cards, so every scenario in each project gets its own profile (names carry no "Davi" or "Nicole").
+const PRACTICE = ["open", "grade", "requeue", "cap"].flatMap((s) => [`Practice ${s} desktop`, `Practice ${s} ipad`]);
+for (const name of ["Settings Desktop", "Settings iPad", ...PRACTICE]) {
   await db.insert(profiles).values({
     name,
     avatar: AVATAR_IDS[2] ?? AVATAR_IDS[0],

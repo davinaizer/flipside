@@ -95,7 +95,7 @@ describe("zip safety", () => {
     expect(r.blocked).toBe(true);
     expect(r.issues[0].code).toBe("too_large");
     expect(r.files.size).toBe(0);
-  });
+  }, 20000);
 
   it("blocks bytes that are not a zip", () => {
     const r = openZip(strToU8("not a zip at all, just text padding"));

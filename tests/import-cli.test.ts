@@ -33,4 +33,4 @@ test("import:cli imports through the service and prints the report; unknown prof
   expect(bad.status).not.toBe(0);
   expect(bad.stderr).toContain("Unknown profile");
   expect(await db.select().from(decks)).toHaveLength(1);
-});
+}, 20000);
