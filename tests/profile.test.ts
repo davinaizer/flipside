@@ -27,6 +27,11 @@ test("cookie and X-Profile-Id resolve a profile; bad ids give 401 in the error f
   // resolveHome: valid cookie goes to the library unless switching; bad values show the picker.
   const { resolveHome } = await import("@/server/profile");
   expect(await resolveHome(p.id, false)).toBe("library");
+  const { profileFromCookie } = await import("@/server/profile");
+  expect((await profileFromCookie(p.id))?.name).toBe("Ada");
+  expect(await profileFromCookie(undefined)).toBeNull();
+  expect(await profileFromCookie("nope")).toBeNull();
+  expect(await profileFromCookie("00000000-0000-4000-8000-000000000000")).toBeNull();
   expect(await resolveHome(p.id, true)).toBe("picker");
   expect(await resolveHome(undefined, false)).toBe("picker");
   expect(await resolveHome("garbage", false)).toBe("picker");

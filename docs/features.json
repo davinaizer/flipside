@@ -443,7 +443,7 @@
           ],
           "area": "src/app/(app)/layout.tsx, src/ui/shell, src/ui/states (Skeleton, ErrorState), pages /library (deck names only), /decks/[id], /progress and /settings as stubs; README items 13 and 16",
           "done_when": "Component or e2e tests: sidebar shows Library, Progress, Settings and the current avatar and name, highlights the current section, and Switch profile returns to the picker from any page; /library lists the profile's decks by name; a missing profile redirects to the picker; a foreign deck URL shows a not-found state; the error state offers Retry and Switch profile.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F2.6",

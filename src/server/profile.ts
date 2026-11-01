@@ -86,3 +86,16 @@ export async function resolveHome(
     },
   );
 }
+
+/** For server-rendered pages: the profile named by the cookie value, or null when missing or unknown. */
+export async function profileFromCookie(
+  cookieValue: string | undefined,
+  db: Db = getDb(),
+): Promise<Profile | null> {
+  if (!cookieValue) return null;
+  const req = new Request("http://local/", { headers: { cookie: `${PROFILE_COOKIE}=${cookieValue}` } });
+  return getCurrentProfile(req, db).catch((e: unknown) => {
+    if (e instanceof ApiError && e.status === 401) return null;
+    throw e;
+  });
+}
