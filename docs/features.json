@@ -982,7 +982,7 @@
           ],
           "area": "src/app/api/v1/settings/route.ts, src/server/settings.ts",
           "done_when": "Integration tests: GET returns stored values merged over defaults; PUT validates with the shared schema and rejects unknown font ids, sizes and colours; values are per profile and the other profile is untouched; a new client sees the saved value.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F5.2",

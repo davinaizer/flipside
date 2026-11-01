@@ -64,3 +64,4 @@ REVIEW F4 round 1: GAPS at 3eb9d84
 - F4.9: Deck e2e covers the loading skeleton (client navigation held open) and the error with Retry (stream's page row swapped for an error row), with axe and 44 px in both themes (e2e/deck.spec.ts).
 REVIEW F4 round 2: PASS at 31f9481
 F4 done: PR #9. MANUAL PENDING: none
+- F5.1: GET/PUT /api/v1/settings (src/server/settings.ts); PUT replaces all settings with strict validation; tests in tests/settings-api.test.ts.
