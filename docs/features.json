@@ -786,7 +786,7 @@
           ],
           "area": "GET /library in src/server/decks.ts, src/shared/schemas/library.ts",
           "done_when": "Integration tests with factories: today's totals (due, decks with due cards, session length) use the profile's local day; the weak count matches the domain definition; groups are alphabetical with Other for no group; each deck has topic, card and due counts and New, Not yet, Nearly and Got it buckets; deleted decks and cards and the other profile's data are excluded; topic names are included for search.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F4.2",

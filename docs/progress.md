@@ -52,3 +52,4 @@ F3.12: ImportSuccess shows added, updated and unchanged counts, the kept missing
 F3.13: import screen follows add_deck_re_import: numbered steps, Deck details beside the preview, colour swatches, segmented answer style, Topic/Front/Back table, Add N cards; e2e and axe pass on both viewports and themes.
 REVIEW F3 round 2: PASS at f56ff1c
 F3 done (PR #8). MANUAL PENDING: none
+- F4.1: GET /library now returns today's totals and grouped decks with due and mastery counts (tests/library-counts.test.ts).

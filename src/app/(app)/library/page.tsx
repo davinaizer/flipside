@@ -7,7 +7,7 @@ import { PROFILE_COOKIE, profileFromCookie } from "@/server/profile";
 export default async function LibraryPage() {
   const profile = await profileFromCookie((await cookies()).get(PROFILE_COOKIE)?.value);
   if (!profile) redirect("/"); // pages render alongside the layout, so guard here too
-  const { decks } = await getLibrary(profile.id);
+  const decks = (await getLibrary(profile)).groups.flatMap((g) => g.decks);
   return (
     <>
       <h1 className="mb-6 text-4xl font-semibold">Library</h1>

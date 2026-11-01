@@ -29,12 +29,14 @@ test("library and deck reads are scoped to the current profile", async () => {
     new Request("http://x/", { headers: { "x-profile-id": p } });
   const ctx = (id: string) => ({ params: Promise.resolve({ id }) });
 
+  const names = (body: { groups: { decks: { name: string }[] }[] }) =>
+    body.groups.flatMap((g) => g.decks.map((d) => d.name));
   const body = await (await lib.GET(req(a.id))).json();
-  expect(body.decks.map((d: { name: string }) => d.name)).toEqual(["Bio"]);
-  expect(body.decks[0].cardCount).toBe(3);
+  expect(names(body)).toEqual(["Bio"]);
+  expect(body.groups[0].decks[0].cardCount).toBe(3);
   const bBody = await (await lib.GET(req(b.id))).json();
-  expect(bBody.decks.map((d: { name: string }) => d.name)).toEqual(["Chem"]);
-  expect(bBody.decks[0].cardCount).toBe(1);
+  expect(names(bBody)).toEqual(["Chem"]);
+  expect(bBody.groups[0].decks[0].cardCount).toBe(1);
   expect((await lib.GET(new Request("http://x/"))).status).toBe(401);
 
   const own = await deck.GET(req(a.id), ctx(da.id));
