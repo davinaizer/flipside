@@ -1450,9 +1450,9 @@
         "16"
       ],
       "notes": "Backup/restore scripts, launchd service, full e2e journey, axe on every screen in both themes. AC11 (reboot, restore drill) is manual.",
-      "status": "todo",
-      "branch": null,
-      "pr": null,
+      "status": "done",
+      "branch": "feat/F8-operations",
+      "pr": 13,
       "tasks": [
         {
           "id": "F8.1",
@@ -1465,7 +1465,7 @@
           ],
           "area": "scripts/backup.sh (pg_dump through podman exec), pnpm backup",
           "done_when": "Integration test against a disposable database and temp folders: writes a dated folder outside the repository with pg_dump output and an images archive; retention removes only backups older than 14 days; failure exits non-zero and leaves no partial folder reported as complete.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F8.2",
@@ -1479,7 +1479,7 @@
           ],
           "area": "scripts/restore.sh (through podman exec), pnpm restore, tests/integration/backup-restore.test.ts",
           "done_when": "Automated drill on a disposable database: seed decks, progress and images, back up, destroy, restore, then card_state, review_log, stats and image bytes match. The script refuses to overwrite non-empty data without an explicit confirm flag.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F8.3",
@@ -1491,7 +1491,7 @@
           ],
           "area": "ops/launchd/*.plist (app, Podman machine and Postgres, nightly backup), docs/operations.md, README.md",
           "done_when": "plutil -lint passes on every plist; one job starts the Podman machine and then the Postgres container, and the app job waits until the database accepts connections; the runbook gives install steps, the iPad address and shortcut, and the manual AC11 reboot and restore checklist. Agents do not install anything on the host; AC11 stays MANUAL 0e6c390.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F8.4",
@@ -1502,7 +1502,7 @@
           ],
           "area": "e2e/journey.spec.ts",
           "done_when": "On both viewports against a production build (next build and next start): pick profile, import the school deck, practise, undo, finish, see statistics; no request leaves the local host.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F8.5",
@@ -1514,7 +1514,7 @@
           ],
           "area": "e2e/a11y.spec.ts",
           "done_when": "AC12 and AC13: one spec walks every screen and state in section 8, including empty, loading, error and success, on both viewports and iPad portrait: no serious or critical axe issue, every control at least 44 px, in both themes; the theme toggle switches each screen at once and survives reload; emulated reduced motion shows no animation. Any token fix is logged as ASSUMED.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F8.6",
@@ -1525,7 +1525,7 @@
           ],
           "area": "e2e/performance.spec.ts, tests/integration/import-performance.test.ts",
           "done_when": "Against a production build: first card within 1 s of Start, next card rendered under 200 ms after a grade, a 2,000-row import under 30 s. Results are appended to docs/progress.md.",
-          "status": "todo"
+          "status": "done"
         }
       ]
     }

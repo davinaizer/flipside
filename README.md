@@ -68,6 +68,10 @@ These scripts are specified in [PRD section 13](docs/PRD.md#13-local-environment
 | `pnpm test` / `pnpm test:e2e` | Unit and integration tests, end-to-end tests |
 | `pnpm backup` / `pnpm restore <file>` | Back up and restore the database and images |
 
+## Running at home
+
+Launchd templates for the app, Postgres and the nightly backup are in `ops/launchd/`. Install steps, the iPad address and shortcut, and the reboot and restore checklist are in [docs/operations.md](docs/operations.md).
+
 ## Roadmap
 
 | Phase | Name | Gate to move on |

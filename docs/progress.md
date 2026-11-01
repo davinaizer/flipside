@@ -98,3 +98,11 @@ REVIEW F7 round 1: GAPS at b7004f8
 F7.7: By deck Mastered now shows the share (boxes 4-5) with count, plus subtitle Sorted by lowest mastery; unit and e2e updated.
 REVIEW F7 round 2: PASS at b371f08
 F7 Progress done (PR #12). MANUAL PENDING: none
+F8.1 done: scripts/backup.sh and pnpm backup (pg_dump via podman exec, images tar.gz, 14-day retention); tests/backup.test.ts.
+F8.2 done: scripts/restore.sh and pnpm restore (refuses non-empty data without --yes); tests/integration/backup-restore.test.ts drill.
+F8.3 done: ops/launchd plists (db, app, backup) and docs/operations.md with install, iPad and AC11 checklist. AC11 stays MANUAL.
+F8.4 done: e2e/journey.spec.ts walks pick profile, import, practise, undo, finish, statistics on both viewports with an off-host request check.
+F8.5: e2e/a11y.spec.ts walks every screen and state in both themes (axe, 44 px), toggle plus reload, reduced motion, iPad portrait; added reduced-motion CSS rule.
+F8.6 done: e2e/performance.spec.ts and tests/integration/import-performance.test.ts. Measured on this Mac, production build, localhost: first card 117 ms ipad / 129 ms desktop (target 1 s); next card after grade max 92 ms ipad / 143 ms desktop (target 200 ms); 2,000-row import 158 ms (target 30 s). Home-network iPad timing stays manual.
+REVIEW F8 round 1: PASS at 6ef11a4
+F8 Operations done (PR #13). MANUAL PENDING: AC11
