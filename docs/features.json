@@ -1465,7 +1465,7 @@
           ],
           "area": "scripts/backup.sh (pg_dump through podman exec), pnpm backup",
           "done_when": "Integration test against a disposable database and temp folders: writes a dated folder outside the repository with pg_dump output and an images archive; retention removes only backups older than 14 days; failure exits non-zero and leaves no partial folder reported as complete.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F8.2",
