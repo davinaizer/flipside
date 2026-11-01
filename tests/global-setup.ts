@@ -19,8 +19,12 @@ function podman(args: string[]): string {
   }).trim();
 }
 
+// Vitest 5 / Vite 8 crash while mapping the stack of an error thrown from global
+// setup ("code.charCodeAt is not a function") and hide the message. A plain
+// stack string keeps the one-line message readable.
 function fail(msg: string): never {
-  throw new Error(`test database: ${msg}`);
+  const line = `test database: ${msg}`;
+  throw Object.assign(new Error(line), { stack: line });
 }
 
 function freePort(): Promise<number> {

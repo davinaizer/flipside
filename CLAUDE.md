@@ -6,7 +6,7 @@ Spec: `docs/PRD.md` (authoritative). How agents build it: `docs/WORKFLOW.md`. Bu
 ## Commands
 - `bash scripts/verify.sh`: typecheck, lint, tests. Must be green before any commit.
 - `pnpm dev`: dev server on port 3000. `pnpm build`, then `pnpm start`: production server.
-- `pnpm db:up` / `pnpm db:down`: start/stop local Postgres 17 (Podman; volume kept). `DATABASE_URL` is in `.env.example`.
+- `pnpm db:up` / `pnpm db:down`: start/stop local Postgres 17 (Podman; volume kept). First time: `cp .env.example .env` (`dev` and `start` read `.env`, and fail without `DATABASE_URL`).
 - `pnpm db:migrate`: apply migrations (needs `DATABASE_URL` exported, e.g. `set -a; . ./.env.example`). `pnpm db:seed`: seed Davi and Nicole.
 - `pnpm test`: Vitest. `pnpm test:e2e`: Playwright desktop and iPad with axe (boots its own Postgres and app; run `pnpm exec playwright install chromium` once).
 
