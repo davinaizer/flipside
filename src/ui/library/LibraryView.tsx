@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { matchesQuery } from "@/domain/text-match";
 import type { Library } from "@/shared/schemas/library";
 import { MasteryBar } from "@/ui/mastery-bar/MasteryBar";
 
@@ -19,58 +20,101 @@ export interface LibraryViewProps {
   /** Set when the session could not be created; shown without blaming the learner. */
   startError: string | null;
   onStart: (scope: "all" | "weak") => void;
+  /** Search text (L6). Decks match by name or any topic name. */
+  query: string;
+  onQueryChange: (query: string) => void;
 }
 
 /** Library screen (L1 to L5, L7, L8): Today panel, then decks in groups. Presentational; the data comes in as props. */
-export function LibraryView({ library, busy, startError, onStart }: LibraryViewProps) {
-  const { today, groups } = library;
+export function LibraryView({
+  library,
+  busy,
+  startError,
+  onStart,
+  query,
+  onQueryChange,
+}: LibraryViewProps) {
+  const { today } = library;
+  const groups = library.groups
+    .map((g) => ({
+      ...g,
+      decks: g.decks.filter(
+        (d) => matchesQuery(d.name, query) || d.topics.some((t) => matchesQuery(t, query)),
+      ),
+    }))
+    .filter((g) => g.decks.length > 0);
+  const noDecks = library.groups.length === 0;
   const length = today.sessionLength === "all" ? "all due" : `${today.sessionLength} cards`;
   return (
     <>
       <div className="mb-6 flex items-center justify-between gap-4">
         <h1 className="text-4xl font-semibold">Library</h1>
-        <Link href="/import" className={`${button} flex items-center bg-primary text-on-primary`}>
-          Add deck
-        </Link>
-      </div>
-      <section aria-labelledby="today" className="mb-8 max-w-3xl rounded-2xl bg-surface-container p-6">
-        <h2 id="today" className="text-2xl font-semibold">Today</h2>
-        <p className="mt-2 text-lg">
-          {today.dueCount} {today.dueCount === 1 ? "card" : "cards"} due in {today.decksWithDue}{" "}
-          {today.decksWithDue === 1 ? "deck" : "decks"}. Sessions are {length}.
-        </p>
-        <div className="mt-4 flex flex-wrap gap-3">
-          <button
-            type="button"
-            disabled={busy || today.dueCount === 0}
-            onClick={() => onStart("all")}
-            className={`${button} bg-primary text-on-primary`}
-          >
-            Start practice
-          </button>
-          <button
-            type="button"
-            disabled={busy || today.weakCount === 0}
-            onClick={() => onStart("weak")}
-            className={`${button} text-on-surface outline outline-1 outline-outline`}
-          >
-            Weak cards ({today.weakCount})
-          </button>
-        </div>
-        {startError && (
-          <p role="alert" className="mt-3 text-on-surface-variant">
-            {startError}
-          </p>
+        {!noDecks && (
+          <Link href="/import" className={`${button} flex items-center bg-primary text-on-primary`}>
+            Add deck
+          </Link>
         )}
-      </section>
-      {groups.length === 0 ? (
+      </div>
+      {noDecks ? null : (
+        <>
+          <label className="mb-6 block max-w-xl">
+            <span className="sr-only">Search decks and topics</span>
+            <input
+              type="search"
+              value={query}
+              onChange={(e) => onQueryChange(e.target.value)}
+              placeholder="Search decks and topics"
+              className="min-h-11 w-full rounded-full bg-surface-container px-5 text-on-surface outline outline-1 outline-outline"
+            />
+          </label>
+          <section
+            aria-labelledby="today"
+            className="mb-8 max-w-3xl rounded-2xl bg-surface-container p-6"
+          >
+            <h2 id="today" className="text-2xl font-semibold">
+              Today
+            </h2>
+            <p className="mt-2 text-lg">
+              {today.dueCount} {today.dueCount === 1 ? "card" : "cards"} due in {today.decksWithDue}{" "}
+              {today.decksWithDue === 1 ? "deck" : "decks"}. Sessions are {length}.
+            </p>
+            <div className="mt-4 flex flex-wrap gap-3">
+              <button
+                type="button"
+                disabled={busy || today.dueCount === 0}
+                onClick={() => onStart("all")}
+                className={`${button} bg-primary text-on-primary`}
+              >
+                Start practice
+              </button>
+              <button
+                type="button"
+                disabled={busy || today.weakCount === 0}
+                onClick={() => onStart("weak")}
+                className={`${button} text-on-surface outline outline-1 outline-outline`}
+              >
+                Weak cards ({today.weakCount})
+              </button>
+            </div>
+            {startError && (
+              <p role="alert" className="mt-3 text-on-surface-variant">
+                {startError}
+              </p>
+            )}
+          </section>
+        </>
+      )}
+      {noDecks ? (
         <section className="max-w-xl">
           <h2 className="text-2xl font-semibold">No decks yet</h2>
           <p className="mt-2 text-on-surface-variant">
-            Add a deck from a CSV file with topic, front and back columns. Your cards are saved on the home server.
+            Add a deck from a CSV file with topic, front and back columns.
           </p>
           <div className="mt-4 flex gap-3">
-            <Link href="/import" className={`${button} flex items-center bg-primary text-on-primary`}>
+            <Link
+              href="/import"
+              className={`${button} flex items-center bg-primary text-on-primary`}
+            >
               Add deck
             </Link>
             <a
@@ -81,6 +125,10 @@ export function LibraryView({ library, busy, startError, onStart }: LibraryViewP
             </a>
           </div>
         </section>
+      ) : groups.length === 0 ? (
+        <p role="status" className="max-w-xl text-on-surface-variant">
+          Nothing matches that search. Try a different word.
+        </p>
       ) : (
         groups.map((g) => (
           <section key={g.name} aria-label={g.name} className="mb-8">
@@ -96,7 +144,10 @@ export function LibraryView({ library, busy, startError, onStart }: LibraryViewP
                       />
                       <div>
                         <h3 className="text-lg font-semibold">
-                          <Link href={`/decks/${d.id}`} className="flex min-h-11 items-center hover:underline">
+                          <Link
+                            href={`/decks/${d.id}`}
+                            className="flex min-h-11 items-center hover:underline"
+                          >
                             {d.name}
                           </Link>
                         </h3>

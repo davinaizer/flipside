@@ -841,7 +841,7 @@
           ],
           "area": "src/ui/library/search, src/domain/text-match.ts; screen empty_library, README item 14",
           "done_when": "Tests: search filters decks and topics as you type, ignoring case and accents (quimica matches Química); Add deck opens /import; a profile with no decks shows one Add deck action, Download CSV template and one plain line on how to add cards; no match shows a neutral message.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F4.5",

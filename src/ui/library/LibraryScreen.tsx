@@ -15,6 +15,7 @@ type State = { kind: "loading" } | { kind: "error" } | { kind: "ready"; library:
 export function LibraryScreen() {
   const router = useRouter();
   const [state, setState] = useState<State>({ kind: "loading" });
+  const [query, setQuery] = useState("");
   const [busy, setBusy] = useState(false);
   const [startError, setStartError] = useState<string | null>(null);
 
@@ -42,9 +43,20 @@ export function LibraryScreen() {
       const id = await startSession({ scope: { kind: scope }, length: sessionLength });
       router.push(`/practice/${id}`);
     } catch {
-      setStartError("We could not start practice just now. Your cards are safe, so please try again.");
+      setStartError(
+        "We could not start practice just now. Your cards are safe, so please try again.",
+      );
       setBusy(false);
     }
   }
-  return <LibraryView library={state.library} busy={busy} startError={startError} onStart={onStart} />;
+  return (
+    <LibraryView
+      library={state.library}
+      busy={busy}
+      startError={startError}
+      onStart={onStart}
+      query={query}
+      onQueryChange={setQuery}
+    />
+  );
 }
