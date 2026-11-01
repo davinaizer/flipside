@@ -18,7 +18,7 @@ const D = "11111111-1111-4111-8111-111111111111";
 const html = (ticked: string[]) =>
   renderToStaticMarkup(
     createElement(DeckView, {
-      deck: { id: D, name: "Science", groupName: null, color: null, answerStyle: "paragraph", cardCount: 8, reviewCount: 12, topics },
+      deck: { id: D, name: "Science", groupName: null, color: null, answerStyle: "paragraph", cardCount: 8, reviewCount: 12, newRemaining: 10, topics },
       leeches: [],
       ticked: new Set(ticked),
       onToggle() {},
@@ -37,7 +37,7 @@ test("topics show counts, mastery legend and mastered percentage", () => {
 });
 
 test("with none ticked Practise scopes the deck and states the due count", () => {
-  const p = practisePlan(D, topics, new Set());
+  const p = practisePlan(D, topics, new Set(), 10);
   expect(p.label).toBe("Practise deck (3 due)");
   expect(p.scope).toEqual({ kind: "deck", deckId: D });
   expect(anywayPlan(D, topics, new Set())).toBeNull();
@@ -45,7 +45,7 @@ test("with none ticked Practise scopes the deck and states the due count", () =>
 });
 
 test("with topics ticked Practise scopes them and states topic and due counts", () => {
-  const p = practisePlan(D, topics, new Set(["Cells", "Energy"]));
+  const p = practisePlan(D, topics, new Set(["Cells", "Energy"]), 10);
   expect(p.label).toBe("Practise 2 topics (3 due)");
   expect(p.scope).toEqual({ kind: "topics", deckId: D, topics: ["Cells", "Energy"] });
 });
@@ -78,4 +78,12 @@ test("Needs rewording lists leeches with lapse counts and is absent with none", 
   expect(out).toContain("Needs rewording");
   expect(out).toContain("What is a cell?");
   expect(out).toContain("missed 9 times");
+});
+
+test("Practise is startable with only New cards while the daily cap allows, and not otherwise", () => {
+  const fresh = [{ topic: "Cells", dueCount: 0, mastery: { new: 3 } }];
+  expect(practisePlan(D, fresh, new Set(), 10).startable).toBe(3);
+  expect(practisePlan(D, fresh, new Set(), 2).startable).toBe(2);
+  expect(practisePlan(D, fresh, new Set(), 0).startable).toBe(0);
+  expect(practisePlan(D, [{ topic: "Cells", dueCount: 0, mastery: { new: 0 } }], new Set(), 10).startable).toBe(0);
 });

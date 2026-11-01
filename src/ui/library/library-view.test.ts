@@ -17,7 +17,7 @@ const deck = (id: string, name: string, topics: string[]) => ({
   dueCount: 0,
   mastery,
 });
-const today = { dueCount: 0, decksWithDue: 0, sessionLength: 10, weakCount: 0 };
+const today = { dueCount: 0, startableCount: 0, decksWithDue: 0, sessionLength: 10, weakCount: 0 };
 const full = {
   today,
   groups: [

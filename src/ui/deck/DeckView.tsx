@@ -15,7 +15,7 @@ export interface DeckTopic {
 }
 
 export interface DeckViewProps {
-  deck: EditableDeck & { cardCount: number; reviewCount: number; topics: DeckTopic[] };
+  deck: EditableDeck & { cardCount: number; reviewCount: number; newRemaining: number; topics: DeckTopic[] };
   leeches: Leech[];
   ticked: Set<string>;
   onToggle: (topic: string) => void;
@@ -28,7 +28,7 @@ const button = "min-h-11 rounded-full px-8 font-semibold disabled:opacity-60";
 
 /** Deck page (D1 to D3): topics with counts and mastery, tick boxes, and the Practise actions. Presentational. */
 export function DeckView({ deck, leeches, ticked, onToggle, busy, startError, onStart }: DeckViewProps) {
-  const plan = practisePlan(deck.id, deck.topics, ticked);
+  const plan = practisePlan(deck.id, deck.topics, ticked, deck.newRemaining);
   const anyway = anywayPlan(deck.id, deck.topics, ticked);
   return (
     <>
@@ -43,7 +43,7 @@ export function DeckView({ deck, leeches, ticked, onToggle, busy, startError, on
       <div className="mb-6 flex flex-wrap gap-3">
         <button
           type="button"
-          disabled={busy || plan.due === 0}
+          disabled={busy || plan.startable === 0}
           onClick={() => onStart(plan.scope)}
           className={`${button} bg-primary text-on-primary`}
         >

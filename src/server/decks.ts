@@ -1,13 +1,13 @@
 import { z } from "zod";
-import { and, asc, desc, eq, isNull, sql } from "drizzle-orm";
+import { and, asc, desc, eq, gte, isNull, sql } from "drizzle-orm";
 import type { Db } from "@/server/db/client";
 import { getDb } from "@/server/db/client";
 import { cardState, cards, decks, reviewLog } from "@/server/db/schema";
 import { ApiError } from "@/server/http/errors";
 import type { Profile } from "@/server/profile";
-import { learningDay } from "@/domain/day";
+import { dayStartUtc, learningDay } from "@/domain/day";
 import type { Box } from "@/domain/scheduler";
-import { isWeak } from "@/domain/session-builder";
+import { isWeak, sessionCandidateCount } from "@/domain/session-builder";
 import { masteryBuckets } from "@/domain/stats";
 import { ANSWER_STYLES, CARD_COLORS, type CardStatus, type Grade } from "@/shared/enums";
 import type { DeckSummary, Library } from "@/shared/schemas/library";
@@ -25,6 +25,22 @@ const deckColumns = {
 
 export const OTHER_GROUP = "Other";
 
+/** New cards the profile may still meet today: the daily cap minus cards introduced since the learning day began (PRD section 5). */
+async function newCardsRemaining(profile: Profile, today: string, db: Db): Promise<number> {
+  const [{ n }] = await db
+    .select({ n: sql<number>`count(*)::int` })
+    .from(reviewLog)
+    .where(
+      and(
+        eq(reviewLog.profileId, profile.id),
+        eq(reviewLog.introducedNew, true),
+        isNull(reviewLog.undoneAt),
+        gte(reviewLog.reviewedAt, dayStartUtc(today, profile.timezone, profile.dayStartHour)),
+      ),
+    );
+  return Math.max(0, settingsSchema.parse(profile.settings).newCardsPerDay - n);
+}
+
 /**
  * The current profile's library: decks grouped by group name (alphabetical, "Other" for
  * none, last), per-deck counts and mastery buckets, and today's totals. Every figure uses
@@ -33,7 +49,8 @@ export const OTHER_GROUP = "Other";
  */
 export async function getLibrary(profile: Profile, now: Date = new Date(), db: Db = getDb()): Promise<Library> {
   const today = learningDay(now, profile.timezone, profile.dayStartHour);
-  const [deckRows, cardRows] = await Promise.all([
+  const [newRemaining, deckRows, cardRows] = await Promise.all([
+    newCardsRemaining(profile, today, db),
     db
       .select(deckColumns)
       .from(decks)
@@ -103,9 +120,11 @@ export async function getLibrary(profile: Profile, now: Date = new Date(), db: D
     ]);
   }
 
+  const newCount = cardRows.filter((c) => c.box === null).length;
   return {
     today: {
       dueCount,
+      startableCount: sessionCandidateCount(dueCount, newCount, newRemaining),
       decksWithDue: dueByDeck.size,
       sessionLength: settingsSchema.parse(profile.settings).cardsPerSession,
       weakCount,
@@ -145,7 +164,8 @@ export async function findDeck(profileId: string, deckId: string, db: Db = getDb
 export async function getDeck(profile: Profile, deckId: string, now: Date = new Date(), db: Db = getDb()) {
   const deck = await findDeck(profile.id, deckId, db);
   const today = learningDay(now, profile.timezone, profile.dayStartHour);
-  const [rows, [{ n: reviewCount }]] = await Promise.all([
+  const [newRemaining, rows, [{ n: reviewCount }]] = await Promise.all([
+    newCardsRemaining(profile, today, db),
     db
       .select({
         topic: cards.topic,
@@ -187,7 +207,7 @@ export async function getDeck(profile: Profile, deckId: string, now: Date = new 
     };
   });
   return {
-    deck: { ...deck, cardCount: rows.length, reviewCount, topics },
+    deck: { ...deck, cardCount: rows.length, reviewCount, newRemaining, topics },
   };
 }
 

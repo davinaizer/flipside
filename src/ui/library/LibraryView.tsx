@@ -81,7 +81,7 @@ export function LibraryView({
             <div className="mt-4 flex flex-wrap gap-3">
               <button
                 type="button"
-                disabled={busy || today.dueCount === 0}
+                disabled={busy || today.startableCount === 0}
                 onClick={() => onStart("all")}
                 className={`${button} bg-primary text-on-primary`}
               >

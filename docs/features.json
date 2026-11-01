@@ -916,7 +916,7 @@
           ],
           "area": "src/server/decks.ts, src/ui/library/LibraryView.tsx, src/ui/deck/DeckView.tsx",
           "done_when": "Review gap 1: Start practice (Library) and Practise deck (Deck) are enabled whenever the scope has session candidates per PRD section 5 (due cards plus new cards up to the remaining daily cap), built from the domain rule, not dueCount alone. Test: a deck with only New cards can start practice from both Library and Deck; with no candidates the buttons stay disabled.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F4.9",

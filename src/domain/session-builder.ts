@@ -61,6 +61,15 @@ export function isWeak(card: SessionCard): boolean {
   return s.status === "leech" || (s.box === 1 && s.reps >= 1);
 }
 
+/**
+ * How many cards a session over a scope can hold before the length cut: the due cards
+ * plus New cards up to what the daily cap still allows. Same rule as buildSession, for
+ * screens that only have counts (enabling Start practice).
+ */
+export function sessionCandidateCount(due: number, newInScope: number, newRemaining: number): number {
+  return due + Math.min(newInScope, Math.max(0, Math.floor(newRemaining)));
+}
+
 function inScope(card: SessionCard, scope: SessionScope): boolean {
   switch (scope.kind) {
     case "all":

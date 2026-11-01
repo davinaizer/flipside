@@ -60,3 +60,4 @@ F3 done (PR #8). MANUAL PENDING: none
 - F4.6: Deck page has Edit deck (PATCH), Delete deck (confirmation with card and review record counts, then Library), Re-import link (/import?deckId=) and a Needs rewording list of leeches (src/ui/deck/*, e2e/deck.spec.ts).
 - F4.7: Library e2e covers loading, error with Retry, empty, populated and search; Deck e2e adds edit panel, delete confirmation (DELETE mocked) and not-found, all with axe and 44 px in both themes (e2e/library.spec.ts, e2e/deck.spec.ts).
 REVIEW F4 round 1: GAPS at 3eb9d84
+- F4.8: Start practice and Practise deck enable on candidates = due + New up to the remaining daily cap (domain sessionCandidateCount); library today.startableCount and deck.newRemaining added (tests/library-counts.test.ts, practice-plan test).

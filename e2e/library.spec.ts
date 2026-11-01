@@ -14,7 +14,7 @@ const deck = {
   mastery: { new: 4, notYet: 6, nearly: 9, gotIt: 45 },
 };
 const library = {
-  today: { dueCount: 12, decksWithDue: 1, sessionLength: 10, weakCount: 3 },
+  today: { dueCount: 12, startableCount: 12, decksWithDue: 1, sessionLength: 10, weakCount: 3 },
   groups: [{ name: "Other", decks: [deck] }],
 };
 
@@ -92,7 +92,7 @@ test("loading shows a skeleton that passes axe", async ({ page }) => {
 test("empty Library offers one Add deck action and passes axe", async ({ page }) => {
   await page.route("**/api/v1/library", (r) =>
     r.fulfill({
-      json: { today: { dueCount: 0, decksWithDue: 0, sessionLength: 10, weakCount: 0 }, groups: [] },
+      json: { today: { dueCount: 0, startableCount: 0, decksWithDue: 0, sessionLength: 10, weakCount: 0 }, groups: [] },
     }),
   );
   await signIn(page);

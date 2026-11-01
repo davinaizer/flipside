@@ -1,26 +1,34 @@
 import type { SessionRequest } from "@/shared/schemas/session";
 
+import { sessionCandidateCount } from "@/domain/session-builder";
+
 export interface TopicRow {
   topic: string;
   dueCount: number;
+  /** New cards in the topic (mastery.new). */
+  mastery: { new: number };
 }
 
 const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? "" : "s"}`;
 
 /** What the main Practise button does for the current ticks (D2). */
-export function practisePlan(deckId: string, topics: TopicRow[], ticked: Set<string>) {
+export function practisePlan(deckId: string, topics: TopicRow[], ticked: Set<string>, newRemaining: number) {
   const chosen = topics.filter((t) => ticked.has(t.topic));
   if (chosen.length === 0) {
     const due = topics.reduce((n, t) => n + t.dueCount, 0);
+    const fresh = topics.reduce((n, t) => n + t.mastery.new, 0);
     return {
       due,
+      startable: sessionCandidateCount(due, fresh, newRemaining),
       label: `Practise deck (${due} due)`,
       scope: { kind: "deck", deckId } as SessionRequest["scope"],
     };
   }
   const due = chosen.reduce((n, t) => n + t.dueCount, 0);
+  const fresh = chosen.reduce((n, t) => n + t.mastery.new, 0);
   return {
     due,
+    startable: sessionCandidateCount(due, fresh, newRemaining),
     label: `Practise ${plural(chosen.length, "topic")} (${due} due)`,
     scope: { kind: "topics", deckId, topics: chosen.map((t) => t.topic) } as SessionRequest["scope"],
   };

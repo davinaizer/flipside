@@ -26,6 +26,8 @@ export const libraryGroupSchema = z.object({
 export const librarySchema = z.object({
   today: z.object({
     dueCount: count,
+    /** Cards a session could start with: due plus New up to the daily cap left (section 5). */
+    startableCount: count,
     decksWithDue: count,
     /** The profile's cards-per-session setting. */
     sessionLength: z.union([z.literal(5), z.literal(10), z.literal(20), z.literal("all")]),
