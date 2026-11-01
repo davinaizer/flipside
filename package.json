@@ -10,6 +10,8 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "test": "vitest run",
+    "db:up": "bash scripts/db.sh up",
+    "db:down": "bash scripts/db.sh down",
     "format": "prettier --write ."
   },
   "dependencies": {

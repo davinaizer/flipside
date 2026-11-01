@@ -64,7 +64,8 @@
           ],
           "area": "scripts/db.sh (podman run, no compose tool), .env.example, src/server/env.ts, package.json scripts db:up and db:down",
           "done_when": "pnpm db:up starts a healthy docker.io/library/postgres:17 container with podman, bound to 127.0.0.1:5432 with a named volume, safe to run twice, and pnpm db:down stops it and keeps the volume (checked with podman ps, podman port and pg_isready); .env.example lists DATABASE_URL, IMAGE_STORE_DRIVER, IMAGE_STORE_PATH and PORT; a unit test proves env parsing rejects a missing DATABASE_URL.",
-          "status": "todo"
+          "status": "done",
+          "commit": "bfe7722"
         },
         {
           "id": "F0.4",
