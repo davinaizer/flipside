@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 export async function GET(request: Request): Promise<Response> {
   try {
     const profile = await getCurrentProfile(request);
-    return Response.json(await getLibrary(profile.id));
+    return Response.json(await getLibrary(profile));
   } catch (e) {
     return toErrorResponse(e);
   }

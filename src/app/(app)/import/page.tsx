@@ -11,7 +11,7 @@ export default async function ImportPage({
 }) {
   const profile = await profileFromCookie((await cookies()).get(PROFILE_COOKIE)?.value);
   if (!profile) redirect("/");
-  const { decks } = await getLibrary(profile.id);
+  const decks = (await getLibrary(profile)).groups.flatMap((g) => g.decks);
   const { deckId } = await searchParams;
   return (
     <>

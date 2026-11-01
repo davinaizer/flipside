@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { librarySchema, type Library } from "@/shared/schemas/library";
 import { importResultSchema, type ImportResult } from "@/shared/schemas/import";
 import {
   meSchema,
@@ -46,6 +47,7 @@ export const api = {
       method: "POST",
       body: JSON.stringify({ profileId }),
     }),
+  library: (): Promise<Library> => call("/library", librarySchema),
   me: (): Promise<Me> => call("/me", meSchema),
   /** Commit step of the import (PRD section 6, step 4): the file plus deck details, or a deckId to re-import. */
   commitImport: (form: FormData): Promise<ImportResult> =>

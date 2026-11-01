@@ -52,3 +52,15 @@ F3.12: ImportSuccess shows added, updated and unchanged counts, the kept missing
 F3.13: import screen follows add_deck_re_import: numbered steps, Deck details beside the preview, colour swatches, segmented answer style, Topic/Front/Back table, Add N cards; e2e and axe pass on both viewports and themes.
 REVIEW F3 round 2: PASS at f56ff1c
 F3 done (PR #8). MANUAL PENDING: none
+- F4.1: GET /library now returns today's totals and grouped decks with due and mastery counts (tests/library-counts.test.ts).
+- F4.2: GET/PATCH/DELETE /decks/{id} and GET /decks/{id}/leeches; topics carry due, buckets and mastered percent, deck carries cardCount and reviewCount (tests/deck-manage-api.test.ts).
+- F4.3: Library page (Today panel, grouped decks, mastery bar with counts, skeleton and Retry); Start practice and Weak cards PUT /sessions/{uuid} and open the /practice/{id} stub (src/ui/library, e2e/library.spec.ts).
+- F4.4: Library search (deck and topic names, case and accent blind via src/domain/text-match.ts), neutral no-match line, and a single-action empty state (src/ui/library/library-view.test.ts).
+- F4.5: Deck page lists topics with counts, mastery bar and mastered percent; tick topics to scope Practise (label states topics and due) and practise-anyway for topics with nothing due (src/ui/deck, e2e/deck.spec.ts).
+- F4.6: Deck page has Edit deck (PATCH), Delete deck (confirmation with card and review record counts, then Library), Re-import link (/import?deckId=) and a Needs rewording list of leeches (src/ui/deck/*, e2e/deck.spec.ts).
+- F4.7: Library e2e covers loading, error with Retry, empty, populated and search; Deck e2e adds edit panel, delete confirmation (DELETE mocked) and not-found, all with axe and 44 px in both themes (e2e/library.spec.ts, e2e/deck.spec.ts).
+REVIEW F4 round 1: GAPS at 3eb9d84
+- F4.8: Start practice and Practise deck enable on candidates = due + New up to the remaining daily cap (domain sessionCandidateCount); library today.startableCount and deck.newRemaining added (tests/library-counts.test.ts, practice-plan test).
+- F4.9: Deck e2e covers the loading skeleton (client navigation held open) and the error with Retry (stream's page row swapped for an error row), with axe and 44 px in both themes (e2e/deck.spec.ts).
+REVIEW F4 round 2: PASS at 31f9481
+F4 done: PR #9. MANUAL PENDING: none

@@ -764,9 +764,9 @@
         "11"
       ],
       "notes": "",
-      "status": "todo",
-      "branch": null,
-      "pr": null,
+      "status": "done",
+      "branch": "feat/F4-library-and-deck-page",
+      "pr": 9,
       "tasks": [
         {
           "id": "F4.1",
@@ -786,7 +786,7 @@
           ],
           "area": "GET /library in src/server/decks.ts, src/shared/schemas/library.ts",
           "done_when": "Integration tests with factories: today's totals (due, decks with due cards, session length) use the profile's local day; the weak count matches the domain definition; groups are alphabetical with Other for no group; each deck has topic, card and due counts and New, Not yet, Nearly and Got it buckets; deleted decks and cards and the other profile's data are excluded; topic names are included for search.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F4.2",
@@ -805,7 +805,7 @@
           ],
           "area": "src/app/api/v1/decks/[id] (GET, PATCH, DELETE), decks/[id]/leeches",
           "done_when": "Integration tests: topics carry card count, due count, buckets and mastered percentage including New; PATCH validates rename, group, colour and answer style; the deck response gives the card and review record counts for the delete confirmation; DELETE soft-deletes deck and cards and keeps review_log and card_state; leeches returns flagged cards with lapses; each endpoint returns 404 for the other profile.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F4.3",
@@ -825,7 +825,7 @@
           ],
           "area": "src/app/(app)/library, src/ui/library, src/ui/mastery-bar, src/ui/practice/start-session.ts, /practice/[sessionId] stub; screens library and loading_skeleton",
           "done_when": "Component or e2e tests: Today panel, grouped decks and mastery bar with counts in the legend as well as colour; loading uses skeletons and errors offer Retry. Start practice and Weak cards each PUT /api/v1/sessions/{uuid} with the right scope and length and open /practice/{id}, asserted by intercepting the request, because the session API lands in F6, which closes the flow end to end.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F4.4",
@@ -841,7 +841,7 @@
           ],
           "area": "src/ui/library/search, src/domain/text-match.ts; screen empty_library, README item 14",
           "done_when": "Tests: search filters decks and topics as you type, ignoring case and accents (quimica matches Química); Add deck opens /import; a profile with no decks shows one Add deck action, Download CSV template and one plain line on how to add cards; no match shows a neutral message.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F4.5",
@@ -858,7 +858,7 @@
           ],
           "area": "src/app/(app)/decks/[id], src/ui/deck; screen deck_detail",
           "done_when": "Component or e2e tests: topics show counts, mastery bar and mastered percentage; with none ticked Practise scopes the deck, with some ticked those topics, and the label states topic and due counts; a ticked topic with no due cards offers a clearly labelled practise-anyway that sends ignoring due dates. Session requests asserted by intercept as in the Library task; not-found, loading and error states render.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F4.6",
@@ -875,7 +875,7 @@
           ],
           "area": "src/ui/deck/edit-deck, src/ui/deck/delete-deck, src/ui/deck/needs-rewording",
           "done_when": "Component or e2e tests: edit saves name, group, colour and answer style and updates the page; delete states how many cards and review records will go, then returns to Library with the deck hidden; Needs rewording lists leeches with lapse counts and is absent when there are none; re-import opens /import?deckId=.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F4.7",
@@ -900,7 +900,37 @@
           ],
           "area": "e2e/library.spec.ts, e2e/deck.spec.ts; screen error_with_retry",
           "done_when": "On both viewports with seeded data: empty, loading, error with Retry, populated Library, search, Deck page, edit and delete all pass; axe and 44 px checks pass on each state in both themes.",
-          "status": "todo"
+          "status": "done"
+        },
+        {
+          "id": "F4.8",
+          "title": "Fix: allow starting practice when cards are all New",
+          "reqs": [
+            "L2",
+            "D2"
+          ],
+          "prd_sections": [
+            "5",
+            "7",
+            "11"
+          ],
+          "area": "src/server/decks.ts, src/ui/library/LibraryView.tsx, src/ui/deck/DeckView.tsx",
+          "done_when": "Review gap 1: Start practice (Library) and Practise deck (Deck) are enabled whenever the scope has session candidates per PRD section 5 (due cards plus new cards up to the remaining daily cap), built from the domain rule, not dueCount alone. Test: a deck with only New cards can start practice from both Library and Deck; with no candidates the buttons stay disabled.",
+          "status": "done"
+        },
+        {
+          "id": "F4.9",
+          "title": "Fix: test Deck page loading and error states",
+          "reqs": [
+            "D1"
+          ],
+          "prd_sections": [
+            "8",
+            "16"
+          ],
+          "area": "e2e/deck.spec.ts",
+          "done_when": "Review gap 2: e2e shows the /decks/[id] route rendering the loading skeleton and the error-with-Retry state, with axe and 44 px checks in both themes on both viewports.",
+          "status": "done"
         }
       ],
       "design_screens": [
