@@ -21,8 +21,8 @@
         "16"
       ],
       "notes": "Scaffold, schema for PRD section 10, Podman Postgres, verify/test/e2e harness, seed, health. Land the full schema here so later features do not collide on migrations.",
-      "status": "todo",
-      "branch": null,
+      "status": "in_progress",
+      "branch": "feat/F0-foundation",
       "pr": null,
       "tasks": [
         {
