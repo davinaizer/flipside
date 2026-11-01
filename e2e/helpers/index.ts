@@ -23,6 +23,8 @@ export async function expectTargetsAtLeast44(page: Page): Promise<number> {
     els
       .map((el) => ({ el, r: el.getBoundingClientRect() }))
       .filter(({ r }) => r.width > 0 && r.height > 0)
+      // A visually hidden file input is operated through its 44 px label, which is checked itself.
+      .filter(({ el }) => !(el instanceof HTMLInputElement && el.type === "file" && el.closest("label")))
       .filter(({ r }) => r.width < 44 || r.height < 44)
       .map(
         ({ el, r }) => `${el.tagName.toLowerCase()} ${Math.round(r.width)}x${Math.round(r.height)}`,

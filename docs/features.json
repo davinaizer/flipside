@@ -680,7 +680,7 @@
           ],
           "area": "e2e/import.spec.ts",
           "done_when": "On both viewports: import the school zip through the UI, then re-import it and see nothing added; import an edited back and see one updated; a broken CSV shows its row errors; axe and 44 px checks pass on each import step in both themes.",
-          "status": "todo"
+          "status": "done"
         }
       ],
       "design_screens": [
