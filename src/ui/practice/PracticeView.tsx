@@ -76,6 +76,7 @@ export function PracticeView({
   onReveal,
   reader,
   footer,
+  headerAction,
 }: {
   card: SessionCardPayload;
   revealed: boolean;
@@ -87,9 +88,12 @@ export function PracticeView({
   reader?: Reader | null;
   /** Grade buttons on the back; the session controls (Undo, End) sit under them. */
   footer?: ReactNode;
+  /** Top bar shortcut, e.g. reading settings. */
+  headerAction?: ReactNode;
 }) {
   return (
     <div className="mx-auto flex min-h-screen w-full max-w-3xl flex-col gap-6 p-6">
+      {headerAction}
       <SessionProgress done={done} total={total} />
       <article data-testid="practice-card" className="rounded-3xl p-8 text-left" style={readingStyle(settings)}>
         <span className="inline-block rounded-full bg-primary-container px-4 py-1 text-sm font-semibold text-on-primary-container">

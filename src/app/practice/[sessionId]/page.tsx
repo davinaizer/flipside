@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { PROFILE_COOKIE, profileFromCookie } from "@/server/profile";
 import { readSettings } from "@/server/settings";
+import { SettingsProvider } from "@/ui/settings/SettingsProvider";
 import { PracticeScreen } from "@/ui/practice/PracticeScreen";
 
 export const dynamic = "force-dynamic";
@@ -11,14 +12,12 @@ export default async function PracticePage({ params }: { params: Promise<{ sessi
   const profile = await profileFromCookie((await cookies()).get(PROFILE_COOKIE)?.value);
   if (!profile) redirect("/");
   const { sessionId } = await params;
-  const s = readSettings(profile.settings);
+  const settings = readSettings(profile.settings);
   return (
     <main className="min-h-screen bg-surface text-on-surface">
-      <PracticeScreen
-        sessionId={sessionId}
-        settings={{ font: s.font, textSize: s.textSize, letterSpacing: s.letterSpacing, lineSpacing: s.lineSpacing, cardColor: s.cardColor }}
-        speech={{ autoRead: s.readAloud, speed: s.readingSpeed }}
-      />
+      <SettingsProvider key={profile.id} initial={settings}>
+        <PracticeScreen sessionId={sessionId} />
+      </SettingsProvider>
     </main>
   );
 }

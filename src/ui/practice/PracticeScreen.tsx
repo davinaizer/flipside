@@ -3,13 +3,14 @@
 import { useEffect, useState } from "react";
 import type { SessionResponse } from "@/shared/schemas/session";
 import { api } from "@/ui/api/client";
-import type { ReadingSpeed } from "@/shared/enums";
-import type { ReadingSettings } from "@/ui/reading-card/ReadingCard";
+import { useSettings } from "@/ui/settings/SettingsProvider";
 import { ErrorState } from "@/ui/states/ErrorState";
 import { Skeleton } from "@/ui/states/Skeleton";
 import { GradeBar } from "./GradeBar";
 import { PracticeView } from "./PracticeView";
 import { SummaryScreen } from "./SummaryScreen";
+import { SettingsPopover, SettingsShortcut } from "./SettingsPopover";
+import { usePracticeShortcuts } from "./shortcuts";
 import { useReadAloud } from "./speech";
 import { useSession } from "./use-session";
 
@@ -22,10 +23,8 @@ export function PracticeLoading() {
   );
 }
 
-/** Loads the session (an empty PUT resumes it); the loaded session is then driven by use-session. */
-export type SpeechSettings = { autoRead: boolean; speed: ReadingSpeed };
-
-export function PracticeScreen({ sessionId, settings, speech }: { sessionId: string; settings: ReadingSettings; speech: SpeechSettings }) {
+/** Loads the session (an empty PUT resumes it); the loaded session is then driven by use-session. Needs a SettingsProvider. */
+export function PracticeScreen({ sessionId }: { sessionId: string }) {
   const [data, setData] = useState<SessionResponse | null>(null);
   const [failed, setFailed] = useState(false);
 
@@ -39,14 +38,20 @@ export function PracticeScreen({ sessionId, settings, speech }: { sessionId: str
 
   if (failed) return <div className="p-8"><ErrorState onRetry={retry} /></div>;
   if (!data) return <PracticeLoading />;
-  return <ActiveSession data={data} settings={settings} speech={speech} />;
+  return <ActiveSession data={data} />;
 }
 
-function ActiveSession({ data, settings, speech }: { data: SessionResponse; settings: ReadingSettings; speech: SpeechSettings }) {
+function ActiveSession({ data }: { data: SessionResponse }) {
+  const { settings } = useSettings();
   const [left, setLeft] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const { view, controller } = useSession(data, () => setLeft(true));
   const { card, labels } = view;
-  const reader = useReadAloud(card?.cardId, card?.front, speech.autoRead && !view.revealed, speech.speed);
+  const reader = useReadAloud(card?.cardId, card?.front, settings.readAloud && !view.revealed, settings.readingSpeed);
+  usePracticeShortcuts(
+    { revealed: view.revealed, dialogOpen: settingsOpen },
+    { reveal: controller.reveal, grade: (g) => void controller.grade(g) },
+  );
 
   // A finished, ended or left session shows its summary; the server completes it on the last grade.
   if (left || view.finished || data.session.endedAt) return <SummaryScreen sessionId={data.session.id} />;
@@ -71,7 +76,9 @@ function ActiveSession({ data, settings, speech }: { data: SessionResponse; sett
     );
   }
   return (
+    <>
     <PracticeView
+      headerAction={<SettingsShortcut onOpen={() => setSettingsOpen(true)} />}
       card={card}
       revealed={view.revealed}
       done={view.done}
@@ -88,5 +95,7 @@ function ActiveSession({ data, settings, speech }: { data: SessionResponse; sett
         </>
       }
     />
+    {settingsOpen && <SettingsPopover onClose={() => setSettingsOpen(false)} />}
+    </>
   );
 }

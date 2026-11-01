@@ -1246,7 +1246,7 @@
           ],
           "area": "src/ui/practice/settings-popover, src/ui/practice/shortcuts",
           "done_when": "Component or e2e tests: the top-bar shortcut opens reading settings over the session, changes apply live, and closing returns to the same card and side; Space shows the answer, 1, 2 and 3 grade only when the answer is visible; shortcuts do not fire inside inputs or while a dialog is open.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F6.10",

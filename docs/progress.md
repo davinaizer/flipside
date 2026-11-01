@@ -82,3 +82,4 @@ F5 done: PR #10. MANUAL PENDING: none
 - F6.6: grade buttons, Not yet re-queue, Undo last, End session and resume in the practice screen (src/ui/practice/use-session.ts controller over domain/session-queue, GradeBar.tsx; tests with a mocked clock and API).
 F6.7: session summary (counts, time, go-again cards, Practise the misses via cards scope, Back to Library) shown from PracticeScreen.
 - F6.8: Read aloud button and optional auto-read in practice (src/ui/practice/speech.ts; rates, cancel and unsupported-browser tests with a mocked speechSynthesis). Real iPad check is manual AC10.
+- F6.9: Reading settings shortcut (overlay dialog, live via SettingsProvider, same card kept) and Space/1/2/3 shortcuts (src/ui/practice/SettingsPopover.tsx, shortcuts.ts); tests are pure-function and static-markup, no e2e.
