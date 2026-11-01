@@ -1308,9 +1308,9 @@
         "11"
       ],
       "notes": "",
-      "status": "in_progress",
+      "status": "done",
       "branch": "feat/F7-progress",
-      "pr": null,
+      "pr": 12,
       "tasks": [
         {
           "id": "F7.1",

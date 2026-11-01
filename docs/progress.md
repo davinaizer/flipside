@@ -97,3 +97,4 @@ F6 done: PR #11. MANUAL PENDING: AC10
 REVIEW F7 round 1: GAPS at b7004f8
 F7.7: By deck Mastered now shows the share (boxes 4-5) with count, plus subtitle Sorted by lowest mastery; unit and e2e updated.
 REVIEW F7 round 2: PASS at b371f08
+F7 Progress done (PR #12). MANUAL PENDING: none
