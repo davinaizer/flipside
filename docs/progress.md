@@ -96,3 +96,4 @@ F6 done: PR #11. MANUAL PENDING: AC10
 - F7.6: e2e/progress.spec.ts on desktop and iPad: hand-computed tiles, range switch, Focus next and By deck, Focus next opens a session, undo drops a review from the tiles (AC6), empty state for a new profile, axe and 44 px in both themes.
 REVIEW F7 round 1: GAPS at b7004f8
 F7.7: By deck Mastered now shows the share (boxes 4-5) with count, plus subtitle Sorted by lowest mastery; unit and e2e updated.
+REVIEW F7 round 2: PASS at b371f08
