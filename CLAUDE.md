@@ -11,6 +11,7 @@ Spec: `docs/PRD.md` (authoritative). How agents build it: `docs/WORKFLOW.md`. Bu
 - Layers (PRD section 9): `src/app` parses input and calls a service, no business logic; `src/server` services; `src/domain` pure functions, no I/O; `src/shared` Zod schemas and constants; `src/ui` components and design tokens.
 - The API is the contract: no Server Actions for domain operations (N1).
 - Tunable values (day start hour, intervals, caps) live in `src/shared` constants.
+- Look and feel: `docs/design/DESIGN.md` (light) and `DESIGN-DARK.md` (dark) are canonical. Use the tokens file and existing components; screens are reference only: build from the PRD, use the screen for layout, and apply the corrections in `docs/design/README.md` (never copy `code.html`). Semantic tokens only, no raw hex. Every screen works in both themes.
 - No dependency, service, queue or cache outside PRD section 9 without asking.
 - Never edit PRD acceptance criteria. In `docs/features.json` change only `status`, `commit`, `branch`, `pr`.
 

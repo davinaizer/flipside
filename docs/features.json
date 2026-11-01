@@ -73,7 +73,10 @@
       "status": "todo",
       "branch": null,
       "pr": null,
-      "tasks": []
+      "tasks": [],
+      "design_screens": [
+        "profile_picker"
+      ]
     },
     {
       "id": "F3",
@@ -105,7 +108,11 @@
       "status": "todo",
       "branch": null,
       "pr": null,
-      "tasks": []
+      "tasks": [],
+      "design_screens": [
+        "add_deck_re_import",
+        "import_success"
+      ]
     },
     {
       "id": "F4",
@@ -143,11 +150,18 @@
       "status": "todo",
       "branch": null,
       "pr": null,
-      "tasks": []
+      "tasks": [],
+      "design_screens": [
+        "library",
+        "deck_detail",
+        "empty_library",
+        "loading_skeleton",
+        "error_with_retry"
+      ]
     },
     {
       "id": "F5",
-      "name": "Settings",
+      "name": "Settings and theme",
       "depends_on": [
         "F2"
       ],
@@ -155,10 +169,12 @@
         "T1",
         "T2",
         "T3",
-        "T4"
+        "T4",
+        "T5"
       ],
       "acs": [
-        "AC9"
+        "AC9",
+        "AC13"
       ],
       "manual_acs": [],
       "prd_sections": [
@@ -170,7 +186,10 @@
       "status": "todo",
       "branch": null,
       "pr": null,
-      "tasks": []
+      "tasks": [],
+      "design_screens": [
+        "settings"
+      ]
     },
     {
       "id": "F6",
@@ -216,7 +235,12 @@
       "status": "todo",
       "branch": null,
       "pr": null,
-      "tasks": []
+      "tasks": [],
+      "design_screens": [
+        "practice_session",
+        "practice_answer_revealed",
+        "practice_session_summary"
+      ]
     },
     {
       "id": "F7",
@@ -246,7 +270,10 @@
       "status": "todo",
       "branch": null,
       "pr": null,
-      "tasks": []
+      "tasks": [],
+      "design_screens": [
+        "progress"
+      ]
     },
     {
       "id": "F8",
@@ -268,7 +295,7 @@
         "13",
         "16"
       ],
-      "notes": "Backup/restore scripts, launchd service, full e2e journey, axe on every screen. AC11 (reboot, restore drill) is manual.",
+      "notes": "Backup/restore scripts, launchd service, full e2e journey, axe on every screen in both themes. AC11 (reboot, restore drill) is manual.",
       "status": "todo",
       "branch": null,
       "pr": null,

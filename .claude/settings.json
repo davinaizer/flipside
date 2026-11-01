@@ -1,7 +1,11 @@
 {
   "model": "opus",
   "permissions": {
-    "allow": ["Bash(git push -u origin feat/*)", "Bash(gh pr create*)", "Bash(gh pr merge*)"],
+    "allow": [
+      "Bash(git push -u origin feat/*)",
+      "Bash(gh pr create*)",
+      "Bash(gh pr merge*)"
+    ],
     "deny": [
       "Read(./.env)",
       "Read(./.env.local)",
@@ -15,7 +19,10 @@
     "Stop": [
       {
         "hooks": [
-          { "type": "command", "command": "bash scripts/stop-check.sh 1>&2 || exit 2" }
+          {
+            "type": "command",
+            "command": "bash scripts/stop-check.sh 1>&2 || exit 2"
+          }
         ]
       }
     ]

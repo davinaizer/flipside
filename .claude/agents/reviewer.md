@@ -10,6 +10,7 @@ Read the feature's entry in `docs/features.json` and only the PRD sections it li
 - every listed requirement is implemented and every listed acceptance criterion has a test or an e2e step;
 - the layer rules and stop rules in CLAUDE.md are respected;
 - no scope drift: unrequested features, new dependencies, schema changes outside PRD section 10;
+- UI uses semantic design tokens (no raw hex), works in both themes and matches the screen in `docs/design/` apart from the listed deviations;
 - correctness risks in this app: profile scoping, idempotent writes, day-boundary maths, undo restoring state.
 
 Report only gaps that affect correctness, requirements, acceptance criteria or scope. Skip style, naming and refactors. Do not look for problems that are not there.
