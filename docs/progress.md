@@ -54,3 +54,4 @@ REVIEW F3 round 2: PASS at f56ff1c
 F3 done (PR #8). MANUAL PENDING: none
 - F4.1: GET /library now returns today's totals and grouped decks with due and mastery counts (tests/library-counts.test.ts).
 - F4.2: GET/PATCH/DELETE /decks/{id} and GET /decks/{id}/leeches; topics carry due, buckets and mastered percent, deck carries cardCount and reviewCount (tests/deck-manage-api.test.ts).
+- F4.3: Library page (Today panel, grouped decks, mastery bar with counts, skeleton and Retry); Start practice and Weak cards PUT /sessions/{uuid} and open the /practice/{id} stub (src/ui/library, e2e/library.spec.ts).

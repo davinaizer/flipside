@@ -825,7 +825,7 @@
           ],
           "area": "src/app/(app)/library, src/ui/library, src/ui/mastery-bar, src/ui/practice/start-session.ts, /practice/[sessionId] stub; screens library and loading_skeleton",
           "done_when": "Component or e2e tests: Today panel, grouped decks and mastery bar with counts in the legend as well as colour; loading uses skeletons and errors offer Retry. Start practice and Weak cards each PUT /api/v1/sessions/{uuid} with the right scope and length and open /practice/{id}, asserted by intercepting the request, because the session API lands in F6, which closes the flow end to end.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F4.4",
