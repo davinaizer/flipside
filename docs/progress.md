@@ -53,3 +53,4 @@ F3.13: import screen follows add_deck_re_import: numbered steps, Deck details be
 REVIEW F3 round 2: PASS at f56ff1c
 F3 done (PR #8). MANUAL PENDING: none
 - F4.1: GET /library now returns today's totals and grouped decks with due and mastery counts (tests/library-counts.test.ts).
+- F4.2: GET/PATCH/DELETE /decks/{id} and GET /decks/{id}/leeches; topics carry due, buckets and mastered percent, deck carries cardCount and reviewCount (tests/deck-manage-api.test.ts).

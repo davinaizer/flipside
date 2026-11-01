@@ -41,9 +41,9 @@ test("library and deck reads are scoped to the current profile", async () => {
 
   const own = await deck.GET(req(a.id), ctx(da.id));
   expect(own.status).toBe(200);
-  expect((await own.json()).deck.topics).toEqual([
-    { topic: "Cells", cardCount: 2 },
-    { topic: "Genes", cardCount: 1 },
+  expect((await own.json()).deck.topics.map((t: { topic: string; cardCount: number }) => [t.topic, t.cardCount])).toEqual([
+    ["Cells", 2],
+    ["Genes", 1],
   ]);
 
   const other = await deck.GET(req(a.id), ctx(db1.id));

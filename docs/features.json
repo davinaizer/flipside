@@ -805,7 +805,7 @@
           ],
           "area": "src/app/api/v1/decks/[id] (GET, PATCH, DELETE), decks/[id]/leeches",
           "done_when": "Integration tests: topics carry card count, due count, buckets and mastered percentage including New; PATCH validates rename, group, colour and answer style; the deck response gives the card and review record counts for the delete confirmation; DELETE soft-deletes deck and cards and keeps review_log and card_state; leeches returns flagged cards with lapses; each endpoint returns 404 for the other profile.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F4.3",

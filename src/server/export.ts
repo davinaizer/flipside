@@ -6,7 +6,7 @@ import { EXTENSIONS, type ImageMime } from "@/domain/image-check";
 import type { Db } from "@/server/db/client";
 import { getDb } from "@/server/db/client";
 import { cards, images } from "@/server/db/schema";
-import { getDeck } from "@/server/decks";
+import { findDeck } from "@/server/decks";
 import { getImageStore, type ImageStore } from "@/server/images/store";
 
 async function readAll(stream: ReadableStream<Uint8Array>): Promise<Uint8Array> {
@@ -14,7 +14,7 @@ async function readAll(stream: ReadableStream<Uint8Array>): Promise<Uint8Array> 
 }
 
 /**
- * Zip of deck.csv plus images/ for a deck the profile owns (404 otherwise, via getDeck).
+ * Zip of deck.csv plus images/ for a deck the profile owns (404 otherwise, via findDeck).
  * Images are named by content hash, so one picture used twice is stored once and the
  * names re-import cleanly (the importer matches by base file name).
  */
@@ -24,7 +24,7 @@ export async function exportDeck(
   db: Db = getDb(),
   store: ImageStore = getImageStore(),
 ): Promise<{ filename: string; bytes: Uint8Array }> {
-  const { deck } = await getDeck(profileId, deckId, db);
+  const deck = await findDeck(profileId, deckId, db);
   const rows = await db
     .select({
       externalId: cards.externalId,

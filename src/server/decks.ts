@@ -1,14 +1,15 @@
-import { and, asc, eq, isNull, sql } from "drizzle-orm";
+import { z } from "zod";
+import { and, asc, desc, eq, isNull, sql } from "drizzle-orm";
 import type { Db } from "@/server/db/client";
 import { getDb } from "@/server/db/client";
-import { cardState, cards, decks } from "@/server/db/schema";
+import { cardState, cards, decks, reviewLog } from "@/server/db/schema";
 import { ApiError } from "@/server/http/errors";
 import type { Profile } from "@/server/profile";
 import { learningDay } from "@/domain/day";
 import type { Box } from "@/domain/scheduler";
 import { isWeak } from "@/domain/session-builder";
 import { masteryBuckets } from "@/domain/stats";
-import type { CardStatus, Grade } from "@/shared/enums";
+import { ANSWER_STYLES, CARD_COLORS, type CardStatus, type Grade } from "@/shared/enums";
 import type { DeckSummary, Library } from "@/shared/schemas/library";
 import { settingsSchema } from "@/shared/settings";
 
@@ -118,8 +119,8 @@ export async function getLibrary(profile: Profile, now: Date = new Date(), db: D
   };
 }
 
-/** One deck with its topics and card counts. Another profile's, deleted or unknown ids are all 404. */
-export async function getDeck(profileId: string, deckId: string, db: Db = getDb()) {
+/** The deck row if this profile owns it and it is not deleted; otherwise 404 (same for unknown and other profiles' ids). */
+export async function findDeck(profileId: string, deckId: string, db: Db = getDb()) {
   const notFound = () => new ApiError(404, "deck_not_found", "That deck does not exist.");
   if (!UUID.test(deckId)) throw notFound();
   const [deck] = await db
@@ -133,11 +134,121 @@ export async function getDeck(profileId: string, deckId: string, db: Db = getDb(
       ),
     );
   if (!deck) throw notFound();
-  const topics = await db
-    .select({ topic: cards.topic, cardCount: sql<number>`count(*)::int` })
+  return deck;
+}
+
+/**
+ * One deck with per-topic card count, due count, mastery buckets (New included) and
+ * mastered percentage, plus the card and review record counts the delete confirmation
+ * states (D5). Review records count the profile's non-undone reviews of the deck's cards.
+ */
+export async function getDeck(profile: Profile, deckId: string, now: Date = new Date(), db: Db = getDb()) {
+  const deck = await findDeck(profile.id, deckId, db);
+  const today = learningDay(now, profile.timezone, profile.dayStartHour);
+  const [rows, [{ n: reviewCount }]] = await Promise.all([
+    db
+      .select({
+        topic: cards.topic,
+        box: cardState.box,
+        dueDate: cardState.dueDate,
+        status: cardState.status,
+      })
+      .from(cards)
+      .leftJoin(
+        cardState,
+        and(eq(cardState.cardId, cards.id), eq(cardState.profileId, profile.id)),
+      )
+      .where(and(eq(cards.deckId, deck.id), isNull(cards.deletedAt)))
+      .orderBy(asc(cards.topic)),
+    db
+      .select({ n: sql<number>`count(*)::int` })
+      .from(reviewLog)
+      .innerJoin(cards, eq(cards.id, reviewLog.cardId))
+      .where(
+        and(
+          eq(cards.deckId, deck.id),
+          eq(reviewLog.profileId, profile.id),
+          isNull(reviewLog.undoneAt),
+        ),
+      ),
+  ]);
+  const byTopic = new Map<string, typeof rows>();
+  for (const r of rows) byTopic.set(r.topic, [...(byTopic.get(r.topic) ?? []), r]);
+  const topics = [...byTopic.entries()].map(([topic, list]) => {
+    const m = masteryBuckets(list);
+    return {
+      topic,
+      cardCount: list.length,
+      dueCount: list.filter(
+        (c) => c.box !== null && c.status !== "suspended" && c.dueDate! <= today,
+      ).length,
+      mastery: { new: m.new, notYet: m.notYet, nearly: m.nearly, gotIt: m.gotIt },
+      masteredPercent: m.mastery === null ? 0 : Math.round(m.mastery * 100),
+    };
+  });
+  return {
+    deck: { ...deck, cardCount: rows.length, reviewCount, topics },
+  };
+}
+
+const colorOrNull = z.enum(CARD_COLORS).nullable();
+export const deckPatchSchema = z
+  .object({
+    name: z.string().trim().min(1).max(100),
+    groupName: z.string().trim().max(100).nullable(),
+    color: colorOrNull,
+    answerStyle: z.enum(ANSWER_STYLES),
+  })
+  .partial()
+  .strict()
+  .refine((v) => Object.keys(v).length > 0, "Nothing to change.");
+
+/** Rename, regroup, recolour or change answer style. An empty group name clears the group. */
+export async function updateDeck(profileId: string, deckId: string, body: unknown, db: Db = getDb()) {
+  const deck = await findDeck(profileId, deckId, db);
+  const parsed = deckPatchSchema.safeParse(body);
+  if (!parsed.success) {
+    throw new ApiError(
+      400,
+      "invalid_request",
+      "The deck changes are not valid.",
+      parsed.error.issues.map((i) => ({ path: i.path.join("."), message: i.message })),
+    );
+  }
+  const patch = { ...parsed.data };
+  if (patch.groupName === "") patch.groupName = null;
+  const [row] = await db
+    .update(decks)
+    .set({ ...patch, updatedAt: new Date() })
+    .where(eq(decks.id, deck.id))
+    .returning(deckColumns);
+  return { deck: row };
+}
+
+/** Soft delete: deck and cards get deleted_at; card_state and review_log stay for statistics. */
+export async function deleteDeck(profileId: string, deckId: string, db: Db = getDb()) {
+  const deck = await findDeck(profileId, deckId, db);
+  const at = new Date();
+  await db.transaction(async (tx) => {
+    await tx.update(cards).set({ deletedAt: at, updatedAt: at }).where(and(eq(cards.deckId, deck.id), isNull(cards.deletedAt)));
+    await tx.update(decks).set({ deletedAt: at, updatedAt: at }).where(eq(decks.id, deck.id));
+  });
+}
+
+/** Cards flagged as leeches (status leech) for rewording, most lapses first (D6). */
+export async function getLeeches(profileId: string, deckId: string, db: Db = getDb()) {
+  const deck = await findDeck(profileId, deckId, db);
+  const leeches = await db
+    .select({
+      id: cards.id,
+      topic: cards.topic,
+      front: cards.front,
+      back: cards.back,
+      lapses: cardState.lapses,
+    })
     .from(cards)
-    .where(and(eq(cards.deckId, deck.id), isNull(cards.deletedAt)))
-    .groupBy(cards.topic)
-    .orderBy(asc(cards.topic));
-  return { deck: { ...deck, cardCount: topics.reduce((n, t) => n + t.cardCount, 0), topics } };
+    .innerJoin(cardState, and(eq(cardState.cardId, cards.id), eq(cardState.profileId, profileId)))
+    .where(and(eq(cards.deckId, deck.id), isNull(cards.deletedAt), eq(cardState.status, "leech")))
+    .orderBy(desc(cardState.lapses), asc(cards.position));
+  return { leeches };
 }
