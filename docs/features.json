@@ -297,7 +297,8 @@
           ],
           "area": "src/domain/csv-import.ts, fixtures/csv/ (one broken CSV per rule), papaparse",
           "done_when": "Table-driven tests run one broken file per validation rule and assert block, row error or warning with the row number; free column order, trimmed cells, unknown columns warned, CO₂ and → preserved, duplicate id skips the later row, missing id derives a stable id with the warning; 2,001 rows blocks; a bullet helper returns a list only for bullets style with two or more non-empty lines. Browser-safe, no Node APIs.",
-          "status": "done"
+          "status": "done",
+          "commit": "c50210e"
         },
         {
           "id": "F1.7",
