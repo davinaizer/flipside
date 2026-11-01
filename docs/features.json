@@ -1502,7 +1502,7 @@
           ],
           "area": "e2e/journey.spec.ts",
           "done_when": "On both viewports against a production build (next build and next start): pick profile, import the school deck, practise, undo, finish, see statistics; no request leaves the local host.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F8.5",

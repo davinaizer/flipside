@@ -101,3 +101,4 @@ F7 Progress done (PR #12). MANUAL PENDING: none
 F8.1 done: scripts/backup.sh and pnpm backup (pg_dump via podman exec, images tar.gz, 14-day retention); tests/backup.test.ts.
 F8.2 done: scripts/restore.sh and pnpm restore (refuses non-empty data without --yes); tests/integration/backup-restore.test.ts drill.
 F8.3 done: ops/launchd plists (db, app, backup) and docs/operations.md with install, iPad and AC11 checklist. AC11 stays MANUAL.
+F8.4 done: e2e/journey.spec.ts walks pick profile, import, practise, undo, finish, statistics on both viewports with an off-host request check.
