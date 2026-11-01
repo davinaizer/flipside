@@ -1,4 +1,5 @@
 import type { Stats } from "@/shared/schemas/stats";
+import { PracticeChart } from "./PracticeChart";
 
 export type Range = "week" | "month";
 
@@ -51,6 +52,7 @@ export function ProgressView({ stats, range, onRangeChange }: ProgressViewProps)
         </div>
       </div>
       {stats.hasReviews ? (
+        <div className="grid gap-6">
         <ul className="grid max-w-4xl gap-4 sm:grid-cols-2">
           <Tile label="Cards reviewed" value={String(current.cardsReviewed)} change={changes.cardsReviewed} />
           <Tile label="Got it rate" value={rate} change={changes.gotItRate} />
@@ -61,6 +63,8 @@ export function ProgressView({ stats, range, onRangeChange }: ProgressViewProps)
             change={changes.daysPractised}
           />
         </ul>
+        <PracticeChart bars={stats.bars} range={range} />
+        </div>
       ) : (
         <section className="max-w-2xl rounded-2xl bg-surface-container p-6">
           <h2 className="text-2xl font-semibold">Nothing to show yet</h2>

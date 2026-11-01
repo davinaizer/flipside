@@ -1376,7 +1376,7 @@
           ],
           "area": "src/ui/progress/practice-chart (SVG or CSS, no chart library)",
           "done_when": "Component tests: per-day bars for week and per-week for month; every bar shows its value; the current period is marked by more than colour; the chart has a text alternative and uses semantic tokens only.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F7.5",

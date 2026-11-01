@@ -12,6 +12,7 @@ const stats = (range: Range, over: Partial<Stats> = {}) =>
     range,
     hasReviews: true,
     current: metrics,
+    bars: [],
     changes: {
       cardsReviewed: "38 more than last week",
       gotItRate: "3 points lower than last week",
