@@ -5,3 +5,13 @@ body {
   background: var(--surface);
   color: var(--on-surface);
 }
+
+body {
+  font-family: var(--font-atkinson), ui-sans-serif, system-ui, sans-serif;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-lexend), var(--font-atkinson), ui-sans-serif, system-ui, sans-serif;
+}

@@ -154,7 +154,8 @@
           ],
           "area": "src/ui/fonts/ (committed font files), next/font/local in src/app/layout.tsx, src/ui/font-ids.ts",
           "done_when": "next build succeeds with no network access to font hosts and the output contains the font files; the build output has no reference to fonts.googleapis.com or fonts.gstatic.com; a unit test maps font ids atkinson, lexend and system-sans to the app's font variables and default text is Atkinson with Lexend headings.",
-          "status": "todo"
+          "status": "done",
+          "commit": "0b4f5f0"
         },
         {
           "id": "F0.10",
