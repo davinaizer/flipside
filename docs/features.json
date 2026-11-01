@@ -360,9 +360,9 @@
         "14"
       ],
       "notes": "",
-      "status": "in_progress",
+      "status": "done",
       "branch": "feat/F2-profiles",
-      "pr": null,
+      "pr": 7,
       "tasks": [
         {
           "id": "F2.1",

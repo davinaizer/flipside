@@ -35,3 +35,4 @@ REVIEW F2 round 1: GAPS at 4fcc11a
 F2.7: src/app/error.tsx root boundary (ErrorState with Retry and Switch profile) for (app) layout and / failures; src/app/error.test.ts.
 F2.8: picker loading state uses Skeleton cards in role=status aria-label Loading; e2e matches the label.
 REVIEW F2 round 2: PASS at 417b68c
+F2 done (PR #7). MANUAL PENDING: none
