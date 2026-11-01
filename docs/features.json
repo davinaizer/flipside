@@ -281,7 +281,8 @@
           ],
           "area": "src/domain/session-queue.ts, fixtures/domain/session-queue.json",
           "done_when": "Fixtures prove: Not yet reappears after four other cards, or at the end when fewer remain; at most two re-queues per card; undoing any step restores the exact previous queue and position back to the session start; done, current and remaining counts stay correct. Pure and importable by client and server.",
-          "status": "todo",
+          "status": "done",
+          "commit": "pending",
           "model": "opus"
         },
         {
