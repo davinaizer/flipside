@@ -1,0 +1,55 @@
+"use client";
+
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+
+const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
+
+/** What the confirmation says will go (D5). Exported for tests. */
+export function deleteSummary(name: string, cardCount: number, reviewCount: number): string {
+  return `Delete "${name}"? This hides the deck and its ${plural(cardCount, "card", "cards")} and ${plural(reviewCount, "review record", "review records")}.`;
+}
+
+/** D5: confirm, then DELETE /decks/{id} and return to the Library. */
+export function DeleteDeck({ deck }: { deck: { id: string; name: string; cardCount: number; reviewCount: number } }) {
+  const router = useRouter();
+  const [asking, setAsking] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function onDelete() {
+    setBusy(true);
+    setError(null);
+    try {
+      const res = await fetch(`/api/v1/decks/${deck.id}`, { method: "DELETE" });
+      if (!res.ok) throw new Error("delete failed");
+      router.push("/library");
+      return;
+    } catch {
+      setError("We could not delete the deck just now. It is still here, so please try again.");
+    }
+    setBusy(false);
+  }
+
+  if (!asking) {
+    return (
+      <button type="button" onClick={() => setAsking(true)} className="min-h-11 rounded-full px-6 font-semibold text-error outline outline-1 outline-outline">
+        Delete deck
+      </button>
+    );
+  }
+  return (
+    <div role="alertdialog" aria-label="Delete deck" className="mb-6 max-w-xl rounded-2xl bg-surface-container p-5">
+      <p className="mb-4">{deleteSummary(deck.name, deck.cardCount, deck.reviewCount)}</p>
+      {error && <p role="alert" className="mb-4 text-error">{error}</p>}
+      <div className="flex gap-3">
+        <button type="button" disabled={busy} onClick={onDelete} className="min-h-11 rounded-full bg-error px-8 font-semibold text-on-error disabled:opacity-60">
+          {busy ? "Deleting..." : "Delete deck"}
+        </button>
+        <button type="button" disabled={busy} onClick={() => setAsking(false)} className="min-h-11 rounded-full px-6 font-semibold outline outline-1 outline-outline">
+          Keep deck
+        </button>
+      </div>
+    </div>
+  );
+}

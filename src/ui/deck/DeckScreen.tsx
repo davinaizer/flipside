@@ -9,9 +9,11 @@ import { DeckView, type DeckViewProps } from "./DeckView";
 /** Holds the tick state and starts sessions; the deck itself is loaded by the server page. */
 export function DeckScreen({
   deck,
+  leeches,
   sessionLength,
 }: {
   deck: DeckViewProps["deck"];
+  leeches: DeckViewProps["leeches"];
   sessionLength: SessionRequest["length"];
 }) {
   const router = useRouter();
@@ -36,6 +38,6 @@ export function DeckScreen({
     }
   }
   return (
-    <DeckView deck={deck} ticked={ticked} onToggle={onToggle} busy={busy} startError={startError} onStart={onStart} />
+    <DeckView deck={deck} leeches={leeches} ticked={ticked} onToggle={onToggle} busy={busy} startError={startError} onStart={onStart} />
   );
 }

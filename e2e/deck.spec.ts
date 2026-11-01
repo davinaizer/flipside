@@ -56,3 +56,34 @@ test("a deck that does not exist shows the not-found page", async ({ page }) => 
   await page.goto("/decks/00000000-0000-4000-8000-000000000000");
   await expect(page.getByRole("heading", { name: "We can't find that deck" })).toBeVisible();
 });
+
+test("edit saves name, group, colour and answer style, and the page updates", async ({ page }) => {
+  await openSeededDeck(page);
+  const edit = async (name: string, group: string, colour: string, style: string) => {
+    await page.getByRole("button", { name: "Edit deck" }).click();
+    const form = page.getByRole("form", { name: "Edit deck" });
+    await form.getByLabel("Deck name").fill(name);
+    await form.getByLabel("Group (optional)").fill(group);
+    await form.getByText(colour, { exact: true }).click({ force: true });
+    await form.getByText(style, { exact: true }).click({ force: true });
+    const patch = page.waitForRequest((r) => r.method() === "PATCH");
+    await form.getByRole("button", { name: "Save changes" }).click();
+    return (await patch).postDataJSON();
+  };
+  expect(await edit("Davi Biology", "Sciences", "Sage", "Bullet list")).toEqual({
+    name: "Davi Biology",
+    groupName: "Sciences",
+    color: "sage",
+    answerStyle: "bullets",
+  });
+  await expect(page.getByRole("heading", { name: "Davi Biology" })).toBeVisible();
+  // Restore, so the other tests still find the seeded name.
+  await edit("Davi Science", "", "Mist", "Paragraph");
+  await expect(page.getByRole("heading", { name: "Davi Science" })).toBeVisible();
+});
+
+test("Re-import opens the import screen for this deck", async ({ page }) => {
+  const id = await openSeededDeck(page);
+  await page.getByRole("link", { name: "Re-import" }).click();
+  await page.waitForURL(`**/import?deckId=${id}`);
+});

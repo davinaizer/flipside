@@ -1,6 +1,9 @@
 import Link from "next/link";
 import type { SessionRequest } from "@/shared/schemas/session";
 import { MasteryBar } from "@/ui/mastery-bar/MasteryBar";
+import { DeleteDeck } from "./delete-deck/DeleteDeck";
+import { EditDeck, type EditableDeck } from "./edit-deck/EditDeck";
+import { NeedsRewording, type Leech } from "./needs-rewording/NeedsRewording";
 import { anywayPlan, practisePlan } from "./practice-plan";
 
 export interface DeckTopic {
@@ -12,7 +15,8 @@ export interface DeckTopic {
 }
 
 export interface DeckViewProps {
-  deck: { id: string; name: string; cardCount: number; topics: DeckTopic[] };
+  deck: EditableDeck & { cardCount: number; reviewCount: number; topics: DeckTopic[] };
+  leeches: Leech[];
   ticked: Set<string>;
   onToggle: (topic: string) => void;
   busy: boolean;
@@ -23,7 +27,7 @@ export interface DeckViewProps {
 const button = "min-h-11 rounded-full px-8 font-semibold disabled:opacity-60";
 
 /** Deck page (D1 to D3): topics with counts and mastery, tick boxes, and the Practise actions. Presentational. */
-export function DeckView({ deck, ticked, onToggle, busy, startError, onStart }: DeckViewProps) {
+export function DeckView({ deck, leeches, ticked, onToggle, busy, startError, onStart }: DeckViewProps) {
   const plan = practisePlan(deck.id, deck.topics, ticked);
   const anyway = anywayPlan(deck.id, deck.topics, ticked);
   return (
@@ -56,6 +60,13 @@ export function DeckView({ deck, ticked, onToggle, busy, startError, onStart }: 
           </button>
         )}
       </div>
+      <div className="mb-6 flex flex-wrap items-start gap-3">
+        <EditDeck deck={deck} />
+        <Link href={`/import?deckId=${deck.id}`} className="flex min-h-11 items-center rounded-full px-6 font-semibold text-on-surface outline outline-1 outline-outline">
+          Re-import
+        </Link>
+        <DeleteDeck deck={deck} />
+      </div>
       {startError && (
         <p role="alert" className="mb-4 text-on-surface-variant">
           {startError}
@@ -84,6 +95,7 @@ export function DeckView({ deck, ticked, onToggle, busy, startError, onStart }: 
           </li>
         ))}
       </ul>
+      <NeedsRewording leeches={leeches} />
     </>
   );
 }

@@ -875,7 +875,7 @@
           ],
           "area": "src/ui/deck/edit-deck, src/ui/deck/delete-deck, src/ui/deck/needs-rewording",
           "done_when": "Component or e2e tests: edit saves name, group, colour and answer style and updates the page; delete states how many cards and review records will go, then returns to Library with the deck hidden; Needs rewording lists leeches with lapse counts and is absent when there are none; re-import opens /import?deckId=.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F4.7",
