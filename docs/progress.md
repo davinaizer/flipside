@@ -73,3 +73,4 @@ REVIEW F5 round 1: GAPS at 5fc8d5a
 - F5 review fix: settings saves now serialized in order with a rollback guard (src/ui/settings/saver.ts). Each queued save sends the latest settings when it runs; a failed save rolls back only if no newer change exists.
 REVIEW F5 round 2: GAPS at c7361a1
 REVIEW F5 round 3: PASS at 0fd2cbf
+F5 done: PR #10. MANUAL PENDING: none

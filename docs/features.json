@@ -965,9 +965,9 @@
         "11"
       ],
       "notes": "",
-      "status": "in_progress",
+      "status": "done",
       "branch": "feat/F5-settings-and-theme",
-      "pr": null,
+      "pr": 10,
       "tasks": [
         {
           "id": "F5.1",
