@@ -581,7 +581,7 @@
           ],
           "area": "POST /imports commit path in src/server/imports.ts",
           "done_when": "Integration tests: the server revalidates input; deck with name, group, colour and answer style, cards with position and newlines kept, images and import_runs are saved together; a forced failure mid-way leaves no rows; the same image twice stores one row and one file; another profile's cards never share its image row.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F3.5",

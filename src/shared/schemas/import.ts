@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { ANSWER_STYLES, CARD_COLORS } from "../enums";
 
 /** One problem found while checking an import file; `row` counts the CSV header as row 1. */
 export const importIssueSchema = z.object({
@@ -41,3 +42,26 @@ export const importPreviewSchema = z.object({
 
 export type ImportIssue = z.infer<typeof importIssueSchema>;
 export type ImportPreview = z.infer<typeof importPreviewSchema>;
+
+/** Deck details sent with the file on commit (PRD I3). An empty group means no group. */
+export const importDeckDetailsSchema = z.object({
+  name: z.string().trim().min(1).max(100),
+  group: z
+    .string()
+    .trim()
+    .max(100)
+    .optional()
+    .transform((g) => g || undefined),
+  color: z.enum(CARD_COLORS),
+  answerStyle: z.enum(ANSWER_STYLES),
+});
+
+export const importResultSchema = z.object({
+  deckId: z.string(),
+  added: z.number().int(),
+  updated: z.number().int(),
+  skipped: z.number().int(),
+  imageCount: z.number().int(),
+  warnings: z.array(importIssueSchema),
+});
+export type ImportResult = z.infer<typeof importResultSchema>;
