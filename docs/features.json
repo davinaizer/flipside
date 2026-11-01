@@ -21,9 +21,9 @@
         "16"
       ],
       "notes": "Scaffold, schema for PRD section 10, Podman Postgres, verify/test/e2e harness, seed, health. Land the full schema here so later features do not collide on migrations.",
-      "status": "in_progress",
+      "status": "done",
       "branch": "feat/F0-foundation",
-      "pr": null,
+      "pr": "https://github.com/davinaizer/flipside/pull/3",
       "tasks": [
         {
           "id": "F0.1",
