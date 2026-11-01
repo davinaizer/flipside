@@ -1215,7 +1215,7 @@
           ],
           "area": "src/ui/practice/summary; screen practice_session_summary",
           "done_when": "Component or e2e tests: counts by grade with text labels, session time, up to three cards, Back to Library; Practise the misses starts a new session from an explicit card list; the action is hidden with no misses; no streak or pressure copy.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F6.8",

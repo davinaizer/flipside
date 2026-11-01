@@ -5,6 +5,8 @@ import { ANSWER_STYLES, ENDED_REASONS, GRADES, type Grade } from "../enums";
 export const sessionScopeSchema = z.discriminatedUnion("kind", [
   z.object({ kind: z.literal("all") }),
   z.object({ kind: z.literal("weak") }),
+  /** An explicit card list ("Practise the misses"); due dates are ignored and other profiles' cards are dropped by the builder. */
+  z.object({ kind: z.literal("cards"), cardIds: z.array(z.string().uuid()).min(1) }),
   z.object({ kind: z.literal("deck"), deckId: z.string().uuid() }),
   /** Topics of one deck; ignoreDue is "practise anyway" (D3). */
   z.object({
@@ -86,7 +88,7 @@ export type SessionEndResponse = z.infer<typeof sessionEndResponseSchema>;
 /**
  * Response of GET /sessions/{id}/summary. Counts use each card's first live grade in the
  * session. goAgain is up to three Not yet cards; missIds is every Not yet card, for
- * "Practise the misses" (a new session with scope {kind:"cards"} is not built yet).
+ * "Practise the misses".
  */
 export const sessionSummarySchema = z.object({
   session: sessionResponseSchema.shape.session,

@@ -1,6 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import type { SessionResponse } from "@/shared/schemas/session";
 import { api } from "@/ui/api/client";
@@ -9,6 +8,7 @@ import { ErrorState } from "@/ui/states/ErrorState";
 import { Skeleton } from "@/ui/states/Skeleton";
 import { GradeBar } from "./GradeBar";
 import { PracticeView } from "./PracticeView";
+import { SummaryScreen } from "./SummaryScreen";
 import { useSession } from "./use-session";
 
 export function PracticeLoading() {
@@ -39,9 +39,12 @@ export function PracticeScreen({ sessionId, settings }: { sessionId: string; set
 }
 
 function ActiveSession({ data, settings }: { data: SessionResponse; settings: ReadingSettings }) {
-  const router = useRouter();
-  const { view, controller } = useSession(data, () => router.push("/library"));
+  const [left, setLeft] = useState(false);
+  const { view, controller } = useSession(data, () => setLeft(true));
   const { card, labels } = view;
+
+  // A finished, ended or left session shows its summary; the server completes it on the last grade.
+  if (left || view.finished || data.session.endedAt) return <SummaryScreen sessionId={data.session.id} />;
 
   const controls = (
     <div className="flex justify-between">
@@ -57,7 +60,7 @@ function ActiveSession({ data, settings }: { data: SessionResponse; settings: Re
   if (!card || !labels) {
     return (
       <div className="mx-auto flex w-full max-w-3xl flex-col gap-6 p-8">
-        <p>All cards in this session are done.</p>
+        <p>This session has no cards.</p>
         {controls}
       </div>
     );

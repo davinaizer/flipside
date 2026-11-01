@@ -68,6 +68,7 @@ async function toDomainScope(profile: Profile, scope: SessionRequest["scope"], d
   switch (scope.kind) {
     case "all":
     case "weak":
+    case "cards": // buildQueue only reads the profile's own cards, so foreign ids simply drop out
       return scope;
     case "deck":
       return { kind: "deck", deckId: (await findDeck(profile.id, scope.deckId, db)).id };

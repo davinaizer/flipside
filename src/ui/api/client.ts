@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { librarySchema, type Library } from "@/shared/schemas/library";
 import { importResultSchema, type ImportResult } from "@/shared/schemas/import";
-import { sessionEndResponseSchema, sessionResponseSchema, type SessionResponse } from "@/shared/schemas/session";
+import { sessionEndResponseSchema, sessionResponseSchema, sessionSummarySchema, type SessionResponse, type SessionSummary } from "@/shared/schemas/session";
 import {
   reviewResponseSchema,
   undoResponseSchema,
@@ -67,6 +67,7 @@ export const api = {
     call(`/reviews/${reviewId}`, reviewResponseSchema, { method: "PUT", body: JSON.stringify(body) }),
   undoGrade: (reviewId: string) => call(`/reviews/${reviewId}`, undoResponseSchema, { method: "DELETE" }),
   endSession: (id: string) => call(`/sessions/${id}/end`, sessionEndResponseSchema, { method: "POST" }),
+  summary: (id: string): Promise<SessionSummary> => call(`/sessions/${id}/summary`, sessionSummarySchema),
   me: (): Promise<Me> => call("/me", meSchema),
   /** Commit step of the import (PRD section 6, step 4): the file plus deck details, or a deckId to re-import. */
   commitImport: (form: FormData): Promise<ImportResult> =>
