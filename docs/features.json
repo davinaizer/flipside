@@ -596,7 +596,7 @@
           ],
           "area": "src/server/imports.ts re-import path (deckId in the form)",
           "done_when": "Integration tests with card_state and review_log from factories (AC3): the same file adds nothing and changes no progress; an edited back updates the card and keeps box, due date and history; new ids are added; missing ids are kept and listed; the report gives added, updated, unchanged and skipped, stored in import_runs with no schema change; another profile's deckId returns 404.",
-          "status": "todo",
+          "status": "done",
           "model": "opus"
         },
         {

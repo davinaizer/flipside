@@ -1,5 +1,5 @@
 import type { Db } from "@/server/db/client";
-import { cardState, cards, decks, profiles } from "@/server/db/schema";
+import { cardState, cards, decks, profiles, reviewLog } from "@/server/db/schema";
 
 /** Test data builders; each inserts one row with sensible defaults and returns it. */
 export async function createProfile(db: Db, over: Partial<typeof profiles.$inferInsert> = {}) {
@@ -60,6 +60,31 @@ export async function createCardState(
   const [row] = await db
     .insert(cardState)
     .values({ profileId, cardId, box: 1, dueDate: "2026-01-01", ...over })
+    .returning();
+  return row;
+}
+
+export async function createReviewLog(
+  db: Db,
+  profileId: string,
+  cardId: string,
+  over: Partial<typeof reviewLog.$inferInsert> = {},
+) {
+  const [row] = await db
+    .insert(reviewLog)
+    .values({
+      id: crypto.randomUUID(),
+      profileId,
+      cardId,
+      grade: "got_it",
+      durationMs: 3000,
+      reviewedAt: new Date("2026-01-01T09:00:00Z"),
+      isFirstAttemptToday: true,
+      boxBefore: 1,
+      boxAfter: 2,
+      dueAfter: "2026-01-03",
+      ...over,
+    })
     .returning();
   return row;
 }

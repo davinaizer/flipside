@@ -60,7 +60,11 @@ export const importResultSchema = z.object({
   deckId: z.string(),
   added: z.number().int(),
   updated: z.number().int(),
+  /** Matched cards whose text and images were already the same (re-import only). */
+  unchanged: z.number().int(),
   skipped: z.number().int(),
+  /** Card ids in the deck but not in the file; kept, never deleted (PRD section 6). */
+  missing: z.array(z.string()),
   imageCount: z.number().int(),
   warnings: z.array(importIssueSchema),
 });
