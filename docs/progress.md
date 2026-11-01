@@ -89,3 +89,4 @@ REVIEW F6 round 1: GAPS at c0a7e33
 REVIEW F6 round 2: PASS at 930e9f1
 F6 done: PR #11. MANUAL PENDING: AC10
 - F7.1: GET /api/v1/stats (src/server/stats.ts over domain/stats) with tiles, changes, bars, Focus next and By deck; AC8 integration test over fixtures/stats-history.json (tests/stats-api.test.ts, seeder in tests/helpers/stats-history.ts).
+- F7.2: docs/statistics-queries.md documents the Progress figures as named SQL (windows, tiles, bars, Focus next, By deck, empty state); tests/integration/stats-documented-queries.test.ts runs them on the seeded history and matches GET /stats for both ranges and profiles.

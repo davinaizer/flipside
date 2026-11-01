@@ -1344,7 +1344,7 @@
           ],
           "area": "docs/statistics-queries.md, tests/integration/stats-documented-queries.test.ts",
           "done_when": "A test extracts the SQL from the document, runs it on the seeded history and matches GET /stats, so the numbers on screen are reproducible from review_log.",
-          "status": "todo",
+          "status": "done",
           "model": "opus"
         },
         {
