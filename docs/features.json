@@ -461,7 +461,7 @@
           ],
           "area": "e2e/profiles.spec.ts",
           "done_when": "On both viewports: pick each profile, see only that profile's seeded deck, get not found by URL for the other's deck and 404 from its API, switch profile; axe and 44 px checks pass on picker and Library in both themes.",
-          "status": "todo"
+          "status": "done"
         }
       ],
       "design_screens": [

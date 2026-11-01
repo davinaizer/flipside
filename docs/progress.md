@@ -30,3 +30,4 @@ F2.1: getCurrentProfile (header over cookie, 401 ApiError), ApiError/toErrorResp
 F2.3: GET /library (decks with cardCount) and GET /decks/{id} (topics with counts), scoped by owner; due and mastery counts left to F4.
 F2.4: profile picker at / (src/ui/profile, src/ui/avatars), resolveHome redirect logic, e2e in e2e/profile-picker.spec.ts; e2e server seeds profiles.
 F2.5: app shell (src/app/(app)/layout, src/ui/shell/Sidebar, src/ui/states), stub pages /library /decks/[id] /progress /settings, e2e/app-shell.spec.ts.
+F2.6: e2e/profiles.spec.ts closes AC1 (pick, isolation, 404 by URL and API, switch, axe and 44 px); scripts/e2e-seed.ts adds one deck per profile for e2e.
