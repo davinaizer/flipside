@@ -36,3 +36,19 @@ F2.7: src/app/error.tsx root boundary (ErrorState with Retry and Switch profile)
 F2.8: picker loading state uses Skeleton cards in role=status aria-label Loading; e2e matches the label.
 REVIEW F2 round 2: PASS at 417b68c
 F2 done (PR #7). MANUAL PENDING: none
+F3.1: ImageStore interface, disk driver (rejects keys escaping IMAGE_STORE_PATH), getImageStore by IMAGE_STORE_DRIVER; one contract suite per driver in tests/contract.
+F3.2: GET /api/v1/images/{id} streams owner images with nosniff, immutable cache, ETag and 304; others 404. Test in tests/images-api.test.ts.
+- F3.3: POST /imports?dryRun=true previews CSV or zip (columns, counts, first three cards, issues with rows); integration test checks no rows or files are written.
+- F3.4: commitImport saves deck, images, cards and import run in one transaction; shared parseImport with the dry run; tests/imports-commit.test.ts covers rollback, dedupe and per-profile images.
+- F3.5: re-import via deckId in commitImport (match by id, update changed cards only, add new, list missing); progress rows untouched; tests/imports-reimport.test.ts with createReviewLog factory.
+- F3.6: GET /imports/template (CSV) and GET /decks/{id}/export (deck.csv plus images/ named by hash); tests/export-api.test.ts round-trips to unchanged.
+- F3.7: pnpm import:cli <file> --profile <name> [--name --group --color --answer-style --deck] calls commitImport and prints the result JSON; unknown profile exits 1. ApiError lost parameter properties so Node type stripping can load it. Test in tests/import-cli.test.ts.
+- F3.8: moved school fixtures from res/ to fixtures/, added fixtures/multi-point.csv (6 System Design cards); tests/integration/school-deck.test.ts proves 16 cards, 4 topics, 7 images served byte-for-byte.
+- F3.9: /import screen (src/ui/import): browser parse and preview with the shared domain import-file, deck form or existing deck (?deckId= preselects), commit to /imports, success and blocked/loading/error states; tests in src/ui/import/import.test.ts.
+F3.10: e2e/import.spec.ts drives the import screen end to end on desktop and iPad (school zip, unchanged re-import, edited back, broken CSV, blocked file) with axe and 44 px checks in both themes. 44 px helper now skips a visually hidden file input inside a label.
+REVIEW F3 round 1: GAPS at 9181fc6
+F3.11: parseImportFile now emits one missing_image warning per referencing row for CSV-only uploads, and zip image warnings carry each row; tests in src/domain/import-file.test.ts. Preview already printed Row N.
+F3.12: ImportSuccess shows added, updated and unchanged counts, the kept missing ids and commit warnings (card_not_in_file filtered out as it duplicates the missing list); test in src/ui/import/import.test.ts.
+F3.13: import screen follows add_deck_re_import: numbered steps, Deck details beside the preview, colour swatches, segmented answer style, Topic/Front/Back table, Add N cards; e2e and axe pass on both viewports and themes.
+REVIEW F3 round 2: PASS at f56ff1c
+F3 done (PR #8). MANUAL PENDING: none

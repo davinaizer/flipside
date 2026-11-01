@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { importResultSchema, type ImportResult } from "@/shared/schemas/import";
 import {
   meSchema,
   profileListSchema,
@@ -22,7 +23,8 @@ export class ApiClientError extends Error {
 async function call<T>(path: string, schema: z.ZodType<T>, init?: RequestInit): Promise<T> {
   const res = await fetch(`${API}${path}`, {
     ...init,
-    headers: { "Content-Type": "application/json", ...init?.headers },
+    // A FormData body needs the browser to set its own multipart Content-Type.
+    headers: init?.body instanceof FormData ? init.headers : { "Content-Type": "application/json", ...init?.headers },
   });
   const json: unknown = await res.json().catch(() => null);
   if (!res.ok) {
@@ -45,4 +47,7 @@ export const api = {
       body: JSON.stringify({ profileId }),
     }),
   me: (): Promise<Me> => call("/me", meSchema),
+  /** Commit step of the import (PRD section 6, step 4): the file plus deck details, or a deckId to re-import. */
+  commitImport: (form: FormData): Promise<ImportResult> =>
+    call("/imports", importResultSchema, { method: "POST", body: form }),
 };

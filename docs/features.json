@@ -522,9 +522,9 @@
         "12"
       ],
       "notes": "Includes the ImageStore interface, disk driver and contract tests.",
-      "status": "todo",
-      "branch": null,
-      "pr": null,
+      "status": "done",
+      "branch": "feat/F3-import-and-image-storage",
+      "pr": 8,
       "tasks": [
         {
           "id": "F3.1",
@@ -535,7 +535,7 @@
           ],
           "area": "src/server/images/store.ts, src/server/images/disk-driver.ts, tests/contract/image-store.test.ts",
           "done_when": "One contract suite run per driver proves: put then get returns the same bytes, repeated put is harmless, a missing key fails cleanly, delete is idempotent, exists is accurate; a key escaping IMAGE_STORE_PATH is refused; the driver is chosen from IMAGE_STORE_DRIVER.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F3.2",
@@ -547,7 +547,7 @@
           ],
           "area": "src/app/api/v1/images/[id]/route.ts, src/server/images/service.ts",
           "done_when": "Integration tests: the owner gets the bytes with sniffed Content-Type, nosniff, Cache-Control private, max-age=31536000, immutable and ETag equal to the hash; a matching If-None-Match returns 304; the other profile and unknown ids return 404.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F3.3",
@@ -563,7 +563,7 @@
           ],
           "area": "src/app/api/v1/imports/route.ts (dryRun=true), src/server/imports.ts, src/shared/schemas/import.ts",
           "done_when": "Integration tests with CSV and zip multipart input: the response has detected columns, row counts, first three cards, warnings and errors with row numbers; a row count check of every table and the image folder shows nothing was saved; blocked files return the error format.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F3.4",
@@ -581,7 +581,7 @@
           ],
           "area": "POST /imports commit path in src/server/imports.ts",
           "done_when": "Integration tests: the server revalidates input; deck with name, group, colour and answer style, cards with position and newlines kept, images and import_runs are saved together; a forced failure mid-way leaves no rows; the same image twice stores one row and one file; another profile's cards never share its image row.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F3.5",
@@ -596,7 +596,7 @@
           ],
           "area": "src/server/imports.ts re-import path (deckId in the form)",
           "done_when": "Integration tests with card_state and review_log from factories (AC3): the same file adds nothing and changes no progress; an edited back updates the card and keeps box, due date and history; new ids are added; missing ids are kept and listed; the report gives added, updated, unchanged and skipped, stored in import_runs with no schema change; another profile's deckId returns 404.",
-          "status": "todo",
+          "status": "done",
           "model": "opus"
         },
         {
@@ -613,7 +613,7 @@
           ],
           "area": "CSV template download, src/app/api/v1/decks/[id]/export/route.ts",
           "done_when": "Tests: the template parses with no errors through the CSV validator; the export is a zip of CSV plus images, 404 for another profile; exporting and re-importing a deck reports nothing added or changed.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F3.7",
@@ -627,7 +627,7 @@
           ],
           "area": "scripts/import-cli.ts, pnpm import:cli",
           "done_when": "Integration test: pnpm import:cli <file> --profile <name> imports through the same service and prints the report; an unknown profile exits non-zero.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F3.8",
@@ -642,7 +642,7 @@
           ],
           "area": "move res/science-w2.csv and res/science-w2-deck.zip to fixtures/, add fixtures/multi-point.csv, tests/integration/school-deck.test.ts",
           "done_when": "res/ is gone and the fixtures are unchanged in fixtures/. Integration test: importing the school zip creates one deck of 16 cards across four topics with 7 images and no image warnings, and every card's front_image_id and back_image_id serves the bytes of the file named in its CSV row, including the two question-side images (sci-w2-08 and sci-w2-09).",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F3.9",
@@ -662,7 +662,7 @@
           ],
           "area": "src/app/(app)/import, src/ui/import; screens add_deck_re_import and import_success, README item 15",
           "done_when": "Component or e2e tests: choosing a CSV or zip parses it in the browser with the shared domain functions and previews columns, counts, first three cards, warnings and errors by row, with nothing sent yet; the deck form or existing deck choice follows; commit posts to /imports; success shows deck name and cards added and updated; blocked, loading and error states render; ?deckId= preselects the re-import target.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F3.10",
@@ -680,7 +680,50 @@
           ],
           "area": "e2e/import.spec.ts",
           "done_when": "On both viewports: import the school zip through the UI, then re-import it and see nothing added; import an edited back and see one updated; a broken CSV shows its row errors; axe and 44 px checks pass on each import step in both themes.",
-          "status": "todo"
+          "status": "done"
+        },
+        {
+          "id": "F3.11",
+          "title": "Warn on missing images for CSV-only uploads and give image warnings a row number",
+          "reqs": [
+            "I1",
+            "I2"
+          ],
+          "prd_sections": [
+            "6"
+          ],
+          "area": "src/domain/import-file.ts, src/ui/import/ImportPreview.tsx",
+          "done_when": "Tests: a CSV-only upload that names images returns a missing_image warning per referencing row; zip image warnings (missing, rejected) carry the row number of each CSV row that references the file and the preview shows Row N; re-import still keeps the card current image.",
+          "status": "done"
+        },
+        {
+          "id": "F3.12",
+          "title": "Show the full re-import report on the success screen",
+          "reqs": [
+            "I4"
+          ],
+          "prd_sections": [
+            "6"
+          ],
+          "area": "src/ui/import/ImportSuccess.tsx, src/ui/import/import.test.ts",
+          "done_when": "Component test: success shows added, updated and unchanged counts, lists missing ids kept, and shows commit warnings.",
+          "status": "done"
+        },
+        {
+          "id": "F3.13",
+          "title": "Match the add_deck_re_import layout",
+          "reqs": [
+            "I1",
+            "I2",
+            "I3"
+          ],
+          "prd_sections": [
+            "6",
+            "8"
+          ],
+          "area": "src/ui/import/ImportFlow.tsx, src/ui/import",
+          "done_when": "Screen follows the add_deck_re_import reference using existing tokens and components: numbered steps (Choose file, Check the cards, Deck details), deck details beside the preview, colour swatches, list-style segmented control, Topic/Front/Back preview table, primary Add N cards action; any simplification logged ASSUMED; existing e2e and axe checks still pass on both viewports and themes.",
+          "status": "done"
         }
       ],
       "design_screens": [
