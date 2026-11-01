@@ -231,7 +231,8 @@
           ],
           "area": "src/domain/scheduler.ts, fixtures/domain/scheduler.json",
           "done_when": "JSON fixtures cover every state (New, boxes 1 to 5) times every grade under both LAPSE_RULE values, asserting box, due date, lapses, reps, last grade and re-queue; lapses only rise for box 2 or higher; box 5 Got it stays 5; status becomes leech at 8 lapses and the card stays scheduled.",
-          "status": "todo",
+          "status": "done",
+          "commit": "PENDING",
           "model": "opus"
         },
         {
