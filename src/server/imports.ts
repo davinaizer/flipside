@@ -1,5 +1,4 @@
-import { parseCsv, type CsvIssue } from "@/domain/csv-import";
-import { openZip, resolveImages, type ResolvedImages, type ZipIssue } from "@/domain/zip-import";
+import { buildPreview, parseImportFile } from "@/domain/import-file";
 import { ApiError } from "@/server/http/errors";
 import { getDb, type Db } from "@/server/db/client";
 import { cards, decks, images as imagesTable, importRuns } from "@/server/db/schema";
@@ -7,68 +6,14 @@ import { getImageStore } from "@/server/images/store";
 import { importDeckDetailsSchema, type ImportIssue, type ImportPreview, type ImportResult } from "@/shared/schemas/import";
 import { and, eq, isNull } from "drizzle-orm";
 
-const PREVIEW_CARDS = 3;
-
-const isZip = (b: Uint8Array) => b.length > 3 && b[0] === 0x50 && b[1] === 0x4b;
-
 const blocked = (issues: ImportIssue[]) =>
   new ApiError(422, "import_blocked", "This file cannot be imported. " + issues[0].message + ".", issues);
 
-/** A CSV inside a zip: any .csv entry, ignoring macOS resource-fork folders. */
-function findCsv(files: Map<string, Uint8Array>): { name: string; bytes: Uint8Array } | ImportIssue {
-  const csvs = [...files].filter(([n]) => /\.csv$/i.test(n) && !n.startsWith("__MACOSX/"));
-  if (csvs.length === 1) return { name: csvs[0][0], bytes: csvs[0][1] };
-  return {
-    severity: "block",
-    code: csvs.length === 0 ? "no_csv" : "several_csv",
-    message: csvs.length === 0 ? "The zip has no CSV file" : "The zip has more than one CSV file",
-  };
-}
-
-const fromCsv = (i: CsvIssue): ImportIssue => ({ ...i });
-const fromZip = (i: ZipIssue): ImportIssue => ({ ...i });
-
-type Parsed = {
-  kind: "csv" | "zip";
-  csv: ReturnType<typeof parseCsv>;
-  issues: ImportIssue[];
-  images: ResolvedImages["images"];
-};
-
-/** Steps shared by the dry run and the commit, so the server revalidates exactly what the preview showed. */
-async function parseImport(bytes: Uint8Array): Promise<Parsed> {
-  const kind = isZip(bytes) ? "zip" : "csv";
-  const issues: ImportIssue[] = [];
-  let csvBytes = bytes;
-  let files = new Map<string, Uint8Array>();
-
-  if (kind === "zip") {
-    const zip = openZip(bytes);
-    if (zip.blocked) throw blocked(zip.issues.map(fromZip));
-    files = zip.files;
-    const found = findCsv(files);
-    if (!("bytes" in found)) throw blocked([found]);
-    csvBytes = found.bytes;
-  }
-
-  let text: string;
-  try {
-    text = new TextDecoder("utf-8", { fatal: true }).decode(csvBytes);
-  } catch {
-    throw blocked([{ severity: "block", code: "not_utf8", message: "The CSV is not UTF-8 text" }]);
-  }
-  const csv = parseCsv(text);
-  issues.push(...csv.issues.map(fromCsv));
-  if (csv.blocked) throw blocked(issues.filter((i) => i.severity === "block"));
-
-  let images: Parsed["images"] = new Map();
-  if (kind === "zip") {
-    const names = csv.cards.flatMap((c) => [c.frontImage, c.backImage]).filter((n): n is string => !!n);
-    const resolved = await resolveImages(names, files);
-    issues.push(...resolved.issues.map(fromZip));
-    images = resolved.images;
-  }
-  return { kind, csv, issues, images };
+/** Shared parse (domain) turned into the API's 422 when the file cannot be imported at all. */
+async function parseImport(bytes: Uint8Array) {
+  const parsed = await parseImportFile(bytes);
+  if (!parsed.ok) throw blocked(parsed.issues);
+  return parsed;
 }
 
 /**
@@ -77,23 +22,7 @@ async function parseImport(bytes: Uint8Array): Promise<Parsed> {
  * Files that cannot be imported at all throw a 422 `import_blocked` with the issues as details.
  */
 export async function previewImport(bytes: Uint8Array): Promise<ImportPreview> {
-  const { kind, csv, issues, images } = await parseImport(bytes);
-  const imageCount = new Set([...images.values()].map((i) => i.info.sha256)).size;
-
-  return {
-    kind,
-    columns: csv.columns,
-    unknownColumns: csv.unknownColumns,
-    rowCount: csv.rowCount,
-    validCount: csv.cards.length,
-    skippedCount: csv.rowCount - csv.cards.length,
-    imageCount,
-    firstCards: csv.cards.slice(0, PREVIEW_CARDS).map(({ row, id, idDerived, topic, front, back, frontImage, backImage }) => ({
-      row, id, idDerived, topic, front, back, frontImage, backImage,
-    })),
-    warnings: issues.filter((i) => i.severity === "warning"),
-    errors: issues.filter((i) => i.severity !== "warning"),
-  };
+  return buildPreview(await parseImport(bytes));
 }
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;

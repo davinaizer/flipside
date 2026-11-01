@@ -662,7 +662,7 @@
           ],
           "area": "src/app/(app)/import, src/ui/import; screens add_deck_re_import and import_success, README item 15",
           "done_when": "Component or e2e tests: choosing a CSV or zip parses it in the browser with the shared domain functions and previews columns, counts, first three cards, warnings and errors by row, with nothing sent yet; the deck form or existing deck choice follows; commit posts to /imports; success shows deck name and cards added and updated; blocked, loading and error states render; ?deckId= preselects the re-import target.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F3.10",
