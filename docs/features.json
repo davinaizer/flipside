@@ -52,7 +52,7 @@
           ],
           "area": "src/shared/constants.ts, src/shared/enums.ts, src/shared/settings.ts, src/shared/uuid.ts",
           "done_when": "Unit tests assert: day start hour 7, box intervals 0/1/3/7/14, LAPSE_RULE reset, leech threshold 8, re-queue gap 4 and max 2, new-card cap 10, session lengths, import, image and zip limits, 120 s time cap; settings defaults parse through Zod and store font ids, not CSS stacks (N5); uuidv7 returns time-sortable v7 ids using crypto.getRandomValues, never crypto.randomUUID, which is unavailable to the iPad on plain HTTP.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F0.3",

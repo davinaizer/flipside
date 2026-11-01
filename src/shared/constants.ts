@@ -1,1 +1,34 @@
 export const APP_NAME = "Flipside";
+
+/** Hour (profile local time) at which the learning day starts. */
+export const DEFAULT_DAY_START_HOUR = 7;
+
+/** Days until due, indexed by box (1 to 5). Box 1 is due again today. */
+export const BOX_INTERVALS_DAYS = { 1: 0, 2: 1, 3: 3, 4: 7, 5: 14 } as const;
+export const MIN_BOX = 1;
+export const MAX_BOX = 5;
+
+/** What Not yet does to a card in box 2 or higher: `reset` to box 1, or `drop_one`. */
+export const LAPSE_RULE = "reset" as "reset" | "drop_one";
+
+export const LEECH_THRESHOLD = 8;
+
+/** A Not yet card reappears after about this many other cards. */
+export const REQUEUE_GAP = 4;
+export const REQUEUE_MAX_PER_SESSION = 2;
+
+export const DEFAULT_NEW_CARDS_PER_DAY = 10;
+
+export const SESSION_LENGTHS = [5, 10, 20, "all"] as const;
+export const DEFAULT_SESSION_LENGTH = 5;
+
+/** Each attempt duration is capped at this many seconds for statistics. */
+export const DURATION_CAP_SECONDS = 120;
+
+export const IMPORT_MAX_ROWS = 2000;
+export const IMPORT_MAX_ZIP_ENTRIES = 2000;
+export const IMPORT_MAX_ZIP_UNCOMPRESSED_BYTES = 200 * 1024 * 1024;
+
+export const IMAGE_MAX_BYTES = 5 * 1024 * 1024;
+export const IMAGE_MAX_DIMENSION_PX = 4096;
+export const IMAGE_MIME_TYPES = ["image/png", "image/jpeg", "image/webp", "image/gif"] as const;
