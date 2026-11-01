@@ -522,9 +522,9 @@
         "12"
       ],
       "notes": "Includes the ImageStore interface, disk driver and contract tests.",
-      "status": "in_progress",
+      "status": "done",
       "branch": "feat/F3-import-and-image-storage",
-      "pr": null,
+      "pr": 8,
       "tasks": [
         {
           "id": "F3.1",
