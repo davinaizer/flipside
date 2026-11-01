@@ -313,7 +313,7 @@
           ],
           "area": "src/domain/zip-import.ts, src/domain/image-check.ts, fflate, file-type",
           "done_when": "Tests build zips in memory and prove: absolute path, .. segment and symlink entries block the import (the symlink check reads entry attributes from the zip directory if fflate does not expose them); over 2,000 entries or 200 MB uncompressed blocks; a missing image, a wrong type by bytes with a misleading extension, SVG, over 5 MB and over 4,096 px each warn and drop the image; a CSV image name matches a zip entry by base file name, so q02-back.png finds images/q02-back.png as in the school zip, and two entries with the same base name warn and drop the image; width and height are read from PNG, JPEG, WebP and GIF headers with no new dependency; sha256 and storage key are computed. Browser-safe.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F1.8",
