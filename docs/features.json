@@ -428,7 +428,7 @@
           ],
           "area": "src/app/page.tsx, src/ui/profile, src/ui/avatars (placeholder set behind one registry, D15); screen profile_picker and README items 6 and 7",
           "done_when": "Component or e2e tests: no cookie or an invalid cookie shows the picker with avatar and name and no deck counts; a valid cookie redirects to /library unless ?switch=1 is present; picking sets the cookie and opens /library. Loading and error states render. Works in both themes.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F2.5",

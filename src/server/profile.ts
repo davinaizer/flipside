@@ -66,3 +66,23 @@ export function toMe(profile: Profile) {
     settings: settingsSchema.parse(profile.settings),
   };
 }
+
+/**
+ * Where "/" goes: the Library when the cookie names a real profile (unless the picker was
+ * asked for with ?switch=1), otherwise the picker. An invalid cookie just shows the picker.
+ */
+export async function resolveHome(
+  cookieValue: string | undefined,
+  wantsSwitch: boolean,
+  db: Db = getDb(),
+): Promise<"library" | "picker"> {
+  if (wantsSwitch || !cookieValue) return "picker";
+  const req = new Request("http://local/", { headers: { cookie: `${PROFILE_COOKIE}=${cookieValue}` } });
+  return getCurrentProfile(req, db).then(
+    () => "library" as const,
+    (e: unknown) => {
+      if (e instanceof ApiError && e.status === 401) return "picker" as const;
+      throw e;
+    },
+  );
+}

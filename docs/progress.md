@@ -28,3 +28,4 @@ F1.8: src/domain/stats.ts statsWindows (Monday-aligned week/four weeks plus prev
 F2.1: getCurrentProfile (header over cookie, 401 ApiError), ApiError/toErrorResponse, tests/factories.ts, source scan test.
 - F2.2: profile API (GET /profiles, POST /session/profile, GET /me), shared profile schemas and typed client in src/ui/api/client.ts; integration test in tests/profile-api.test.ts.
 F2.3: GET /library (decks with cardCount) and GET /decks/{id} (topics with counts), scoped by owner; due and mastery counts left to F4.
+F2.4: profile picker at / (src/ui/profile, src/ui/avatars), resolveHome redirect logic, e2e in e2e/profile-picker.spec.ts; e2e server seeds profiles.

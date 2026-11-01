@@ -80,6 +80,7 @@ const run = (args) =>
   });
 try {
   await run(["exec", "next", "build"]);
+  await run(["db:seed"]); // migrates, then adds Davi and Nicole for the picker tests
   await run(["exec", "next", "start", "-H", "127.0.0.1", "-p", appPort]);
 } catch (e) {
   console.error(String(e));

@@ -4,7 +4,7 @@ import { expectNoSeriousA11y, expectTargetsAtLeast44, guardThirdParty, setTheme 
 test("home renders, is accessible in both themes, and stays local", async ({ page }) => {
   const external = await guardThirdParty(page);
   await page.goto("/");
-  await expect(page.getByRole("main")).toContainText("Flipside");
+  await expect(page.getByRole("main")).toContainText("Who is studying?");
 
   for (const theme of ["light", "dark"] as const) {
     await setTheme(page, theme);
