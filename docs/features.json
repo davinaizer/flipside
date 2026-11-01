@@ -216,7 +216,7 @@
           "area": "src/domain/day.ts, fixtures/domain/day-boundary.json",
           "done_when": "Table-driven JSON fixtures pass: 06:30 local counts as the previous day and 07:00 as the new one; both Europe/London clock changes; a non-London timezone; date addition across month and year; Monday week start on the local day. Uses Intl only, with no new dependency.",
           "status": "done",
-          "commit": "20ecd1f",
+          "commit": "792e758",
           "model": "opus"
         },
         {
