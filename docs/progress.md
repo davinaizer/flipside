@@ -13,3 +13,4 @@ F0.7: pnpm db:seed (node with scripts/register-alias.mjs resolve hook, no tsx) s
 - F0.8: src/ui/tokens.css (light/dark via data-theme, box tokens, Tailwind @theme), globals.css, contrast and no-raw-hex tests.
 F0.9: Atkinson Hyperlegible Next and Lexend bundled via next/font/local; body Atkinson, headings Lexend; font id map in src/ui/font-ids.ts.
 F0.10: Playwright desktop and iPad projects, axe in both themes, 44 px and local-request checks; pnpm test:e2e boots its own Postgres and app.
+F0.11: CLAUDE.md lists dev, build, start, db:*, test, test:e2e; each was run successfully (db:migrate and db:seed need DATABASE_URL exported from .env.example).

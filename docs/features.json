@@ -179,7 +179,8 @@
           ],
           "area": "CLAUDE.md Commands section",
           "done_when": "CLAUDE.md lists dev, build, start, db:up, db:down, db:migrate, db:seed, test and test:e2e, and each command listed was run successfully in this task.",
-          "status": "todo"
+          "status": "done",
+          "commit": "3203eca"
         }
       ]
     },

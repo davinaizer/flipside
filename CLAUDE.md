@@ -5,7 +5,10 @@ Spec: `docs/PRD.md` (authoritative). How agents build it: `docs/WORKFLOW.md`. Bu
 
 ## Commands
 - `bash scripts/verify.sh`: typecheck, lint, tests. Must be green before any commit.
-- Feature F0 adds the rest (dev server, db up/down, e2e) and lists them here.
+- `pnpm dev`: dev server on port 3000. `pnpm build`, then `pnpm start`: production server.
+- `pnpm db:up` / `pnpm db:down`: start/stop local Postgres 17 (Podman; volume kept). `DATABASE_URL` is in `.env.example`.
+- `pnpm db:migrate`: apply migrations (needs `DATABASE_URL` exported, e.g. `set -a; . ./.env.example`). `pnpm db:seed`: seed Davi and Nicole.
+- `pnpm test`: Vitest. `pnpm test:e2e`: Playwright desktop and iPad with axe (boots its own Postgres and app; run `pnpm exec playwright install chromium` once).
 
 ## Rules
 - Layers (PRD section 9): `src/app` parses input and calls a service, no business logic; `src/server` services; `src/domain` pure functions, no I/O; `src/shared` Zod schemas and constants; `src/ui` components and design tokens.
