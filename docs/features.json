@@ -1308,8 +1308,8 @@
         "11"
       ],
       "notes": "",
-      "status": "todo",
-      "branch": null,
+      "status": "in_progress",
+      "branch": "feat/F7-progress",
       "pr": null,
       "tasks": [
         {
