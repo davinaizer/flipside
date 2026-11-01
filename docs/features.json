@@ -1231,7 +1231,7 @@
           ],
           "area": "src/ui/practice/speech.ts",
           "done_when": "Unit tests with a mocked speechSynthesis: the button speaks the question on the front and answer on the back; auto-read speaks each new question only when enabled; Slow, Normal and Fast map to rates; navigating cancels speech; unsupported browsers hide the button with no error. Real-device behaviour is manual AC10.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F6.9",

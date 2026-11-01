@@ -17,6 +17,7 @@ export default async function PracticePage({ params }: { params: Promise<{ sessi
       <PracticeScreen
         sessionId={sessionId}
         settings={{ font: s.font, textSize: s.textSize, letterSpacing: s.letterSpacing, lineSpacing: s.lineSpacing, cardColor: s.cardColor }}
+        speech={{ autoRead: s.readAloud, speed: s.readingSpeed }}
       />
     </main>
   );

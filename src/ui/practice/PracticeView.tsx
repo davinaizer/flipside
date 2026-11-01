@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { bulletLines } from "@/domain/csv-import";
 import { QUESTION_SCALE } from "@/shared/constants";
 import type { SessionCardPayload } from "@/shared/schemas/session";
+import { textToRead, type Reader } from "./speech";
 import { readingStyle, type ReadingSettings } from "@/ui/reading-card/ReadingCard";
 
 export const FRONT_HINT = "Say your answer out loud first, then show it.";
@@ -73,6 +74,7 @@ export function PracticeView({
   total,
   settings,
   onReveal,
+  reader,
   footer,
 }: {
   card: SessionCardPayload;
@@ -81,6 +83,8 @@ export function PracticeView({
   total: number;
   settings: ReadingSettings;
   onReveal: () => void;
+  /** Absent when the browser cannot speak: the Read aloud button is then hidden. */
+  reader?: Reader | null;
   /** Grade buttons on the back; the session controls (Undo, End) sit under them. */
   footer?: ReactNode;
 }) {
@@ -110,6 +114,15 @@ export function PracticeView({
           </>
         )}
       </article>
+      {reader && (
+        <button
+          type="button"
+          onClick={() => reader.speak(textToRead(card, revealed))}
+          className="min-h-11 self-center rounded-full px-6 text-on-surface-variant underline"
+        >
+          {revealed ? "Read answer aloud" : "Read question aloud"}
+        </button>
+      )}
       {!revealed && (
         <button
           type="button"

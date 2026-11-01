@@ -3,12 +3,14 @@
 import { useEffect, useState } from "react";
 import type { SessionResponse } from "@/shared/schemas/session";
 import { api } from "@/ui/api/client";
+import type { ReadingSpeed } from "@/shared/enums";
 import type { ReadingSettings } from "@/ui/reading-card/ReadingCard";
 import { ErrorState } from "@/ui/states/ErrorState";
 import { Skeleton } from "@/ui/states/Skeleton";
 import { GradeBar } from "./GradeBar";
 import { PracticeView } from "./PracticeView";
 import { SummaryScreen } from "./SummaryScreen";
+import { useReadAloud } from "./speech";
 import { useSession } from "./use-session";
 
 export function PracticeLoading() {
@@ -21,7 +23,9 @@ export function PracticeLoading() {
 }
 
 /** Loads the session (an empty PUT resumes it); the loaded session is then driven by use-session. */
-export function PracticeScreen({ sessionId, settings }: { sessionId: string; settings: ReadingSettings }) {
+export type SpeechSettings = { autoRead: boolean; speed: ReadingSpeed };
+
+export function PracticeScreen({ sessionId, settings, speech }: { sessionId: string; settings: ReadingSettings; speech: SpeechSettings }) {
   const [data, setData] = useState<SessionResponse | null>(null);
   const [failed, setFailed] = useState(false);
 
@@ -35,13 +39,14 @@ export function PracticeScreen({ sessionId, settings }: { sessionId: string; set
 
   if (failed) return <div className="p-8"><ErrorState onRetry={retry} /></div>;
   if (!data) return <PracticeLoading />;
-  return <ActiveSession data={data} settings={settings} />;
+  return <ActiveSession data={data} settings={settings} speech={speech} />;
 }
 
-function ActiveSession({ data, settings }: { data: SessionResponse; settings: ReadingSettings }) {
+function ActiveSession({ data, settings, speech }: { data: SessionResponse; settings: ReadingSettings; speech: SpeechSettings }) {
   const [left, setLeft] = useState(false);
   const { view, controller } = useSession(data, () => setLeft(true));
   const { card, labels } = view;
+  const reader = useReadAloud(card?.cardId, card?.front, speech.autoRead && !view.revealed, speech.speed);
 
   // A finished, ended or left session shows its summary; the server completes it on the last grade.
   if (left || view.finished || data.session.endedAt) return <SummaryScreen sessionId={data.session.id} />;
@@ -73,6 +78,7 @@ function ActiveSession({ data, settings }: { data: SessionResponse; settings: Re
       total={view.total}
       settings={settings}
       onReveal={() => controller.reveal()}
+      reader={reader}
       footer={
         <>
           {view.revealed && (
