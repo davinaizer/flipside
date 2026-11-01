@@ -1,0 +1,43 @@
+id,topic,front,back,front_image,back_image
+sci-w2-01,7F Chemical reactions,"If a chemical reaction has occurred, what sort things might we witness?","Bubbling
+Colour change
+Temperature change
+Precipitate (a solid forming in a solution)",,
+sci-w2-02,7F Chemical reactions,What is the test for oxygen gas?,"Insert a glowing splint into the boiling tube;
+If oxygen is present, the splint will relight.",,q02-back.png
+sci-w2-03,7F Chemical reactions,What is the test for carbon dioxide gas?,"Bubble it through limewater
+It turns from clear to cloudy",,q03-back.png
+sci-w2-04,7F Chemical reactions,What is the test for hydrogen gas?,"Lit splint near the top of a test tube containing hydrogen.
+If hydrogen present, it will produce a “squeaky pop”.",,q04-back.png
+sci-w2-05,7F Chemical reactions,What is complete combustion?,"Reaction of a fuel with plenty of oxygen
+The maximum amount of energy is given out
+Water and carbon dioxide are produced as waste products.",,q05-back.png
+sci-w2-06,7F Chemical reactions,What is incomplete combustion?,"Incomplete combustion happens in limited oxygen.
+Water is still produced, but carbon monoxide and carbon (soot) are also produced.
+Less energy is released.",,q06-back.png
+sci-w2-07,7E Particles,What is diffusion?,"Diffusion is the spreading out of particles from a high concentration to a low concentration.
+This takes no extra energy (passive).
+It only happens in gases and liquids.",,
+sci-w2-08,7E Particles,What direction will the particles move in?,"The particles will move from left to right.
+They diffuse from an area of high concentration on the left to lower concentration on the right.",q08-front.png,
+sci-w2-09,7G Acids & alkalis,"What numbers relate to acids, alkalis and neutral on the pH scale?","Substances with a pH below 7 are acidic
+Substances with a pH above 7 are alkaline
+Substances with a pH of 7 are neutral",q09-front.png,
+sci-w2-10,7G Acids & alkalis,How do you name the salt produced in a neutralisation reaction?,"The first word is the metal
+The second word comes from the acid:
+Hydrochloric acid = chloride
+Sulfuric acid = sulfate
+Nitric acid = nitrate",,
+sci-w2-11,7G Acids & alkalis,Explain how an acid can be neutralised.,"Add alkali to the acid a bit at a time
+Use an indicator to tell when the neutralisation point has been reached.
+E.g. universal indicator will turn green",,
+sci-w2-12,7G Acids & alkalis,What is an indicator?,An indicator changes colour when it is added to acidic or alkaline solutions.,,
+sci-w2-13,7G Acids & alkalis,"What colour will universal indicator turn when exposed to acids, alkalis & neutral substances?","Acid - red / orange
+Neutral - green
+Alkali - blue / purple",,
+sci-w2-14,7G Acids & alkalis,What is a neutralisation reaction?,Acid + alkali → salt + water,,
+sci-w2-15,7F Chemical reactions,What colour flames do we associate with complete & incomplete combustion?,"Complete = blue flame
+Incomplete = yellow/orange",,
+sci-w2-16,8A Microbes & 8B Plants,What are the different variables in a practical investigation?,"Independent variable (IV) - the thing you change.
+Dependent variable (DV) - the thing you measure.
+Control variables (CV) - the things you keep constant (the same).",,

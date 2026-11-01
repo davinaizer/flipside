@@ -118,7 +118,7 @@ The MVP is a web app running locally on a Mac Mini, used from an iPad over the h
 - Image support through a storage interface with a disk driver.
 - Statistics: performance, frequency and time per card, computed on the server.
 - Reading and practice settings per profile, including a light and dark theme toggle.
-- Local operations: Docker Postgres, backup and restore scripts, seed data.
+- Local operations: Podman Postgres, backup and restore scripts, seed data.
 
 ### Explicitly out of scope for the MVP
 
@@ -491,7 +491,7 @@ flowchart LR
     API --> SVC["Services<br/>decks, imports, sessions, stats"]
     SVC --> DOM["Domain, pure functions<br/>scheduler, sessions, import rules"]
   end
-  SVC --> PG[("Postgres 17<br/>Docker, local only")]
+  SVC --> PG[("Postgres 17<br/>Podman, local only")]
   SVC --> IMG["ImageStore<br/>disk driver, ./data/images"]
   IMG -.-> S3["S3 or R2 driver<br/>Phase 4"]
 ```
@@ -507,14 +507,14 @@ The browser and, later, the SwiftUI app reach the same Route Handlers; services 
 | UI | React client components styled with Tailwind CSS; the design tokens are defined once and feed the Tailwind theme | Practice screens are interactive; tokens stay in one file, so they can map to SwiftUI later |
 | Data fetching | `fetch` through a thin typed client; TanStack Query optional | The UI uses the same API a native app will |
 | Validation and types | Zod schemas shared by UI and API | One source of truth for request and response shapes |
-| Database | Postgres 17 in Docker | Chosen by the owner |
+| Database | Postgres 17 in Podman | Chosen by the owner |
 | ORM and migrations | Drizzle ORM and drizzle-kit | Lightweight, SQL-shaped, works with serverless drivers if deployed later |
 | CSV and zip | Papa Parse (preview in browser), fflate for zip, `file-type` to sniff image bytes | Small, well-known libraries |
 | Speech | Browser `speechSynthesis` | No server involvement; iOS Safari support verified in a spike |
 | Fonts | Bundled with `next/font` | No third-party requests |
 | Tests | Vitest (unit and integration), Playwright (end to end), axe (accessibility) | Section 16 |
 | Tooling | pnpm, ESLint, Prettier, GitHub Actions optional | Standard |
-| Process on the Mac Mini | `next start` supervised by launchd; Docker Desktop or Colima for Postgres | Survives reboots |
+| Process on the Mac Mini | `next start` supervised by launchd; Podman for Postgres | Survives reboots |
 
 ### Layers and boundaries
 
@@ -671,7 +671,7 @@ Postgres runs in a container, the app runs on the Mac Mini host and listens on t
 
 | Component | Where | Notes |
 | --- | --- | --- |
-| Postgres 17 | Docker Compose service, data in a named volume | Bound to `127.0.0.1:5432` only; never exposed to the network |
+| Postgres 17 | Podman container started by `pnpm db:up`, data in a named volume | Bound to `127.0.0.1:5432` only; never exposed to the network |
 | Next.js app | Host process (`pnpm dev` while developing, `next start` in daily use) | Listens on `0.0.0.0:3000` so the iPad can reach it |
 | Image files | `./data/images` on the host | Included in backups |
 | Environment | `.env.local`, never committed; `.env.example` is committed | `DATABASE_URL`, `IMAGE_STORE_DRIVER=fs`, `IMAGE_STORE_PATH`, `PORT` |
@@ -701,7 +701,7 @@ Postgres runs in a container, the app runs on the Mac Mini host and listens on t
 
 ### Running as a service
 
-A launchd job starts `next start` at login or boot; Docker Desktop (or Colima) starts Postgres. A reboot must bring the app back without manual steps.
+A launchd job starts `next start` at login or boot; another starts the Podman machine and the Postgres container. A reboot must bring the app back without manual steps.
 
 ### Privacy and security
 
@@ -915,6 +915,7 @@ These are the decisions taken so far; change one here first, then update the sec
 | D17 | Styling is Tailwind CSS, with the design tokens defined once and fed into the Tailwind theme (resolves OQ6) | 2026-11-01 |
 | D18 | The assumed defaults for OQ2, OQ7, OQ8, OQ9 and OQ10 stand until their review triggers; OQ4 and OQ5 are not build blockers | 2026-11-01 |
 | D19 | The Stitch design files in `docs/design/` are canonical for visual tokens and components; the PRD keeps scope, behaviour and accessibility rules | 2026-11-01 |
+| D20 | Postgres runs in Podman instead of Docker, driven by `podman run` with no compose tool | 2026-11-01 |
 | D20 | A light and dark theme toggle is in the MVP (T5, AC13), stored per profile | 2026-11-01 |
 | D21 | The Stitch screens in `docs/design/stitch_flashcard_learning_app/` are reference only (layout and mood); the PRD decides content, behaviour and copy, and `docs/design/README.md` documents the corrections. Only the two DESIGN files are canonical, for visual tokens | 2026-11-01 |
 
