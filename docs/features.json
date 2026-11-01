@@ -681,6 +681,49 @@
           "area": "e2e/import.spec.ts",
           "done_when": "On both viewports: import the school zip through the UI, then re-import it and see nothing added; import an edited back and see one updated; a broken CSV shows its row errors; axe and 44 px checks pass on each import step in both themes.",
           "status": "done"
+        },
+        {
+          "id": "F3.11",
+          "title": "Warn on missing images for CSV-only uploads and give image warnings a row number",
+          "reqs": [
+            "I1",
+            "I2"
+          ],
+          "prd_sections": [
+            "6"
+          ],
+          "area": "src/domain/import-file.ts, src/ui/import/ImportPreview.tsx",
+          "done_when": "Tests: a CSV-only upload that names images returns a missing_image warning per referencing row; zip image warnings (missing, rejected) carry the row number of each CSV row that references the file and the preview shows Row N; re-import still keeps the card current image.",
+          "status": "todo"
+        },
+        {
+          "id": "F3.12",
+          "title": "Show the full re-import report on the success screen",
+          "reqs": [
+            "I4"
+          ],
+          "prd_sections": [
+            "6"
+          ],
+          "area": "src/ui/import/ImportSuccess.tsx, src/ui/import/import.test.ts",
+          "done_when": "Component test: success shows added, updated and unchanged counts, lists missing ids kept, and shows commit warnings.",
+          "status": "todo"
+        },
+        {
+          "id": "F3.13",
+          "title": "Match the add_deck_re_import layout",
+          "reqs": [
+            "I1",
+            "I2",
+            "I3"
+          ],
+          "prd_sections": [
+            "6",
+            "8"
+          ],
+          "area": "src/ui/import/ImportFlow.tsx, src/ui/import",
+          "done_when": "Screen follows the add_deck_re_import reference using existing tokens and components: numbered steps (Choose file, Check the cards, Deck details), deck details beside the preview, colour swatches, list-style segmented control, Topic/Front/Back preview table, primary Add N cards action; any simplification logged ASSUMED; existing e2e and axe checks still pass on both viewports and themes.",
+          "status": "todo"
         }
       ],
       "design_screens": [
