@@ -707,7 +707,7 @@
           ],
           "area": "src/ui/import/ImportSuccess.tsx, src/ui/import/import.test.ts",
           "done_when": "Component test: success shows added, updated and unchanged counts, lists missing ids kept, and shows commit warnings.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F3.13",

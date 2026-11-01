@@ -48,3 +48,4 @@ F3.2: GET /api/v1/images/{id} streams owner images with nosniff, immutable cache
 F3.10: e2e/import.spec.ts drives the import screen end to end on desktop and iPad (school zip, unchanged re-import, edited back, broken CSV, blocked file) with axe and 44 px checks in both themes. 44 px helper now skips a visually hidden file input inside a label.
 REVIEW F3 round 1: GAPS at 9181fc6
 F3.11: parseImportFile now emits one missing_image warning per referencing row for CSV-only uploads, and zip image warnings carry each row; tests in src/domain/import-file.test.ts. Preview already printed Row N.
+F3.12: ImportSuccess shows added, updated and unchanged counts, the kept missing ids and commit warnings (card_not_in_file filtered out as it duplicates the missing list); test in src/ui/import/import.test.ts.

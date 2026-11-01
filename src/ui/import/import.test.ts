@@ -47,10 +47,35 @@ test("success names the deck with added and updated counts and two actions", () 
     }),
   );
   expect(html).toContain("Saved to Biology");
-  expect(html).toContain("3 cards added, 1 updated");
+  expect(html).toContain("3 cards added, 1 updated, 0 unchanged");
   expect(html).toContain('href="/decks/d1"');
   expect(html).toContain('href="/library"');
   expect(html).not.toMatch(/box|leitner/i);
+});
+
+test("success on re-import shows unchanged, missing ids kept, and commit warnings", () => {
+  const html = renderToStaticMarkup(
+    createElement(ImportSuccess, {
+      deckName: "Biology",
+      result: {
+        deckId: "d1",
+        added: 0,
+        updated: 2,
+        unchanged: 5,
+        skipped: 0,
+        missing: ["a9", "b3"],
+        imageCount: 0,
+        warnings: [
+          { severity: "warning", code: "missing_image", row: 4, message: "Image x.png was not supplied" },
+          { severity: "warning", code: "card_not_in_file", message: "Card a9 is in the deck but not in the file; it was kept" },
+        ],
+      },
+    }),
+  );
+  expect(html).toContain("2 updated, 5 unchanged");
+  expect(html).toContain("a9, b3");
+  expect(html).toContain("Row 4: Image x.png was not supplied");
+  expect(html).not.toContain("is in the deck but not in the file");
 });
 
 test("the flow starts at file choice with the template link", () => {
