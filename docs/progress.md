@@ -16,3 +16,4 @@ F0.10: Playwright desktop and iPad projects, axe in both themes, 44 px and local
 F0.11: CLAUDE.md lists dev, build, start, db:*, test, test:e2e; each was run successfully (db:migrate and db:seed need DATABASE_URL exported from .env.example).
 - 2026-11-01: F0 Foundation DONE. PR #3 merged into develop (merge 7cd6aa8). Reviewer PASS; verify and e2e green.
 MANUAL PENDING: F0.6 next start on an empty database (covered indirectly by the e2e server, not run by hand); F0.4 missing-podman, stopped-machine and concurrent-run paths.
+F1.1: src/domain/day.ts (learningDay, dayStartUtc, addDays, daysBetween, weekStart) via Intl only; fixtures/domain/day-boundary.json covers 07:00 boundary, both London clock changes, NY/Sydney/Kolkata, month/year/leap addition, Monday weeks.
