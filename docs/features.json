@@ -1450,8 +1450,8 @@
         "16"
       ],
       "notes": "Backup/restore scripts, launchd service, full e2e journey, axe on every screen in both themes. AC11 (reboot, restore drill) is manual.",
-      "status": "todo",
-      "branch": null,
+      "status": "in_progress",
+      "branch": "feat/F8-operations",
       "pr": null,
       "tasks": [
         {
