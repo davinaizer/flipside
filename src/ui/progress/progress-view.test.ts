@@ -13,6 +13,8 @@ const stats = (range: Range, over: Partial<Stats> = {}) =>
     hasReviews: true,
     current: metrics,
     bars: [],
+    focusNext: [],
+    byDeck: [],
     changes: {
       cardsReviewed: "38 more than last week",
       gotItRate: "3 points lower than last week",
@@ -56,4 +58,29 @@ test("empty state explains what appears after the first session", () => {
 test("loading and error states render", () => {
   expect(renderToStaticMarkup(createElement(PageSkeleton))).toContain('aria-label="Loading"');
   expect(renderToStaticMarkup(createElement(ErrorState, { onRetry: () => {} }))).toContain("Retry");
+});
+
+const deckRow = (name: string, over = {}) => ({
+  deckId: name, name, color: null, cards: 40, mastered: 9, mastery: 0.2, medianSeconds: 14.2,
+  lastPractisedAt: "2026-10-30T10:00:00Z", ...over,
+});
+
+test("Focus next says mastery and each topic has a Practise button", () => {
+  const topics = ["A", "B", "C"].map((t, i) => ({
+    deckId: "d1", deckName: "Química", topic: t, cards: 5, mastery: 0.1 * (i + 1), lapses: 0,
+  }));
+  const html = render(stats("week", { focusNext: topics }));
+  expect(html).toContain("Focus next");
+  expect(html.match(/Mastery \d+%/g)).toEqual(["Mastery 10%", "Mastery 20%", "Mastery 30%"]);
+  expect(html.match(/aria-label="Practise [ABC]"/g)).toHaveLength(3);
+});
+
+test("By deck keeps the order given, shows Mastered as a count and no mastery rate", () => {
+  const html = render(stats("week", { byDeck: [deckRow("Low"), deckRow("High", { mastered: 30 })] }));
+  for (const h of ["Cards", "Mastered", "Median time", "Last practised"]) expect(html).toContain(h);
+  expect(html.indexOf("Low")).toBeLessThan(html.indexOf("High"));
+  expect(html).toContain("<td class=\"px-4 py-3\">9</td>");
+  expect(html).toContain("14 s");
+  expect(html).toContain("30 Oct 2026");
+  expect(html.slice(html.indexOf("By deck"))).not.toMatch(/Mastery|%/);
 });

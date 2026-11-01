@@ -1,4 +1,6 @@
 import type { Stats } from "@/shared/schemas/stats";
+import { ByDeckTable } from "./by-deck/ByDeckTable";
+import { FocusNext, type FocusTopic } from "./focus-next/FocusNext";
 import { PracticeChart } from "./PracticeChart";
 
 export type Range = "week" | "month";
@@ -22,10 +24,13 @@ export interface ProgressViewProps {
   stats: Stats;
   range: Range;
   onRangeChange: (range: Range) => void;
+  practising?: boolean;
+  practiseError?: string | null;
+  onPractise?: (topic: FocusTopic) => void;
 }
 
 /** Progress screen (S1, S5): range switch and the four tiles. Mastery-based sections come with later tasks. No streaks or badges (PRD section 7). */
-export function ProgressView({ stats, range, onRangeChange }: ProgressViewProps) {
+export function ProgressView({ stats, range, onRangeChange, practising = false, practiseError = null, onPractise = () => {} }: ProgressViewProps) {
   const { current, changes } = stats;
   const rate = current.gotItRate === null ? "–" : `${Math.round(current.gotItRate * 100)}%`;
   const time = current.medianSeconds === null ? "–" : `${Math.round(current.medianSeconds)} s`;
@@ -64,6 +69,8 @@ export function ProgressView({ stats, range, onRangeChange }: ProgressViewProps)
           />
         </ul>
         <PracticeChart bars={stats.bars} range={range} />
+        <FocusNext topics={stats.focusNext} busy={practising} error={practiseError} onPractise={onPractise} />
+        <ByDeckTable decks={stats.byDeck} />
         </div>
       ) : (
         <section className="max-w-2xl rounded-2xl bg-surface-container p-6">

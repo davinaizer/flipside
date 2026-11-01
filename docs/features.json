@@ -1392,7 +1392,7 @@
           ],
           "area": "src/ui/progress/focus-next, src/ui/progress/by-deck",
           "done_when": "Component or e2e tests: three lowest-mastery topics say mastery and each starts a session on that topic, ignoring due dates when none are due; the by-deck table has Cards, Mastered, median time and last practised, lowest mastery first, and no mastery shown as a rate.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F7.6",
