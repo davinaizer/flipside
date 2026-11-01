@@ -18,7 +18,7 @@ export type ImageCheck =
   | { ok: true; image: ImageInfo }
   | { ok: false; reason: ImageRejection; message: string };
 
-const EXTENSIONS: Record<ImageMime, string> = {
+export const EXTENSIONS: Record<ImageMime, string> = {
   "image/png": "png",
   "image/jpeg": "jpg",
   "image/webp": "webp",

@@ -613,7 +613,7 @@
           ],
           "area": "CSV template download, src/app/api/v1/decks/[id]/export/route.ts",
           "done_when": "Tests: the template parses with no errors through the CSV validator; the export is a zip of CSV plus images, 404 for another profile; exporting and re-importing a deck reports nothing added or changed.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F3.7",

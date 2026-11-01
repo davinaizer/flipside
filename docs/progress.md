@@ -41,3 +41,4 @@ F3.2: GET /api/v1/images/{id} streams owner images with nosniff, immutable cache
 - F3.3: POST /imports?dryRun=true previews CSV or zip (columns, counts, first three cards, issues with rows); integration test checks no rows or files are written.
 - F3.4: commitImport saves deck, images, cards and import run in one transaction; shared parseImport with the dry run; tests/imports-commit.test.ts covers rollback, dedupe and per-profile images.
 - F3.5: re-import via deckId in commitImport (match by id, update changed cards only, add new, list missing); progress rows untouched; tests/imports-reimport.test.ts with createReviewLog factory.
+- F3.6: GET /imports/template (CSV) and GET /decks/{id}/export (deck.csv plus images/ named by hash); tests/export-api.test.ts round-trips to unchanged.
