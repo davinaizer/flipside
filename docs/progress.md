@@ -25,3 +25,14 @@ F1.6: src/domain/csv-import.ts parseCsv (Papa Parse; block/error/warning issues 
 F1.7: zip safety (central-directory symlink check, entry and size limits) and image checks (bytes sniffing, header dimensions, sha256, storage key) in src/domain/zip-import.ts and image-check.ts; added fflate and file-type.
 F1.8: src/domain/stats.ts statsWindows (Monday-aligned week/four weeks plus previous period), windowMetrics, practiceBars, changeInWords, masteryBuckets, focusNext, sortByLowestMastery; fixtures/domain/stats.json hand-computed across the October clock change and day-start boundaries.
 - 2026-11-01: F1 Domain core DONE. PR #5 merged into develop (merge 1528431). Reviewer PASS; verify green (453 tests); e2e and axe not applicable.
+F2.1: getCurrentProfile (header over cookie, 401 ApiError), ApiError/toErrorResponse, tests/factories.ts, source scan test.
+- F2.2: profile API (GET /profiles, POST /session/profile, GET /me), shared profile schemas and typed client in src/ui/api/client.ts; integration test in tests/profile-api.test.ts.
+F2.3: GET /library (decks with cardCount) and GET /decks/{id} (topics with counts), scoped by owner; due and mastery counts left to F4.
+F2.4: profile picker at / (src/ui/profile, src/ui/avatars), resolveHome redirect logic, e2e in e2e/profile-picker.spec.ts; e2e server seeds profiles.
+F2.5: app shell (src/app/(app)/layout, src/ui/shell/Sidebar, src/ui/states), stub pages /library /decks/[id] /progress /settings, e2e/app-shell.spec.ts.
+F2.6: e2e/profiles.spec.ts closes AC1 (pick, isolation, 404 by URL and API, switch, axe and 44 px); scripts/e2e-seed.ts adds one deck per profile for e2e.
+REVIEW F2 round 1: GAPS at 4fcc11a
+F2.7: src/app/error.tsx root boundary (ErrorState with Retry and Switch profile) for (app) layout and / failures; src/app/error.test.ts.
+F2.8: picker loading state uses Skeleton cards in role=status aria-label Loading; e2e matches the label.
+REVIEW F2 round 2: PASS at 417b68c
+F2 done (PR #7). MANUAL PENDING: none

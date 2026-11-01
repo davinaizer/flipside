@@ -360,9 +360,9 @@
         "14"
       ],
       "notes": "",
-      "status": "todo",
-      "branch": null,
-      "pr": null,
+      "status": "done",
+      "branch": "feat/F2-profiles",
+      "pr": 7,
       "tasks": [
         {
           "id": "F2.1",
@@ -379,7 +379,7 @@
           ],
           "area": "src/server/profile.ts, src/server/http, tests/factories",
           "done_when": "Integration tests: cookie and X-Profile-Id each resolve a profile; missing, unknown or malformed returns 401 in the error format; a source scan proves no other module reads flipside_profile; factories create decks, cards and card state for later tests.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F2.2",
@@ -396,7 +396,7 @@
           ],
           "area": "src/app/api/v1/{profiles,session/profile,me}, src/shared/schemas/profile.ts, src/ui/api/client.ts",
           "done_when": "Integration tests: GET /profiles returns only id, name and avatar; POST /session/profile sets flipside_profile as HttpOnly, SameSite=Lax and without Secure (the iPad uses plain HTTP) and rejects an unknown id; GET /me returns profile and settings. Responses parse with the shared Zod schemas.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F2.3",
@@ -412,7 +412,7 @@
           ],
           "area": "src/app/api/v1/library, src/app/api/v1/decks/[id], src/server/decks.ts",
           "done_when": "Integration tests with factory data for both profiles (AC1, ahead of import): GET /library lists only the current profile's non-deleted decks, with no counts from the other profile; GET /decks/{id} for the other profile's deck returns 404, the same as an unknown id. Counts are completed in F4.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F2.4",
@@ -428,7 +428,7 @@
           ],
           "area": "src/app/page.tsx, src/ui/profile, src/ui/avatars (placeholder set behind one registry, D15); screen profile_picker and README items 6 and 7",
           "done_when": "Component or e2e tests: no cookie or an invalid cookie shows the picker with avatar and name and no deck counts; a valid cookie redirects to /library unless ?switch=1 is present; picking sets the cookie and opens /library. Loading and error states render. Works in both themes.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F2.5",
@@ -443,7 +443,7 @@
           ],
           "area": "src/app/(app)/layout.tsx, src/ui/shell, src/ui/states (Skeleton, ErrorState), pages /library (deck names only), /decks/[id], /progress and /settings as stubs; README items 13 and 16",
           "done_when": "Component or e2e tests: sidebar shows Library, Progress, Settings and the current avatar and name, highlights the current section, and Switch profile returns to the picker from any page; /library lists the profile's decks by name; a missing profile redirects to the picker; a foreign deck URL shows a not-found state; the error state offers Retry and Switch profile.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F2.6",
@@ -461,7 +461,34 @@
           ],
           "area": "e2e/profiles.spec.ts",
           "done_when": "On both viewports: pick each profile, see only that profile's seeded deck, get not found by URL for the other's deck and 404 from its API, switch profile; axe and 44 px checks pass on picker and Library in both themes.",
-          "status": "todo"
+          "status": "done"
+        },
+        {
+          "id": "F2.7",
+          "title": "Catch layout and home errors with a root error boundary",
+          "reqs": [
+            "P1",
+            "P2"
+          ],
+          "prd_sections": [
+            "8"
+          ],
+          "area": "src/app/error.tsx",
+          "done_when": "src/app/error.tsx (client component) renders ErrorState with Retry and Switch profile when the (app) layout or / throws, e.g. the database is unreachable; an e2e or component test proves it.",
+          "status": "done"
+        },
+        {
+          "id": "F2.8",
+          "title": "Use skeletons for the picker loading state",
+          "reqs": [
+            "P1"
+          ],
+          "prd_sections": [
+            "8"
+          ],
+          "area": "src/ui/profile/ProfilePicker.tsx",
+          "done_when": "The picker loading state renders Skeleton blocks sized like the avatar cards inside a role=status element with aria-label Loading, not a text line; the e2e check matches the label; axe and 44 px checks still pass in both themes.",
+          "status": "done"
         }
       ],
       "design_screens": [
