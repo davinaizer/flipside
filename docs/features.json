@@ -1411,7 +1411,7 @@
           ],
           "area": "e2e/progress.spec.ts",
           "done_when": "On both viewports with the seeded history: the screen shows the hand-computed figures; undo removes a review's contribution (AC6); Focus next opens a session; the empty state shows for a new profile; axe and 44 px checks pass in both themes.",
-          "status": "todo"
+          "status": "done"
         }
       ],
       "design_screens": [
