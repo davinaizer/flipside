@@ -10,3 +10,4 @@ F0.4: vitest global setup starts a disposable tmpfs Postgres 17 via podman, remo
 F0.5: Drizzle schema for all nine section 10 tables, migration 0000, postgres-js client, schema introspection test.
 F0.6: migrations run on start via instrumentation, pnpm db:migrate, GET /api/v1/health with 503 section 11 error format.
 F0.7: pnpm db:seed (node with scripts/register-alias.mjs resolve hook, no tsx) seeds Davi and Nicole idempotently by name; tests use per-file databases to avoid parallel migration races.
+- F0.8: src/ui/tokens.css (light/dark via data-theme, box tokens, Tailwind @theme), globals.css, contrast and no-raw-hex tests.

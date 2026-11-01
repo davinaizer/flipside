@@ -139,7 +139,8 @@
           ],
           "area": "src/ui/tokens.css (the one tokens file), Tailwind config, src/app/layout.tsx; source docs/design/DESIGN.md, DESIGN-DARK.md and README.md",
           "done_when": "Unit tests parse the tokens file and prove: light and dark define the same semantic names, switched by a data-theme attribute, default light; box tokens exist for New, Not yet, Nearly and Got it; every text and surface pair used by those tokens reaches 4.5:1 in both themes (any adjusted value logged as ASSUMED); no raw hex appears in src outside the tokens file.",
-          "status": "todo"
+          "status": "done",
+          "commit": "cc22e32"
         },
         {
           "id": "F0.9",
