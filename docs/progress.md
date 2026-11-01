@@ -18,3 +18,4 @@ F0.11: CLAUDE.md lists dev, build, start, db:*, test, test:e2e; each was run suc
 MANUAL PENDING: F0.6 next start on an empty database (covered indirectly by the e2e server, not run by hand); F0.4 missing-podman, stopped-machine and concurrent-run paths.
 F1.1: src/domain/day.ts (learningDay, dayStartUtc, addDays, daysBetween, weekStart) via Intl only; fixtures/domain/day-boundary.json covers 07:00 boundary, both London clock changes, NY/Sydney/Kolkata, month/year/leap addition, Monday weeks.
 F1.2: src/domain/scheduler.ts applyGrade (New and boxes 1-5, LAPSE_RULE reset/drop_one, leech at 8, requeue flag); fixtures/domain/scheduler.json has the full 36-case matrix plus leech and suspended edge cases.
+F1.3: src/domain/grade-labels.ts gradeLabels derives Again today/Tomorrow/In N days from applyGrade's due date; fixtures/domain/grade-labels.json covers all six states, both lapse rules.

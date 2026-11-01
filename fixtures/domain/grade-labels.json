@@ -1,0 +1,11 @@
+{
+  "today": "2026-12-28",
+  "cases": [
+    { "from": "new", "labels": { "not_yet": "Again today", "nearly": "Again today", "got_it": "Tomorrow" } },
+    { "from": "box1", "labels": { "not_yet": "Again today", "nearly": "Again today", "got_it": "Tomorrow" } },
+    { "from": "box2", "labels": { "not_yet": "Again today", "nearly": "Tomorrow", "got_it": "In 3 days" } },
+    { "from": "box3", "labels": { "not_yet": "Again today", "nearly": "In 3 days", "got_it": "In 7 days" } },
+    { "from": "box4", "labels": { "not_yet": "Again today", "nearly": "In 7 days", "got_it": "In 14 days" } },
+    { "from": "box5", "labels": { "not_yet": "Again today", "nearly": "In 14 days", "got_it": "In 14 days" } }
+  ]
+}
