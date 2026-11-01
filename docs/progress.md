@@ -104,3 +104,4 @@ F8.3 done: ops/launchd plists (db, app, backup) and docs/operations.md with inst
 F8.4 done: e2e/journey.spec.ts walks pick profile, import, practise, undo, finish, statistics on both viewports with an off-host request check.
 F8.5: e2e/a11y.spec.ts walks every screen and state in both themes (axe, 44 px), toggle plus reload, reduced motion, iPad portrait; added reduced-motion CSS rule.
 F8.6 done: e2e/performance.spec.ts and tests/integration/import-performance.test.ts. Measured on this Mac, production build, localhost: first card 117 ms ipad / 129 ms desktop (target 1 s); next card after grade max 92 ms ipad / 143 ms desktop (target 200 ms); 2,000-row import 158 ms (target 30 s). Home-network iPad timing stays manual.
+REVIEW F8 round 1: PASS at 6ef11a4
