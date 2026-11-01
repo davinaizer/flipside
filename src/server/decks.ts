@@ -26,7 +26,7 @@ const deckColumns = {
 export const OTHER_GROUP = "Other";
 
 /** New cards the profile may still meet today: the daily cap minus cards introduced since the learning day began (PRD section 5). */
-async function newCardsRemaining(profile: Profile, today: string, db: Db): Promise<number> {
+export async function newCardsRemaining(profile: Profile, today: string, db: Db): Promise<number> {
   const [{ n }] = await db
     .select({ n: sql<number>`count(*)::int` })
     .from(reviewLog)

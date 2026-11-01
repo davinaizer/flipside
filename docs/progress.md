@@ -74,3 +74,4 @@ REVIEW F5 round 1: GAPS at 5fc8d5a
 REVIEW F5 round 2: GAPS at c7361a1
 REVIEW F5 round 3: PASS at 0fd2cbf
 F5 done: PR #10. MANUAL PENDING: none
+- F6.1: PUT /api/v1/sessions/{id} builds the queue (src/server/sessions.ts) for every scope and length, stores the ordered card ids in sessions.meta, and returns card text, images, grade labels and grades so far; an empty body resumes (tests/sessions-api.test.ts, AC7 cap).
