@@ -694,7 +694,7 @@
           ],
           "area": "src/domain/import-file.ts, src/ui/import/ImportPreview.tsx",
           "done_when": "Tests: a CSV-only upload that names images returns a missing_image warning per referencing row; zip image warnings (missing, rejected) carry the row number of each CSV row that references the file and the preview shows Row N; re-import still keeps the card current image.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F3.12",

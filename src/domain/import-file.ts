@@ -22,6 +22,16 @@ function findCsv(files: Map<string, Uint8Array>): { name: string; bytes: Uint8Ar
 const fromCsv = (i: CsvIssue): ImportIssue => ({ ...i });
 const fromZip = (i: ZipIssue): ImportIssue => ({ ...i });
 
+/** One copy of an image warning per CSV row that references the file, so the preview can say Row N. */
+function withRows(
+  issue: ImportIssue,
+  cards: { row: number; frontImage?: string | null; backImage?: string | null }[],
+): ImportIssue[] {
+  if (issue.severity !== "warning" || !issue.image) return [issue];
+  const rows = cards.filter((c) => c.frontImage === issue.image || c.backImage === issue.image);
+  return rows.length ? rows.map((c) => ({ ...issue, row: c.row })) : [issue];
+}
+
 export type ParsedImport =
   | { ok: false; issues: ImportIssue[] }
   | {
@@ -63,11 +73,22 @@ export async function parseImportFile(bytes: Uint8Array): Promise<ParsedImport> 
   if (csv.blocked) return blockedBy(issues.filter((i) => i.severity === "block"));
 
   let images: ResolvedImages["images"] = new Map();
+  const names = csv.cards.flatMap((c) => [c.frontImage, c.backImage]).filter((n): n is string => !!n);
   if (kind === "zip") {
-    const names = csv.cards.flatMap((c) => [c.frontImage, c.backImage]).filter((n): n is string => !!n);
     const resolved = await resolveImages(names, files);
-    issues.push(...resolved.issues.map(fromZip));
+    issues.push(...resolved.issues.flatMap((i) => withRows(fromZip(i), csv.cards)));
     images = resolved.images;
+  } else {
+    // A CSV alone cannot carry pictures: warn for each row that names one (re-import keeps the current image).
+    for (const name of new Set(names)) {
+      const missing: ImportIssue = {
+        severity: "warning",
+        code: "missing_image",
+        image: name,
+        message: `Image not in the upload: ${name}`,
+      };
+      issues.push(...withRows(missing, csv.cards));
+    }
   }
   return { ok: true, kind, csv, issues, images };
 }
