@@ -1308,9 +1308,9 @@
         "11"
       ],
       "notes": "",
-      "status": "todo",
-      "branch": null,
-      "pr": null,
+      "status": "done",
+      "branch": "feat/F7-progress",
+      "pr": 12,
       "tasks": [
         {
           "id": "F7.1",
@@ -1329,7 +1329,7 @@
           ],
           "area": "src/app/api/v1/stats/route.ts, src/server/stats.ts, src/shared/schemas/stats.ts, fixtures/stats-history",
           "done_when": "Integration test (AC8) over a seeded history with hand-computed expected values: week and month tiles and changes, per-day and per-week bars, first-attempt-only counting, undone rows excluded, median with the 120 s cap, Focus next, by-deck. Reviews from deleted decks stay in tiles and bars but deleted decks are out of Focus next and by-deck. The other profile's data never appears.",
-          "status": "todo",
+          "status": "done",
           "model": "opus"
         },
         {
@@ -1344,7 +1344,7 @@
           ],
           "area": "docs/statistics-queries.md, tests/integration/stats-documented-queries.test.ts",
           "done_when": "A test extracts the SQL from the document, runs it on the seeded history and matches GET /stats, so the numbers on screen are reproducible from review_log.",
-          "status": "todo",
+          "status": "done",
           "model": "opus"
         },
         {
@@ -1361,7 +1361,7 @@
           ],
           "area": "src/app/(app)/progress, src/ui/progress; screen progress, README items 5 and 17",
           "done_when": "Component or e2e tests: the range switch changes all figures; four tiles show values and plain-word changes (\"38 more than last week\"), the second tile is Got it rate and days practised reads like 5 of 7; no streaks or badges; empty state explains what appears after the first session; loading and error states render.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F7.4",
@@ -1376,7 +1376,7 @@
           ],
           "area": "src/ui/progress/practice-chart (SVG or CSS, no chart library)",
           "done_when": "Component tests: per-day bars for week and per-week for month; every bar shows its value; the current period is marked by more than colour; the chart has a text alternative and uses semantic tokens only.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F7.5",
@@ -1392,7 +1392,7 @@
           ],
           "area": "src/ui/progress/focus-next, src/ui/progress/by-deck",
           "done_when": "Component or e2e tests: three lowest-mastery topics say mastery and each starts a session on that topic, ignoring due dates when none are due; the by-deck table has Cards, Mastered, median time and last practised, lowest mastery first, and no mastery shown as a rate.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F7.6",
@@ -1411,7 +1411,18 @@
           ],
           "area": "e2e/progress.spec.ts",
           "done_when": "On both viewports with the seeded history: the screen shows the hand-computed figures; undo removes a review's contribution (AC6); Focus next opens a session; the empty state shows for a new profile; axe and 44 px checks pass in both themes.",
-          "status": "todo"
+          "status": "done"
+        },
+        {
+          "id": "F7.7",
+          "title": "Fix review gaps: By deck shows mastery share and sort note",
+          "reqs": [],
+          "prd_sections": [
+            "7"
+          ],
+          "area": "src/ui/progress/by-deck/ByDeckTable.tsx, src/ui/progress/progress-view.test.ts",
+          "done_when": "By deck Mastered column shows the mastery share as a whole percent (dash when null) per PRD section 7 and design README item 5; the section says it is sorted by lowest mastery; tests updated to expect both; verify.sh green.",
+          "status": "done"
         }
       ],
       "design_screens": [

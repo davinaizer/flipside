@@ -88,3 +88,13 @@ F6.10: e2e/practice.spec.ts closes AC4 to AC7 and AC2 images on both viewports w
 REVIEW F6 round 1: GAPS at c0a7e33
 REVIEW F6 round 2: PASS at 930e9f1
 F6 done: PR #11. MANUAL PENDING: AC10
+- F7.1: GET /api/v1/stats (src/server/stats.ts over domain/stats) with tiles, changes, bars, Focus next and By deck; AC8 integration test over fixtures/stats-history.json (tests/stats-api.test.ts, seeder in tests/helpers/stats-history.ts).
+- F7.2: docs/statistics-queries.md documents the Progress figures as named SQL (windows, tiles, bars, Focus next, By deck, empty state); tests/integration/stats-documented-queries.test.ts runs them on the seeded history and matches GET /stats for both ranges and profiles.
+- F7.3: Progress page (src/ui/progress) with range switch, four tiles with plain-word changes, empty, loading and error states; chart, Focus next and By deck follow in F7.4+. Static-markup tests, no e2e.
+- F7.4: PracticeChart (CSS bars, src/ui/progress) on the Progress page: per-day (week) or per-week (month), value above every bar, current period tagged Today/This week plus heavier outline, role=img text alternative listing all figures.
+- F7.5: Focus next (three lowest-mastery topics, Practise starts a topics session with ignoreDue) and By deck table (Cards, Mastered, Median time, Last practised) on the Progress page; static-markup tests.
+- F7.6: e2e/progress.spec.ts on desktop and iPad: hand-computed tiles, range switch, Focus next and By deck, Focus next opens a session, undo drops a review from the tiles (AC6), empty state for a new profile, axe and 44 px in both themes.
+REVIEW F7 round 1: GAPS at b7004f8
+F7.7: By deck Mastered now shows the share (boxes 4-5) with count, plus subtitle Sorted by lowest mastery; unit and e2e updated.
+REVIEW F7 round 2: PASS at b371f08
+F7 Progress done (PR #12). MANUAL PENDING: none

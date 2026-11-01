@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { librarySchema, type Library } from "@/shared/schemas/library";
+import { statsSchema, type Stats } from "@/shared/schemas/stats";
 import { importResultSchema, type ImportResult } from "@/shared/schemas/import";
 import { sessionEndResponseSchema, sessionResponseSchema, sessionSummarySchema, type SessionResponse, type SessionSummary } from "@/shared/schemas/session";
 import {
@@ -55,6 +56,7 @@ export const api = {
       body: JSON.stringify({ profileId }),
     }),
   library: (): Promise<Library> => call("/library", librarySchema),
+  stats: (range: "week" | "month"): Promise<Stats> => call(`/stats?range=${range}`, statsSchema),
   saveSettings: (settings: Settings): Promise<Settings> =>
     call("/settings", z.object({ settings: settingsSchema }), {
       method: "PUT",
