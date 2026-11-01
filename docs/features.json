@@ -331,7 +331,7 @@
           ],
           "area": "src/domain/stats.ts, fixtures/domain/stats.json",
           "done_when": "Hand-computed JSON fixtures over review rows cover: first-attempt-only counting, undone rows excluded, Got it rate with Nearly as not Got it, median time with the 120 s cap using all attempts, days practised, mastery including New, mastery bar buckets, week and four-week windows aligned to the Monday of the local day, previous-period change in plain words, Focus next (at least 3 cards, tie to more lapses).",
-          "status": "todo",
+          "status": "done",
           "model": "opus"
         }
       ]
