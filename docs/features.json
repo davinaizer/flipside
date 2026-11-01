@@ -1029,7 +1029,7 @@
           ],
           "area": "src/ui/settings/practice",
           "done_when": "Component or e2e tests: cards per session 5, 10, 20, All due (default 5), new cards per day (default 10), read aloud off and reading speed Normal all save per profile; the new-card value is validated as a non-negative whole number; the Library Today panel shows the configured session length.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F5.5",

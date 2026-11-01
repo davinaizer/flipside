@@ -67,3 +67,4 @@ F4 done: PR #9. MANUAL PENDING: none
 - F5.1: GET/PUT /api/v1/settings (src/server/settings.ts); PUT replaces all settings with strict validation; tests in tests/settings-api.test.ts.
 - F5.2: SettingsProvider and sidebar theme switch apply and save the theme at once; root layout renders the profile's theme (src/ui/settings/*, e2e/theme.spec.ts).
 - F5.3: Reading settings with live preview (font, size, spacing, card colour, reset) at /settings; shared ReadingCard and --on-card-* tokens (src/ui/reading-card, src/ui/settings/reading).
+- F5.4: Practice settings (session length, new cards per day with validation, read aloud, reading speed) on /settings (src/ui/settings/practice).
