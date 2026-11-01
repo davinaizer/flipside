@@ -535,7 +535,7 @@
           ],
           "area": "src/server/images/store.ts, src/server/images/disk-driver.ts, tests/contract/image-store.test.ts",
           "done_when": "One contract suite run per driver proves: put then get returns the same bytes, repeated put is harmless, a missing key fails cleanly, delete is idempotent, exists is accurate; a key escaping IMAGE_STORE_PATH is refused; the driver is chosen from IMAGE_STORE_DRIVER.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F3.2",
