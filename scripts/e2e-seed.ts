@@ -37,7 +37,9 @@ const PRACTICE = ["open", "grade", "requeue", "cap"].flatMap((s) => [`Practice $
 const JOURNEY = ["Journey desktop", "Journey ipad"];
 // a11y.spec.ts imports a deck and grades one card, then walks every screen; it owns one profile per project.
 const A11Y = ["A11y desktop", "A11y ipad"];
-for (const name of ["Settings Desktop", "Settings iPad", ...PRACTICE, ...JOURNEY, ...A11Y]) {
+// performance.spec.ts times Start and grading on a fresh imported deck; one profile per project.
+const PERF = ["Perf desktop", "Perf ipad"];
+for (const name of ["Settings Desktop", "Settings iPad", ...PRACTICE, ...JOURNEY, ...A11Y, ...PERF]) {
   await db.insert(profiles).values({
     name,
     avatar: AVATAR_IDS[2] ?? AVATAR_IDS[0],

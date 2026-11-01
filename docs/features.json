@@ -1525,7 +1525,7 @@
           ],
           "area": "e2e/performance.spec.ts, tests/integration/import-performance.test.ts",
           "done_when": "Against a production build: first card within 1 s of Start, next card rendered under 200 ms after a grade, a 2,000-row import under 30 s. Results are appended to docs/progress.md.",
-          "status": "todo"
+          "status": "done"
         }
       ]
     }
