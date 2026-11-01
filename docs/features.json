@@ -264,7 +264,7 @@
           "area": "src/domain/session-builder.ts, fixtures/domain/session-builder.json",
           "done_when": "Fixtures with an injected random source cover: scopes all, deck, topics, weak, topics ignoring due dates (D3) and an explicit card list (misses, R11); order by lowest box, oldest due, shuffled ties, new last; lengths 5, 10, 20 and all; suspended excluded; weak means box 1 graded at least once plus leeches; with 16 new cards and 10 remaining, never more than 10 new, in every scope.",
           "status": "done",
-          "commit": null,
+          "commit": "69b439d",
           "model": "opus"
         },
         {
