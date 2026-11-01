@@ -1,3 +1,5 @@
+import { ProgressScreen } from "@/ui/progress/ProgressScreen";
+
 export default function ProgressPage() {
-  return <h1 className="text-4xl font-semibold">Progress</h1>;
+  return <ProgressScreen />;
 }

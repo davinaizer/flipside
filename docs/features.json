@@ -1361,7 +1361,7 @@
           ],
           "area": "src/app/(app)/progress, src/ui/progress; screen progress, README items 5 and 17",
           "done_when": "Component or e2e tests: the range switch changes all figures; four tiles show values and plain-word changes (\"38 more than last week\"), the second tile is Got it rate and days practised reads like 5 of 7; no streaks or badges; empty state explains what appears after the first session; loading and error states render.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F7.4",
