@@ -547,7 +547,7 @@
           ],
           "area": "src/app/api/v1/images/[id]/route.ts, src/server/images/service.ts",
           "done_when": "Integration tests: the owner gets the bytes with sniffed Content-Type, nosniff, Cache-Control private, max-age=31536000, immutable and ETag equal to the hash; a matching If-None-Match returns 304; the other profile and unknown ids return 404.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F3.3",
