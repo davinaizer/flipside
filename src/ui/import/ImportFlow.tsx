@@ -5,7 +5,7 @@ import { buildPreview, parseImportFile } from "@/domain/import-file";
 import { ANSWER_STYLES, CARD_COLORS } from "@/shared/enums";
 import type { ImportIssue, ImportPreview as Preview, ImportResult } from "@/shared/schemas/import";
 import { ApiClientError, api } from "@/ui/api/client";
-import { ImportBlocked, ImportPreview } from "./ImportPreview";
+import { ImportBlocked, ImportPreview, StepHeading } from "./ImportPreview";
 import { ImportSuccess } from "./ImportSuccess";
 
 export interface DeckChoice {
@@ -21,6 +21,16 @@ type Step =
   | { kind: "saving"; preview: Preview }
   | { kind: "error"; preview: Preview; message: string }
   | { kind: "done"; deckName: string; result: ImportResult };
+
+// Full class names so Tailwind sees them; tokens live in tokens.css.
+const SWATCH = {
+  mist: "bg-card-mist",
+  cream: "bg-card-cream",
+  peach: "bg-card-peach",
+  sage: "bg-card-sage",
+  lavender: "bg-card-lavender",
+  night: "bg-card-night",
+} as const;
 
 const field = "min-h-11 rounded-xl bg-surface-container-low px-3 outline outline-1 outline-outline";
 
@@ -65,57 +75,56 @@ export function ImportFlow({ decks, initialDeckId }: { decks: DeckChoice[]; init
   const preview = "preview" in step ? step.preview : null;
   const saving = step.kind === "saving";
 
+  const existing = decks.find((d) => d.id === deckId);
+  const canSave = preview !== null && preview.validCount > 0;
+  const cardsLabel = preview ? `${preview.validCount} ${preview.validCount === 1 ? "card" : "cards"}` : "";
+
   return (
-    <div className="flex max-w-2xl flex-col gap-6">
-      <div className="flex flex-wrap items-center gap-4">
-        <label className="flex min-h-11 cursor-pointer items-center rounded-full bg-primary px-8 text-on-primary focus-within:outline focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-primary">
-          Choose CSV or zip
-          <input
-            type="file"
-            accept=".csv,.zip,text/csv,application/zip"
-            className="sr-only"
-            onChange={(e) => void choose(e.target.files?.[0])}
-          />
-        </label>
-        <a href="/api/v1/imports/template" download className="flex min-h-11 items-center underline">
-          Download CSV template
-        </a>
+    <form
+      className="grid max-w-6xl gap-6 lg:grid-cols-[minmax(0,1fr)_20rem] lg:items-start"
+      onSubmit={(e) => {
+        e.preventDefault();
+        if (preview) void add(e.currentTarget, preview);
+      }}
+    >
+      <div className="flex flex-col gap-6">
+        <section aria-label="Choose file" className="flex flex-col gap-4 rounded-2xl bg-surface-container p-6">
+          <StepHeading n={1} title="Choose file" hint="Import cards using a spreadsheet or packaged archive" />
+          <div className="flex flex-wrap items-center gap-4">
+            <label className="flex min-h-11 cursor-pointer items-center rounded-full bg-primary px-8 text-on-primary focus-within:outline focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-primary">
+              {file ? "Choose a different file" : "Choose CSV or zip"}
+              <input
+                type="file"
+                accept=".csv,.zip,text/csv,application/zip"
+                className="sr-only"
+                onChange={(e) => void choose(e.target.files?.[0])}
+              />
+            </label>
+            {file && <span className="break-all">{file.name}</span>}
+            <a href="/api/v1/imports/template" download className="flex min-h-11 items-center underline">
+              Download CSV template
+            </a>
+          </div>
+          {existing && <p>Updating {existing.name}. Choose the new version of its file.</p>}
+          <p className="text-on-surface-variant">
+            Needs the columns topic, front and back. Add a zip to bring pictures too.
+          </p>
+        </section>
+
+        {step.kind === "reading" && <p role="status" aria-label="Loading">Reading the file...</p>}
+        {step.kind === "blocked" && <ImportBlocked issues={step.issues} />}
+        {preview && file && <ImportPreview preview={preview} fileName={file.name} />}
       </div>
-      {deckId && (
-        <p>Updating {decks.find((d) => d.id === deckId)?.name}. Choose the new version of its file.</p>
-      )}
-      <p className="text-on-surface-variant">
-        Needs the columns topic, front and back. Add a zip to bring pictures too.
-      </p>
 
-      {step.kind === "reading" && (
-        <p role="status" aria-label="Loading">Reading the file...</p>
-      )}
-      {step.kind === "blocked" && <ImportBlocked issues={step.issues} />}
-      {preview && file && <ImportPreview preview={preview} fileName={file.name} />}
-
-      {preview && preview.validCount > 0 && (
-        <form
-          className="flex flex-col gap-4"
-          onSubmit={(e) => {
-            e.preventDefault();
-            void add(e.currentTarget, preview);
-          }}
-        >
+      {canSave && (
+        <section aria-label="Deck details" className="flex flex-col gap-4 rounded-2xl bg-surface-container p-6">
+          <StepHeading n={3} title="Deck details" hint="Appearance and presentation settings" />
           <label className="flex flex-col gap-1">
             Add to
-            <select
-              name="deckId"
-              value={deckId}
-              onChange={(e) => setDeckId(e.target.value)}
-              className={field}
-              disabled={saving}
-            >
+            <select name="deckId" value={deckId} onChange={(e) => setDeckId(e.target.value)} className={field} disabled={saving}>
               <option value="">A new deck</option>
               {decks.map((d) => (
-                <option key={d.id} value={d.id}>
-                  Update {d.name}
-                </option>
+                <option key={d.id} value={d.id}>Update {d.name}</option>
               ))}
             </select>
           </label>
@@ -132,37 +141,45 @@ export function ImportFlow({ decks, initialDeckId }: { decks: DeckChoice[]; init
               <label className="flex flex-col gap-1">
                 Group (optional)
                 <input name="group" maxLength={100} className={field} />
+                <span className="text-sm text-on-surface-variant">Decks in the same group sit together in the Library.</span>
               </label>
-              <label className="flex flex-col gap-1">
-                Card colour
-                <select name="color" defaultValue="mist" className={field}>
+              <fieldset className="flex flex-col gap-2">
+                <legend className="mb-1">Card colour</legend>
+                <div className="flex flex-wrap gap-2">
                   {CARD_COLORS.map((c) => (
-                    <option key={c} value={c}>{c[0].toUpperCase() + c.slice(1)}</option>
+                    <label key={c} className="relative cursor-pointer">
+                      <input type="radio" name="color" value={c} defaultChecked={c === "mist"} className="peer sr-only" />
+                      <span className={`block size-11 rounded-full outline outline-1 outline-outline ${SWATCH[c]} peer-checked:outline-4 peer-checked:outline-primary peer-focus-visible:outline-offset-2`} />
+                      <span className="sr-only">{c[0].toUpperCase() + c.slice(1)}</span>
+                    </label>
                   ))}
-                </select>
-              </label>
-              <label className="flex flex-col gap-1">
-                Answer style
-                <select name="answerStyle" defaultValue="paragraph" className={field}>
+                </div>
+              </fieldset>
+              <fieldset className="flex flex-col gap-2">
+                <legend className="mb-1">Show answers as</legend>
+                <div className="flex gap-1 rounded-full bg-surface-container-low p-1">
                   {ANSWER_STYLES.map((a) => (
-                    <option key={a} value={a}>{a === "bullets" ? "Bullet list" : "Paragraph"}</option>
+                    <label key={a} className="relative flex-1 cursor-pointer">
+                      <input type="radio" name="answerStyle" value={a} defaultChecked={a === "paragraph"} className="peer sr-only" />
+                      <span className="flex min-h-11 items-center justify-center gap-2 rounded-full px-3 peer-checked:bg-primary peer-checked:text-on-primary peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-primary">
+                        <span aria-hidden="true">{a === "bullets" ? "\u2630" : "\u2261"}</span>
+                        {a === "bullets" ? "Bullet list" : "Paragraph"}
+                      </span>
+                    </label>
                   ))}
-                </select>
-              </label>
+                </div>
+              </fieldset>
             </fieldset>
           )}
-          {step.kind === "error" && (
-            <p role="alert" className="text-error">{step.message}</p>
-          )}
-          <button
-            type="submit"
-            disabled={saving}
-            className="min-h-11 self-start rounded-full bg-primary px-8 text-on-primary disabled:opacity-60"
-          >
-            {saving ? "Saving..." : deckId ? "Update deck" : "Add deck"}
-          </button>
-        </form>
+          {step.kind === "error" && <p role="alert" className="text-error">{step.message}</p>}
+          <div className="flex flex-wrap gap-3">
+            <button type="submit" disabled={saving} className="min-h-11 rounded-full bg-primary px-8 text-on-primary disabled:opacity-60">
+              {saving ? "Saving..." : deckId ? "Update deck" : `Add ${cardsLabel}`}
+            </button>
+            <a href="/library" className="flex min-h-11 items-center px-4 underline">Cancel</a>
+          </div>
+        </section>
       )}
-    </div>
+    </form>
   );
 }

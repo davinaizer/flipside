@@ -49,7 +49,7 @@ test("import the school zip, re-import it unchanged, then an edited back", async
   await checkBothThemes(page); // preview step
 
   await page.getByLabel("Deck name").fill(deck);
-  await page.getByRole("button", { name: "Add deck" }).click();
+  await page.getByRole("button", { name: /^Add \d+ cards?$/ }).click();
   await expect(page.getByRole("status")).toContainText(`Saved to ${deck}`);
   await expect(page.getByRole("status")).toContainText("16 cards added, 0 updated");
   await checkBothThemes(page); // success step

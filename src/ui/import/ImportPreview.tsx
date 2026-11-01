@@ -1,5 +1,18 @@
 import type { ImportIssue, ImportPreview as Preview } from "@/shared/schemas/import";
 
+/** Numbered step heading shared by the three import steps (reference layout). */
+export function StepHeading({ n, title, hint }: { n: number; title: string; hint?: string }) {
+  return (
+    <div className="flex items-center gap-3">
+      <span aria-hidden="true" className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary text-on-primary">{n}</span>
+      <div>
+        <h2 className="text-xl font-semibold">{title}</h2>
+        {hint && <p className="text-sm text-on-surface-variant">{hint}</p>}
+      </div>
+    </div>
+  );
+}
+
 function IssueList({ title, issues }: { title: string; issues: ImportIssue[] }) {
   if (issues.length === 0) return null;
   return (
@@ -27,21 +40,33 @@ export function ImportPreview({ preview, fileName }: { preview: Preview; fileNam
   ];
   return (
     <section aria-label="Preview" className="flex flex-col gap-4 rounded-2xl bg-surface-container p-6">
-      <h2 className="text-2xl font-semibold">Preview of {fileName}</h2>
+      <StepHeading n={2} title="Check the cards" hint={`Preview of ${fileName}`} />
       <p>{counts.join(", ")}</p>
       <p className="text-on-surface-variant">
         Columns found: {preview.columns.join(", ") || "none"}
         {preview.unknownColumns.length > 0 && `. Ignored: ${preview.unknownColumns.join(", ")}`}
       </p>
-      <ol aria-label="First cards" className="flex flex-col gap-3">
-        {preview.firstCards.map((c) => (
-          <li key={c.row} className="rounded-xl bg-surface-container-low p-4">
-            <p className="text-sm text-on-surface-variant">{c.topic}</p>
-            <p className="font-semibold">{c.front}</p>
-            <p>{c.back}</p>
-          </li>
-        ))}
-      </ol>
+      <table className="w-full table-fixed text-left">
+        <caption className="pb-2 text-left text-sm text-on-surface-variant">
+          First {preview.firstCards.length} of {preview.validCount} ready {preview.validCount === 1 ? "card" : "cards"}
+        </caption>
+        <thead>
+          <tr className="text-sm text-on-surface-variant">
+            <th scope="col" className="w-1/4 p-2 font-medium">Topic</th>
+            <th scope="col" className="w-1/3 p-2 font-medium">Front</th>
+            <th scope="col" className="p-2 font-medium">Back</th>
+          </tr>
+        </thead>
+        <tbody>
+          {preview.firstCards.map((c) => (
+            <tr key={c.row} className="align-top odd:bg-surface-container-low">
+              <td className="p-2 text-on-surface-variant">{c.topic}</td>
+              <td className="p-2 font-semibold">{c.front}</td>
+              <td className="p-2">{c.back}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
       <IssueList title="Errors" issues={preview.errors} />
       <IssueList title="Warnings" issues={preview.warnings} />
     </section>

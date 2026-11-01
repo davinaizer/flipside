@@ -49,3 +49,4 @@ F3.10: e2e/import.spec.ts drives the import screen end to end on desktop and iPa
 REVIEW F3 round 1: GAPS at 9181fc6
 F3.11: parseImportFile now emits one missing_image warning per referencing row for CSV-only uploads, and zip image warnings carry each row; tests in src/domain/import-file.test.ts. Preview already printed Row N.
 F3.12: ImportSuccess shows added, updated and unchanged counts, the kept missing ids and commit warnings (card_not_in_file filtered out as it duplicates the missing list); test in src/ui/import/import.test.ts.
+F3.13: import screen follows add_deck_re_import: numbered steps, Deck details beside the preview, colour swatches, segmented answer style, Topic/Front/Back table, Add N cards; e2e and axe pass on both viewports and themes.

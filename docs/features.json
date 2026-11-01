@@ -723,7 +723,7 @@
           ],
           "area": "src/ui/import/ImportFlow.tsx, src/ui/import",
           "done_when": "Screen follows the add_deck_re_import reference using existing tokens and components: numbered steps (Choose file, Check the cards, Deck details), deck details beside the preview, colour swatches, list-style segmented control, Topic/Front/Back preview table, primary Add N cards action; any simplification logged ASSUMED; existing e2e and axe checks still pass on both viewports and themes.",
-          "status": "todo"
+          "status": "done"
         }
       ],
       "design_screens": [

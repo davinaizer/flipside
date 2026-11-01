@@ -27,6 +27,12 @@
   --on-box-nearly: #5c4700;
   --box-got-it: #4648d4;
   --on-box-got-it: #ffffff;
+  --card-mist: #dce9ff;
+  --card-cream: #fef9c3;
+  --card-peach: #ffdcc4;
+  --card-sage: #cdeede;
+  --card-lavender: #e4e1ff;
+  --card-night: #2b3550;
 }
 
 [data-theme="dark"] {
@@ -54,6 +60,12 @@
   --on-box-nearly: #fff1a8;
   --box-got-it: #bdc2ff;
   --on-box-got-it: #131e8c;
+  --card-mist: #2a3a5c;
+  --card-cream: #463c00;
+  --card-peach: #4f2500;
+  --card-sage: #1f4a3a;
+  --card-lavender: #3a3c78;
+  --card-night: #0b1326;
 }
 
 @theme inline {
@@ -81,4 +93,10 @@
   --color-on-box-nearly: var(--on-box-nearly);
   --color-box-got-it: var(--box-got-it);
   --color-on-box-got-it: var(--on-box-got-it);
+  --color-card-mist: var(--card-mist);
+  --color-card-cream: var(--card-cream);
+  --color-card-peach: var(--card-peach);
+  --color-card-sage: var(--card-sage);
+  --color-card-lavender: var(--card-lavender);
+  --color-card-night: var(--card-night);
 }
