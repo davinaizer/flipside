@@ -79,3 +79,4 @@ F5 done: PR #10. MANUAL PENDING: none
 - F6.3: DELETE /api/v1/reviews/{id} undoes the latest live grade of a session (src/server/reviews.ts): restores card_state from prev_state or removes it for a New card, marks undone_at, keeps the row, returns the restored state and labels; repeat-safe (tests/reviews-undo.test.ts).
 - F6.4: POST /api/v1/sessions/{id}/end and GET /api/v1/sessions/{id}/summary (src/server/sessions.ts); the last grade marks the session completed (src/server/reviews.ts) (tests/sessions-end-summary.test.ts).
 - F6.5: full-screen practice front and back views with segmented progress, reading settings, skeleton and error state (src/ui/practice, src/app/practice/[sessionId]); grading is F6.6.
+- F6.6: grade buttons, Not yet re-queue, Undo last, End session and resume in the practice screen (src/ui/practice/use-session.ts controller over domain/session-queue, GradeBar.tsx; tests with a mocked clock and API).

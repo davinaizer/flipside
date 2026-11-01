@@ -1201,7 +1201,7 @@
           ],
           "area": "src/ui/practice/use-session.ts (uses src/domain/session-queue)",
           "done_when": "Component or e2e tests with a mocked clock: three buttons with icon, label and server sublabel; Not yet reappears per the queue with fresh labels; Undo last returns to the previous front and repeats to the start; End session leaves at once; duration runs from front shown to grade with no visible timer; a failed grade retries with the same id; reloading the page resumes at the same card.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F6.7",

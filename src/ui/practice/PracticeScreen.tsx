@@ -1,12 +1,15 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import type { SessionResponse } from "@/shared/schemas/session";
 import { api } from "@/ui/api/client";
 import type { ReadingSettings } from "@/ui/reading-card/ReadingCard";
 import { ErrorState } from "@/ui/states/ErrorState";
 import { Skeleton } from "@/ui/states/Skeleton";
+import { GradeBar } from "./GradeBar";
 import { PracticeView } from "./PracticeView";
+import { useSession } from "./use-session";
 
 export function PracticeLoading() {
   return (
@@ -17,11 +20,10 @@ export function PracticeLoading() {
   );
 }
 
-/** Loads the session (an empty PUT resumes it) and shows the first card not yet graded. Grading is F6.6. */
+/** Loads the session (an empty PUT resumes it); the loaded session is then driven by use-session. */
 export function PracticeScreen({ sessionId, settings }: { sessionId: string; settings: ReadingSettings }) {
   const [data, setData] = useState<SessionResponse | null>(null);
   const [failed, setFailed] = useState(false);
-  const [revealed, setRevealed] = useState(false);
 
   useEffect(() => {
     api.session(sessionId).then(setData, () => setFailed(true));
@@ -33,20 +35,49 @@ export function PracticeScreen({ sessionId, settings }: { sessionId: string; set
 
   if (failed) return <div className="p-8"><ErrorState onRetry={retry} /></div>;
   if (!data) return <PracticeLoading />;
+  return <ActiveSession data={data} settings={settings} />;
+}
 
-  const graded = new Set(data.grades.map((g) => g.cardId));
-  const done = data.queue.filter((c) => graded.has(c.cardId)).length;
-  const card = data.queue.find((c) => !graded.has(c.cardId));
-  if (!card) return <p className="p-8">All cards in this session are done.</p>;
+function ActiveSession({ data, settings }: { data: SessionResponse; settings: ReadingSettings }) {
+  const router = useRouter();
+  const { view, controller } = useSession(data, () => router.push("/library"));
+  const { card, labels } = view;
 
+  const controls = (
+    <div className="flex justify-between">
+      <button type="button" disabled={!view.canUndo || view.busy || view.failed} onClick={() => void controller.undo()} className="min-h-11 px-4 text-on-surface-variant underline disabled:opacity-50">
+        Undo last
+      </button>
+      <button type="button" onClick={() => controller.end()} className="min-h-11 px-4 text-on-surface-variant underline">
+        End session
+      </button>
+    </div>
+  );
+
+  if (!card || !labels) {
+    return (
+      <div className="mx-auto flex w-full max-w-3xl flex-col gap-6 p-8">
+        <p>All cards in this session are done.</p>
+        {controls}
+      </div>
+    );
+  }
   return (
     <PracticeView
       card={card}
-      revealed={revealed}
-      done={done}
-      total={data.queue.length}
+      revealed={view.revealed}
+      done={view.done}
+      total={view.total}
       settings={settings}
-      onReveal={() => setRevealed(true)}
+      onReveal={() => controller.reveal()}
+      footer={
+        <>
+          {view.revealed && (
+            <GradeBar labels={labels} busy={view.busy} failed={view.failed} onGrade={(g) => void controller.grade(g)} onRetry={() => void controller.retry()} />
+          )}
+          {controls}
+        </>
+      }
     />
   );
 }

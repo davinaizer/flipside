@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { bulletLines } from "@/domain/csv-import";
 import { QUESTION_SCALE } from "@/shared/constants";
 import type { SessionCardPayload } from "@/shared/schemas/session";
@@ -72,6 +73,7 @@ export function PracticeView({
   total,
   settings,
   onReveal,
+  footer,
 }: {
   card: SessionCardPayload;
   revealed: boolean;
@@ -79,6 +81,8 @@ export function PracticeView({
   total: number;
   settings: ReadingSettings;
   onReveal: () => void;
+  /** Grade buttons on the back; the session controls (Undo, End) sit under them. */
+  footer?: ReactNode;
 }) {
   return (
     <div className="mx-auto flex min-h-screen w-full max-w-3xl flex-col gap-6 p-6">
@@ -115,6 +119,7 @@ export function PracticeView({
           Show answer
         </button>
       )}
+      {footer}
     </div>
   );
 }

@@ -1,7 +1,12 @@
 import { z } from "zod";
 import { librarySchema, type Library } from "@/shared/schemas/library";
 import { importResultSchema, type ImportResult } from "@/shared/schemas/import";
-import { sessionResponseSchema, type SessionResponse } from "@/shared/schemas/session";
+import { sessionEndResponseSchema, sessionResponseSchema, type SessionResponse } from "@/shared/schemas/session";
+import {
+  reviewResponseSchema,
+  undoResponseSchema,
+  type ReviewRequest,
+} from "@/shared/schemas/review";
 import { settingsSchema, type Settings } from "@/shared/settings";
 import {
   meSchema,
@@ -58,6 +63,10 @@ export const api = {
   /** Loads a session; an empty PUT body resumes an existing one. */
   session: (id: string): Promise<SessionResponse> =>
     call(`/sessions/${id}`, sessionResponseSchema, { method: "PUT" }),
+  grade: (reviewId: string, body: ReviewRequest) =>
+    call(`/reviews/${reviewId}`, reviewResponseSchema, { method: "PUT", body: JSON.stringify(body) }),
+  undoGrade: (reviewId: string) => call(`/reviews/${reviewId}`, undoResponseSchema, { method: "DELETE" }),
+  endSession: (id: string) => call(`/sessions/${id}/end`, sessionEndResponseSchema, { method: "POST" }),
   me: (): Promise<Me> => call("/me", meSchema),
   /** Commit step of the import (PRD section 6, step 4): the file plus deck details, or a deckId to re-import. */
   commitImport: (form: FormData): Promise<ImportResult> =>
