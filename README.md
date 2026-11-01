@@ -1,1 +1,92 @@
-# flipside
+# Flipside
+
+Local-first flashcards with spaced repetition, designed for a dyslexic teenager's school revision and for engineering interview prep.
+
+> **Status: planning.** The product requirements are written ([docs/PRD.md](docs/PRD.md)). There is no application code yet, so none of the commands below exist until the MVP is built.
+
+## What it is
+
+Flipside schedules flashcard reviews with a boxed (Leitner) system: a card you know moves up a box and comes back less often, a card you miss comes back the same day. It keeps the method behind Anki, in an interface built for a teenager, with reading settings (font, size, spacing, card colour) the learner controls.
+
+It runs on a home server (a Mac Mini) and is used from an iPad browser over the home network. Any subject works: one deck per subject, short or multi-point answers, optional images.
+
+## Who it is for
+
+| Profile | Use |
+| --- | --- |
+| Nicole | School subjects and exam preparation, mostly on an iPad |
+| Davi | System Design and other engineering topics for interview prep |
+
+Profiles are picked from a Netflix-style screen. There is no login in the MVP.
+
+## MVP at a glance
+
+- Profile picker; decks, progress and settings are separate per profile.
+- Library of decks with today's due count, deck pages with topic selection.
+- Practice sessions: flip, grade (Not yet, Nearly, Got it), undo, read-aloud, summary.
+- Scheduler: five boxes; only Got it moves a card up; missed cards return within the session; a daily cap on new cards; cards that keep failing are flagged for rewording.
+- CSV import (with a zip of images), with preview, validation and updates that keep progress.
+- Progress screen: cards practised, Got it rate, time per card, days practised, by-deck table.
+- Local only: Docker Postgres, backups, no third-party requests.
+
+Out of scope for the MVP: deployment, authentication, offline use, notifications, an in-app card editor, voice and LLM features.
+
+## Tech stack
+
+| Layer | Choice |
+| --- | --- |
+| App | Next.js (App Router) with Route Handlers, TypeScript |
+| Database | Postgres 17 in Docker, Drizzle ORM |
+| Validation | Zod schemas shared by UI and API |
+| Images | `ImageStore` interface: disk driver now, S3-compatible (for example Cloudflare R2) later |
+| Tests | Vitest, Playwright, axe |
+| Package manager | pnpm |
+
+## Repository layout (planned)
+
+```text
+docs/        PRD and design links
+src/app      pages and Route Handlers (/api/v1)
+src/server   services: decks, imports, sessions, stats
+src/domain   pure functions: scheduler, session builder, import rules
+src/shared   Zod schemas and constants
+src/ui       components and design tokens
+drizzle/     migrations
+scripts/     backup, restore, import tools
+fixtures/    test decks
+```
+
+## Local development (planned)
+
+These scripts are specified in [PRD section 13](docs/PRD.md#13-local-environment-and-operations) and do not exist yet.
+
+| Command | Purpose |
+| --- | --- |
+| `pnpm db:up` | Start Postgres in Docker |
+| `pnpm db:migrate` / `pnpm db:seed` | Apply migrations, create the two profiles |
+| `pnpm dev` | Run the app (listens on the home network so the iPad can reach it) |
+| `pnpm test` / `pnpm test:e2e` | Unit and integration tests, end-to-end tests |
+| `pnpm backup` / `pnpm restore <file>` | Back up and restore the database and images |
+
+## Roadmap
+
+| Phase | Name | Gate to move on |
+| --- | --- | --- |
+| 1 | MVP: web app, local | Acceptance criteria pass; four weeks of real use |
+| 1.5 | Extras: confidence tap, per-point reveal, test-date cram mode | Native need confirmed |
+| 2 | SwiftUI app: study-plan reminders, offline, sync, login | LLM grading agrees with hand grading in a recorded test |
+| 3 | Experiment: spoken answers with LLM feedback, randomised | Owner decides to host, with an access gate ready |
+| 4 | Optional deployment | Hosted behind the access gate |
+
+## Documentation
+
+- [Product requirements (PRD)](docs/PRD.md): scope, requirements, learning model, import format, statistics, architecture, data model, API, testing, risks and the decision log.
+- Design mockups (private links, iPad landscape): [v2, current](https://claude.ai/artifact/C2dqjpab7V7Jseiwr8k5L9) and [v1, first pass](https://claude.ai/artifact/Me41FufM8usUznonLJu6Nd).
+
+## First fixture
+
+The first test deck was converted from school slides: 16 cards, four topics and seven images. It is not in the repository yet; the plan is to add it under `fixtures/`.
+
+## Licence
+
+Private personal project. No licence has been chosen.
