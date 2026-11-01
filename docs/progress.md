@@ -99,3 +99,4 @@ F7.7: By deck Mastered now shows the share (boxes 4-5) with count, plus subtitle
 REVIEW F7 round 2: PASS at b371f08
 F7 Progress done (PR #12). MANUAL PENDING: none
 F8.1 done: scripts/backup.sh and pnpm backup (pg_dump via podman exec, images tar.gz, 14-day retention); tests/backup.test.ts.
+F8.2 done: scripts/restore.sh and pnpm restore (refuses non-empty data without --yes); tests/integration/backup-restore.test.ts drill.

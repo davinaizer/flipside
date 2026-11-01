@@ -1479,7 +1479,7 @@
           ],
           "area": "scripts/restore.sh (through podman exec), pnpm restore, tests/integration/backup-restore.test.ts",
           "done_when": "Automated drill on a disposable database: seed decks, progress and images, back up, destroy, restore, then card_state, review_log, stats and image bytes match. The script refuses to overwrite non-empty data without an explicit confirm flag.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F8.3",
