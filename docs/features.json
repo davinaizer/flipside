@@ -462,6 +462,33 @@
           "area": "e2e/profiles.spec.ts",
           "done_when": "On both viewports: pick each profile, see only that profile's seeded deck, get not found by URL for the other's deck and 404 from its API, switch profile; axe and 44 px checks pass on picker and Library in both themes.",
           "status": "done"
+        },
+        {
+          "id": "F2.7",
+          "title": "Catch layout and home errors with a root error boundary",
+          "reqs": [
+            "P1",
+            "P2"
+          ],
+          "prd_sections": [
+            "8"
+          ],
+          "area": "src/app/error.tsx",
+          "done_when": "src/app/error.tsx (client component) renders ErrorState with Retry and Switch profile when the (app) layout or / throws, e.g. the database is unreachable; an e2e or component test proves it.",
+          "status": "todo"
+        },
+        {
+          "id": "F2.8",
+          "title": "Use skeletons for the picker loading state",
+          "reqs": [
+            "P1"
+          ],
+          "prd_sections": [
+            "8"
+          ],
+          "area": "src/ui/profile/ProfilePicker.tsx",
+          "done_when": "The picker loading state renders Skeleton blocks sized like the avatar cards inside a role=status element with aria-label Loading, not a text line; the e2e check matches the label; axe and 44 px checks still pass in both themes.",
+          "status": "todo"
         }
       ],
       "design_screens": [
