@@ -24,3 +24,4 @@ F1.5: src/domain/session-queue.ts immutable queue (entries with attempt number, 
 F1.6: src/domain/csv-import.ts parseCsv (Papa Parse; block/error/warning issues with row numbers, header = row 1), deriveCardId, bulletLines; fixtures/csv/ has one broken file per rule; papaparse and @types/papaparse added.
 F1.7: zip safety (central-directory symlink check, entry and size limits) and image checks (bytes sniffing, header dimensions, sha256, storage key) in src/domain/zip-import.ts and image-check.ts; added fflate and file-type.
 F1.8: src/domain/stats.ts statsWindows (Monday-aligned week/four weeks plus previous period), windowMetrics, practiceBars, changeInWords, masteryBuckets, focusNext, sortByLowestMastery; fixtures/domain/stats.json hand-computed across the October clock change and day-start boundaries.
+- 2026-11-01: F1 Domain core DONE. PR #5 merged into develop (merge 1528431). Reviewer PASS; verify green (453 tests); e2e and axe not applicable.

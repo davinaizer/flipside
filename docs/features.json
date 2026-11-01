@@ -200,9 +200,9 @@
         "14"
       ],
       "notes": "Pure functions in src/domain with table-driven JSON fixtures (N4): scheduler, session builder, re-queue, undo maths, day boundary, CSV validation, stats definitions. Provides the logic behind AC4 to AC8; those ACs close in F6 and F7.",
-      "status": "in_progress",
+      "status": "done",
       "branch": "feat/F1-domain-core",
-      "pr": null,
+      "pr": "https://github.com/davinaizer/flipside/pull/5",
       "tasks": [
         {
           "id": "F1.1",
