@@ -1,0 +1,26 @@
+id,topic,front,back,front_image,back_image
+sd-01,Caching,"When would you add a cache in front of a database?","Reads far outnumber writes
+The same rows are requested repeatedly
+Slightly stale data is acceptable
+The database is the latency or load bottleneck",,
+sd-02,Caching,"Name the main cache write strategies and their trade-off.","Write-through: consistent, slower writes
+Write-back: fast writes, risk of data loss
+Write-around: avoids polluting the cache, first read misses
+Cache-aside: app controls loading, can serve stale data",,
+sd-03,Load balancing,"What can a load balancer use to pick a server?","Round robin
+Least connections
+Weighted capacity
+Consistent hashing on a key
+Health checks to drop failed servers",,
+sd-04,Load balancing,"Layer 4 versus layer 7 load balancing?","L4: routes on IP and port, fast, content-blind
+L7: routes on URL, headers or cookies, can terminate TLS
+L7 costs more CPU but allows smarter routing",,
+sd-05,Databases,"When do you shard a database, and what goes wrong?","Shard when one node cannot hold the data or the write load
+Pick a key with even spread to avoid hot shards
+Cross-shard joins and transactions get hard
+Resharding is expensive, so plan for growth",,
+sd-06,Databases,"List the ways to scale reads on a relational database.","Add read replicas
+Cache hot queries
+Add the right indexes
+Denormalise read-heavy views
+Accept replica lag on replicas",,

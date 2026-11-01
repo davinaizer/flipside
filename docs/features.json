@@ -642,7 +642,7 @@
           ],
           "area": "move res/science-w2.csv and res/science-w2-deck.zip to fixtures/, add fixtures/multi-point.csv, tests/integration/school-deck.test.ts",
           "done_when": "res/ is gone and the fixtures are unchanged in fixtures/. Integration test: importing the school zip creates one deck of 16 cards across four topics with 7 images and no image warnings, and every card's front_image_id and back_image_id serves the bytes of the file named in its CSV row, including the two question-side images (sci-w2-08 and sci-w2-09).",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F3.9",

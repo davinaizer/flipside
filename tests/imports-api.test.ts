@@ -58,7 +58,7 @@ test("dry run previews CSV and zip input and saves nothing", async () => {
   expect(body.warnings.some((w: { code: string }) => w.code === "unknown_column")).toBe(true);
 
   // The school deck as a zip: images are counted and checked.
-  const zipBytes = new Uint8Array(await readFile(join(process.cwd(), "res/science-w2-deck.zip")));
+  const zipBytes = new Uint8Array(await readFile(join(process.cwd(), "fixtures/science-w2-deck.zip")));
   const zres = await post(zipBytes);
   expect(zres.status).toBe(200);
   const z = await zres.json();

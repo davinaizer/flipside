@@ -43,3 +43,4 @@ F3.2: GET /api/v1/images/{id} streams owner images with nosniff, immutable cache
 - F3.5: re-import via deckId in commitImport (match by id, update changed cards only, add new, list missing); progress rows untouched; tests/imports-reimport.test.ts with createReviewLog factory.
 - F3.6: GET /imports/template (CSV) and GET /decks/{id}/export (deck.csv plus images/ named by hash); tests/export-api.test.ts round-trips to unchanged.
 - F3.7: pnpm import:cli <file> --profile <name> [--name --group --color --answer-style --deck] calls commitImport and prints the result JSON; unknown profile exits 1. ApiError lost parameter properties so Node type stripping can load it. Test in tests/import-cli.test.ts.
+- F3.8: moved school fixtures from res/ to fixtures/, added fixtures/multi-point.csv (6 System Design cards); tests/integration/school-deck.test.ts proves 16 cards, 4 topics, 7 images served byte-for-byte.

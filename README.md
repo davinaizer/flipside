@@ -85,7 +85,7 @@ These scripts are specified in [PRD section 13](docs/PRD.md#13-local-environment
 
 ## First fixture
 
-The first test deck was converted from school slides: 16 cards, four topics and seven images. It is in `res/` for now and moves to `fixtures/` in task F3.8.
+The first test deck was converted from school slides: 16 cards, four topics and seven images. It is in `fixtures/` (`science-w2.csv` and `science-w2-deck.zip`).
 
 ## Licence
 
