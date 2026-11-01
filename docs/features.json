@@ -1094,8 +1094,8 @@
         "11"
       ],
       "notes": "AC10 (read aloud on the target iPad) is manual.",
-      "status": "todo",
-      "branch": null,
+      "status": "in_progress",
+      "branch": "feat/F6-practice",
       "pr": null,
       "tasks": [
         {
