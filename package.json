@@ -13,6 +13,7 @@
     "db:up": "bash scripts/db.sh up",
     "db:down": "bash scripts/db.sh down",
     "db:migrate": "drizzle-kit migrate",
+    "db:seed": "node --import ./scripts/register-alias.mjs scripts/seed.ts",
     "format": "prettier --write ."
   },
   "dependencies": {

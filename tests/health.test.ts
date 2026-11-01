@@ -1,5 +1,6 @@
 import { afterEach, expect, test, vi, inject } from "vitest";
 import postgres from "postgres";
+import { freshDatabase } from "./helpers/db";
 
 afterEach(() => {
   vi.resetModules();
@@ -13,17 +14,18 @@ async function loadRoute(url: string) {
 }
 
 test("migrations are safe to run twice and health returns 200", async () => {
-  vi.stubEnv("DATABASE_URL", inject("testDatabaseUrl"));
+  const url = await freshDatabase(inject("testDatabaseUrl"), "flipside_health");
+  vi.stubEnv("DATABASE_URL", url);
   const { runMigrations } = await import("@/server/db/migrate");
   await runMigrations();
   await runMigrations();
-  const sql = postgres(inject("testDatabaseUrl"), { max: 1 });
+  const sql = postgres(url, { max: 1 });
   const [r] = await sql`select count(*)::int as n from public.schema_migrations`;
   await sql.end();
   expect(r.n).toBe(1);
 
   vi.resetModules();
-  const { GET } = await loadRoute(inject("testDatabaseUrl"));
+  const { GET } = await loadRoute(url);
   const res = await GET();
   expect(res.status).toBe(200);
   expect(await res.json()).toEqual({ status: "ok", checks: { database: "ok" } });

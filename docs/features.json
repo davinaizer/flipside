@@ -125,7 +125,8 @@
           ],
           "area": "scripts/seed.ts, pnpm db:seed, src/shared/avatars.ts (placeholder avatar ids, D15)",
           "done_when": "Integration test: running the seed twice leaves exactly Davi and Nicole, each with a different avatar id, timezone Europe/London, day start hour 7 and default settings; a third profile added by insert needs no code change.",
-          "status": "todo"
+          "status": "done",
+          "commit": "0e6c390"
         },
         {
           "id": "F0.8",
@@ -1366,7 +1367,7 @@
             "16"
           ],
           "area": "ops/launchd/*.plist (app, Podman machine and Postgres, nightly backup), docs/operations.md, README.md",
-          "done_when": "plutil -lint passes on every plist; one job starts the Podman machine and then the Postgres container, and the app job waits until the database accepts connections; the runbook gives install steps, the iPad address and shortcut, and the manual AC11 reboot and restore checklist. Agents do not install anything on the host; AC11 stays MANUAL PENDING.",
+          "done_when": "plutil -lint passes on every plist; one job starts the Podman machine and then the Postgres container, and the app job waits until the database accepts connections; the runbook gives install steps, the iPad address and shortcut, and the manual AC11 reboot and restore checklist. Agents do not install anything on the host; AC11 stays MANUAL 0e6c390.",
           "status": "todo"
         },
         {

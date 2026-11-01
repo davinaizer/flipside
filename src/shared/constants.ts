@@ -1,5 +1,8 @@
 export const APP_NAME = "Flipside";
 
+/** Default profile timezone; decides what "today" is. */
+export const DEFAULT_TIMEZONE = "Europe/London";
+
 /** Hour (profile local time) at which the learning day starts. */
 export const DEFAULT_DAY_START_HOUR = 7;
 
