@@ -379,7 +379,7 @@
           ],
           "area": "src/server/profile.ts, src/server/http, tests/factories",
           "done_when": "Integration tests: cookie and X-Profile-Id each resolve a profile; missing, unknown or malformed returns 401 in the error format; a source scan proves no other module reads flipside_profile; factories create decks, cards and card state for later tests.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F2.2",
