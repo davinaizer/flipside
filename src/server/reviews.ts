@@ -250,6 +250,8 @@ export async function undoReview(profile: Profile, id: string, now: Date = new D
     if (latest?.id !== reviewId) throw notLatest();
     // A later grade of the same card in another session built on this one; restoring the
     // older state would silently discard it.
+    // Lock the card row as putReview does, so a concurrent grade of it elsewhere cannot slip past this check.
+    await tx.select({ id: cards.id }).from(cards).where(eq(cards.id, row!.cardId)).for("update");
     const [laterElsewhere] = await tx
       .select({ id: reviewLog.id })
       .from(reviewLog)

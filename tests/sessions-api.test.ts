@@ -101,6 +101,13 @@ test("PUT /sessions/{id} builds, stores and resumes the queue", async () => {
   ).toEqual([box3.id, notDue.id, ...fresh.slice(0, 3).map((c) => c.id)]);
   expect(ids(await put(sid(), { scope: { kind: "weak" }, length: "all" }))).toEqual([box1Old.id, box1.id, leech.id]);
 
+  // Explicit cards ("Practise the misses"): a foreign card is dropped, a not-due card is kept.
+  const picked = await put(sid(), { scope: { kind: "cards", cardIds: [box1.id, foreignCard.id, notDue.id] }, length: "all" });
+  expect(ids(picked)).toContain(box1.id);
+  expect(ids(picked)).toContain(notDue.id);
+  expect(ids(picked)).not.toContain(foreignCard.id);
+  expect(ids(picked)).toHaveLength(2);
+
   // A retry with the same id returns the identical queue, whatever the body says.
   const again = await put(allId, { scope: { kind: "weak" }, length: 5 });
   expect(again).toEqual(all);

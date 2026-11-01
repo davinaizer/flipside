@@ -76,6 +76,14 @@ test("Start practice, Weak cards and Deck Practise open real sessions; front, ba
   await expect(page.getByText("1 Not yet")).toBeVisible();
   await checkBothThemes(page); // summary
 
+  const summaryUrl = page.url();
+  await page.getByRole("button", { name: "Practise the misses" }).click();
+  await page.waitForURL((u) => /\/practice\/[^/]+$/.test(u.pathname) && u.href !== summaryUrl);
+  await expect(page.getByText("Card 1 of 1")).toBeVisible();
+  await expect(question(page)).toContainText("If a chemical reaction has occurred");
+  await page.getByRole("button", { name: "End session" }).click();
+  await expect(page.getByRole("heading", { name: "Session summary" })).toBeVisible();
+
   await page.getByRole("link", { name: "Back to Library" }).click();
   await page.waitForURL("**/library");
   await page.getByRole("button", { name: /^Weak cards/ }).click();
