@@ -63,3 +63,4 @@ REVIEW F4 round 1: GAPS at 3eb9d84
 - F4.8: Start practice and Practise deck enable on candidates = due + New up to the remaining daily cap (domain sessionCandidateCount); library today.startableCount and deck.newRemaining added (tests/library-counts.test.ts, practice-plan test).
 - F4.9: Deck e2e covers the loading skeleton (client navigation held open) and the error with Retry (stream's page row swapped for an error row), with axe and 44 px in both themes (e2e/deck.spec.ts).
 REVIEW F4 round 2: PASS at 31f9481
+F4 done: PR #9. MANUAL PENDING: none

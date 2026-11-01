@@ -764,9 +764,9 @@
         "11"
       ],
       "notes": "",
-      "status": "in_progress",
+      "status": "done",
       "branch": "feat/F4-library-and-deck-page",
-      "pr": null,
+      "pr": 9,
       "tasks": [
         {
           "id": "F4.1",
