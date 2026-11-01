@@ -3,6 +3,7 @@ import type { Db } from "@/server/db/client";
 import { getDb } from "@/server/db/client";
 import { profiles } from "@/server/db/schema";
 import { ApiError } from "@/server/http/errors";
+import { settingsSchema } from "@/shared/settings";
 
 /** The only module that knows the cookie name (PRD section 11); others import this constant. */
 export const PROFILE_COOKIE = "flipside_profile";
@@ -34,4 +35,34 @@ export async function getCurrentProfile(request: Request, db: Db = getDb()): Pro
   const [profile] = await db.select().from(profiles).where(eq(profiles.id, id.toLowerCase()));
   if (!profile) throw unauthorized();
   return profile;
+}
+
+/** Picker list: id, name and avatar only (PRD section 11). */
+export async function listProfiles(db: Db = getDb()) {
+  return db
+    .select({ id: profiles.id, name: profiles.name, avatar: profiles.avatar })
+    .from(profiles)
+    .orderBy(profiles.name);
+}
+
+/** Confirms the profile exists before the route sets the cookie. */
+export async function requireProfileById(id: string, db: Db = getDb()): Promise<Profile> {
+  const [profile] = await db.select().from(profiles).where(eq(profiles.id, id));
+  if (!profile) throw new ApiError(404, "profile_not_found", "That profile does not exist.");
+  return profile;
+}
+
+/** The /me payload; stored settings are completed with defaults. */
+export function toMe(profile: Profile) {
+  return {
+    profile: {
+      id: profile.id,
+      name: profile.name,
+      avatar: profile.avatar,
+      accent: profile.accent,
+      timezone: profile.timezone,
+      dayStartHour: profile.dayStartHour,
+    },
+    settings: settingsSchema.parse(profile.settings),
+  };
 }

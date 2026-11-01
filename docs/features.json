@@ -396,7 +396,7 @@
           ],
           "area": "src/app/api/v1/{profiles,session/profile,me}, src/shared/schemas/profile.ts, src/ui/api/client.ts",
           "done_when": "Integration tests: GET /profiles returns only id, name and avatar; POST /session/profile sets flipside_profile as HttpOnly, SameSite=Lax and without Secure (the iPad uses plain HTTP) and rejects an unknown id; GET /me returns profile and settings. Responses parse with the shared Zod schemas.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F2.3",

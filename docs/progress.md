@@ -26,3 +26,4 @@ F1.7: zip safety (central-directory symlink check, entry and size limits) and im
 F1.8: src/domain/stats.ts statsWindows (Monday-aligned week/four weeks plus previous period), windowMetrics, practiceBars, changeInWords, masteryBuckets, focusNext, sortByLowestMastery; fixtures/domain/stats.json hand-computed across the October clock change and day-start boundaries.
 - 2026-11-01: F1 Domain core DONE. PR #5 merged into develop (merge 1528431). Reviewer PASS; verify green (453 tests); e2e and axe not applicable.
 F2.1: getCurrentProfile (header over cookie, 401 ApiError), ApiError/toErrorResponse, tests/factories.ts, source scan test.
+- F2.2: profile API (GET /profiles, POST /session/profile, GET /me), shared profile schemas and typed client in src/ui/api/client.ts; integration test in tests/profile-api.test.ts.
