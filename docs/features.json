@@ -901,6 +901,36 @@
           "area": "e2e/library.spec.ts, e2e/deck.spec.ts; screen error_with_retry",
           "done_when": "On both viewports with seeded data: empty, loading, error with Retry, populated Library, search, Deck page, edit and delete all pass; axe and 44 px checks pass on each state in both themes.",
           "status": "done"
+        },
+        {
+          "id": "F4.8",
+          "title": "Fix: allow starting practice when cards are all New",
+          "reqs": [
+            "L2",
+            "D2"
+          ],
+          "prd_sections": [
+            "5",
+            "7",
+            "11"
+          ],
+          "area": "src/server/decks.ts, src/ui/library/LibraryView.tsx, src/ui/deck/DeckView.tsx",
+          "done_when": "Review gap 1: Start practice (Library) and Practise deck (Deck) are enabled whenever the scope has session candidates per PRD section 5 (due cards plus new cards up to the remaining daily cap), built from the domain rule, not dueCount alone. Test: a deck with only New cards can start practice from both Library and Deck; with no candidates the buttons stay disabled.",
+          "status": "todo"
+        },
+        {
+          "id": "F4.9",
+          "title": "Fix: test Deck page loading and error states",
+          "reqs": [
+            "D1"
+          ],
+          "prd_sections": [
+            "8",
+            "16"
+          ],
+          "area": "e2e/deck.spec.ts",
+          "done_when": "Review gap 2: e2e shows the /decks/[id] route rendering the loading skeleton and the error-with-Retry state, with axe and 44 px checks in both themes on both viewports.",
+          "status": "todo"
         }
       ],
       "design_screens": [
