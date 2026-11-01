@@ -1165,7 +1165,7 @@
           ],
           "area": "POST /sessions/{id}/end, GET /sessions/{id}/summary, src/server/sessions.ts",
           "done_when": "Integration tests: end marks ended_early and keeps grades; grading the last card marks completed; summary gives counts by grade from each card's first grade in the session (ASSUMED if the PRD stays silent), session time, up to three cards to go again and the ids for Practise the misses; undone reviews never count; other profile gets 404.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F6.5",

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { and, desc, eq, gt, gte, isNull } from "drizzle-orm";
+import { and, asc, desc, eq, gt, gte, isNull } from "drizzle-orm";
 import type { Db } from "@/server/db/client";
 import { getDb } from "@/server/db/client";
 import { cardState, cards, decks, reviewLog, sessions } from "@/server/db/schema";
@@ -171,8 +171,33 @@ export async function putReview(
         meta: { state, requeue },
       })
       .returning();
+    await completeIfFinished(tx, sessionId, session.endedAt, now);
     return toResponse(profile, row!);
   });
+}
+
+/**
+ * Marks the session completed once every card in its queue has a live grade that did not
+ * re-queue (R7). Runs inside the grade's transaction, under the session lock. An ended
+ * session keeps its first end. Undoing a grade later does not reopen a completed session.
+ */
+type Tx = Parameters<Parameters<Db["transaction"]>[0]>[0];
+
+async function completeIfFinished(tx: Tx, sessionId: string, endedAt: Date | null, now: Date): Promise<void> {
+  if (endedAt) return;
+  const [session] = await tx.select({ meta: sessions.meta }).from(sessions).where(eq(sessions.id, sessionId));
+  const { cardIds } = sessionMetaSchema.parse(session!.meta);
+  const live = await tx
+    .select({ cardId: reviewLog.cardId, meta: reviewLog.meta })
+    .from(reviewLog)
+    .where(and(eq(reviewLog.sessionId, sessionId), isNull(reviewLog.undoneAt)))
+    .orderBy(asc(reviewLog.reviewedAt), asc(reviewLog.createdAt));
+  // The latest live grade of each card says whether it still has a re-queued attempt.
+  const settled = new Map<string, boolean>();
+  for (const r of live) settled.set(r.cardId, !reviewMetaSchema.parse(r.meta).requeue);
+  if (cardIds.length > 0 && cardIds.every((c) => settled.get(c) === true)) {
+    await tx.update(sessions).set({ endedAt: now, endedReason: "completed" }).where(eq(sessions.id, sessionId));
+  }
 }
 
 /** The response for an undone review: the restored state and labels for regrading it, from the day of the undo. */

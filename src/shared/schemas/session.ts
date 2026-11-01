@@ -72,3 +72,28 @@ export const sessionResponseSchema = z.object({
 
 export type SessionCardPayload = z.infer<typeof sessionCardSchema>;
 export type SessionResponse = z.infer<typeof sessionResponseSchema>;
+
+/** Response of POST /sessions/{id}/end. */
+export const sessionEndResponseSchema = z.object({
+  session: z.object({
+    id: z.string().uuid(),
+    endedAt: z.string(),
+    endedReason: z.enum(ENDED_REASONS),
+  }),
+});
+export type SessionEndResponse = z.infer<typeof sessionEndResponseSchema>;
+
+/**
+ * Response of GET /sessions/{id}/summary. Counts use each card's first live grade in the
+ * session. goAgain is up to three Not yet cards; missIds is every Not yet card, for
+ * "Practise the misses" (a new session with scope {kind:"cards"} is not built yet).
+ */
+export const sessionSummarySchema = z.object({
+  session: sessionResponseSchema.shape.session,
+  counts: z.object({ not_yet: z.number().int(), nearly: z.number().int(), got_it: z.number().int() }),
+  gradedCount: z.number().int(),
+  durationMs: z.number().int().nonnegative(),
+  goAgain: z.array(z.object({ cardId: z.string().uuid(), deckName: z.string(), topic: z.string(), front: z.string() })).max(3),
+  missIds: z.array(z.string().uuid()),
+});
+export type SessionSummary = z.infer<typeof sessionSummarySchema>;

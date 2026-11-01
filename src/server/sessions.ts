@@ -15,7 +15,9 @@ import {
   sessionRequestSchema,
   type SessionCardPayload,
   type SessionRequest,
+  type SessionEndResponse,
   type SessionResponse,
+  type SessionSummary,
 } from "@/shared/schemas/session";
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -245,4 +247,87 @@ export async function putSession(
   const row = await findSessionRow(sessionId, db);
   if (!row || row.profileId !== profile.id) throw notFound();
   return loadSession(profile, row, now, db);
+}
+
+/** Loads a session of this profile or throws 404 (another profile's session looks missing). */
+async function ownSession(profile: Profile, id: string, db: Db): Promise<SessionRow> {
+  if (!UUID.test(id)) throw notFound();
+  const row = await findSessionRow(id.toLowerCase(), db);
+  if (!row || row.profileId !== profile.id) throw notFound();
+  return row;
+}
+
+/**
+ * POST /sessions/{id}/end (R7). Marks the session ended early; grades already given stay.
+ * An already ended session (early or completed) is returned as stored, so a retry is safe.
+ */
+export async function endSession(profile: Profile, id: string, now: Date = new Date(), db: Db = getDb()): Promise<SessionEndResponse> {
+  const row = await ownSession(profile, id, db);
+  let ended = row;
+  if (!row.endedAt) {
+    // The guard on ended_at keeps a concurrent completion or end from being overwritten.
+    const [updated] = await db
+      .update(sessions)
+      .set({ endedAt: now, endedReason: "ended_early" })
+      .where(and(eq(sessions.id, row.id), isNull(sessions.endedAt)))
+      .returning();
+    ended = updated ?? (await findSessionRow(row.id, db))!;
+  }
+  return {
+    session: { id: ended.id, endedAt: ended.endedAt!.toISOString(), endedReason: ended.endedReason as SessionEndResponse["session"]["endedReason"] },
+  };
+}
+
+/**
+ * GET /sessions/{id}/summary (R11). ASSUMED: each card counts once, by its first live
+ * (non-undone) grade in the session; re-queued attempts do not change the counts. Session
+ * time runs from start to the end, or to the last grade while the session is still open.
+ */
+export async function getSummary(profile: Profile, id: string, db: Db = getDb()): Promise<SessionSummary> {
+  const row = await ownSession(profile, id, db);
+  const meta = sessionMetaSchema.parse(row.meta);
+  const reviews = await db
+    .select({ cardId: reviewLog.cardId, grade: reviewLog.grade, reviewedAt: reviewLog.reviewedAt })
+    .from(reviewLog)
+    .where(and(eq(reviewLog.sessionId, row.id), eq(reviewLog.profileId, profile.id), isNull(reviewLog.undoneAt)))
+    .orderBy(asc(reviewLog.reviewedAt), asc(reviewLog.createdAt));
+
+  const first = new Map<string, Grade>();
+  for (const r of reviews) if (!first.has(r.cardId)) first.set(r.cardId, r.grade as Grade);
+  const counts = { not_yet: 0, nearly: 0, got_it: 0 };
+  for (const g of first.values()) counts[g]++;
+
+  // Queue order, so the cards to go again appear as they were met.
+  const missIds = meta.cardIds.filter((c) => first.get(c) === "not_yet");
+  const goAgainIds = missIds.slice(0, 3);
+  const goAgainRows =
+    goAgainIds.length === 0
+      ? []
+      : await db
+          .select({ id: cards.id, deckName: decks.name, topic: cards.topic, front: cards.front })
+          .from(cards)
+          .innerJoin(decks, eq(decks.id, cards.deckId))
+          .where(and(inArray(cards.id, goAgainIds), eq(decks.ownerProfileId, profile.id)));
+  const byId = new Map(goAgainRows.map((c) => [c.id, c]));
+
+  const end = row.endedAt ?? reviews.at(-1)?.reviewedAt ?? row.startedAt;
+  return {
+    session: {
+      id: row.id,
+      scope: row.scope as SessionRequest["scope"],
+      length: meta.length,
+      plannedCount: row.plannedCount,
+      startedAt: row.startedAt.toISOString(),
+      endedAt: row.endedAt?.toISOString() ?? null,
+      endedReason: row.endedReason as SessionResponse["session"]["endedReason"],
+    },
+    counts,
+    gradedCount: first.size,
+    durationMs: Math.max(0, end.getTime() - row.startedAt.getTime()),
+    goAgain: goAgainIds.flatMap((cardId) => {
+      const c = byId.get(cardId);
+      return c ? [{ cardId, deckName: c.deckName, topic: c.topic, front: c.front }] : [];
+    }),
+    missIds,
+  };
 }
