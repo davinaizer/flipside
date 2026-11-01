@@ -77,7 +77,8 @@
           ],
           "area": "vitest global setup, disposable podman container on tmpfs, tests/helpers",
           "done_when": "With the dev database stopped, pnpm test starts a disposable Postgres 17 with podman under a unique name and free port, runs an integration test reading the server version, and removes the container afterwards, also on failure; two concurrent runs do not collide; a missing podman or a stopped podman machine fails with a clear one-line message.",
-          "status": "todo"
+          "status": "done",
+          "commit": "85f560c"
         },
         {
           "id": "F0.5",
