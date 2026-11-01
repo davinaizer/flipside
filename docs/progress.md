@@ -38,3 +38,4 @@ REVIEW F2 round 2: PASS at 417b68c
 F2 done (PR #7). MANUAL PENDING: none
 F3.1: ImageStore interface, disk driver (rejects keys escaping IMAGE_STORE_PATH), getImageStore by IMAGE_STORE_DRIVER; one contract suite per driver in tests/contract.
 F3.2: GET /api/v1/images/{id} streams owner images with nosniff, immutable cache, ETag and 304; others 404. Test in tests/images-api.test.ts.
+- F3.3: POST /imports?dryRun=true previews CSV or zip (columns, counts, first three cards, issues with rows); integration test checks no rows or files are written.

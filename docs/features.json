@@ -563,7 +563,7 @@
           ],
           "area": "src/app/api/v1/imports/route.ts (dryRun=true), src/server/imports.ts, src/shared/schemas/import.ts",
           "done_when": "Integration tests with CSV and zip multipart input: the response has detected columns, row counts, first three cards, warnings and errors with row numbers; a row count check of every table and the image folder shows nothing was saved; blocked files return the error format.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F3.4",
