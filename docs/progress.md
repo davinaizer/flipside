@@ -58,3 +58,4 @@ F3 done (PR #8). MANUAL PENDING: none
 - F4.4: Library search (deck and topic names, case and accent blind via src/domain/text-match.ts), neutral no-match line, and a single-action empty state (src/ui/library/library-view.test.ts).
 - F4.5: Deck page lists topics with counts, mastery bar and mastered percent; tick topics to scope Practise (label states topics and due) and practise-anyway for topics with nothing due (src/ui/deck, e2e/deck.spec.ts).
 - F4.6: Deck page has Edit deck (PATCH), Delete deck (confirmation with card and review record counts, then Library), Re-import link (/import?deckId=) and a Needs rewording list of leeches (src/ui/deck/*, e2e/deck.spec.ts).
+- F4.7: Library e2e covers loading, error with Retry, empty, populated and search; Deck e2e adds edit panel, delete confirmation (DELETE mocked) and not-found, all with axe and 44 px in both themes (e2e/library.spec.ts, e2e/deck.spec.ts).

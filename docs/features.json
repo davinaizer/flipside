@@ -900,7 +900,7 @@
           ],
           "area": "e2e/library.spec.ts, e2e/deck.spec.ts; screen error_with_retry",
           "done_when": "On both viewports with seeded data: empty, loading, error with Retry, populated Library, search, Deck page, edit and delete all pass; axe and 44 px checks pass on each state in both themes.",
-          "status": "todo"
+          "status": "done"
         }
       ],
       "design_screens": [

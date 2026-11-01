@@ -57,11 +57,61 @@ test("Start practice and Weak cards each PUT a session and open /practice/{id}",
   }
 });
 
-test("a failed load shows Retry, which loads again", async ({ page }) => {
+async function checkBothThemes(page: Page) {
+  for (const theme of ["light", "dark"] as const) {
+    await setTheme(page, theme);
+    await expectNoSeriousA11y(page);
+    await expectTargetsAtLeast44(page);
+  }
+}
+
+test("a failed load shows Retry, which loads again; axe and 44 px pass on the error", async ({ page }) => {
   let calls = 0;
   await page.route("**/api/v1/library", (r) => (calls++ === 0 ? r.abort() : r.fulfill({ json: library })));
   await signIn(page);
   await expect(page.getByRole("heading", { name: /home server/ })).toBeVisible();
+  await checkBothThemes(page);
   await page.getByRole("button", { name: "Retry" }).click();
   await expect(page.getByRole("heading", { name: "Today" })).toBeVisible();
+});
+
+test("loading shows a skeleton that passes axe", async ({ page }) => {
+  let release!: () => void;
+  const gate = new Promise<void>((res) => (release = res));
+  await page.route("**/api/v1/library", async (r) => {
+    await gate;
+    await r.fulfill({ json: library });
+  });
+  await signIn(page);
+  await expect(page.getByRole("status", { name: "Loading" })).toBeVisible();
+  await checkBothThemes(page);
+  release();
+  await expect(page.getByRole("heading", { name: "Today" })).toBeVisible();
+});
+
+test("empty Library offers one Add deck action and passes axe", async ({ page }) => {
+  await page.route("**/api/v1/library", (r) =>
+    r.fulfill({
+      json: { today: { dueCount: 0, decksWithDue: 0, sessionLength: 10, weakCount: 0 }, groups: [] },
+    }),
+  );
+  await signIn(page);
+  await expect(page.getByRole("heading", { name: "No decks yet" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Add deck" })).toHaveCount(1);
+  await checkBothThemes(page);
+});
+
+test("search filters by deck name, shows a neutral no-match line, and passes axe", async ({ page }) => {
+  const other = { ...deck, id: "22222222-2222-4222-8222-222222222222", name: "History", topics: ["Romans"] };
+  await page.route("**/api/v1/library", (r) =>
+    r.fulfill({ json: { ...library, groups: [{ name: "Other", decks: [deck, other] }] } }),
+  );
+  await signIn(page);
+  const search = page.getByRole("searchbox").or(page.getByPlaceholder("Search decks and topics")).first();
+  await search.fill("roman");
+  await expect(page.getByRole("link", { name: /History/ })).toBeVisible();
+  await expect(page.getByRole("link", { name: /Science/ })).toHaveCount(0);
+  await search.fill("zzzz");
+  await expect(page.getByText("Nothing matches that search.")).toBeVisible();
+  await checkBothThemes(page);
 });

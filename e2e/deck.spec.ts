@@ -5,7 +5,7 @@ async function openSeededDeck(page: Page) {
   await page.goto("/");
   await page.getByRole("button", { name: "Davi" }).click();
   await page.waitForURL("**/library");
-  await page.getByRole("link", { name: "Davi Science" }).click();
+  await page.getByRole("link", { name: /Davi (Science|Biology)/ }).click();
   await page.waitForURL("**/decks/*");
   return page.url().split("/").pop()!;
 }
@@ -86,4 +86,49 @@ test("Re-import opens the import screen for this deck", async ({ page }) => {
   const id = await openSeededDeck(page);
   await page.getByRole("link", { name: "Re-import" }).click();
   await page.waitForURL(`**/import?deckId=${id}`);
+});
+
+test("edit panel passes axe and 44 px in both themes", async ({ page }) => {
+  await openSeededDeck(page);
+  await page.getByRole("button", { name: "Edit deck" }).click();
+  await expect(page.getByRole("form", { name: "Edit deck" })).toBeVisible();
+  for (const theme of ["light", "dark"] as const) {
+    await setTheme(page, theme);
+    await expectNoSeriousA11y(page);
+    await expectTargetsAtLeast44(page);
+  }
+});
+
+test("delete confirms, sends DELETE, returns to the Library; Keep deck cancels", async ({ page }) => {
+  const id = await openSeededDeck(page);
+  // Mocked so the shared seeded deck survives the other tests.
+  await page.route(`**/api/v1/decks/${id}`, (r) =>
+    r.request().method() === "DELETE" ? r.fulfill({ status: 204 }) : r.continue(),
+  );
+  await page.getByRole("button", { name: "Delete deck" }).click();
+  const dialog = page.getByRole("alertdialog", { name: "Delete deck" });
+  await expect(dialog).toContainText(/Delete ".+"\? This hides the deck and its 2 cards/);
+  for (const theme of ["light", "dark"] as const) {
+    await setTheme(page, theme);
+    await expectNoSeriousA11y(page);
+    await expectTargetsAtLeast44(page);
+  }
+  await dialog.getByRole("button", { name: "Keep deck" }).click();
+  await expect(dialog).toHaveCount(0);
+  await page.getByRole("button", { name: "Delete deck" }).click();
+  const del = page.waitForRequest((r) => r.method() === "DELETE");
+  await page.getByRole("alertdialog").getByRole("button", { name: "Delete deck" }).click();
+  await del;
+  await page.waitForURL("**/library");
+});
+
+test("not-found page passes axe in both themes", async ({ page }) => {
+  await openSeededDeck(page);
+  await page.goto("/decks/00000000-0000-4000-8000-000000000000");
+  await expect(page.getByRole("heading", { name: "We can't find that deck" })).toBeVisible();
+  for (const theme of ["light", "dark"] as const) {
+    await setTheme(page, theme);
+    await expectNoSeriousA11y(page);
+    await expectTargetsAtLeast44(page);
+  }
 });
