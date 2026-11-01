@@ -21,9 +21,9 @@
         "16"
       ],
       "notes": "Scaffold, schema for PRD section 10, Podman Postgres, verify/test/e2e harness, seed, health. Land the full schema here so later features do not collide on migrations.",
-      "status": "todo",
-      "branch": null,
-      "pr": null,
+      "status": "done",
+      "branch": "feat/F0-foundation",
+      "pr": "https://github.com/davinaizer/flipside/pull/3",
       "tasks": [
         {
           "id": "F0.1",
@@ -35,7 +35,7 @@
           ],
           "area": "package.json, tsconfig, eslint, prettier, vitest config, src/{app,server,domain,shared,ui}, .gitignore",
           "done_when": "verify.sh runs green with pnpm scripts typecheck, lint and test plus one smoke test; dev and start scripts bind 0.0.0.0:3000 and next build succeeds; ESLint fails on a test sample where src/domain imports src/server, a database module or node:fs; git check-ignore matches .DS_Store, .env, .env.local, data/x, CLAUDE.local.md and .claude/settings.local.json, and .env.example is not ignored.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F0.2",
@@ -52,7 +52,7 @@
           ],
           "area": "src/shared/constants.ts, src/shared/enums.ts, src/shared/settings.ts, src/shared/uuid.ts",
           "done_when": "Unit tests assert: day start hour 7, box intervals 0/1/3/7/14, LAPSE_RULE reset, leech threshold 8, re-queue gap 4 and max 2, new-card cap 10, session lengths, import, image and zip limits, 120 s time cap; settings defaults parse through Zod and store font ids, not CSS stacks (N5); uuidv7 returns time-sortable v7 ids using crypto.getRandomValues, never crypto.randomUUID, which is unavailable to the iPad on plain HTTP.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F0.3",
@@ -64,7 +64,8 @@
           ],
           "area": "scripts/db.sh (podman run, no compose tool), .env.example, src/server/env.ts, package.json scripts db:up and db:down",
           "done_when": "pnpm db:up starts a healthy docker.io/library/postgres:17 container with podman, bound to 127.0.0.1:5432 with a named volume, safe to run twice, and pnpm db:down stops it and keeps the volume (checked with podman ps, podman port and pg_isready); .env.example lists DATABASE_URL, IMAGE_STORE_DRIVER, IMAGE_STORE_PATH and PORT; a unit test proves env parsing rejects a missing DATABASE_URL.",
-          "status": "todo"
+          "status": "done",
+          "commit": "bfe7722"
         },
         {
           "id": "F0.4",
@@ -76,7 +77,8 @@
           ],
           "area": "vitest global setup, disposable podman container on tmpfs, tests/helpers",
           "done_when": "With the dev database stopped, pnpm test starts a disposable Postgres 17 with podman under a unique name and free port, runs an integration test reading the server version, and removes the container afterwards, also on failure; two concurrent runs do not collide; a missing podman or a stopped podman machine fails with a clear one-line message.",
-          "status": "todo"
+          "status": "done",
+          "commit": "85f560c"
         },
         {
           "id": "F0.5",
@@ -88,7 +90,8 @@
           ],
           "area": "src/server/db/schema.ts, drizzle.config.ts, drizzle/, src/server/db/client.ts, a Postgres driver for Drizzle",
           "done_when": "An integration test introspecting the migrated test database proves: all nine tables exist, including the drizzle-kit journal configured under the name schema_migrations; every column in section 10, created_at and updated_at everywhere, deleted_at on decks and cards, meta on review_log and sessions; unique (deck_id, external_id) and (owner_profile_id, sha256); composite primary key on card_state; the indexes on card_state, review_log and cards; box 0 and 6 are rejected. The test database is built by migrations, not push.",
-          "status": "todo"
+          "status": "done",
+          "commit": "af42dfd"
         },
         {
           "id": "F0.6",
@@ -104,7 +107,8 @@
           ],
           "area": "src/instrumentation.ts, src/server/db/migrate.ts, src/app/api/v1/health/route.ts, src/server/http (error format), pnpm db:migrate",
           "done_when": "Integration tests: GET /api/v1/health returns 200 with the database check, and 503 in the section 11 error format when the database is unreachable; migrate is safe to run twice. Check: next start against an empty database creates the tables and health returns 200.",
-          "status": "todo"
+          "status": "done",
+          "commit": "14af137"
         },
         {
           "id": "F0.7",
@@ -121,7 +125,8 @@
           ],
           "area": "scripts/seed.ts, pnpm db:seed, src/shared/avatars.ts (placeholder avatar ids, D15)",
           "done_when": "Integration test: running the seed twice leaves exactly Davi and Nicole, each with a different avatar id, timezone Europe/London, day start hour 7 and default settings; a third profile added by insert needs no code change.",
-          "status": "todo"
+          "status": "done",
+          "commit": "0e6c390"
         },
         {
           "id": "F0.8",
@@ -134,7 +139,8 @@
           ],
           "area": "src/ui/tokens.css (the one tokens file), Tailwind config, src/app/layout.tsx; source docs/design/DESIGN.md, DESIGN-DARK.md and README.md",
           "done_when": "Unit tests parse the tokens file and prove: light and dark define the same semantic names, switched by a data-theme attribute, default light; box tokens exist for New, Not yet, Nearly and Got it; every text and surface pair used by those tokens reaches 4.5:1 in both themes (any adjusted value logged as ASSUMED); no raw hex appears in src outside the tokens file.",
-          "status": "todo"
+          "status": "done",
+          "commit": "cc22e32"
         },
         {
           "id": "F0.9",
@@ -148,7 +154,8 @@
           ],
           "area": "src/ui/fonts/ (committed font files), next/font/local in src/app/layout.tsx, src/ui/font-ids.ts",
           "done_when": "next build succeeds with no network access to font hosts and the output contains the font files; the build output has no reference to fonts.googleapis.com or fonts.gstatic.com; a unit test maps font ids atkinson, lexend and system-sans to the app's font variables and default text is Atkinson with Lexend headings.",
-          "status": "todo"
+          "status": "done",
+          "commit": "0b4f5f0"
         },
         {
           "id": "F0.10",
@@ -160,7 +167,8 @@
           ],
           "area": "playwright.config.ts, e2e/, e2e/helpers (axe in both themes, 44 px target check, third-party request guard), pnpm test:e2e",
           "done_when": "pnpm test:e2e starts its own database and app, then passes a smoke spec on desktop and iPad (1180 x 820) projects: page renders, axe reports no serious or critical issue with data-theme light and dark, every control is at least 44 px, and no request leaves the local host. verify.sh does not run e2e and vitest ignores e2e/.",
-          "status": "todo"
+          "status": "done",
+          "commit": "a8a3126"
         },
         {
           "id": "F0.11",
@@ -171,7 +179,8 @@
           ],
           "area": "CLAUDE.md Commands section",
           "done_when": "CLAUDE.md lists dev, build, start, db:up, db:down, db:migrate, db:seed, test and test:e2e, and each command listed was run successfully in this task.",
-          "status": "todo"
+          "status": "done",
+          "commit": "3203eca"
         }
       ]
     },
@@ -191,9 +200,9 @@
         "14"
       ],
       "notes": "Pure functions in src/domain with table-driven JSON fixtures (N4): scheduler, session builder, re-queue, undo maths, day boundary, CSV validation, stats definitions. Provides the logic behind AC4 to AC8; those ACs close in F6 and F7.",
-      "status": "todo",
-      "branch": null,
-      "pr": null,
+      "status": "done",
+      "branch": "feat/F1-domain-core",
+      "pr": "https://github.com/davinaizer/flipside/pull/5",
       "tasks": [
         {
           "id": "F1.1",
@@ -206,7 +215,8 @@
           ],
           "area": "src/domain/day.ts, fixtures/domain/day-boundary.json",
           "done_when": "Table-driven JSON fixtures pass: 06:30 local counts as the previous day and 07:00 as the new one; both Europe/London clock changes; a non-London timezone; date addition across month and year; Monday week start on the local day. Uses Intl only, with no new dependency.",
-          "status": "todo",
+          "status": "done",
+          "commit": "792e758",
           "model": "opus"
         },
         {
@@ -221,7 +231,8 @@
           ],
           "area": "src/domain/scheduler.ts, fixtures/domain/scheduler.json",
           "done_when": "JSON fixtures cover every state (New, boxes 1 to 5) times every grade under both LAPSE_RULE values, asserting box, due date, lapses, reps, last grade and re-queue; lapses only rise for box 2 or higher; box 5 Got it stays 5; status becomes leech at 8 lapses and the card stays scheduled.",
-          "status": "todo",
+          "status": "done",
+          "commit": "fc0699e",
           "model": "opus"
         },
         {
@@ -236,7 +247,8 @@
           ],
           "area": "src/domain/grade-labels.ts, fixtures/domain/grade-labels.json",
           "done_when": "Fixtures assert the three labels for every state (Again today, Tomorrow, In 3 days and so on); a test over all states proves each label is derived from the applyGrade due date, so label and outcome cannot disagree.",
-          "status": "todo"
+          "status": "done",
+          "commit": "f6e97fc"
         },
         {
           "id": "F1.4",
@@ -251,7 +263,8 @@
           ],
           "area": "src/domain/session-builder.ts, fixtures/domain/session-builder.json",
           "done_when": "Fixtures with an injected random source cover: scopes all, deck, topics, weak, topics ignoring due dates (D3) and an explicit card list (misses, R11); order by lowest box, oldest due, shuffled ties, new last; lengths 5, 10, 20 and all; suspended excluded; weak means box 1 graded at least once plus leeches; with 16 new cards and 10 remaining, never more than 10 new, in every scope.",
-          "status": "todo",
+          "status": "done",
+          "commit": "69b439d",
           "model": "opus"
         },
         {
@@ -268,7 +281,8 @@
           ],
           "area": "src/domain/session-queue.ts, fixtures/domain/session-queue.json",
           "done_when": "Fixtures prove: Not yet reappears after four other cards, or at the end when fewer remain; at most two re-queues per card; undoing any step restores the exact previous queue and position back to the session start; done, current and remaining counts stay correct. Pure and importable by client and server.",
-          "status": "todo",
+          "status": "done",
+          "commit": "d56782e",
           "model": "opus"
         },
         {
@@ -283,7 +297,8 @@
           ],
           "area": "src/domain/csv-import.ts, fixtures/csv/ (one broken CSV per rule), papaparse",
           "done_when": "Table-driven tests run one broken file per validation rule and assert block, row error or warning with the row number; free column order, trimmed cells, unknown columns warned, CO₂ and → preserved, duplicate id skips the later row, missing id derives a stable id with the warning; 2,001 rows blocks; a bullet helper returns a list only for bullets style with two or more non-empty lines. Browser-safe, no Node APIs.",
-          "status": "todo"
+          "status": "done",
+          "commit": "c50210e"
         },
         {
           "id": "F1.7",
@@ -298,7 +313,8 @@
           ],
           "area": "src/domain/zip-import.ts, src/domain/image-check.ts, fflate, file-type",
           "done_when": "Tests build zips in memory and prove: absolute path, .. segment and symlink entries block the import (the symlink check reads entry attributes from the zip directory if fflate does not expose them); over 2,000 entries or 200 MB uncompressed blocks; a missing image, a wrong type by bytes with a misleading extension, SVG, over 5 MB and over 4,096 px each warn and drop the image; a CSV image name matches a zip entry by base file name, so q02-back.png finds images/q02-back.png as in the school zip, and two entries with the same base name warn and drop the image; width and height are read from PNG, JPEG, WebP and GIF headers with no new dependency; sha256 and storage key are computed. Browser-safe.",
-          "status": "todo"
+          "status": "done",
+          "commit": "0957c9b"
         },
         {
           "id": "F1.8",
@@ -315,7 +331,8 @@
           ],
           "area": "src/domain/stats.ts, fixtures/domain/stats.json",
           "done_when": "Hand-computed JSON fixtures over review rows cover: first-attempt-only counting, undone rows excluded, Got it rate with Nearly as not Got it, median time with the 120 s cap using all attempts, days practised, mastery including New, mastery bar buckets, week and four-week windows aligned to the Monday of the local day, previous-period change in plain words, Focus next (at least 3 cards, tie to more lapses).",
-          "status": "todo",
+          "status": "done",
+          "commit": "97cda69",
           "model": "opus"
         }
       ]
@@ -1362,7 +1379,7 @@
             "16"
           ],
           "area": "ops/launchd/*.plist (app, Podman machine and Postgres, nightly backup), docs/operations.md, README.md",
-          "done_when": "plutil -lint passes on every plist; one job starts the Podman machine and then the Postgres container, and the app job waits until the database accepts connections; the runbook gives install steps, the iPad address and shortcut, and the manual AC11 reboot and restore checklist. Agents do not install anything on the host; AC11 stays MANUAL PENDING.",
+          "done_when": "plutil -lint passes on every plist; one job starts the Podman machine and then the Postgres container, and the app job waits until the database accepts connections; the runbook gives install steps, the iPad address and shortcut, and the manual AC11 reboot and restore checklist. Agents do not install anything on the host; AC11 stays MANUAL 0e6c390.",
           "status": "todo"
         },
         {

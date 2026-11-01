@@ -1,0 +1,725 @@
+{
+  "description": "buildSession cases (PRD section 5 Building a session, R1, L3, D3, R11). today is the learning day. state null means New. random is cycled; ties (same box and due date) are shuffled with Fisher-Yates from the last index down, j = floor(r * (i + 1)), so 0.9 keeps input order for groups up to 10 and 0 swaps. New cards keep input order (deck position) and come last, capped at newRemaining. Weak scope keeps the due-date rule.",
+  "today": "2026-12-28",
+  "cards": [
+    {
+      "id": "a1",
+      "deckId": "A",
+      "topic": "cells",
+      "state": {
+        "box": 1,
+        "dueDate": "2026-12-28",
+        "reps": 3,
+        "lapses": 1,
+        "lastGrade": "not_yet",
+        "status": "active"
+      }
+    },
+    {
+      "id": "a2",
+      "deckId": "A",
+      "topic": "cells",
+      "state": {
+        "box": 1,
+        "dueDate": "2026-12-27",
+        "reps": 2,
+        "lapses": 1,
+        "lastGrade": "nearly",
+        "status": "active"
+      }
+    },
+    {
+      "id": "a3",
+      "deckId": "A",
+      "topic": "plants",
+      "state": {
+        "box": 1,
+        "dueDate": "2026-12-27",
+        "reps": 1,
+        "lapses": 0,
+        "lastGrade": "not_yet",
+        "status": "active"
+      }
+    },
+    {
+      "id": "a4",
+      "deckId": "A",
+      "topic": "plants",
+      "state": {
+        "box": 2,
+        "dueDate": "2026-12-28",
+        "reps": 3,
+        "lapses": 1,
+        "lastGrade": "got_it",
+        "status": "active"
+      }
+    },
+    {
+      "id": "a5",
+      "deckId": "A",
+      "topic": "cells",
+      "state": {
+        "box": 3,
+        "dueDate": "2026-12-20",
+        "reps": 3,
+        "lapses": 1,
+        "lastGrade": "got_it",
+        "status": "active"
+      }
+    },
+    {
+      "id": "a6",
+      "deckId": "A",
+      "topic": "cells",
+      "state": {
+        "box": 3,
+        "dueDate": "2026-12-20",
+        "reps": 3,
+        "lapses": 1,
+        "lastGrade": "got_it",
+        "status": "active"
+      }
+    },
+    {
+      "id": "a7",
+      "deckId": "A",
+      "topic": "plants",
+      "state": {
+        "box": 4,
+        "dueDate": "2026-12-30",
+        "reps": 3,
+        "lapses": 1,
+        "lastGrade": "got_it",
+        "status": "active"
+      }
+    },
+    {
+      "id": "a8",
+      "deckId": "A",
+      "topic": "cells",
+      "state": {
+        "box": 5,
+        "dueDate": "2027-01-05",
+        "reps": 20,
+        "lapses": 8,
+        "lastGrade": "got_it",
+        "status": "leech"
+      }
+    },
+    {
+      "id": "a9",
+      "deckId": "A",
+      "topic": "plants",
+      "state": {
+        "box": 2,
+        "dueDate": "2026-12-26",
+        "reps": 3,
+        "lapses": 1,
+        "lastGrade": "got_it",
+        "status": "suspended"
+      }
+    },
+    {
+      "id": "b1",
+      "deckId": "B",
+      "topic": "atoms",
+      "state": {
+        "box": 1,
+        "dueDate": "2026-12-28",
+        "reps": 1,
+        "lapses": 0,
+        "lastGrade": "not_yet",
+        "status": "active"
+      }
+    },
+    {
+      "id": "b2",
+      "deckId": "B",
+      "topic": "atoms",
+      "state": {
+        "box": 2,
+        "dueDate": "2026-12-25",
+        "reps": 3,
+        "lapses": 1,
+        "lastGrade": "got_it",
+        "status": "active"
+      }
+    },
+    {
+      "id": "b3",
+      "deckId": "B",
+      "topic": "atoms",
+      "state": {
+        "box": 4,
+        "dueDate": "2026-12-31",
+        "reps": 15,
+        "lapses": 8,
+        "lastGrade": "got_it",
+        "status": "leech"
+      }
+    },
+    {
+      "id": "b4",
+      "deckId": "B",
+      "topic": "atoms",
+      "state": {
+        "box": 1,
+        "dueDate": "2026-12-20",
+        "reps": 4,
+        "lapses": 2,
+        "lastGrade": "not_yet",
+        "status": "suspended"
+      }
+    },
+    {
+      "id": "n01",
+      "deckId": "A",
+      "topic": "cells",
+      "state": null
+    },
+    {
+      "id": "n02",
+      "deckId": "A",
+      "topic": "plants",
+      "state": null
+    },
+    {
+      "id": "n03",
+      "deckId": "A",
+      "topic": "cells",
+      "state": null
+    },
+    {
+      "id": "n04",
+      "deckId": "A",
+      "topic": "plants",
+      "state": null
+    },
+    {
+      "id": "n05",
+      "deckId": "A",
+      "topic": "cells",
+      "state": null
+    },
+    {
+      "id": "n06",
+      "deckId": "A",
+      "topic": "plants",
+      "state": null
+    },
+    {
+      "id": "n07",
+      "deckId": "A",
+      "topic": "cells",
+      "state": null
+    },
+    {
+      "id": "n08",
+      "deckId": "A",
+      "topic": "plants",
+      "state": null
+    },
+    {
+      "id": "n09",
+      "deckId": "A",
+      "topic": "cells",
+      "state": null
+    },
+    {
+      "id": "n10",
+      "deckId": "A",
+      "topic": "plants",
+      "state": null
+    },
+    {
+      "id": "n11",
+      "deckId": "A",
+      "topic": "cells",
+      "state": null
+    },
+    {
+      "id": "n12",
+      "deckId": "A",
+      "topic": "plants",
+      "state": null
+    },
+    {
+      "id": "n13",
+      "deckId": "B",
+      "topic": "atoms",
+      "state": null
+    },
+    {
+      "id": "n14",
+      "deckId": "B",
+      "topic": "atoms",
+      "state": null
+    },
+    {
+      "id": "n15",
+      "deckId": "B",
+      "topic": "atoms",
+      "state": null
+    },
+    {
+      "id": "n16",
+      "deckId": "B",
+      "topic": "atoms",
+      "state": null
+    }
+  ],
+  "cases": [
+    {
+      "name": "all, All due: due by box then oldest due, then 10 of 16 new",
+      "scope": {
+        "kind": "all"
+      },
+      "length": "all",
+      "newRemaining": 10,
+      "random": [
+        0.9
+      ],
+      "expected": [
+        "a2",
+        "a3",
+        "a1",
+        "b1",
+        "b2",
+        "a4",
+        "a5",
+        "a6",
+        "n01",
+        "n02",
+        "n03",
+        "n04",
+        "n05",
+        "n06",
+        "n07",
+        "n08",
+        "n09",
+        "n10"
+      ],
+      "candidateCount": 18
+    },
+    {
+      "name": "all, length 5",
+      "scope": {
+        "kind": "all"
+      },
+      "length": 5,
+      "newRemaining": 10,
+      "random": [
+        0.9
+      ],
+      "expected": [
+        "a2",
+        "a3",
+        "a1",
+        "b1",
+        "b2"
+      ],
+      "candidateCount": 18
+    },
+    {
+      "name": "all, length 10",
+      "scope": {
+        "kind": "all"
+      },
+      "length": 10,
+      "newRemaining": 10,
+      "random": [
+        0.9
+      ],
+      "expected": [
+        "a2",
+        "a3",
+        "a1",
+        "b1",
+        "b2",
+        "a4",
+        "a5",
+        "a6",
+        "n01",
+        "n02"
+      ],
+      "candidateCount": 18
+    },
+    {
+      "name": "all, length 20 with 18 candidates",
+      "scope": {
+        "kind": "all"
+      },
+      "length": 20,
+      "newRemaining": 10,
+      "random": [
+        0.9
+      ],
+      "expected": [
+        "a2",
+        "a3",
+        "a1",
+        "b1",
+        "b2",
+        "a4",
+        "a5",
+        "a6",
+        "n01",
+        "n02",
+        "n03",
+        "n04",
+        "n05",
+        "n06",
+        "n07",
+        "n08",
+        "n09",
+        "n10"
+      ],
+      "candidateCount": 18
+    },
+    {
+      "name": "all, random 0 swaps every tie",
+      "scope": {
+        "kind": "all"
+      },
+      "length": "all",
+      "newRemaining": 10,
+      "random": [
+        0.0
+      ],
+      "expected": [
+        "a3",
+        "a2",
+        "b1",
+        "a1",
+        "b2",
+        "a4",
+        "a6",
+        "a5",
+        "n01",
+        "n02",
+        "n03",
+        "n04",
+        "n05",
+        "n06",
+        "n07",
+        "n08",
+        "n09",
+        "n10"
+      ],
+      "candidateCount": 18
+    },
+    {
+      "name": "all, no new left today",
+      "scope": {
+        "kind": "all"
+      },
+      "length": "all",
+      "newRemaining": 0,
+      "random": [
+        0.9
+      ],
+      "expected": [
+        "a2",
+        "a3",
+        "a1",
+        "b1",
+        "b2",
+        "a4",
+        "a5",
+        "a6"
+      ],
+      "candidateCount": 8
+    },
+    {
+      "name": "deck A: 12 new in deck, 10 allowed",
+      "scope": {
+        "kind": "deck",
+        "deckId": "A"
+      },
+      "length": "all",
+      "newRemaining": 10,
+      "random": [
+        0.9
+      ],
+      "expected": [
+        "a2",
+        "a3",
+        "a1",
+        "a4",
+        "a5",
+        "a6",
+        "n01",
+        "n02",
+        "n03",
+        "n04",
+        "n05",
+        "n06",
+        "n07",
+        "n08",
+        "n09",
+        "n10"
+      ],
+      "candidateCount": 16
+    },
+    {
+      "name": "deck B: suspended and not-due excluded",
+      "scope": {
+        "kind": "deck",
+        "deckId": "B"
+      },
+      "length": "all",
+      "newRemaining": 10,
+      "random": [
+        0.9
+      ],
+      "expected": [
+        "b1",
+        "b2",
+        "n13",
+        "n14",
+        "n15",
+        "n16"
+      ],
+      "candidateCount": 6
+    },
+    {
+      "name": "topics: A cells",
+      "scope": {
+        "kind": "topics",
+        "topics": [
+          {
+            "deckId": "A",
+            "topic": "cells"
+          }
+        ]
+      },
+      "length": "all",
+      "newRemaining": 10,
+      "random": [
+        0.9
+      ],
+      "expected": [
+        "a2",
+        "a1",
+        "a5",
+        "a6",
+        "n01",
+        "n03",
+        "n05",
+        "n07",
+        "n09",
+        "n11"
+      ],
+      "candidateCount": 10
+    },
+    {
+      "name": "topics: A plants and B atoms, 3 new left",
+      "scope": {
+        "kind": "topics",
+        "topics": [
+          {
+            "deckId": "A",
+            "topic": "plants"
+          },
+          {
+            "deckId": "B",
+            "topic": "atoms"
+          }
+        ]
+      },
+      "length": "all",
+      "newRemaining": 3,
+      "random": [
+        0.9
+      ],
+      "expected": [
+        "a3",
+        "b1",
+        "b2",
+        "a4",
+        "n02",
+        "n04",
+        "n06"
+      ],
+      "candidateCount": 7
+    },
+    {
+      "name": "topics: topic name matches only within its deck",
+      "scope": {
+        "kind": "topics",
+        "topics": [
+          {
+            "deckId": "B",
+            "topic": "cells"
+          }
+        ]
+      },
+      "length": "all",
+      "newRemaining": 10,
+      "random": [
+        0.9
+      ],
+      "expected": [],
+      "candidateCount": 0
+    },
+    {
+      "name": "topics ignoring due dates (D3): not-due cards join, suspended stays out",
+      "scope": {
+        "kind": "topics",
+        "topics": [
+          {
+            "deckId": "A",
+            "topic": "plants"
+          }
+        ],
+        "ignoreDue": true
+      },
+      "length": "all",
+      "newRemaining": 10,
+      "random": [
+        0.9
+      ],
+      "expected": [
+        "a3",
+        "a4",
+        "a7",
+        "n02",
+        "n04",
+        "n06",
+        "n08",
+        "n10",
+        "n12"
+      ],
+      "candidateCount": 9
+    },
+    {
+      "name": "topics ignoring due dates, leech in box 5 last of the active cards",
+      "scope": {
+        "kind": "topics",
+        "topics": [
+          {
+            "deckId": "A",
+            "topic": "cells"
+          }
+        ],
+        "ignoreDue": true
+      },
+      "length": "all",
+      "newRemaining": 0,
+      "random": [
+        0.9
+      ],
+      "expected": [
+        "a2",
+        "a1",
+        "a5",
+        "a6",
+        "a8"
+      ],
+      "candidateCount": 5
+    },
+    {
+      "name": "weak: box 1 graded at least once plus due leeches, never new",
+      "scope": {
+        "kind": "weak"
+      },
+      "length": "all",
+      "newRemaining": 10,
+      "random": [
+        0.9
+      ],
+      "expected": [
+        "a2",
+        "a3",
+        "a1",
+        "b1"
+      ],
+      "candidateCount": 4
+    },
+    {
+      "name": "weak, length 5 with ties swapped",
+      "scope": {
+        "kind": "weak"
+      },
+      "length": 5,
+      "newRemaining": 10,
+      "random": [
+        0.0
+      ],
+      "expected": [
+        "a3",
+        "a2",
+        "b1",
+        "a1"
+      ],
+      "candidateCount": 4
+    },
+    {
+      "name": "explicit card list (misses): ignores due dates, drops suspended, same order rule",
+      "scope": {
+        "kind": "cards",
+        "cardIds": [
+          "b1",
+          "a7",
+          "a9",
+          "n05",
+          "a5"
+        ]
+      },
+      "length": "all",
+      "newRemaining": 10,
+      "random": [
+        0.9
+      ],
+      "expected": [
+        "b1",
+        "a5",
+        "a7",
+        "n05"
+      ],
+      "candidateCount": 4
+    },
+    {
+      "name": "explicit card list: 16 new, 10 allowed",
+      "scope": {
+        "kind": "cards",
+        "cardIds": [
+          "n01",
+          "n02",
+          "n03",
+          "n04",
+          "n05",
+          "n06",
+          "n07",
+          "n08",
+          "n09",
+          "n10",
+          "n11",
+          "n12",
+          "n13",
+          "n14",
+          "n15",
+          "n16"
+        ]
+      },
+      "length": "all",
+      "newRemaining": 10,
+      "random": [
+        0.9
+      ],
+      "expected": [
+        "n01",
+        "n02",
+        "n03",
+        "n04",
+        "n05",
+        "n06",
+        "n07",
+        "n08",
+        "n09",
+        "n10"
+      ],
+      "candidateCount": 10
+    }
+  ]
+}

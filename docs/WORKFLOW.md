@@ -4,7 +4,7 @@ How agents build Flipside. Product scope is `docs/PRD.md`; this file is authorit
 
 ## How to run
 1. `/plan-backlog`: fills the task lists in `docs/features.json`. You review the summary once.
-2. `/run-feature`: builds the next feature and opens its PR. `/run-feature F3` targets one; `/run-feature all` continues feature after feature.
+2. `/run-feature`: shows a summary of what it will build and waits for your confirmation, then builds the feature and merges its PR. `/run-feature F3` targets one; `/run-feature all` continues feature after feature.
 3. Answer the questions it asks. Features merge into `develop` by themselves once the gate passes; review the merged PRs, the ASSUMED log and the manual checklist afterwards.
 
 ## Roles
