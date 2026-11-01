@@ -75,12 +75,14 @@ test("Focus next says mastery and each topic has a Practise button", () => {
   expect(html.match(/aria-label="Practise [ABC]"/g)).toHaveLength(3);
 });
 
-test("By deck keeps the order given, shows Mastered as a count and no mastery rate", () => {
+test("By deck keeps the order given, shows the Mastered share with count and a sort subtitle", () => {
   const html = render(stats("week", { byDeck: [deckRow("Low"), deckRow("High", { mastered: 30 })] }));
   for (const h of ["Cards", "Mastered", "Median time", "Last practised"]) expect(html).toContain(h);
   expect(html.indexOf("Low")).toBeLessThan(html.indexOf("High"));
-  expect(html).toContain("<td class=\"px-4 py-3\">9</td>");
+  expect(html).toContain("20%");
+  expect(html).toContain("(9)");
+  expect(html).toContain("Sorted by lowest mastery");
+  expect(render(stats("week", { byDeck: [deckRow("None", { mastery: null })] }))).toContain("–");
   expect(html).toContain("14 s");
   expect(html).toContain("30 Oct 2026");
-  expect(html.slice(html.indexOf("By deck"))).not.toMatch(/Mastery|%/);
 });

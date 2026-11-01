@@ -1422,7 +1422,7 @@
           ],
           "area": "src/ui/progress/by-deck/ByDeckTable.tsx, src/ui/progress/progress-view.test.ts",
           "done_when": "By deck Mastered column shows the mastery share as a whole percent (dash when null) per PRD section 7 and design README item 5; the section says it is sorted by lowest mastery; tests updated to expect both; verify.sh green.",
-          "status": "todo"
+          "status": "done"
         }
       ],
       "design_screens": [

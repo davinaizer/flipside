@@ -39,7 +39,7 @@ test("the seeded history shows its hand-computed figures and Focus next opens a 
 
   const row = page.getByRole("region", { name: "By deck" }).getByRole("row", { name: /Progress science/ });
   await expect(row.getByRole("cell").nth(0)).toHaveText("6");
-  await expect(row.getByRole("cell").nth(1)).toHaveText("4");
+  await expect(row.getByRole("cell").nth(1)).toHaveText("67% (4)");
   await expect(row.getByRole("cell").nth(2)).toHaveText("7 s");
 
   await page.getByRole("button", { name: "This month" }).click();
