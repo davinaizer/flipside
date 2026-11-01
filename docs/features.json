@@ -167,7 +167,8 @@
           ],
           "area": "playwright.config.ts, e2e/, e2e/helpers (axe in both themes, 44 px target check, third-party request guard), pnpm test:e2e",
           "done_when": "pnpm test:e2e starts its own database and app, then passes a smoke spec on desktop and iPad (1180 x 820) projects: page renders, axe reports no serious or critical issue with data-theme light and dark, every control is at least 44 px, and no request leaves the local host. verify.sh does not run e2e and vitest ignores e2e/.",
-          "status": "todo"
+          "status": "done",
+          "commit": "a8a3126"
         },
         {
           "id": "F0.11",
