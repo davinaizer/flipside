@@ -1274,7 +1274,7 @@
           ],
           "area": "e2e/practice.spec.ts, using the school fixture",
           "done_when": "On both viewports: Start practice, Weak cards and Deck Practise each open a real session (closing the F4 intercepts); a 5-card session shows sublabels and box and due updates match section 5 (AC4); Not yet reappears after about four cards, at most twice (AC5); undo restores state (AC6); 16 new cards with cap 10 yields no more than 10 in a local day (AC7); images appear on the correct side (AC2); front, back and summary pass axe and 44 px in both themes.",
-          "status": "todo"
+          "status": "done"
         }
       ],
       "design_screens": [
