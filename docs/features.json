@@ -1132,7 +1132,7 @@
           ],
           "area": "src/app/api/v1/reviews/[id]/route.ts, src/server/reviews.ts, src/shared/schemas/review.ts",
           "done_when": "Integration tests (AC4): PUT applies the scheduler in one transaction and returns state, next due, re-queue and fresh labels for a re-queued card; all review_log fields are complete, including prev_state, is_first_attempt_today and introduced_new; a retry returns the original without double-counting; rejects a card outside the queue and another profile's session; a card's profile mismatch is refused (section 10); no more than two re-queues per card.",
-          "status": "todo",
+          "status": "done",
           "model": "opus"
         },
         {

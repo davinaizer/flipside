@@ -24,7 +24,7 @@ const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
  * What sessions.meta holds (no schema change): the length asked for and the ordered card
  * ids built at creation, so a retry or a resume returns the identical queue.
  */
-const sessionMetaSchema = z.object({
+export const sessionMetaSchema = z.object({
   length: sessionRequestSchema.shape.length,
   cardIds: z.array(z.string()),
 });
