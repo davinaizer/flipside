@@ -627,7 +627,7 @@
           ],
           "area": "scripts/import-cli.ts, pnpm import:cli",
           "done_when": "Integration test: pnpm import:cli <file> --profile <name> imports through the same service and prints the report; an unknown profile exits non-zero.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F3.8",
