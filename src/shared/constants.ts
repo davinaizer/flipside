@@ -43,3 +43,23 @@ export const IMPORT_MAX_ZIP_UNCOMPRESSED_BYTES = 200 * 1024 * 1024;
 export const IMAGE_MAX_BYTES = 5 * 1024 * 1024;
 export const IMAGE_MAX_DIMENSION_PX = 4096;
 export const IMAGE_MIME_TYPES = ["image/png", "image/jpeg", "image/webp", "image/gif"] as const;
+
+/** Reading settings (T1). Steps are 1-based like the stored settings; body text never goes under 16 px. */
+export const TEXT_SIZE_STEPS = [
+  { label: "Small", px: 16 },
+  { label: "Medium", px: 18 },
+  { label: "Large", px: 22 },
+  { label: "Extra large", px: 26 },
+] as const;
+export const LETTER_SPACING_STEPS = [
+  { label: "Normal", em: 0 },
+  { label: "Wide", em: 0.05 },
+  { label: "Wider", em: 0.1 },
+] as const;
+export const LINE_SPACING_STEPS = [
+  { label: "Normal", lineHeight: 1.4 },
+  { label: "Roomy", lineHeight: 1.7 },
+  { label: "Extra roomy", lineHeight: 2 },
+] as const;
+/** The question is set this many times larger than the answer text. */
+export const QUESTION_SCALE = 1.5;

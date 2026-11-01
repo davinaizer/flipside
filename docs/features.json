@@ -1013,7 +1013,7 @@
           ],
           "area": "src/app/(app)/settings, src/ui/settings/reading, src/ui/reading-card (reused by Practice), card colour tokens in src/ui/tokens.css; screen settings, README item 8",
           "done_when": "Tests: all T1 options exist (three fonts including System Sans, 4 sizes, 3 letter and 3 line spacings, Mist, Cream, Peach, Sage, Lavender, Night); the preview changes at once and only card text changes, not chrome; each card colour reaches 4.5:1 with its text (values not in the design files logged as ASSUMED); minimum 16 px; Reset to defaults works.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F5.4",
