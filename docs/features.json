@@ -248,7 +248,7 @@
           "area": "src/domain/grade-labels.ts, fixtures/domain/grade-labels.json",
           "done_when": "Fixtures assert the three labels for every state (Again today, Tomorrow, In 3 days and so on); a test over all states proves each label is derived from the applyGrade due date, so label and outcome cannot disagree.",
           "status": "done",
-          "commit": "PENDING"
+          "commit": "f6e97fc"
         },
         {
           "id": "F1.4",
