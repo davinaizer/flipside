@@ -86,3 +86,4 @@ F6.7: session summary (counts, time, go-again cards, Practise the misses via car
 F6.10: e2e/practice.spec.ts closes AC4 to AC7 and AC2 images on both viewports with axe and 44 px; seeds eight Practice profiles.
 - F6.11 (review fix): tests for cards scope and Practise the misses e2e, undo locks the card row, explicit timeouts on slow tests.
 REVIEW F6 round 1: GAPS at c0a7e33
+REVIEW F6 round 2: PASS at 930e9f1
