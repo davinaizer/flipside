@@ -94,3 +94,4 @@ F6 done: PR #11. MANUAL PENDING: AC10
 - F7.4: PracticeChart (CSS bars, src/ui/progress) on the Progress page: per-day (week) or per-week (month), value above every bar, current period tagged Today/This week plus heavier outline, role=img text alternative listing all figures.
 - F7.5: Focus next (three lowest-mastery topics, Practise starts a topics session with ignoreDue) and By deck table (Cards, Mastered, Median time, Last practised) on the Progress page; static-markup tests.
 - F7.6: e2e/progress.spec.ts on desktop and iPad: hand-computed tiles, range switch, Focus next and By deck, Focus next opens a session, undo drops a review from the tiles (AC6), empty state for a new profile, axe and 44 px in both themes.
+REVIEW F7 round 1: GAPS at b7004f8

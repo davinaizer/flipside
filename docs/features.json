@@ -1412,6 +1412,17 @@
           "area": "e2e/progress.spec.ts",
           "done_when": "On both viewports with the seeded history: the screen shows the hand-computed figures; undo removes a review's contribution (AC6); Focus next opens a session; the empty state shows for a new profile; axe and 44 px checks pass in both themes.",
           "status": "done"
+        },
+        {
+          "id": "F7.7",
+          "title": "Fix review gaps: By deck shows mastery share and sort note",
+          "reqs": [],
+          "prd_sections": [
+            "7"
+          ],
+          "area": "src/ui/progress/by-deck/ByDeckTable.tsx, src/ui/progress/progress-view.test.ts",
+          "done_when": "By deck Mastered column shows the mastery share as a whole percent (dash when null) per PRD section 7 and design README item 5; the section says it is sorted by lowest mastery; tests updated to expect both; verify.sh green.",
+          "status": "todo"
         }
       ],
       "design_screens": [
