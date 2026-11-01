@@ -35,7 +35,9 @@ for (const [owner, name] of Object.entries(DECKS)) {
 const PRACTICE = ["open", "grade", "requeue", "cap"].flatMap((s) => [`Practice ${s} desktop`, `Practice ${s} ipad`]);
 // journey.spec.ts walks the whole path from an empty profile, one per project.
 const JOURNEY = ["Journey desktop", "Journey ipad"];
-for (const name of ["Settings Desktop", "Settings iPad", ...PRACTICE, ...JOURNEY]) {
+// a11y.spec.ts imports a deck and grades one card, then walks every screen; it owns one profile per project.
+const A11Y = ["A11y desktop", "A11y ipad"];
+for (const name of ["Settings Desktop", "Settings iPad", ...PRACTICE, ...JOURNEY, ...A11Y]) {
   await db.insert(profiles).values({
     name,
     avatar: AVATAR_IDS[2] ?? AVATAR_IDS[0],

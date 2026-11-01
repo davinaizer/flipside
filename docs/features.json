@@ -1514,7 +1514,7 @@
           ],
           "area": "e2e/a11y.spec.ts",
           "done_when": "AC12 and AC13: one spec walks every screen and state in section 8, including empty, loading, error and success, on both viewports and iPad portrait: no serious or critical axe issue, every control at least 44 px, in both themes; the theme toggle switches each screen at once and survives reload; emulated reduced motion shows no animation. Any token fix is logged as ASSUMED.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F8.6",

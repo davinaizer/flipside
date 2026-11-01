@@ -15,3 +15,14 @@ h2,
 h3 {
   font-family: var(--font-lexend), var(--font-atkinson), ui-sans-serif, system-ui, sans-serif;
 }
+
+/* Reduced motion (PRD section 8): no animation or transition, including the Tailwind skeleton pulse. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
