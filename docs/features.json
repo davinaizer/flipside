@@ -90,7 +90,8 @@
           ],
           "area": "src/server/db/schema.ts, drizzle.config.ts, drizzle/, src/server/db/client.ts, a Postgres driver for Drizzle",
           "done_when": "An integration test introspecting the migrated test database proves: all nine tables exist, including the drizzle-kit journal configured under the name schema_migrations; every column in section 10, created_at and updated_at everywhere, deleted_at on decks and cards, meta on review_log and sessions; unique (deck_id, external_id) and (owner_profile_id, sha256); composite primary key on card_state; the indexes on card_state, review_log and cards; box 0 and 6 are rejected. The test database is built by migrations, not push.",
-          "status": "todo"
+          "status": "done",
+          "commit": "af42dfd"
         },
         {
           "id": "F0.6",

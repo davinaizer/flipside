@@ -7,3 +7,4 @@ Append-only. One to three lines per task or event: date, task id, what, commit. 
 F0.2: shared constants, enums, settings schema (Zod added per PRD section 9) and uuidv7 in src/shared.
 F0.3: scripts/db.sh (podman run, named volume, idempotent), .env.example, zod env parsing in src/server/env.ts.
 F0.4: vitest global setup starts a disposable tmpfs Postgres 17 via podman, removed on exit.
+F0.5: Drizzle schema for all nine section 10 tables, migration 0000, postgres-js client, schema introspection test.
