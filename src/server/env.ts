@@ -15,5 +15,17 @@ export function parseEnv(source: Record<string, string | undefined>): Env {
 
 let cached: Env | undefined;
 export function getEnv(): Env {
-  return (cached ??= parseEnv(process.env));
+  if (cached) return cached;
+  try {
+    return (cached = parseEnv(process.env));
+  } catch (e) {
+    if (e instanceof z.ZodError) {
+      const bad = e.issues.map((i) => i.path.join(".")).join(", ");
+      throw new Error(
+        `Invalid environment (${bad}). Copy .env.example to .env and start the database with pnpm db:up.`,
+        { cause: e },
+      );
+    }
+    throw e;
+  }
 }
