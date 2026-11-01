@@ -1148,7 +1148,7 @@
           ],
           "area": "DELETE /reviews/{id} in src/server/reviews.ts",
           "done_when": "Integration tests (AC6): undo marks undone_at, keeps the row, and restores box, due date, lapses, reps and status, removing the state row for a card that was New; the new-card allowance and first-attempt flag recover, so regrading is a first attempt; stepping back through the whole session works; only the latest live review of a session can be undone, others return 409; a repeated DELETE is safe; another profile gets 404; the response has the card's labels.",
-          "status": "todo",
+          "status": "done",
           "model": "opus"
         },
         {

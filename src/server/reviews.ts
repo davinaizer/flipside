@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { and, eq, gte, isNull } from "drizzle-orm";
+import { and, desc, eq, gt, gte, isNull } from "drizzle-orm";
 import type { Db } from "@/server/db/client";
 import { getDb } from "@/server/db/client";
 import { cardState, cards, decks, reviewLog, sessions } from "@/server/db/schema";
@@ -15,6 +15,7 @@ import {
   reviewRequestSchema,
   reviewStateSchema,
   type ReviewResponse,
+  type UndoResponse,
 } from "@/shared/schemas/review";
 
 type ReviewRow = typeof reviewLog.$inferSelect;
@@ -171,5 +172,95 @@ export async function putReview(
       })
       .returning();
     return toResponse(profile, row!);
+  });
+}
+
+/** The response for an undone review: the restored state and labels for regrading it, from the day of the undo. */
+function toUndoResponse(profile: Profile, row: ReviewRow): UndoResponse {
+  const prev = prevStateSchema.parse(row.prevState);
+  const state = prev && { box: prev.box, dueDate: prev.dueDate, reps: prev.reps, lapses: prev.lapses, lastGrade: prev.lastGrade, status: prev.status };
+  const today = learningDay(row.undoneAt!, profile.timezone, profile.dayStartHour);
+  return {
+    review: {
+      id: row.id,
+      sessionId: row.sessionId!,
+      cardId: row.cardId,
+      grade: row.grade as Grade,
+      reviewedAt: row.reviewedAt.toISOString(),
+      undoneAt: row.undoneAt!.toISOString(),
+    },
+    state,
+    labels: gradeLabels(state && { ...state, box: state.box as Box }, today),
+  };
+}
+
+/**
+ * DELETE /reviews/{id} (R6, AC6). Undo: restores card_state from prev_state (removing the
+ * row when the card was New) and marks the review undone; the row stays (append-only).
+ * Statistics, the new-card allowance and the first-attempt check all skip undone rows, so
+ * they recover with no further write. Only the latest live review of its session can be
+ * undone, which lets undo step back through the whole session one grade at a time. A
+ * repeat answers the stored result.
+ */
+export async function undoReview(profile: Profile, id: string, now: Date = new Date(), db: Db = getDb()): Promise<UndoResponse> {
+  if (!z.string().uuid().safeParse(id).success) throw new ApiError(400, "invalid_id", "The review id must be a UUID.");
+  const reviewId = id.toLowerCase();
+
+  return db.transaction(async (tx) => {
+    const [found] = await tx.select({ profileId: reviewLog.profileId, sessionId: reviewLog.sessionId }).from(reviewLog).where(eq(reviewLog.id, reviewId));
+    if (!found || found.profileId !== profile.id) throw notFound("review");
+    // Same lock as putReview, so an undo and a grade in one session never interleave.
+    if (found.sessionId) await tx.select({ id: sessions.id }).from(sessions).where(eq(sessions.id, found.sessionId)).for("update");
+
+    const [row] = await tx.select().from(reviewLog).where(eq(reviewLog.id, reviewId));
+    if (row!.undoneAt) return toUndoResponse(profile, row!);
+
+    const notLatest = () => new ApiError(409, "not_latest_review", "Only the latest grade in a session can be undone.");
+    const [latest] = await tx
+      .select({ id: reviewLog.id })
+      .from(reviewLog)
+      .where(and(eq(reviewLog.sessionId, row!.sessionId!), isNull(reviewLog.undoneAt)))
+      .orderBy(desc(reviewLog.reviewedAt), desc(reviewLog.createdAt))
+      .limit(1);
+    if (latest?.id !== reviewId) throw notLatest();
+    // A later grade of the same card in another session built on this one; restoring the
+    // older state would silently discard it.
+    const [laterElsewhere] = await tx
+      .select({ id: reviewLog.id })
+      .from(reviewLog)
+      .where(
+        and(
+          eq(reviewLog.profileId, profile.id),
+          eq(reviewLog.cardId, row!.cardId),
+          isNull(reviewLog.undoneAt),
+          gt(reviewLog.reviewedAt, row!.reviewedAt),
+        ),
+      )
+      .limit(1);
+    if (laterElsewhere) throw notLatest();
+
+    const prev = prevStateSchema.parse(row!.prevState);
+    const key = and(eq(cardState.profileId, profile.id), eq(cardState.cardId, row!.cardId));
+    if (prev === null) {
+      await tx.delete(cardState).where(key);
+    } else {
+      const restored = {
+        box: prev.box,
+        dueDate: prev.dueDate,
+        reps: prev.reps,
+        lapses: prev.lapses,
+        lastGrade: prev.lastGrade,
+        status: prev.status,
+        lastReviewedAt: prev.lastReviewedAt ? new Date(prev.lastReviewedAt) : null,
+        updatedAt: now,
+      };
+      await tx
+        .insert(cardState)
+        .values({ profileId: profile.id, cardId: row!.cardId, ...restored })
+        .onConflictDoUpdate({ target: [cardState.profileId, cardState.cardId], set: restored });
+    }
+
+    const [undone] = await tx.update(reviewLog).set({ undoneAt: now, updatedAt: now }).where(eq(reviewLog.id, reviewId)).returning();
+    return toUndoResponse(profile, undone!);
   });
 }

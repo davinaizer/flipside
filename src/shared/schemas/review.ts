@@ -42,5 +42,15 @@ export const reviewResponseSchema = z.object({
   labels: gradeLabelsSchema.nullable(),
 });
 
+/** Response of DELETE /reviews/{id} (undo), identical on a repeat. */
+export const undoResponseSchema = z.object({
+  review: reviewResponseSchema.shape.review.extend({ undoneAt: z.string() }),
+  /** The card's state restored by the undo; null when the card is New again. */
+  state: reviewStateSchema.nullable(),
+  /** Labels for regrading the card from the restored state. */
+  labels: gradeLabelsSchema,
+});
+
 export type ReviewState = z.infer<typeof reviewStateSchema>;
 export type ReviewResponse = z.infer<typeof reviewResponseSchema>;
+export type UndoResponse = z.infer<typeof undoResponseSchema>;

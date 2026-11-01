@@ -1,6 +1,6 @@
 import { errorResponse, toErrorResponse } from "@/server/http/errors";
 import { getCurrentProfile } from "@/server/profile";
-import { putReview } from "@/server/reviews";
+import { putReview, undoReview } from "@/server/reviews";
 
 export const dynamic = "force-dynamic";
 
@@ -17,6 +17,16 @@ export async function PUT(request: Request, { params }: Ctx): Promise<Response> 
       return errorResponse(400, "invalid_json", "The body must be JSON.");
     }
     return Response.json(await putReview(profile, (await params).id, body));
+  } catch (e) {
+    return toErrorResponse(e);
+  }
+}
+
+/** Undo: restores the card's previous state and marks the review undone; a repeat returns the same result. */
+export async function DELETE(request: Request, { params }: Ctx): Promise<Response> {
+  try {
+    const profile = await getCurrentProfile(request);
+    return Response.json(await undoReview(profile, (await params).id));
   } catch (e) {
     return toErrorResponse(e);
   }
