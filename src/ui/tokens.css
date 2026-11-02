@@ -55,6 +55,12 @@
   --bar-nearly: #f6cf6d;
   --bar-got-it: #6063ee;
   --elevation-card: 0 8px 24px -4px rgba(99, 102, 241, 0.06);
+  --surface-container-lowest: #ffffff;
+  --secondary-container: #ffab69;
+  --on-secondary-container: #783d01;
+  --tertiary-container: #008376;
+  --on-tertiary-container: #f4fffb;
+  --card-radius: 2rem;
 }
 
 [data-theme="dark"] {
@@ -109,6 +115,13 @@
   --bar-got-it: #818cf8;
   /* DESIGN-DARK.md: no drop shadows; depth comes from tonal layers and the card edge. */
   --elevation-card: none;
+  --surface-container-lowest: #060e20;
+  --secondary-container: #18a479;
+  --on-secondary-container: #003121;
+  --tertiary-container: #df7c27;
+  --on-tertiary-container: #4c2300;
+  /* DESIGN-DARK.md: cards are 1rem; DESIGN.md: 2rem. */
+  --card-radius: 1rem;
 }
 
 @theme inline {
@@ -162,5 +175,10 @@
   --color-bar-nearly: var(--bar-nearly);
   --color-bar-got-it: var(--bar-got-it);
   --shadow-card: var(--elevation-card);
-  --radius-card: 2rem;
+  --color-surface-container-lowest: var(--surface-container-lowest);
+  --color-secondary-container: var(--secondary-container);
+  --color-on-secondary-container: var(--on-secondary-container);
+  --color-tertiary-container: var(--tertiary-container);
+  --color-on-tertiary-container: var(--on-tertiary-container);
+  --radius-card: var(--card-radius);
 }
