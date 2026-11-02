@@ -1,14 +1,8 @@
 # Flipside
 
-Local-first flashcards with spaced repetition, built for school revision, with reading support for learners with dyslexia, and for engineering interview prep.
-
-> **Status: v0.1.0 (MVP).** The Phase 1 web app is built and in use. The product requirements are in [docs/PRD.md](docs/PRD.md).
-
-## What it is
-
 Flipside schedules flashcard reviews with a boxed (Leitner) system: a card you know moves up a box and comes back less often, a card you miss comes back the same day. It keeps the method behind Anki, in an interface built for young learners, with reading settings (font, size, spacing, card colour) the learner controls.
 
-It runs on a home server (a Mac Mini) and is used from an iPad browser over the home network. Any subject works: one deck per subject, short or multi-point answers, optional images.
+> **Status: v0.1.0 (MVP).** The Phase 1 web app is built and in use. The product requirements are in [docs/PRD.md](docs/PRD.md).
 
 ## Who it is for
 
