@@ -1,0 +1,6 @@
+# Dependency build scripts are denied on purpose: esbuild and unrs-resolver ship prebuilt
+# binaries through optional packages. Listing them keeps `pnpm install --frozen-lockfile`
+# from failing with ERR_PNPM_IGNORED_BUILDS on a fresh clone or in CI.
+allowBuilds:
+  esbuild: false
+  unrs-resolver: false

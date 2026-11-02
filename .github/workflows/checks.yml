@@ -1,0 +1,58 @@
+# Runs on every pull request into main (and develop, where features land first).
+# A pull_request run checks out the merge of the PR into its base branch, so a green run
+# means the result of merging passes, not only the branch on its own.
+name: checks
+
+on:
+  pull_request:
+    branches: [main, develop]
+
+concurrency:
+  group: checks-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: verify (typecheck, lint, unit and integration tests)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 12
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 26
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      # Tests start a throwaway Postgres 17 with Podman (tests/global-setup.ts); the runner has Podman.
+      - run: bash scripts/verify.sh
+
+  e2e:
+    name: e2e (Playwright with axe, desktop and iPad)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 12
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 26
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec playwright install --with-deps chromium
+      # Playwright boots its own Postgres (Podman) and a production build of the app.
+      - run: pnpm test:e2e
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-test-results
+          path: test-results/
+          if-no-files-found: ignore
+          retention-days: 7
