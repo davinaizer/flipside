@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { bulletLines } from "@/domain/csv-import";
+import { Icon } from "@/ui/icons/Icon";
 import { QUESTION_SCALE } from "@/shared/constants";
 import type { SessionCardPayload } from "@/shared/schemas/session";
 import { textToRead, type Reader } from "./speech";
@@ -22,33 +23,43 @@ function CardImage({ image }: { image: NonNullable<SessionCardPayload["frontImag
   );
 }
 
-/** Segmented bar: done, current and remaining are told apart by colour and by the "Card N of M" text. */
-export function SessionProgress({ done, total }: { done: number; total: number }) {
+/** Deck name and "Card N of M": the text count that backs up the bar, so colour is never the only signal. */
+export function SessionCount({ deckName, done, total }: { deckName?: string; done: number; total: number }) {
   const current = Math.min(done + 1, total);
   return (
-    <div className="w-full">
-      <p className="text-center text-sm text-on-surface-variant">
+    <p className="flex min-h-11 items-center gap-2 rounded-full border border-card-edge bg-surface-card px-5 shadow-card">
+      {deckName && <span className="font-semibold text-on-surface">{deckName}</span>}
+      <span className="text-body-sm text-on-surface-variant">
         Card {current} of {total}
-      </p>
-      <div
-        role="progressbar"
-        aria-label="Session progress"
-        aria-valuemin={0}
-        aria-valuemax={total}
-        aria-valuenow={done}
-        aria-valuetext={`${done} done of ${total}`}
-        className="mt-2 flex gap-2"
-      >
-        {Array.from({ length: total }, (_, i) => {
-          const state = i < done ? "done" : i === done ? "current" : "remaining";
-          const colour =
-            state === "done" ? "bg-primary-container" : state === "current" ? "bg-primary" : "bg-surface-container-high";
-          return <div key={i} data-segment={state} className={`h-2 flex-1 rounded-full ${colour}`} />;
-        })}
-      </div>
+      </span>
+    </p>
+  );
+}
+
+/** Segmented bar: done, current and remaining are told apart by colour and by the "Card N of M" text. */
+export function SessionProgress({ done, total }: { done: number; total: number }) {
+  return (
+    <div
+      role="progressbar"
+      aria-label="Session progress"
+      aria-valuemin={0}
+      aria-valuemax={total}
+      aria-valuenow={done}
+      aria-valuetext={`${done} done of ${total}`}
+      className="flex w-full gap-2"
+    >
+      {Array.from({ length: total }, (_, i) => {
+        const state = i < done ? "done" : i === done ? "current" : "remaining";
+        const colour =
+          state === "done" ? "bg-primary-container" : state === "current" ? "bg-primary" : "bg-surface-container-high";
+        return <div key={i} data-segment={state} className={`h-2 flex-1 rounded-full ${colour}`} />;
+      })}
     </div>
   );
 }
+
+export const iconButton =
+  "flex size-11 items-center justify-center rounded-full border border-card-edge bg-surface-card text-on-surface-variant shadow-card hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary";
 
 function Answer({ card }: { card: SessionCardPayload }) {
   const lines = bulletLines(card.back, card.answerStyle);
@@ -78,6 +89,7 @@ export function PracticeView({
   reader,
   footer,
   headerAction,
+  onEnd,
 }: {
   card: SessionCardPayload;
   revealed: boolean;
@@ -89,15 +101,40 @@ export function PracticeView({
   reader?: Reader | null;
   /** Grade buttons on the back; the session controls (Undo, End) sit under them. */
   footer?: ReactNode;
-  /** Top bar shortcut, e.g. reading settings. */
+  /** Top bar shortcut on the right, e.g. reading settings. */
   headerAction?: ReactNode;
+  /** Leaves the session; the End session pill in the top bar is shown only when this is given. */
+  onEnd?: () => void;
 }) {
   return (
     <div className="mx-auto flex min-h-screen w-full max-w-3xl flex-col gap-6 p-6">
-      {headerAction}
+      <header className="grid grid-cols-[1fr_auto_1fr] items-center gap-3">
+        <div>
+          {onEnd && (
+            <button type="button" onClick={onEnd} className={buttonClass("secondary", { size: "compact" })}>
+              <Icon name="x" />
+              End session
+            </button>
+          )}
+        </div>
+        <SessionCount deckName={card.deckName} done={done} total={total} />
+        <div className="flex items-center justify-end gap-2">
+          {reader && (
+            <button
+              type="button"
+              aria-label={revealed ? "Read answer aloud" : "Read question aloud"}
+              onClick={() => reader.speak(textToRead(card, revealed))}
+              className={iconButton}
+            >
+              <Icon name="volume" />
+            </button>
+          )}
+          {headerAction}
+        </div>
+      </header>
       <SessionProgress done={done} total={total} />
       <article data-testid="practice-card" className="rounded-3xl p-8 text-left" style={readingStyle(settings)}>
-        <span className="inline-block rounded-full bg-primary-container px-4 py-1 text-sm font-semibold text-on-primary-container">
+        <span className="inline-block rounded-full bg-secondary-container px-4 py-1 text-sm font-semibold text-on-secondary-container">
           {card.topic}
         </span>
         {revealed ? (
@@ -119,20 +156,11 @@ export function PracticeView({
           </>
         )}
       </article>
-      {reader && (
-        <button
-          type="button"
-          onClick={() => reader.speak(textToRead(card, revealed))}
-          className="min-h-11 self-center rounded-full px-6 text-on-surface-variant underline"
-        >
-          {revealed ? "Read answer aloud" : "Read question aloud"}
-        </button>
-      )}
       {!revealed && (
         <button
           type="button"
           onClick={onReveal}
-          className={buttonClass("primary", { large: true, extra: "self-center" })}
+          className={buttonClass("primary", { size: "large", extra: "self-center" })}
         >
           Show answer
         </button>

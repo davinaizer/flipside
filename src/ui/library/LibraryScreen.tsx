@@ -6,7 +6,7 @@ import type { Library } from "@/shared/schemas/library";
 import { api } from "@/ui/api/client";
 import { startSession } from "@/ui/practice/start-session";
 import { ErrorState } from "@/ui/states/ErrorState";
-import { PageSkeleton } from "@/ui/states/Skeleton";
+import { LibrarySkeleton } from "@/ui/states/Skeleton";
 import { LibraryView } from "./LibraryView";
 
 type State = { kind: "loading" } | { kind: "error" } | { kind: "ready"; library: Library };
@@ -32,7 +32,7 @@ export function LibraryScreen() {
     fetchLibrary();
   };
 
-  if (state.kind === "loading") return <PageSkeleton />;
+  if (state.kind === "loading") return <LibrarySkeleton />;
   if (state.kind === "error") return <ErrorState onRetry={retry} />;
 
   const { sessionLength } = state.library.today;

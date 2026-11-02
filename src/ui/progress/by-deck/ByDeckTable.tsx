@@ -9,7 +9,7 @@ export function ByDeckTable({ decks }: { decks: Stats["byDeck"] }) {
   const th = "px-4 py-3 text-left text-base font-semibold text-on-surface-variant";
   return (
     <section aria-labelledby="by-deck-title">
-      <h2 id="by-deck-title" className="text-2xl font-semibold">By deck</h2>
+      <h2 id="by-deck-title" className="text-headline-md font-semibold">By deck</h2>
       <p className="text-base text-on-surface-variant">Sorted by lowest mastery</p>
       <div className="mt-4 overflow-x-auto rounded-card border border-card-edge bg-surface-card shadow-card">
         <table className="w-full min-w-[32rem] text-base">

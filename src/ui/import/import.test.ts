@@ -50,7 +50,8 @@ test("success names the deck with added and updated counts and two actions", () 
   expect(html).toContain("3 cards added, 1 updated, 0 unchanged");
   expect(html).toContain('href="/decks/d1"');
   expect(html).toContain('href="/library"');
-  expect(html).not.toMatch(/box|leitner/i);
+  // Visible text only: the icons carry an SVG viewBox attribute.
+  expect(html.replace(/<[^>]*>/g, " ")).not.toMatch(/box|leitner/i);
 });
 
 test("success on re-import shows unchanged, missing ids kept, and commit warnings", () => {

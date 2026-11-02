@@ -180,3 +180,13 @@ Major: G1, G4, G5, G5b, G8, G9, PP3, LB3, LB6, DK1, DK3, DK4, PR1, PR3, PR4, PG1
 - Started a practice session on the Test deck and graded one card "Got it" (local dev data only).
 - Created `.claude/launch.json` so the dev server could be previewed; delete it if unwanted.
 - Dark theme was switched on for Davi and switched back off.
+
+## Status after the follow-up restyle
+
+Fixed on branch `fix/design-tokens-button`: G1, G2, G6 (icons), LB1, LB2, LB3, LB5, LB6, LB7, LB10, LB11, LB12, DK1, DK3, DK4, DK5, PR1 to PR5, SM1 to SM3, PG1 to PG4, PG6, ST1 (switch affordance), ST2, ST4, ST6, IM1 (partly), IM2, ER1, PP2 to PP4.
+
+Deliberately not done:
+- **G3 top bar, LB4 overall mastery, LB9 add-deck tile, DK2 deck-level bar, PP1 picker heading:** need a PRD decision (flagged above).
+- **LB8 caption and PG5 by-deck bar and colour dot:** the unit and e2e tests assert the per-bar legend text ("Got it 45"), and the stats API has no per-deck status counts or deck colour.
+- **ST1 location:** the theme switch stays in the sidebar (e2e addresses it there); Settings does not duplicate it.
+- **ST3 stepper, ST5 preview labels, IM1 back link:** optional; the back link would clash with existing "Library" link locators.

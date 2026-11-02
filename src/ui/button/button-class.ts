@@ -11,12 +11,17 @@ const VARIANT: Record<Variant, string> = {
   danger: "bg-surface-container-high text-error hover:bg-surface-container-highest",
 };
 
+const SIZE = { default: "min-h-11 px-8", compact: "min-h-11 px-4", large: "min-h-14 px-10" } as const;
+
 /**
  * The one pill-button look for buttons, links and file labels. A class string rather than a
  * component because call sites render <button>, next/link, <a> and <label>. `extra` is for
- * layout only (margin, alignment), never colour or size; `large` is the Show answer size.
+ * layout only (margin, alignment), never colour or size: Tailwind cannot be relied on to pick
+ * between two padding classes, so size is its own option.
  */
-export function buttonClass(variant: Variant, opts: { large?: boolean; extra?: string } = {}): string {
-  const size = opts.large ? "min-h-14 px-10" : "min-h-11 px-8";
-  return `${BASE} ${size} ${VARIANT[variant]} ${opts.extra ?? ""}`.trim();
+export function buttonClass(
+  variant: Variant,
+  opts: { size?: keyof typeof SIZE; extra?: string } = {},
+): string {
+  return `${BASE} ${SIZE[opts.size ?? "default"]} ${VARIANT[variant]} ${opts.extra ?? ""}`.trim();
 }

@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { api } from "@/ui/api/client";
+import { Logo } from "@/ui/icons/Icon";
 import { Avatar } from "@/ui/avatars";
 import { Skeleton } from "@/ui/states/Skeleton";
 import type { ProfileSummary } from "@/shared/schemas/profile";
@@ -43,7 +44,11 @@ export function ProfilePicker() {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center gap-10 bg-surface p-8">
-      <h1 className="text-4xl font-semibold text-on-surface">Who is studying?</h1>
+      <div className="flex items-center gap-3 rounded-full border border-card-edge bg-surface-card py-2 pl-2 pr-5 shadow-card">
+        <Logo size={36} />
+        <span className="font-semibold text-headline-sm">Flipside</span>
+      </div>
+      <h1 className="text-display-mobile font-bold text-on-surface">Who is studying?</h1>
       {state.kind === "loading" && (
         <div role="status" aria-label="Loading" className="flex flex-wrap justify-center gap-8">
           <Skeleton className="h-52 w-44 rounded-3xl" />
@@ -72,15 +77,18 @@ export function ProfilePicker() {
               <button
                 type="button"
                 onClick={() => pick(p.id)}
-                className="flex min-h-11 min-w-44 flex-col items-center gap-4 rounded-3xl bg-surface-container p-6 text-on-surface outline-offset-4 hover:bg-surface-container-high focus-visible:outline-2 focus-visible:outline-primary"
+                className="flex min-h-11 min-w-52 flex-col items-center gap-4 overflow-hidden rounded-card border-t-4 border-t-primary-container border-x border-b border-x-card-edge border-b-card-edge bg-surface-card px-8 pb-8 pt-8 text-on-surface shadow-card outline-offset-4 hover:bg-surface-container-low focus-visible:outline-2 focus-visible:outline-primary"
               >
-                <Avatar id={p.avatar} />
-                <span className="text-xl font-semibold">{p.name}</span>
+                <Avatar id={p.avatar} size={112} />
+                <span className="text-headline-md font-semibold">{p.name}</span>
               </button>
             </li>
           ))}
         </ul>
       )}
+      <p className="rounded-full border border-card-edge bg-surface-card px-5 py-2 text-body-sm text-on-surface-variant">
+        Each profile keeps its own cards, progress and reading settings.
+      </p>
       {pickError && (
         <p role="alert" className="text-error">
           That did not work. Please try again.

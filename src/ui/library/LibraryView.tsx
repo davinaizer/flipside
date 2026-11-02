@@ -1,18 +1,10 @@
 import Link from "next/link";
 import { matchesQuery } from "@/domain/text-match";
 import type { Library } from "@/shared/schemas/library";
+import { DeckTile } from "@/ui/deck-tile/DeckTile";
+import { Icon } from "@/ui/icons/Icon";
 import { MasteryBar } from "@/ui/mastery-bar/MasteryBar";
 import { buttonClass } from "@/ui/button/button-class";
-
-const SWATCH: Record<string, string> = {
-  mist: "bg-card-mist",
-  cream: "bg-card-cream",
-  peach: "bg-card-peach",
-  sage: "bg-card-sage",
-  lavender: "bg-card-lavender",
-  night: "bg-card-night",
-};
-
 
 export interface LibraryViewProps {
   library: Library;
@@ -47,80 +39,85 @@ export function LibraryView({
   const length = today.sessionLength === "all" ? "all due" : `${today.sessionLength} cards`;
   return (
     <>
-      <div className="mb-6 flex items-center justify-between gap-4">
-        <h1 className="text-4xl font-semibold">Library</h1>
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
+        <h1 className="text-headline-lg font-semibold">Library</h1>
         {!noDecks && (
-          <Link href="/import" className={buttonClass("primary")}>
-            Add deck
-          </Link>
+          <div className="flex flex-wrap items-center gap-3">
+            <label className="relative block w-72">
+              <span className="sr-only">Search decks and topics</span>
+              <input
+                type="search"
+                value={query}
+                onChange={(e) => onQueryChange(e.target.value)}
+                placeholder="Search decks and topics"
+                className="min-h-11 w-full rounded-full border border-outline-variant bg-surface-card pl-5 pr-11 text-on-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+              />
+              <span aria-hidden="true" className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant">
+                <Icon name="search" />
+              </span>
+            </label>
+            <Link href="/import" className={buttonClass("primary")}>
+              <Icon name="plus" />
+              Add deck
+            </Link>
+          </div>
         )}
       </div>
       {noDecks ? null : (
-        <>
-          <label className="mb-6 block max-w-xl">
-            <span className="sr-only">Search decks and topics</span>
-            <input
-              type="search"
-              value={query}
-              onChange={(e) => onQueryChange(e.target.value)}
-              placeholder="Search decks and topics"
-              className="min-h-11 w-full rounded-full bg-surface-container px-5 text-on-surface outline outline-1 outline-outline"
-            />
-          </label>
-          <section
-            aria-labelledby="today"
-            className="mb-8 max-w-3xl rounded-card border border-card-edge bg-surface-card shadow-card p-6"
-          >
-            <h2 id="today" className="text-2xl font-semibold">
-              Today
-            </h2>
-            <p className="mt-2 text-lg">
-              {today.dueCount} {today.dueCount === 1 ? "card" : "cards"} due in {today.decksWithDue}{" "}
-              {today.decksWithDue === 1 ? "deck" : "decks"}. Sessions are {length}.
-            </p>
-            <div className="mt-4 flex flex-wrap gap-3">
-              <button
-                type="button"
-                disabled={busy || today.startableCount === 0}
-                onClick={() => onStart("all")}
-                className={buttonClass("primary")}
-              >
-                Start practice
-              </button>
-              <button
-                type="button"
-                disabled={busy || today.weakCount === 0}
-                onClick={() => onStart("weak")}
-                className={buttonClass("secondary")}
-              >
-                Weak cards ({today.weakCount})
-              </button>
-            </div>
-            {startError && (
-              <p role="alert" className="mt-3 text-on-surface-variant">
-                {startError}
-              </p>
-            )}
-          </section>
-        </>
-      )}
-      {noDecks ? (
-        <section className="max-w-xl">
-          <h2 className="text-2xl font-semibold">No decks yet</h2>
-          <p className="mt-2 text-on-surface-variant">
-            Add a deck from a CSV file with topic, front and back columns.
+        <section
+          aria-labelledby="today"
+          className="mb-8 max-w-6xl rounded-card border border-card-edge bg-surface-card p-6 shadow-card"
+        >
+          <h2 id="today" className="inline-block rounded-full bg-surface-container-high px-3 py-1 text-label-md font-semibold text-primary">
+            Today
+          </h2>
+          <p className="mt-3 text-body-lg">
+            <span className="text-display font-bold">{today.dueCount}</span>{" "}
+            {today.dueCount === 1 ? "card" : "cards"} due in {today.decksWithDue}{" "}
+            {today.decksWithDue === 1 ? "deck" : "decks"}. Sessions are {length}.
           </p>
-          <div className="mt-4 flex gap-3">
-            <Link
-              href="/import"
+          <div className="mt-4 flex flex-wrap gap-3">
+            <button
+              type="button"
+              disabled={busy || today.startableCount === 0}
+              onClick={() => onStart("all")}
               className={buttonClass("primary")}
             >
-              Add deck
-            </Link>
-            <a
-              href="/api/v1/imports/template"
+              <Icon name="play" size={18} />
+              Start practice
+            </button>
+            <button
+              type="button"
+              disabled={busy || today.weakCount === 0}
+              onClick={() => onStart("weak")}
               className={buttonClass("secondary")}
             >
+              Weak cards ({today.weakCount})
+            </button>
+          </div>
+          {startError && (
+            <p role="alert" className="mt-3 text-on-surface-variant">
+              {startError}
+            </p>
+          )}
+        </section>
+      )}
+      {noDecks ? (
+        <section className="flex max-w-xl flex-col items-start gap-3 rounded-card border border-card-edge bg-surface-card p-8 shadow-card">
+          <span aria-hidden="true" className="flex size-14 items-center justify-center rounded-full bg-surface-container-high text-primary">
+            <Icon name="cards" size={28} />
+          </span>
+          <h2 className="text-headline-md font-semibold">No decks yet</h2>
+          <p className="text-on-surface-variant">
+            Add a deck from a CSV file with topic, front and back columns.
+          </p>
+          <div className="mt-2 flex flex-wrap gap-3">
+            <Link href="/import" className={buttonClass("primary")}>
+              <Icon name="plus" />
+              Add deck
+            </Link>
+            <a href="/api/v1/imports/template" className={buttonClass("secondary")}>
+              <Icon name="download" />
               Download CSV template
             </a>
           </div>
@@ -132,18 +129,20 @@ export function LibraryView({
       ) : (
         groups.map((g) => (
           <section key={g.name} aria-label={g.name} className="mb-8">
-            <h2 className="mb-3 text-2xl font-semibold">{g.name}</h2>
-            <ul className="grid max-w-5xl gap-4 md:grid-cols-2">
+            <div className="mb-3 flex items-center gap-3">
+              <h2 className="text-headline-sm font-semibold">{g.name}</h2>
+              <span className="rounded-full bg-surface-container-high px-3 py-0.5 text-label-sm text-on-surface-variant">
+                {g.decks.length} {g.decks.length === 1 ? "deck" : "decks"}
+              </span>
+            </div>
+            <ul className="grid max-w-6xl gap-4 md:grid-cols-2">
               {g.decks.map((d) => (
-                <li key={d.id} className="rounded-card border border-card-edge bg-surface-card shadow-card p-5">
+                <li key={d.id} className="rounded-card border border-card-edge bg-surface-card p-5 shadow-card">
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex items-center gap-3">
-                      <span
-                        aria-hidden="true"
-                        className={`h-11 w-11 shrink-0 rounded-2xl outline outline-1 outline-outline-variant ${SWATCH[d.color ?? ""] ?? "bg-surface-container-high"}`}
-                      />
+                      <DeckTile name={d.name} color={d.color} />
                       <div>
-                        <h3 className="text-lg font-semibold">
+                        <h3 className="text-headline-sm font-semibold">
                           <Link
                             href={`/decks/${d.id}`}
                             className="flex min-h-11 items-center hover:underline"
@@ -151,15 +150,21 @@ export function LibraryView({
                             {d.name}
                           </Link>
                         </h3>
-                        <p className="text-sm text-on-surface-variant">
+                        <p className="text-body-sm text-on-surface-variant">
                           {d.topicCount} {d.topicCount === 1 ? "topic" : "topics"} · {d.cardCount}{" "}
                           {d.cardCount === 1 ? "card" : "cards"}
                         </p>
                       </div>
                     </div>
-                    <span className="rounded-full bg-primary-container px-3 py-1 text-sm font-semibold text-on-primary-container">
-                      {d.dueCount} due
-                    </span>
+                    {d.dueCount > 0 ? (
+                      <span className="rounded-full bg-inverse-surface px-3 py-1 text-label-md font-semibold text-inverse-on-surface">
+                        {d.dueCount} due
+                      </span>
+                    ) : (
+                      <span className="rounded-full bg-surface-container-high px-3 py-1 text-label-md font-semibold text-primary">
+                        Up to date
+                      </span>
+                    )}
                   </div>
                   <div className="mt-4">
                     <MasteryBar mastery={d.mastery} />

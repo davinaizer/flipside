@@ -16,7 +16,7 @@ describe("buttonClass", () => {
   });
 
   it("large replaces the height instead of stacking two", () => {
-    const c = buttonClass("primary", { large: true });
+    const c = buttonClass("primary", { size: "large" });
     expect(c).toContain("min-h-14");
     expect(c).not.toContain("min-h-11");
   });

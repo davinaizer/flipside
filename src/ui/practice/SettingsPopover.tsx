@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { Icon } from "@/ui/icons/Icon";
 import { ReadingSettings } from "@/ui/settings/reading/ReadingSettings";
+import { iconButton } from "./PracticeView";
 import { buttonClass } from "@/ui/button/button-class";
 
 /**
@@ -31,8 +33,8 @@ export function SettingsPopover({ onClose }: { onClose: () => void }) {
 
 export function SettingsShortcut({ onOpen }: { onOpen: () => void }) {
   return (
-    <button type="button" onClick={onOpen} aria-haspopup="dialog" className="min-h-11 self-end rounded-full px-4 text-on-surface-variant underline">
-      Reading settings
+    <button type="button" onClick={onOpen} aria-haspopup="dialog" aria-label="Reading settings" className={iconButton}>
+      <Icon name="settings" />
     </button>
   );
 }

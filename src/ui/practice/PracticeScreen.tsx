@@ -6,6 +6,8 @@ import { api } from "@/ui/api/client";
 import { useSettings } from "@/ui/settings/SettingsProvider";
 import { ErrorState } from "@/ui/states/ErrorState";
 import { Skeleton } from "@/ui/states/Skeleton";
+import { buttonClass } from "@/ui/button/button-class";
+import { Icon } from "@/ui/icons/Icon";
 import { GradeBar } from "./GradeBar";
 import { PracticeView } from "./PracticeView";
 import { SummaryScreen } from "./SummaryScreen";
@@ -56,28 +58,27 @@ function ActiveSession({ data }: { data: SessionResponse }) {
   // A finished, ended or left session shows its summary; the server completes it on the last grade.
   if (left || view.finished || data.session.endedAt) return <SummaryScreen sessionId={data.session.id} />;
 
-  const controls = (
-    <div className="flex justify-between">
-      <button type="button" disabled={!view.canUndo || view.busy || view.failed} onClick={() => void controller.undo()} className="min-h-11 px-4 text-on-surface-variant underline disabled:opacity-50">
-        Undo last
-      </button>
-      <button type="button" onClick={() => controller.end()} className="min-h-11 px-4 text-on-surface-variant underline">
-        End session
-      </button>
-    </div>
+  const undo = (
+    <button type="button" disabled={!view.canUndo || view.busy || view.failed} onClick={() => void controller.undo()} className={buttonClass("secondary", { extra: "self-center" })}>
+      <Icon name="undo" />
+      Undo last
+    </button>
   );
 
   if (!card || !labels) {
     return (
       <div className="mx-auto flex w-full max-w-3xl flex-col gap-6 p-8">
         <p>This session has no cards.</p>
-        {controls}
+        <button type="button" onClick={() => controller.end()} className={buttonClass("secondary", { extra: "self-start" })}>
+          End session
+        </button>
       </div>
     );
   }
   return (
     <>
     <PracticeView
+      onEnd={() => controller.end()}
       headerAction={<SettingsShortcut onOpen={() => setSettingsOpen(true)} />}
       card={card}
       revealed={view.revealed}
@@ -91,7 +92,7 @@ function ActiveSession({ data }: { data: SessionResponse }) {
           {view.revealed && (
             <GradeBar labels={labels} busy={view.busy} failed={view.failed} onGrade={(g) => void controller.grade(g)} onRetry={() => void controller.retry()} />
           )}
-          {controls}
+          {undo}
         </>
       }
     />

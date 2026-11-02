@@ -8,6 +8,7 @@ import {
 } from "@/shared/constants";
 import { DEFAULT_SETTINGS, type Settings } from "@/shared/settings";
 import { ReadingCard } from "@/ui/reading-card/ReadingCard";
+import { Choice } from "../Choice";
 import { useSettings } from "../SettingsProvider";
 import { buttonClass } from "@/ui/button/button-class";
 
@@ -15,6 +16,14 @@ const FONT_LABEL: Record<FontId, string> = {
   atkinson: "Atkinson Hyperlegible Next",
   lexend: "Lexend",
   system: "System Sans",
+};
+const SWATCH: Record<string, string> = {
+  mist: "bg-card-mist",
+  cream: "bg-card-cream",
+  peach: "bg-card-peach",
+  sage: "bg-card-sage",
+  lavender: "bg-card-lavender",
+  night: "bg-card-night",
 };
 const COLOR_LABEL = (c: string) => c[0].toUpperCase() + c.slice(1);
 
@@ -29,21 +38,6 @@ function Group({ label, children }: { label: string; children: React.ReactNode }
   );
 }
 
-function Choice({ on, onClick, children }: { on: boolean; onClick: () => void; children: React.ReactNode }) {
-  return (
-    <button
-      type="button"
-      aria-pressed={on}
-      onClick={onClick}
-      className={`min-h-11 rounded-full px-5 font-semibold ${
-        on ? "bg-primary text-on-primary" : "bg-surface-container text-on-surface hover:bg-surface-container-high"
-      }`}
-    >
-      {children}
-    </button>
-  );
-}
-
 /** Reading settings (T1, T4): choices on the left, live preview on the right. Changes apply at once and save. */
 export function ReadingSettings() {
   const { settings, update } = useSettings();
@@ -53,7 +47,7 @@ export function ReadingSettings() {
   return (
     <section aria-labelledby="reading-h" className="grid gap-8 lg:grid-cols-2">
       <div>
-        <h2 id="reading-h" className="text-2xl font-semibold">
+        <h2 id="reading-h" className="text-headline-md font-semibold">
           Reading
         </h2>
         <Group label="Font">
@@ -86,9 +80,23 @@ export function ReadingSettings() {
         </Group>
         <Group label="Card colour">
           {CARD_COLORS.map((c) => (
-            <Choice key={c} on={settings.cardColor === c} onClick={() => set({ cardColor: c })}>
-              {COLOR_LABEL(c)}
-            </Choice>
+            <button
+              key={c}
+              type="button"
+              aria-pressed={settings.cardColor === c}
+              onClick={() => set({ cardColor: c })}
+              className="flex min-h-11 flex-col items-center gap-1 rounded-2xl px-2 py-1 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+            >
+              <span
+                aria-hidden="true"
+                className={`size-11 rounded-full outline outline-1 outline-outline-variant ${SWATCH[c]} ${
+                  settings.cardColor === c ? "outline-4 outline-primary" : ""
+                }`}
+              />
+              <span className={`text-label-md ${settings.cardColor === c ? "font-semibold text-primary" : "text-on-surface-variant"}`}>
+                {COLOR_LABEL(c)}
+              </span>
+            </button>
           ))}
         </Group>
         <button
@@ -100,7 +108,7 @@ export function ReadingSettings() {
         </button>
       </div>
       <div>
-        <h2 className="text-2xl font-semibold">Preview</h2>
+        <h2 className="text-headline-md font-semibold">Preview</h2>
         <div className="mt-4">
           <ReadingCard
             settings={settings}

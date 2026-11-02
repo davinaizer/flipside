@@ -4,7 +4,7 @@ import { expect, test } from "vitest";
 import { DEFAULT_SETTINGS } from "@/shared/settings";
 import type { SessionCardPayload } from "@/shared/schemas/session";
 import { PracticeLoading } from "./PracticeScreen";
-import { FRONT_HINT, PracticeView, SessionProgress } from "./PracticeView";
+import { FRONT_HINT, PracticeView, SessionCount, SessionProgress } from "./PracticeView";
 
 const img = (id: string) => ({ id, url: `/api/v1/images/${id}`, width: 10, height: 10 });
 const card: SessionCardPayload = {
@@ -73,7 +73,9 @@ test("progress shows done, current and remaining with a text count", () => {
   expect(html.match(/data-segment="done"/g)).toHaveLength(2);
   expect(html.match(/data-segment="current"/g)).toHaveLength(1);
   expect(html.match(/data-segment="remaining"/g)).toHaveLength(2);
-  expect(html).toContain("Card 3 of 5");
+  const count = renderToStaticMarkup(createElement(SessionCount, { deckName: "Science", done: 2, total: 5 }));
+  expect(count).toContain("Card 3 of 5");
+  expect(count).toContain("Science");
 });
 
 test("the loading skeleton renders", () => {

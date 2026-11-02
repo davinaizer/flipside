@@ -3,8 +3,8 @@
 import { useState } from "react";
 import { READING_SPEEDS } from "@/shared/enums";
 import type { Settings } from "@/shared/settings";
+import { Choice, SwitchTrack } from "../Choice";
 import { useSettings } from "../SettingsProvider";
-import { buttonClass } from "@/ui/button/button-class";
 
 const MAX_NEW = 100; // mirrors settingsSchema.newCardsPerDay
 const LENGTHS: { value: Settings["cardsPerSession"]; label: string }[] = [
@@ -22,21 +22,6 @@ export function parseNewCards(text: string): number | null {
   return n <= MAX_NEW ? n : null;
 }
 
-function Choice({ on, onClick, children }: { on: boolean; onClick: () => void; children: React.ReactNode }) {
-  return (
-    <button
-      type="button"
-      aria-pressed={on}
-      onClick={onClick}
-      className={`min-h-11 rounded-full px-5 font-semibold ${
-        on ? "bg-primary text-on-primary" : "bg-surface-container text-on-surface hover:bg-surface-container-high"
-      }`}
-    >
-      {children}
-    </button>
-  );
-}
-
 /** Practice settings (T2): session length, new cards per day, read aloud, reading speed. Valid changes save at once. */
 export function PracticeSettings() {
   const { settings, update } = useSettings();
@@ -46,7 +31,7 @@ export function PracticeSettings() {
 
   return (
     <section aria-labelledby="practice-h" className="mt-12 max-w-xl">
-      <h2 id="practice-h" className="text-2xl font-semibold">
+      <h2 id="practice-h" className="text-headline-md font-semibold">
         Practice
       </h2>
       <fieldset className="mt-6">
@@ -74,7 +59,7 @@ export function PracticeSettings() {
             const n = parseNewCards(e.target.value);
             if (n !== null) set({ newCardsPerDay: n });
           }}
-          className="min-h-11 w-28 rounded-lg bg-surface-container px-4 text-on-surface"
+          className="min-h-11 w-28 rounded-full border border-outline-variant bg-surface-card px-4 text-on-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
         />
         {invalid && (
           <p id="new-cards-error" role="alert" className="mt-2 text-error">
@@ -88,9 +73,10 @@ export function PracticeSettings() {
           role="switch"
           aria-checked={settings.readAloud}
           onClick={() => set({ readAloud: !settings.readAloud })}
-          className={buttonClass("secondary")}
+          className="flex min-h-11 w-full items-center justify-between gap-4 rounded-card border border-card-edge bg-surface-card px-5 py-3 text-left font-semibold shadow-card focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
         >
           Read questions aloud: {settings.readAloud ? "On" : "Off"}
+          <SwitchTrack on={settings.readAloud} />
         </button>
       </div>
       <fieldset className="mt-6">

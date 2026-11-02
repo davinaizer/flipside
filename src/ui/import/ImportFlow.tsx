@@ -7,6 +7,7 @@ import type { ImportIssue, ImportPreview as Preview, ImportResult } from "@/shar
 import { ApiClientError, api } from "@/ui/api/client";
 import { ImportBlocked, ImportPreview, StepHeading } from "./ImportPreview";
 import { ImportSuccess } from "./ImportSuccess";
+import { Icon } from "@/ui/icons/Icon";
 import { buttonClass } from "@/ui/button/button-class";
 
 export interface DeckChoice {
@@ -102,7 +103,8 @@ export function ImportFlow({ decks, initialDeckId }: { decks: DeckChoice[]; init
               />
             </label>
             {file && <span className="break-all">{file.name}</span>}
-            <a href="/api/v1/imports/template" download className="flex min-h-11 items-center underline">
+            <a href="/api/v1/imports/template" download className={buttonClass("secondary")}>
+              <Icon name="download" />
               Download CSV template
             </a>
           </div>
@@ -175,9 +177,10 @@ export function ImportFlow({ decks, initialDeckId }: { decks: DeckChoice[]; init
           {step.kind === "error" && <p role="alert" className="text-error">{step.message}</p>}
           <div className="flex flex-wrap gap-3">
             <button type="submit" disabled={saving} className={buttonClass("primary")}>
+              <Icon name="save" />
               {saving ? "Saving..." : deckId ? "Update deck" : `Add ${cardsLabel}`}
             </button>
-            <a href="/library" className="flex min-h-11 items-center px-4 underline">Cancel</a>
+            <a href="/library" className={buttonClass("secondary")}>Cancel</a>
           </div>
         </section>
       )}
