@@ -1,12 +1,12 @@
 # Flipside
 
-Local-first flashcards with spaced repetition, designed for a dyslexic teenager's school revision and for engineering interview prep.
+Local-first flashcards with spaced repetition, built for school revision, with reading support for learners with dyslexia, and for engineering interview prep.
 
 > **Status: v0.1.0 (MVP).** The Phase 1 web app is built and in use. The product requirements are in [docs/PRD.md](docs/PRD.md).
 
 ## What it is
 
-Flipside schedules flashcard reviews with a boxed (Leitner) system: a card you know moves up a box and comes back less often, a card you miss comes back the same day. It keeps the method behind Anki, in an interface built for a teenager, with reading settings (font, size, spacing, card colour) the learner controls.
+Flipside schedules flashcard reviews with a boxed (Leitner) system: a card you know moves up a box and comes back less often, a card you miss comes back the same day. It keeps the method behind Anki, in an interface built for young learners, with reading settings (font, size, spacing, card colour) the learner controls.
 
 It runs on a home server (a Mac Mini) and is used from an iPad browser over the home network. Any subject works: one deck per subject, short or multi-point answers, optional images.
 
@@ -14,8 +14,8 @@ It runs on a home server (a Mac Mini) and is used from an iPad browser over the 
 
 | Profile | Use |
 | --- | --- |
-| Nicole | School subjects and exam preparation, mostly on an iPad |
-| Davi | System Design and other engineering topics for interview prep |
+| Student | School subjects and exam preparation, mostly on an iPad |
+| Engineer | System Design and other engineering topics for interview prep |
 
 Profiles are picked from a Netflix-style screen. There is no login in the MVP.
 
@@ -71,7 +71,7 @@ Specified in [PRD section 13](docs/PRD.md#13-local-environment-and-operations). 
 
 ## Checks on pull requests
 
-`.github/workflows/checks.yml` runs `scripts/verify.sh` and the Playwright e2e suite on every pull request into `main` or `develop`, against the merged result. Branch protection is not available on a private free repository, so check the result before you merge.
+`.github/workflows/checks.yml` runs `scripts/verify.sh` and the Playwright e2e suite on every pull request into `main` or `develop`, against the merged result. Turn on branch protection for `main` to require both checks before a merge.
 
 ## Running at home
 
@@ -90,12 +90,12 @@ Launchd templates for the app, Postgres and the nightly backup are in `ops/launc
 ## Documentation
 
 - [Product requirements (PRD)](docs/PRD.md): scope, requirements, learning model, import format, statistics, architecture, data model, API, testing, risks and the decision log.
-- Design mockups (private links, iPad landscape): [v2, current](https://claude.ai/artifact/C2dqjpab7V7Jseiwr8k5L9) and [v1, first pass](https://claude.ai/artifact/Me41FufM8usUznonLJu6Nd).
+- Design reference: the Stitch exports and the light and dark design files in [docs/design/](docs/design/README.md). The screens are reference only; the PRD and that README say where they differ.
 
 ## First fixture
 
-The first test deck was converted from school slides: 16 cards, four topics and seven images. It is in `fixtures/` (`science-w2.csv` and `science-w2-deck.zip`).
+The first test deck is a small science deck: 16 cards, four topics and seven images (diagrams drawn for this repository). It is in `fixtures/` (`science-w2.csv` and `science-w2-deck.zip`).
 
 ## Licence
 
-Private personal project. No licence has been chosen.
+[MIT](LICENSE).

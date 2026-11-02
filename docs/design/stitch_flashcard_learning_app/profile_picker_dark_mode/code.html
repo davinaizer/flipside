@@ -29,7 +29,7 @@
 <div class="absolute inset-0 rounded-full bg-tertiary/10 blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
 </div>
 <div class="space-y-1">
-<h2 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Nicole</h2>
+<h2 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Student</h2>
 
 </div>
 </div>
@@ -68,7 +68,7 @@
 <script>
     (function() {
       const handleSelect = (name) => {
-        const targetBtn = name === 'Nicole' ? document.getElementById('profile-nicole') : document.getElementById('profile-davi');
+        const targetBtn = name === 'Student' ? document.getElementById('profile-nicole') : document.getElementById('profile-davi');
         if (targetBtn) {
           targetBtn.classList.add('opacity-80', 'scale-[0.98]');
           setTimeout(() => {
@@ -77,11 +77,11 @@
         }
       };
 
-      const btnNicole = document.getElementById('profile-nicole');
+      const btnStudent = document.getElementById('profile-nicole');
       const btnDavi = document.getElementById('profile-davi');
 
-      if (btnNicole) {
-        btnNicole.addEventListener('click', () => handleSelect('Nicole'));
+      if (btnStudent) {
+        btnStudent.addEventListener('click', () => handleSelect('Student'));
       }
       if (btnDavi) {
         btnDavi.addEventListener('click', () => handleSelect('Davi'));

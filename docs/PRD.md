@@ -32,12 +32,12 @@ Diagrams are Mermaid and render on GitHub. Mockups are linked in section 18.
 
 ## 1. Overview
 
-Flipside is a local-first flashcard app for spaced, self-graded revision, built for one dyslexic secondary-school student and one adult preparing for engineering interviews. It replaces paper cards and Anki, keeping Anki's proven method (retrieval practice with spaced repetition) in an interface a teenager actually wants to open.
+Flipside is a local-first flashcard app for spaced, self-graded revision, built for one secondary-school student who benefits from dyslexia-friendly reading support and one adult preparing for engineering interviews. It replaces paper cards and Anki, keeping Anki's proven method (retrieval practice with spaced repetition) in an interface a young learner actually wants to open.
 
 ### Problem
 
 - Paper flashcards work when a parent quizzes, but nothing schedules reviews or records what is weak.
-- Anki's scheduling is sound, but its interface is dated and not tuned for a dyslexic teenager. The iOS app is paid, and importing CSV on iOS may need the desktop app.
+- Anki's scheduling is sound, but its interface is dated and not tuned for learners with dyslexia. The iOS app is paid, and importing CSV on iOS may need the desktop app.
 - The same tool must also serve a very different kind of content: long, multi-point answers for System Design and other engineering topics.
 
 ### Goals
@@ -45,7 +45,7 @@ Flipside is a local-first flashcard app for spaced, self-graded revision, built 
 | ID | Goal |
 | --- | --- |
 | G1 | Daily practice that schedules itself: each card returns when it is due, not when someone remembers. |
-| G2 | A reading experience a dyslexic learner can tune (font, size, spacing, colour) and that feels designed for teenagers. |
+| G2 | A reading experience a dyslexic learner can tune (font, size, spacing, colour) and that feels designed for young learners. |
 | G3 | Any subject: school topics and engineering topics live in the same app, one deck per subject, with short or multi-point answers. |
 | G4 | Content in minutes without typing: import a CSV (with images) produced from existing material. |
 | G5 | Honest progress data: performance, frequency and time per card, with definitions that cannot flatter the learner. |
@@ -75,8 +75,8 @@ The MVP has two profiles, chosen from a Netflix-style picker, with no passwords:
 
 | Profile | Who | Main use | Device |
 | --- | --- | --- | --- |
-| Nicole | Secondary-school student, dyslexic, preparing for school mock tests and GCSEs | Short, frequent sessions on school subjects; heavy use of reading settings and read-aloud | iPad (primary) |
-| Davi | Adult, senior software engineer | System Design and other engineering topics for interview prep; longer multi-point answers | iPad, desktop browser |
+| Student | Secondary-school student who benefits from reading support, preparing for school exams | Short, frequent sessions on school subjects; heavy use of reading settings and read-aloud | iPad (primary) |
+| Engineer | Adult software engineer | System Design and other engineering topics for interview prep; longer multi-point answers | iPad, desktop browser |
 
 The model is multi-profile, not two hard-coded users: adding a profile later is an insert, not a code change.
 
@@ -381,7 +381,7 @@ The limits are heuristics sized for personal use and are configurable constants.
 
 ### First fixture
 
-The school deck converted from the PPT (`science-w2.csv` plus seven images, 16 cards across four topics) is the first acceptance fixture. Two cards depend on images shown on the question side.
+The science deck (`science-w2.csv` plus seven diagrams drawn for this repository, 16 cards across four topics) is the first acceptance fixture. Two cards depend on images shown on the question side.
 
 ## 7. Statistics
 
@@ -422,7 +422,7 @@ The by-deck column labelled Got it in the mockup is a mastery share, not a rate,
 
 ## 8. UX and accessibility
 
-The interface is designed for a dyslexic teenager on an iPad: calm, low-glare surfaces, large touch targets, user-controlled text, and no pressure mechanics. The design files in `docs/design/` are the visual reference.
+The interface is designed for learners with dyslexia on an iPad: calm, low-glare surfaces, large touch targets, user-controlled text, and no pressure mechanics. The design files in `docs/design/` are the visual reference.
 
 ### Visual system
 
@@ -548,7 +548,7 @@ Nine tables hold everything; decks belong to one profile, progress belongs to a 
 
 | Table | Key columns | Notes |
 | --- | --- | --- |
-| `profiles` | id, name, avatar, accent, timezone, day\_start\_hour, settings (jsonb) | Seeded with Davi and Nicole |
+| `profiles` | id, name, avatar, accent, timezone, day\_start\_hour, settings (jsonb) | Seeded with the two profiles in `scripts/seed.ts` |
 | `decks` | id, owner\_profile\_id, name, group\_name, color, answer\_style, deleted\_at | answer\_style is paragraph or bullets |
 | `cards` | id, deck\_id, external\_id, topic, front, back, front\_image\_id, back\_image\_id, position, deleted\_at | Unique (deck\_id, external\_id). `back` keeps newlines, one point per line |
 | `images` | id, owner\_profile\_id, sha256, mime, bytes, width, height, storage\_key | Unique (owner\_profile\_id, sha256); content-addressed |
@@ -714,7 +714,7 @@ A launchd job starts `next start` at login or boot; another starts the Podman ma
 - `docs/` holds this PRD, the design files in `docs/design/` and the mockup links.
 - `src/` holds `app`, `server`, `domain`, `shared` and `ui` (section 9).
 - `drizzle/` holds migrations; `scripts/` holds backup, restore and import tools.
-- `fixtures/` holds test decks, starting with the school deck and a System Design deck still to be written.
+- `fixtures/` holds test decks, starting with the science deck and a System Design deck still to be written.
 
 ## 14. Native-readiness constraints
 
@@ -817,11 +817,11 @@ The MVP is accepted when the scheduler, import and statistics are proven by auto
 | Unit | Vitest | Scheduler (table-driven JSON fixtures for every box and grade), session builder (scope, order, length, daily cap, weak cards), day-boundary maths, CSV validation, grade labels |
 | Integration | Vitest against a test Postgres | Route Handlers with real queries: profile scoping, idempotent `PUT /reviews`, undo restores state, import commit and re-import keep progress, stats queries match hand-computed values |
 | Contract | Vitest | `ImageStore` behaves identically for every driver |
-| End to end | Playwright (desktop and an iPad-sized viewport) | Pick profile, import the school deck, practise, undo, finish, see statistics |
+| End to end | Playwright (desktop and an iPad-sized viewport) | Pick profile, import the science deck, practise, undo, finish, see statistics |
 | Accessibility | axe in Playwright, manual pass | Contrast at least 4.5:1, labels on controls, focus order, targets at least 44 px, reduced motion |
 | Device | Manual on a real iPad in Safari | Layout, read-aloud, reading settings, performance on the home network |
 
-Test data: the school deck (`science-w2`, 16 cards, 7 images), a synthetic multi-point deck for long answers, and a deliberately broken CSV for every validation rule. A System Design fixture deck of about 36 cards is still to be written (open question OQ5).
+Test data: the science deck (`science-w2`, 16 cards, 7 images), a synthetic multi-point deck for long answers, and a deliberately broken CSV for every validation rule. A System Design fixture deck of about 36 cards is still to be written (open question OQ5).
 
 ### Acceptance criteria
 
@@ -900,14 +900,14 @@ These are the decisions taken so far; change one here first, then update the sec
 | D2 | App name: Flipside (working name; not yet checked against existing apps) | 2026-11-01 |
 | D3 | Stack: Next.js (Route Handlers) and Postgres, TypeScript | 2026-11-01 |
 | D4 | Local first: develop and run on the Mac Mini with Postgres in a container; deployment is out of scope for the MVP | 2026-11-01 |
-| D5 | Two profiles (Davi, Nicole) chosen from a Netflix-style picker; no authentication | 2026-11-01 |
+| D5 | Two profiles (a student and an engineer, seeded by `scripts/seed.ts`) chosen from a Netflix-style picker; no authentication | 2026-11-01 |
 | D6 | Decks are owned by one profile; sharing comes later | 2026-11-01 |
 | D7 | Images behind an `ImageStore` interface: disk driver now, S3-compatible (R2) driver at deployment | 2026-11-01 |
 | D8 | Only Got it moves a card up; Nearly holds the box; Not yet resets to box 1 | 2026-11-01 |
 | D9 | Carry the earlier gaps into the MVP: in-session re-queue, new-cards-per-day cap, leech flag, first-attempt-only statistics, Unicode formulas | 2026-11-01 |
 | D10 | A SwiftUI app is a later phase, motivated by reminders; the owner has an Apple developer account | 2026-11-01 |
 | D11 | Voice and LLM feedback is an experimental phase, randomised and guarded | 2026-11-01 |
-| D12 | Content comes in as CSV; the school PPT was converted to the first fixture deck | 2026-11-01 |
+| D12 | Content comes in as CSV; the first fixture deck was written as a CSV with diagrams drawn for this repository | 2026-11-01 |
 | D13 | The lapse rule is a configuration constant (`reset` default, `drop_one` available); MVP behaviour is unchanged | 2026-11-01 |
 | D14 | `review_log` is kept complete and append-only so a different scheduler can be replayed over it later; no FSRS in the MVP | 2026-11-01 |
 | D15 | Avatars: build the profile picker against a placeholder set behind one registry file; the final illustrations are chosen with the learner and swapped in later (resolves OQ1) | 2026-11-01 |
@@ -939,9 +939,7 @@ These are the decisions taken so far; change one here first, then update the sec
 ### References
 
 - Design files (canonical for visual tokens): `docs/design/DESIGN.md` (light), `docs/design/DESIGN-DARK.md` (dark)
-- Design mockup v2 (superseded by the Stitch screens in `docs/design/`): [Flipside v2 canvas](https://claude.ai/artifact/C2dqjpab7V7Jseiwr8k5L9)
-- Design mockup v1 (first pass): [GCSE Flashcards canvas](https://claude.ai/artifact/Me41FufM8usUznonLJu6Nd)
-- First fixture deck: `science-w2.csv` and `science-w2-deck.zip` (16 cards, 7 images), converted from the school slides
+- First fixture deck: `science-w2.csv` and `science-w2-deck.zip` (16 cards, 7 diagrams drawn for this repository)
 - Anki scheduling: [SM-2 and FSRS FAQ](https://docs.ankiweb.net/faqs/what-spaced-repetition-algorithm)
 - Anki manual: [Studying](https://docs.ankiweb.net/studying.html), [Deck options](https://docs.ankiweb.net/deck-options.html), [Statistics](https://docs.ankiweb.net/stats.html)
 - Dyslexia guidance: [British Dyslexia Association style guide summary](https://www.bumc.bu.edu/jmedday/files/2025/05/Dyslexia-friendly-style-guide.docx), [Dyslexia Scotland on fonts](https://dyslexiascotland.org.uk/?p=21280)
