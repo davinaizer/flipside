@@ -6,7 +6,7 @@ How to run Flipside on the Mac Mini and use it from the iPad. Agents never insta
 
 | Job (label) | Starts | Notes |
 | --- | --- | --- |
-| `com.flipside.db` | `podman machine start`, then `scripts/db.sh up` (Postgres 17 container) | Runs once at login. Starting an already running machine is ignored. |
+| `com.flipside.db` | `podman machine start`, then `scripts/db.sh up` (Postgres 17 container) | Runs once at login. Starting an already running machine is ignored. If it exits with an error (for example the Podman machine was not ready), launchd retries every 30 s until it succeeds. |
 | `com.flipside.app` | `pnpm start` on `0.0.0.0:3000` | Waits (retries every 3 s) until `pg_isready` succeeds in the container, then starts. Restarted if it exits. |
 | `com.flipside.backup` | `scripts/backup.sh` | Every night at 02:30 into `~/flipside-backups`, 14 days kept. |
 
