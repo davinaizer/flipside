@@ -2,7 +2,7 @@
 
 Local-first flashcards with spaced repetition, designed for a dyslexic teenager's school revision and for engineering interview prep.
 
-> **Status: planning.** The product requirements are written ([docs/PRD.md](docs/PRD.md)). There is no application code yet, so none of the commands below exist until the MVP is built.
+> **Status: v0.1.0 (MVP).** The Phase 1 web app is built and in use. The product requirements are in [docs/PRD.md](docs/PRD.md).
 
 ## What it is
 
@@ -56,17 +56,22 @@ scripts/     backup, restore, import tools
 fixtures/    test decks
 ```
 
-## Local development (planned)
+## Local development
 
-These scripts are specified in [PRD section 13](docs/PRD.md#13-local-environment-and-operations) and do not exist yet.
+Specified in [PRD section 13](docs/PRD.md#13-local-environment-and-operations). Copy `.env.example` to `.env` first.
 
 | Command | Purpose |
 | --- | --- |
 | `pnpm db:up` | Start Postgres in Podman |
 | `pnpm db:migrate` / `pnpm db:seed` | Apply migrations, create the two profiles |
-| `pnpm dev` | Run the app (listens on the home network so the iPad can reach it) |
+| `pnpm dev` | Development server. Open it from this Mac only: Next's dev server refuses its scripts to other devices, so a tablet shows a page that never loads |
+| `pnpm build` then `pnpm start` | Production server on the home network. Use this for the iPad or any other tablet |
 | `pnpm test` / `pnpm test:e2e` | Unit and integration tests, end-to-end tests |
-| `pnpm backup` / `pnpm restore <file>` | Back up and restore the database and images |
+| `pnpm backup` / `pnpm restore <folder>` | Back up and restore the database and images. Set `IMAGE_STORE_PATH` in the shell if images are not in `./data/images`: these scripts do not read `.env` |
+
+## Checks on pull requests
+
+`.github/workflows/checks.yml` runs `scripts/verify.sh` and the Playwright e2e suite on every pull request into `main` or `develop`, against the merged result. Branch protection is not available on a private free repository, so check the result before you merge.
 
 ## Running at home
 
