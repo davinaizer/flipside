@@ -39,12 +39,13 @@ Uninstall: `launchctl bootout gui/$(id -u)/com.flipside.<job>` and delete the pl
 ## iPad
 
 1. Give the Mac Mini a fixed address in the router (DHCP reservation), or use its name from System Settings, General, Sharing (for example `mac-mini.local`).
-2. In Safari on the iPad open `http://<address>:3000` (plain HTTP, home network only).
+2. In Safari on the iPad open `http://<address>:3000` (plain HTTP, home network only). The server must be the production one (`pnpm start`, which the launchd app job runs). `pnpm dev` does not work from another device: its scripts get a 403, so the picker stays on grey placeholders and taps do nothing.
 3. Share, Add to Home Screen. It is a shortcut to the page; there is no offline mode.
 
 ## Backup and restore
 
 - Manual backup: `pnpm backup`. Each run makes `~/flipside-backups/flipside-YYYY-MM-DD-HHMMSS/` with `database.dump` and `images.tar.gz`.
+- The scripts do not read `.env`. If images are stored outside `./data/images`, export `IMAGE_STORE_PATH` first (for the nightly job, add it to `EnvironmentVariables` in the backup plist), or the wrong folder is archived or overwritten.
 - Restore: `pnpm restore <backup-folder>`. It refuses when data exists; add `--yes` to replace the database and the images folder.
 
 ## AC11 manual checklist (reboot and restore)
