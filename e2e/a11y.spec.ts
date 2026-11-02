@@ -86,6 +86,8 @@ async function practiceScreens(page: Page) {
 }
 
 test("every screen and state passes axe and 44 px in both themes; toggle, reload, reduced motion; iPad portrait", async ({ page, browser }, info) => {
+  // One walk over every screen in two themes: about 25 s on a laptop, so the 30 s default is too tight for CI.
+  test.setTimeout(120_000);
   // Picker: no cookie yet.
   const fresh = await browser.newContext({ viewport: page.viewportSize() });
   const picker = await fresh.newPage();
