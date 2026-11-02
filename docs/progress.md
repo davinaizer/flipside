@@ -107,3 +107,4 @@ F8.6 done: e2e/performance.spec.ts and tests/integration/import-performance.test
 REVIEW F8 round 1: PASS at 6ef11a4
 F8 Operations done (PR #13). MANUAL PENDING: AC11
 MANUAL DONE (owner, 2026-11-02): AC10 Read aloud on iPad OK; AC11 reboot and restore OK; real-device iPad speed and tablet reachability OK. Release v0.1.0.
+Release v0.2.0: design audit fixes (shared tokens and button, consistent light and dark design files, screen restyle; PR #20).
