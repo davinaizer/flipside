@@ -27,7 +27,7 @@ Profiles are picked from a Netflix-style screen. There is no login in the MVP.
 - Scheduler: five boxes; only Got it moves a card up; missed cards return within the session; a daily cap on new cards; cards that keep failing are flagged for rewording.
 - CSV import (with a zip of images), with preview, validation and updates that keep progress.
 - Progress screen: cards practised, Got it rate, time per card, days practised, by-deck table.
-- Local only: Docker Postgres, backups, no third-party requests.
+- Local only: Podman Postgres, backups, no third-party requests.
 
 Out of scope for the MVP: deployment, authentication, offline use, notifications, an in-app card editor, voice and LLM features.
 
@@ -36,7 +36,7 @@ Out of scope for the MVP: deployment, authentication, offline use, notifications
 | Layer | Choice |
 | --- | --- |
 | App | Next.js (App Router) with Route Handlers, TypeScript |
-| Database | Postgres 17 in Docker, Drizzle ORM |
+| Database | Postgres 17 in Podman, Drizzle ORM |
 | Validation | Zod schemas shared by UI and API |
 | Images | `ImageStore` interface: disk driver now, S3-compatible (for example Cloudflare R2) later |
 | Tests | Vitest, Playwright, axe |
@@ -62,11 +62,15 @@ These scripts are specified in [PRD section 13](docs/PRD.md#13-local-environment
 
 | Command | Purpose |
 | --- | --- |
-| `pnpm db:up` | Start Postgres in Docker |
+| `pnpm db:up` | Start Postgres in Podman |
 | `pnpm db:migrate` / `pnpm db:seed` | Apply migrations, create the two profiles |
 | `pnpm dev` | Run the app (listens on the home network so the iPad can reach it) |
 | `pnpm test` / `pnpm test:e2e` | Unit and integration tests, end-to-end tests |
 | `pnpm backup` / `pnpm restore <file>` | Back up and restore the database and images |
+
+## Running at home
+
+Launchd templates for the app, Postgres and the nightly backup are in `ops/launchd/`. Install steps, the iPad address and shortcut, and the reboot and restore checklist are in [docs/operations.md](docs/operations.md).
 
 ## Roadmap
 
@@ -85,7 +89,7 @@ These scripts are specified in [PRD section 13](docs/PRD.md#13-local-environment
 
 ## First fixture
 
-The first test deck was converted from school slides: 16 cards, four topics and seven images. It is not in the repository yet; the plan is to add it under `fixtures/`.
+The first test deck was converted from school slides: 16 cards, four topics and seven images. It is in `fixtures/` (`science-w2.csv` and `science-w2-deck.zip`).
 
 ## Licence
 

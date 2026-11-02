@@ -1,0 +1,85 @@
+{
+  "description": "Day-boundary cases (PRD sections 2, 5, N8). Instants are UTC ISO 8601; dates are YYYY-MM-DD in the profile calendar. Weeks start on Monday.",
+  "learningDay": [
+    { "name": "London winter 06:30 counts as previous day", "instant": "2026-01-15T06:30:00Z", "timezone": "Europe/London", "dayStartHour": 7, "expected": "2026-01-14" },
+    { "name": "London winter 06:59:59 still previous day", "instant": "2026-01-15T06:59:59Z", "timezone": "Europe/London", "dayStartHour": 7, "expected": "2026-01-14" },
+    { "name": "London winter 07:00 is the new day", "instant": "2026-01-15T07:00:00Z", "timezone": "Europe/London", "dayStartHour": 7, "expected": "2026-01-15" },
+    { "name": "London winter 23:59 same day", "instant": "2026-01-15T23:59:00Z", "timezone": "Europe/London", "dayStartHour": 7, "expected": "2026-01-15" },
+    { "name": "London winter 00:30 previous day", "instant": "2026-01-16T00:30:00Z", "timezone": "Europe/London", "dayStartHour": 7, "expected": "2026-01-15" },
+    { "name": "London summer 06:30 BST counts as previous day", "instant": "2026-06-15T05:30:00Z", "timezone": "Europe/London", "dayStartHour": 7, "expected": "2026-06-14" },
+    { "name": "London summer 07:00 BST is the new day", "instant": "2026-06-15T06:00:00Z", "timezone": "Europe/London", "dayStartHour": 7, "expected": "2026-06-15" },
+    { "name": "Clocks forward: 00:30 GMT before the change", "instant": "2026-03-29T00:30:00Z", "timezone": "Europe/London", "dayStartHour": 7, "expected": "2026-03-28" },
+    { "name": "Clocks forward: 06:59 BST after the change", "instant": "2026-03-29T05:59:00Z", "timezone": "Europe/London", "dayStartHour": 7, "expected": "2026-03-28" },
+    { "name": "Clocks forward: 07:00 BST is the new day", "instant": "2026-03-29T06:00:00Z", "timezone": "Europe/London", "dayStartHour": 7, "expected": "2026-03-29" },
+    { "name": "Day before clocks forward: 06:30 GMT is the previous day", "instant": "2026-03-28T06:30:00Z", "timezone": "Europe/London", "dayStartHour": 7, "expected": "2026-03-27" },
+    { "name": "Clocks back: 07:00 BST the day before", "instant": "2026-10-24T06:00:00Z", "timezone": "Europe/London", "dayStartHour": 7, "expected": "2026-10-24" },
+    { "name": "Clocks back: first 01:30 BST", "instant": "2026-10-25T00:30:00Z", "timezone": "Europe/London", "dayStartHour": 7, "expected": "2026-10-24" },
+    { "name": "Clocks back: second 01:30 GMT", "instant": "2026-10-25T01:30:00Z", "timezone": "Europe/London", "dayStartHour": 7, "expected": "2026-10-24" },
+    { "name": "Clocks back: 06:59 GMT after the change", "instant": "2026-10-25T06:59:00Z", "timezone": "Europe/London", "dayStartHour": 7, "expected": "2026-10-24" },
+    { "name": "Clocks back: 07:00 GMT is the new day", "instant": "2026-10-25T07:00:00Z", "timezone": "Europe/London", "dayStartHour": 7, "expected": "2026-10-25" },
+    { "name": "Year boundary: 06:30 on 1 January belongs to 31 December", "instant": "2026-01-01T06:30:00Z", "timezone": "Europe/London", "dayStartHour": 7, "expected": "2025-12-31" },
+    { "name": "Month boundary: 06:30 on 1 March belongs to 28 February", "instant": "2026-03-01T06:30:00Z", "timezone": "Europe/London", "dayStartHour": 7, "expected": "2026-02-28" },
+    { "name": "New York 06:59 EST previous day", "instant": "2026-01-15T11:59:00Z", "timezone": "America/New_York", "dayStartHour": 7, "expected": "2026-01-14" },
+    { "name": "New York 07:00 EST new day", "instant": "2026-01-15T12:00:00Z", "timezone": "America/New_York", "dayStartHour": 7, "expected": "2026-01-15" },
+    { "name": "New York 07:00 EDT new day", "instant": "2026-07-15T11:00:00Z", "timezone": "America/New_York", "dayStartHour": 7, "expected": "2026-07-15" },
+    { "name": "Sydney 06:30 AEDT is previous local day though UTC date differs", "instant": "2026-01-15T19:30:00Z", "timezone": "Australia/Sydney", "dayStartHour": 7, "expected": "2026-01-15" },
+    { "name": "Sydney 07:00 AEDT is next local day", "instant": "2026-01-15T20:00:00Z", "timezone": "Australia/Sydney", "dayStartHour": 7, "expected": "2026-01-16" },
+    { "name": "Kolkata half-hour offset 06:59", "instant": "2026-01-15T01:29:00Z", "timezone": "Asia/Kolkata", "dayStartHour": 7, "expected": "2026-01-14" },
+    { "name": "Kolkata half-hour offset 07:00", "instant": "2026-01-15T01:30:00Z", "timezone": "Asia/Kolkata", "dayStartHour": 7, "expected": "2026-01-15" },
+    { "name": "Day start hour 0 uses midnight", "instant": "2026-01-15T00:00:00Z", "timezone": "Europe/London", "dayStartHour": 0, "expected": "2026-01-15" }
+  ],
+  "dayStartUtc": [
+    { "name": "London winter", "date": "2026-01-15", "timezone": "Europe/London", "dayStartHour": 7, "expected": "2026-01-15T07:00:00.000Z" },
+    { "name": "London summer", "date": "2026-06-15", "timezone": "Europe/London", "dayStartHour": 7, "expected": "2026-06-15T06:00:00.000Z" },
+    { "name": "Day before clocks forward", "date": "2026-03-28", "timezone": "Europe/London", "dayStartHour": 7, "expected": "2026-03-28T07:00:00.000Z" },
+    { "name": "Clocks forward day", "date": "2026-03-29", "timezone": "Europe/London", "dayStartHour": 7, "expected": "2026-03-29T06:00:00.000Z" },
+    { "name": "Day before clocks back", "date": "2026-10-24", "timezone": "Europe/London", "dayStartHour": 7, "expected": "2026-10-24T06:00:00.000Z" },
+    { "name": "Clocks back day", "date": "2026-10-25", "timezone": "Europe/London", "dayStartHour": 7, "expected": "2026-10-25T07:00:00.000Z" },
+    { "name": "Skipped wall time starts when clocks jump", "date": "2026-03-29", "timezone": "Europe/London", "dayStartHour": 1, "expected": "2026-03-29T01:00:00.000Z" },
+    { "name": "Repeated wall time uses first occurrence", "date": "2026-10-25", "timezone": "Europe/London", "dayStartHour": 1, "expected": "2026-10-25T00:00:00.000Z" },
+    { "name": "New York winter", "date": "2026-01-15", "timezone": "America/New_York", "dayStartHour": 7, "expected": "2026-01-15T12:00:00.000Z" },
+    { "name": "Sydney summer, previous UTC date", "date": "2026-01-16", "timezone": "Australia/Sydney", "dayStartHour": 7, "expected": "2026-01-15T20:00:00.000Z" },
+    { "name": "Kolkata half-hour offset", "date": "2026-01-15", "timezone": "Asia/Kolkata", "dayStartHour": 7, "expected": "2026-01-15T01:30:00.000Z" }
+  ],
+  "addDays": [
+    { "date": "2026-01-15", "days": 0, "expected": "2026-01-15" },
+    { "date": "2026-01-15", "days": 1, "expected": "2026-01-16" },
+    { "date": "2026-01-31", "days": 1, "expected": "2026-02-01" },
+    { "date": "2026-02-28", "days": 1, "expected": "2026-03-01" },
+    { "date": "2028-02-28", "days": 1, "expected": "2028-02-29" },
+    { "date": "2026-03-01", "days": -1, "expected": "2026-02-28" },
+    { "date": "2026-03-28", "days": 1, "expected": "2026-03-29" },
+    { "date": "2026-10-24", "days": 3, "expected": "2026-10-27" },
+    { "date": "2026-04-28", "days": 7, "expected": "2026-05-05" },
+    { "date": "2026-12-31", "days": 1, "expected": "2027-01-01" },
+    { "date": "2027-01-01", "days": -1, "expected": "2026-12-31" },
+    { "date": "2026-12-25", "days": 14, "expected": "2027-01-08" },
+    { "date": "2026-01-03", "days": -7, "expected": "2025-12-27" }
+  ],
+  "daysBetween": [
+    { "from": "2026-01-15", "to": "2026-01-15", "expected": 0 },
+    { "from": "2026-03-28", "to": "2026-03-30", "expected": 2 },
+    { "from": "2026-12-31", "to": "2027-01-01", "expected": 1 },
+    { "from": "2027-01-08", "to": "2026-12-25", "expected": -14 }
+  ],
+  "weekStart": [
+    { "name": "Monday is its own week start", "date": "2026-11-02", "expected": "2026-11-02" },
+    { "name": "Wednesday", "date": "2026-11-04", "expected": "2026-11-02" },
+    { "name": "Sunday belongs to the week before", "date": "2026-11-01", "expected": "2026-10-26" },
+    { "name": "Across a month boundary", "date": "2026-10-01", "expected": "2026-09-28" },
+    { "name": "Across a year boundary", "date": "2027-01-01", "expected": "2026-12-28" },
+    { "name": "Clocks-back Sunday", "date": "2026-10-25", "expected": "2026-10-19" }
+  ],
+  "learningWeekStart": [
+    { "name": "Monday 06:30 still in the previous week", "instant": "2026-11-02T06:30:00Z", "timezone": "Europe/London", "dayStartHour": 7, "expected": "2026-10-26" },
+    { "name": "Monday 07:00 starts the new week", "instant": "2026-11-02T07:00:00Z", "timezone": "Europe/London", "dayStartHour": 7, "expected": "2026-11-02" },
+    { "name": "Sydney Monday 07:00 while UTC is still Sunday", "instant": "2026-11-01T20:00:00Z", "timezone": "Australia/Sydney", "dayStartHour": 7, "expected": "2026-11-02" }
+  ],
+  "invalid": [
+    { "name": "Bad date format", "fn": "addDays", "args": ["2026-1-5", 1] },
+    { "name": "Impossible date", "fn": "weekStart", "args": ["2026-02-30"] },
+    { "name": "Unknown timezone", "fn": "learningDay", "args": ["2026-01-15T07:00:00Z", "Mars/Olympus", 7] },
+    { "name": "Day start hour out of range", "fn": "learningDay", "args": ["2026-01-15T07:00:00Z", "Europe/London", 24] },
+    { "name": "Invalid instant", "fn": "learningDay", "args": ["not a date", "Europe/London", 7] }
+  ]
+}

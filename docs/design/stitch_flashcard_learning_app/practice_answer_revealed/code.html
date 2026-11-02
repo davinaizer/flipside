@@ -1,0 +1,269 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><meta content="web_blank" name="shell-type"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&amp;family=Atkinson+Hyperlegible+Next:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "outline-variant": "#c7c4d7",
+          "on-secondary-fixed": "#2f1400",
+          "on-error": "#ffffff",
+          "on-primary": "#ffffff",
+          "on-secondary-container": "#783d01",
+          "error": "#ba1a1a",
+          "surface-dim": "#ccdbf3",
+          "surface-container-high": "#dce9ff",
+          "on-tertiary-fixed": "#00201c",
+          "secondary-fixed-dim": "#ffb780",
+          "on-primary-container": "#fffbff",
+          "tertiary-fixed": "#8cf5e4",
+          "surface-container-low": "#eff4ff",
+          "on-tertiary-fixed-variant": "#005048",
+          "on-surface-variant": "#5a596e",
+          "background": "#f5f6ff",
+          "on-secondary-fixed-variant": "#6f3800",
+          "tertiary-container": "#008376",
+          "on-surface": "#121b2d",
+          "error-container": "#ffdad6",
+          "surface-container": "#e6eeff",
+          "on-secondary": "#ffffff",
+          "inverse-on-surface": "#eaf1ff",
+          "surface-container-highest": "#d5e3fc",
+          "surface-container-lowest": "#ffffff",
+          "surface-tint": "#494bd6",
+          "on-error-container": "#93000a",
+          "primary-container": "#5254e3",
+          "primary-fixed": "#e1e0ff",
+          "on-primary-fixed-variant": "#2f2ebe",
+          "on-tertiary-container": "#f4fffb",
+          "surface-variant": "#d5e3fc",
+          "on-primary-fixed": "#07006c",
+          "on-tertiary": "#ffffff",
+          "primary": "#4648d4",
+          "primary-fixed-dim": "#c0c1ff",
+          "secondary": "#7a5538",
+          "tertiary-fixed-dim": "#6fd8c8",
+          "tertiary": "#00685d",
+          "inverse-surface": "#233144",
+          "secondary-fixed": "#ffdcc4",
+          "outline": "#767586",
+          "secondary-container": "#ffab69",
+          "surface": "#f8f9ff",
+          "inverse-primary": "#c0c1ff",
+          "on-background": "#0d1c2e",
+          "surface-bright": "#f8f9ff",
+          "status-not-yet": "#e27339",
+          "status-nearly": "#dfa435",
+          "status-got-it": "#4648d4",
+          "badge-soft": "#fdf5eb",
+          "badge-text": "#754b20",
+          "lavender-subtle": "#eceeff",
+          "card-warm": "#fffdfa",
+          "card-tint-cream": "#fefaf0",
+          "card-tint-peach": "#fef4ed"
+        },
+        "borderRadius": {
+          "DEFAULT": "1rem",
+          "lg": "2rem",
+          "xl": "3rem",
+          "full": "9999px"
+        },
+        "spacing": {
+          "margin-sm": "1rem",
+          "gutter-lg": "2rem",
+          "space-xl": "2.5rem",
+          "space-md": "1rem",
+          "space-sm": "0.5rem",
+          "gutter": "1.5rem",
+          "gutter-sm": "1rem",
+          "space-xs": "0.25rem",
+          "margin-lg": "3rem",
+          "space-lg": "1.5rem",
+          "margin": "1.5rem"
+        },
+        "fontFamily": {
+          "headline-lg": ["Lexend", "sans-serif"],
+          "headline-md": ["Lexend", "sans-serif"],
+          "label-lg": ["Lexend", "sans-serif"],
+          "label-sm": ["Lexend", "sans-serif"],
+          "headline-sm": ["Lexend", "sans-serif"],
+          "display-mobile": ["Lexend", "sans-serif"],
+          "headline-lg-mobile": ["Lexend", "sans-serif"],
+          "body-sm": ["Atkinson Hyperlegible Next", "sans-serif"],
+          "label-md": ["Lexend", "sans-serif"],
+          "body-md": ["Atkinson Hyperlegible Next", "sans-serif"],
+          "body-lg": ["Atkinson Hyperlegible Next", "sans-serif"],
+          "display": ["Lexend", "sans-serif"],
+          "sans": ["Lexend", "sans-serif"]
+        },
+        "fontSize": {
+          "headline-lg": ["2.25rem", {"lineHeight": "2.875rem", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+          "headline-md": ["1.75rem", {"lineHeight": "2.375rem", "letterSpacing": "-0.005em", "fontWeight": "600"}],
+          "label-lg": ["0.9375rem", {"lineHeight": "1.25rem", "letterSpacing": "0.01em", "fontWeight": "600"}],
+          "label-sm": ["0.75rem", {"lineHeight": "1rem", "letterSpacing": "0.03em", "fontWeight": "500"}],
+          "headline-sm": ["1.25rem", {"lineHeight": "1.75rem", "letterSpacing": "0.005em", "fontWeight": "600"}],
+          "display-mobile": ["2.25rem", {"lineHeight": "2.875rem", "letterSpacing": "-0.015em", "fontWeight": "700"}],
+          "headline-lg-mobile": ["1.75rem", {"lineHeight": "2.375rem", "letterSpacing": "0em", "fontWeight": "600"}],
+          "body-sm": ["0.875rem", {"lineHeight": "1.375rem", "letterSpacing": "0.025em", "fontWeight": "400"}],
+          "label-md": ["0.8125rem", {"lineHeight": "1.125rem", "letterSpacing": "0.02em", "fontWeight": "600"}],
+          "body-md": ["1rem", {"lineHeight": "1.625rem", "letterSpacing": "0.02em", "fontWeight": "400"}],
+          "body-lg": ["1.125rem", {"lineHeight": "1.875rem", "letterSpacing": "0.015em", "fontWeight": "400"}],
+          "display": ["2.75rem", {"lineHeight": "3.5rem", "letterSpacing": "-0.025em", "fontWeight": "600"}]
+        }
+      }
+    }
+  };
+</script></head><body class="bg-[#f3f5fc] font-body-md text-body-md text-on-surface antialiased min-h-screen selection:bg-primary-fixed selection:text-on-primary-fixed"><main class="w-full min-h-screen bg-gradient-to-b from-[#f3f5fc] via-[#f5f6ff] to-[#f0f3fb] flex items-center justify-center p-4 md:p-8"><div class="flex flex-col w-full max-w-[1140px] mx-auto py-2 px-3 sm:px-6 select-none items-center justify-between min-h-[740px]">
+<!-- Top Bar Section -->
+<header class="w-full flex flex-col gap-3">
+<div class="flex items-center justify-between w-full">
+<!-- Left: Exit Button -->
+<button aria-label="End practice session" class="group flex items-center gap-2 px-5 min-h-[48px] rounded-full bg-surface-container-lowest hover:bg-surface-container transition-all duration-200 shadow-sm text-on-surface-variant hover:text-on-surface" type="button">
+<span class="material-symbols-outlined text-[20px] transition-transform group-hover:-translate-x-0.5">arrow_back</span>
+<span class="font-label-lg text-label-lg">End session</span>
+</button>
+<!-- Center: Context & Counter -->
+<div class="flex items-center gap-2 px-5 py-2.5 rounded-full bg-surface-container-lowest shadow-sm">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+<span class="font-headline-sm text-label-lg text-on-surface tracking-wide">System Design</span>
+<span class="text-outline-variant font-label-md">•</span>
+<span class="font-label-md text-label-md text-on-surface-variant font-medium">Card 1 of 5</span>
+</div>
+<!-- Right: Secondary Controls -->
+<div class="flex items-center gap-2">
+<button aria-label="Audio preferences" class="w-12 h-12 flex items-center justify-center rounded-full bg-surface-container-lowest text-on-surface-variant hover:text-primary hover:bg-primary-fixed/40 transition-all duration-200 shadow-sm" id="narrationToggle" type="button">
+<span class="material-symbols-outlined text-[22px]">volume_up</span>
+</button>
+<button aria-label="Session settings" class="w-12 h-12 flex items-center justify-center rounded-full bg-surface-container-lowest text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all duration-200 shadow-sm" type="button">
+<span class="material-symbols-outlined text-[22px]">tune</span>
+</button>
+</div>
+</div>
+<!-- Segmented Session Progress Bar (5 segments, card 1 active) -->
+<div aria-label="Session progress: 1 of 5 cards" class="w-full grid grid-cols-5 gap-2 px-1 pt-1">
+<!-- Active Segment 1 -->
+<div class="h-2 rounded-full bg-primary shadow-sm relative overflow-hidden transition-all duration-300">
+<div class="absolute inset-0 bg-primary-container opacity-20 animate-pulse"></div>
+</div>
+<!-- Remaining Segments -->
+<div class="h-2 rounded-full bg-surface-container-highest transition-all duration-300"></div>
+<div class="h-2 rounded-full bg-surface-container-highest transition-all duration-300"></div>
+<div class="h-2 rounded-full bg-surface-container-highest transition-all duration-300"></div>
+<div class="h-2 rounded-full bg-surface-container-highest transition-all duration-300"></div>
+</div>
+</header>
+<!-- Main Flashcard Container (Centered ~860px wide, min 420px height) -->
+<main class="w-full max-w-[880px] my-5 flex flex-col justify-center">
+<div class="relative w-full rounded-lg bg-surface-container-lowest shadow-xl p-8 sm:p-10 transition-all duration-300 flex flex-col justify-between overflow-hidden">
+<!-- Ambient gentle tint glow inside card -->
+<div class="absolute -top-24 -right-24 w-80 h-80 rounded-full bg-primary-fixed/25 blur-3xl pointer-events-none"></div>
+<div class="absolute -bottom-28 -left-24 w-72 h-72 rounded-full bg-secondary-fixed/30 blur-3xl pointer-events-none"></div>
+<!-- Card Header: Topic Badge + Read Aloud Target -->
+<div class="relative z-10 flex items-center justify-between w-full mb-6">
+<div class="flex items-center gap-2">
+<span class="px-4 py-1.5 rounded-full bg-badge-soft text-badge-text font-label-md text-label-md tracking-wider uppercase font-semibold flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary-container"></span>
+            Caching
+          </span>
+
+</div>
+<button aria-label="Listen to card audio" class="min-w-[48px] min-h-[48px] w-12 h-12 rounded-full bg-surface-container-low hover:bg-primary-fixed text-primary flex items-center justify-center transition-all duration-200" id="speakButton" title="Read prompt and answer aloud" type="button">
+<span class="material-symbols-outlined text-[24px]">campaign</span>
+</button>
+</div>
+<!-- Front Prompt Section -->
+<section aria-labelledby="question-label" class="relative z-10 space-y-2">
+<div class="flex items-center gap-2">
+<span class="font-label-sm text-label-sm tracking-widest uppercase font-semibold text-on-surface-variant" id="question-label">Question</span>
+
+
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight leading-snug">
+          When would you choose write-through caching over write-back?
+        </h1>
+</section>
+<!-- Divider (subtle calm rule with gentle transition badge) -->
+<div class="relative z-10 my-6 py-1 flex items-center">
+<div class="flex-grow h-px bg-surface-container"></div>
+<div class="px-3 py-1 rounded-full bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm flex items-center gap-1.5 shadow-sm">
+<span class="material-symbols-outlined text-[15px] text-primary">visibility</span>
+<span class="">Answer Revealed</span>
+</div>
+<div class="flex-grow h-px bg-surface-container"></div>
+</div>
+<!-- Back Answer Section (Revealed state) -->
+<section aria-labelledby="answer-label" class="relative z-10 space-y-4">
+
+<ul class="space-y-3" role="list"><li class="flex items-start gap-3 p-3 rounded-2xl bg-surface-container-low/70"><span class="w-2 h-2 rounded-full bg-primary shrink-0 mt-2"></span><p class="font-body-md text-body-md text-on-surface leading-relaxed">Reads must always see the latest write immediately without delay.</p></li><li class="flex items-start gap-3 p-3 rounded-2xl bg-surface-container-low/70"><span class="w-2 h-2 rounded-full bg-primary shrink-0 mt-2"></span><p class="font-body-md text-body-md text-on-surface leading-relaxed">Simpler crash recovery since persistent storage is always kept up to date.</p></li><li class="flex items-start gap-3 p-3 rounded-2xl bg-surface-container-low/70"><span class="w-2 h-2 rounded-full bg-primary shrink-0 mt-2"></span><p class="font-body-md text-body-md text-on-surface leading-relaxed">Acceptable write latency trade-off because writes are significantly less frequent than reads.</p></li></ul>
+</section>
+</div>
+</main>
+<!-- Bottom Leitner 3-Grade Rating Area -->
+<footer class="w-full max-w-[880px] flex flex-col items-center gap-3.5 pb-2">
+<!-- Prompt Instruction -->
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-on-surface-variant">psychology</span>
+<p class="font-label-lg text-label-lg text-on-surface-variant font-medium">How well did you know this?</p>
+</div>
+<!-- 3 Leitner Rating Pill Buttons -->
+<div class="grid grid-cols-3 gap-3.5 w-full">
+<!-- 1. Not Yet -->
+<button aria-label="Review not yet, practice again today" class="group flex flex-col items-center justify-center min-h-[58px] py-2 px-3 rounded-2xl bg-card-tint-peach hover:bg-orange-100 text-status-not-yet active:scale-[0.98] transition-all duration-200 shadow-sm" type="button">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[20px] transition-transform group-hover:rotate-[-20deg]">replay</span>
+<span class="font-headline-sm text-headline-sm font-semibold tracking-normal text-status-not-yet">Not yet</span>
+</div>
+<span class="font-label-sm text-label-sm font-medium mt-0.5 text-on-secondary-container">Again today</span>
+</button>
+<!-- 2. Nearly -->
+<button aria-label="Review nearly, review tomorrow" class="group flex flex-col items-center justify-center min-h-[58px] py-2 px-3 rounded-2xl bg-card-tint-cream hover:bg-amber-100 text-status-nearly active:scale-[0.98] transition-all duration-200 shadow-sm" type="button">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[20px] transition-transform group-hover:translate-y-[-2px]">trending_up</span>
+<span class="font-headline-sm text-headline-sm font-semibold tracking-normal text-status-nearly">Nearly</span>
+</div>
+<span class="font-label-sm text-label-sm font-medium mt-0.5 text-secondary">Tomorrow</span>
+</button>
+<!-- 3. Got It -->
+<button aria-label="Review got it, review in 3 days" class="group flex flex-col items-center justify-center min-h-[58px] py-2 px-3 rounded-2xl bg-lavender-subtle hover:bg-primary-fixed text-status-got-it active:scale-[0.98] transition-all duration-200 shadow-sm" type="button">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[20px] transition-transform group-hover:scale-110">task_alt</span>
+<span class="font-headline-sm text-headline-sm font-semibold tracking-normal text-status-got-it">Got it</span>
+</div>
+<span class="font-label-sm text-label-sm font-medium opacity-85 mt-0.5 text-primary">In 3 days</span>
+</button>
+</div>
+<!-- Undo Flip & Auxiliary Link -->
+<div class="flex items-center justify-center gap-5 pt-0.5"><button aria-label="Undo last action" class="min-h-[48px] px-5 inline-flex items-center gap-2 text-on-surface-variant hover:text-on-surface font-label-md text-label-md transition-colors rounded-full hover:bg-surface-container" id="undoFlipBtn" type="button"><span class="material-symbols-outlined text-[18px]">undo</span><span class="">Undo last</span></button></div>
+</footer>
+</div>
+<script>
+  (function() {
+    const speakBtn = document.getElementById('speakButton');
+    const undoBtn = document.getElementById('undoFlipBtn');
+    let isSpeaking = false;
+
+    if (speakBtn) {
+      speakBtn.addEventListener('click', function() {
+        isSpeaking = !isSpeaking;
+        const icon = speakBtn.querySelector('.material-symbols-outlined');
+        if (icon) {
+          icon.textContent = isSpeaking ? 'volume_off' : 'campaign';
+        }
+        speakBtn.classList.toggle('bg-primary');
+        speakBtn.classList.toggle('text-on-primary');
+      });
+    }
+
+    if (undoBtn) {
+      undoBtn.addEventListener('click', function() {
+        undoBtn.classList.add('scale-95');
+        setTimeout(() => undoBtn.classList.remove('scale-95'), 150);
+      });
+    }
+  })();
+</script></main>
+
+
+</body></html>

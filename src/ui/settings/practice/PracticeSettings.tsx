@@ -1,0 +1,107 @@
+"use client";
+
+import { useState } from "react";
+import { READING_SPEEDS } from "@/shared/enums";
+import type { Settings } from "@/shared/settings";
+import { useSettings } from "../SettingsProvider";
+
+const MAX_NEW = 100; // mirrors settingsSchema.newCardsPerDay
+const LENGTHS: { value: Settings["cardsPerSession"]; label: string }[] = [
+  { value: 5, label: "5" },
+  { value: 10, label: "10" },
+  { value: 20, label: "20" },
+  { value: "all", label: "All due" },
+];
+const SPEED_LABEL = { slow: "Slow", normal: "Normal", fast: "Fast" } as const;
+
+/** Returns the parsed value, or null when the text is not a whole number from 0 to MAX_NEW. */
+export function parseNewCards(text: string): number | null {
+  if (!/^\d+$/.test(text.trim())) return null;
+  const n = Number(text);
+  return n <= MAX_NEW ? n : null;
+}
+
+function Choice({ on, onClick, children }: { on: boolean; onClick: () => void; children: React.ReactNode }) {
+  return (
+    <button
+      type="button"
+      aria-pressed={on}
+      onClick={onClick}
+      className={`min-h-11 rounded-full px-5 font-semibold ${
+        on ? "bg-primary text-on-primary" : "bg-surface-container text-on-surface hover:bg-surface-container-high"
+      }`}
+    >
+      {children}
+    </button>
+  );
+}
+
+/** Practice settings (T2): session length, new cards per day, read aloud, reading speed. Valid changes save at once. */
+export function PracticeSettings() {
+  const { settings, update } = useSettings();
+  const set = (patch: Partial<Settings>) => update(patch).catch(() => {});
+  const [text, setText] = useState(String(settings.newCardsPerDay));
+  const invalid = parseNewCards(text) === null;
+
+  return (
+    <section aria-labelledby="practice-h" className="mt-12 max-w-xl">
+      <h2 id="practice-h" className="text-2xl font-semibold">
+        Practice
+      </h2>
+      <fieldset className="mt-6">
+        <legend className="mb-2 font-semibold">Cards per session</legend>
+        <div className="flex flex-wrap gap-2">
+          {LENGTHS.map((l) => (
+            <Choice key={l.label} on={settings.cardsPerSession === l.value} onClick={() => set({ cardsPerSession: l.value })}>
+              {l.label}
+            </Choice>
+          ))}
+        </div>
+      </fieldset>
+      <div className="mt-6">
+        <label htmlFor="new-cards" className="mb-2 block font-semibold">
+          New cards per day
+        </label>
+        <input
+          id="new-cards"
+          inputMode="numeric"
+          value={text}
+          aria-invalid={invalid}
+          aria-describedby={invalid ? "new-cards-error" : undefined}
+          onChange={(e) => {
+            setText(e.target.value);
+            const n = parseNewCards(e.target.value);
+            if (n !== null) set({ newCardsPerDay: n });
+          }}
+          className="min-h-11 w-28 rounded-lg bg-surface-container px-4 text-on-surface"
+        />
+        {invalid && (
+          <p id="new-cards-error" role="alert" className="mt-2 text-error">
+            Enter a whole number from 0 to {MAX_NEW}.
+          </p>
+        )}
+      </div>
+      <div className="mt-6">
+        <button
+          type="button"
+          role="switch"
+          aria-checked={settings.readAloud}
+          onClick={() => set({ readAloud: !settings.readAloud })}
+          className="min-h-11 rounded-full bg-surface-container px-5 font-semibold hover:bg-surface-container-high"
+        >
+          Read questions aloud: {settings.readAloud ? "On" : "Off"}
+        </button>
+      </div>
+      <fieldset className="mt-6">
+        <legend className="mb-2 font-semibold">Reading speed</legend>
+        <div className="flex flex-wrap gap-2">
+          {READING_SPEEDS.map((s) => (
+            <Choice key={s} on={settings.readingSpeed === s} onClick={() => set({ readingSpeed: s })}>
+              {SPEED_LABEL[s]}
+            </Choice>
+          ))}
+        </div>
+      </fieldset>
+    </section>
+  );
+}

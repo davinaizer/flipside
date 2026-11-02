@@ -94,9 +94,9 @@ The model is multi-profile, not two hard-coded users: adding a profile later is 
 | --- | --- | --- |
 | name | n/a | Display name, up to 24 characters |
 | avatar | first unused | Id from the built-in set |
-| accent colour | blue | Used in the profile picker and sidebar only |
+| accent colour | design primary | Used in the profile picker and sidebar only |
 | timezone | Europe/London | Decides what "today" is for due dates and statistics |
-| day start hour | 04:00 | A review at 01:30 still counts toward the previous day |
+| day start hour | 07:00 | A review at 06:30 still counts toward the previous day |
 | settings | see section 4 | Reading and practice settings, stored as JSON |
 
 ### Security stance for the MVP
@@ -117,8 +117,8 @@ The MVP is a web app running locally on a Mac Mini, used from an iPad over the h
 - CSV import, with or without a zip of images, with preview, validation and re-import updates.
 - Image support through a storage interface with a disk driver.
 - Statistics: performance, frequency and time per card, computed on the server.
-- Reading and practice settings per profile.
-- Local operations: Docker Postgres, backup and restore scripts, seed data.
+- Reading and practice settings per profile, including a light and dark theme toggle.
+- Local operations: Podman Postgres, backup and restore scripts, seed data.
 
 ### Explicitly out of scope for the MVP
 
@@ -213,10 +213,11 @@ Each requirement has an id so tests, tickets and the changelog can point at it. 
 
 | ID | Requirement | Priority |
 | --- | --- | --- |
-| T1 | Reading: font (Atkinson Hyperlegible, Lexend, Arial), text size (4 steps), letter spacing (3), line spacing (3), card colour (Mist, Cream, Peach, Night), with a live preview. | Must |
+| T1 | Reading: font (Atkinson Hyperlegible Next, Lexend, System Sans), text size (4 steps), letter spacing (3), line spacing (3), card colour (Mist, Cream, Peach, Sage, Lavender, Night), with a live preview. | Must |
 | T2 | Practice: cards per session (5, 10, 20, All due; default 5), new cards per day (default 10), read questions aloud (off), reading speed (Normal). | Must |
 | T3 | Settings are stored per profile on the server and applied immediately on every device. | Must |
 | T4 | Reset to defaults. | Should |
+| T5 | Theme: a toggle between the light and dark theme, default light, stored in the profile's settings and applied immediately. | Must |
 
 ### Import (I) and System (X)
 
@@ -273,11 +274,22 @@ Intervals are named constants in one configuration file, not scattered through t
 
 | Grade | Effect on the box | Due date | Other effects |
 | --- | --- | --- | --- |
-| Not yet | Moves to box 1 | Today | Lapses +1 if the card was in box 2 or higher; re-queued in the session |
+| Not yet | Moves to box 1 (default lapse rule, see below) | Today | Lapses +1 if the card was in box 2 or higher; re-queued in the session |
 | Nearly | Stays in the same box (a new card enters box 1) | Today plus the interval of its current box; box 1 stays due today | None |
 | Got it | Moves up one box, to a maximum of 5 (a new card enters box 2) | Today plus the interval of its new box | Lapses unchanged |
 
 Only Got it moves a card up. "Today" is the profile's local day, using its day start hour (section 2).
+
+### Lapse rule
+
+What Not yet does to a card in box 2 or higher is one named constant in the same configuration file as the intervals, `LAPSE_RULE`:
+
+| Value | Effect of Not yet on a card in box 2 or higher | Status |
+| --- | --- | --- |
+| `reset` | Moves to box 1 | Default for the MVP |
+| `drop_one` | Moves down one box (box 1 stays in box 1) | Available, not enabled |
+
+The two differ for a mature card: a box 5 card (14-day interval) that is missed once loses all its progress under `reset`, and only one step under `drop_one`. Anki exposes the same choice (its default resets the interval; the user can have it reduced instead, per the [Anki FAQ](https://docs.ankiweb.net/faqs/what-spaced-repetition-algorithm)). Which suits the two learners is not known, so the MVP keeps `reset` (D8) and the choice is revisited after real use (OQ9). In both cases the card is re-queued in the session and lapses increase by 1, so leech counting is unaffected. Scheduler fixtures cover both values.
 
 ### Building a session
 
@@ -303,6 +315,8 @@ A card is flagged as a leech when its lapses reach 8, a threshold borrowed from 
 Each review record stores the card's state before the grade. Undo deletes the latest record (marking it undone), restores that state, and returns to the card's front. It can step back through the whole session.
 
 ### Not in the MVP, but reserved
+
+- **A different scheduler (for example FSRS):** not built, but nothing in the MVP blocks it. The scheduler is a pure function in `src/domain` (section 9), and `review_log` already stores, for every review, the grade, `reviewed_at`, `duration_ms`, `box_before`, `box_after` and `prev_state` (section 10). That history is enough to replay a different scheduler over past reviews. The MVP must keep these fields complete and must not delete or rewrite review records, other than marking an undo. Whether a different scheduler would help at this scale is unknown (OQ10); secondary sources report fewer reviews at equal retention on large review histories, which is not evidence for a few hundred cards.
 
 - **Confidence tap:** a nullable `confidence` column is reserved in the review record. Phase 1.5 asks for a one-tap rating before the answer is shown and re-tests high-confidence errors sooner, because those errors are corrected more readily but return after a week if the answer is forgotten.
 - **Test-date cram mode:** ignores due dates for cards in a chosen scope until an exam date.
@@ -408,26 +422,25 @@ The by-deck column labelled Got it in the mockup is a mastery share, not a rate,
 
 ## 8. UX and accessibility
 
-The interface is designed for a dyslexic teenager on an iPad: calm, off-white surfaces, large touch targets, user-controlled text, and no pressure mechanics. The v2 mockups are the visual reference.
+The interface is designed for a dyslexic teenager on an iPad: calm, low-glare surfaces, large touch targets, user-controlled text, and no pressure mechanics. The design files in `docs/design/` are the visual reference.
 
 ### Visual system
 
-| Token | Value | Use |
-| --- | --- | --- |
-| Ground | #E9EEF5 | App background |
-| Surface | #F8FAFD | Cards and panels (off-white, not pure white) |
-| Ink | #1B2742 | Primary text |
-| Muted | #3A4866 | Secondary text (meets 4.5:1 on Surface) |
-| Line | #C9D3E3 | Borders |
-| Accent | #3358D4 | Primary actions, selected state |
-| Not yet / Nearly / Got it | #E8903F / #F1D26A / #3358D4 | Box colours; always paired with a label |
+The visual language is defined in `docs/design/DESIGN.md` (light theme) and `docs/design/DESIGN-DARK.md` (dark theme): colours, typography, spacing, shapes, elevation and components. These files are canonical for look and feel. The theme names inside them may be renamed; this PRD says light theme and dark theme.
 
-No red or green is used to carry meaning. Colour is never the only signal: every state also has text or an icon.
+- **Precedence:** this PRD decides scope, behaviour and the accessibility rules. The design files decide visual tokens and components. The Stitch screens in `docs/design/stitch_flashcard_learning_app/` are reference only, for layout and mood. This PRD decides content, behaviour and copy; `docs/design/README.md` lists where the screens differ and what is correct.
+- **Tokens:** both themes are built into one tokens file and the Tailwind theme (N5), with the same semantic names in both. Components use semantic tokens only, never raw hex values.
+- **Theme toggle:** the learner switches between the light and dark theme (T5). Every screen and state works in both.
+- **Box colours:** as drawn in the design screens: Not yet peach, Nearly buttercream, Got it the primary (periwinkle), New a neutral surface tone. Each is always paired with an icon and a label, and red is never used for a wrong answer.
+- **Accessibility wins over a design value:** text contrast stays at least 4.5:1 and targets at least 44 px (AC12). If a design value fails, for example the placeholder slate, adjust that token minimally and log it as ASSUMED in `docs/decisions.md`.
+- **Not in the MVP, though present in the design files:** phone layouts, the line-focus ruler, and the floating tooling dock beyond the controls required in section 4.
+
+Colour is never the only signal: every state also has text or an icon.
 
 ### Reading rules (from British Dyslexia Association guidance and the evidence reviewed)
 
 - Body and card text is at least 16 px, left-aligned, never justified, with no patterned or photographic backgrounds.
-- Defaults: Atkinson Hyperlegible for text, Lexend for headings, wide letter spacing (0.06 em) and roomy line spacing (1.6).
+- Defaults: Atkinson Hyperlegible Next for text and Lexend for headings and labels, with letter and line spacing from the design's typography tokens.
 - Special dyslexia fonts are not assumed to help; the evidence is mixed. The learner chooses the font, size, spacing and card colour, and sees a live preview. Choices apply to card text; interface chrome keeps the defaults.
 - Touch targets are at least 44 px; the design uses 48 px or larger.
 - Fonts are bundled with the app (no requests to Google Fonts), so the app works without internet and sends nothing to third parties.
@@ -442,25 +455,24 @@ No red or green is used to carry meaning. Colour is never the only signal: every
 
 ### Screens
 
-| Screen | Route | v2 mockup artboard |
+| Screen | Route | Stitch screen (light and dark) |
 | --- | --- | --- |
 | Profile picker | `/` when no cookie | Not yet designed |
-| Library | `/library` | Library |
-| Deck | `/decks/[id]` | Deck detail |
-| Practice and summary | `/practice/[sessionId]` | Practice |
-| Progress | `/progress` | Progress |
-| Settings | `/settings` | Settings |
-| Add or re-import deck | `/import` | Add deck |
+| Library | `/library` | `library` |
+| Deck | `/decks/[id]` | `deck_detail` |
+| Practice and summary | `/practice/[sessionId]` | `practice_session` |
+| Progress | `/progress` | `progress` |
+| Settings | `/settings` | `settings` |
+| Add or re-import deck | `/import` | Not yet designed |
 
-### Changes required to the v2 mockups
+### Changes required to the Stitch screens
 
-1. Add the profile picker screen and the profile block with Switch profile in the sidebar; remove the "Saved on this iPad" text.
-2. Add a New segment (and legend entry) to every mastery bar.
-3. Grade sublabels come from the scheduler ("Again today", "Tomorrow", "In 3 days") instead of fixed "today, soon, later" wording.
-4. Rename the by-deck Got it column to Mastered; Focus next uses mastery.
-5. Remove the Import deck (CSV) button from the Library header; Add deck covers it.
-6. Settings gains new cards per day.
-7. The Add deck screen gains the re-import choice (existing deck) and a Download template action.
+The list of deviations to apply when building from the screens is in `docs/design/README.md`. In addition:
+
+1. Add the profile picker screen and the profile block with Switch profile in the sidebar.
+2. Grade sublabels come from the scheduler ("Again today", "Tomorrow", "In 3 days"); the screens already use this style.
+3. The by-deck column is Mastered, and Focus next uses mastery.
+4. The Add deck screen gains the re-import choice (existing deck) and a Download template action.
 
 ### States every screen must cover
 
@@ -479,7 +491,7 @@ flowchart LR
     API --> SVC["Services<br/>decks, imports, sessions, stats"]
     SVC --> DOM["Domain, pure functions<br/>scheduler, sessions, import rules"]
   end
-  SVC --> PG[("Postgres 17<br/>Docker, local only")]
+  SVC --> PG[("Postgres 17<br/>Podman, local only")]
   SVC --> IMG["ImageStore<br/>disk driver, ./data/images"]
   IMG -.-> S3["S3 or R2 driver<br/>Phase 4"]
 ```
@@ -492,17 +504,17 @@ The browser and, later, the SwiftUI app reach the same Route Handlers; services 
 | --- | --- | --- |
 | Language | TypeScript (strict) | One language across UI, API and scheduler |
 | App framework | Next.js, App Router | Chosen by the owner; Route Handlers provide the API |
-| UI | React client components with CSS variables for the design tokens | Practice screens are interactive; tokens map cleanly to SwiftUI later |
+| UI | React client components styled with Tailwind CSS; the design tokens are defined once and feed the Tailwind theme | Practice screens are interactive; tokens stay in one file, so they can map to SwiftUI later |
 | Data fetching | `fetch` through a thin typed client; TanStack Query optional | The UI uses the same API a native app will |
 | Validation and types | Zod schemas shared by UI and API | One source of truth for request and response shapes |
-| Database | Postgres 17 in Docker | Chosen by the owner |
+| Database | Postgres 17 in Podman | Chosen by the owner |
 | ORM and migrations | Drizzle ORM and drizzle-kit | Lightweight, SQL-shaped, works with serverless drivers if deployed later |
 | CSV and zip | Papa Parse (preview in browser), fflate for zip, `file-type` to sniff image bytes | Small, well-known libraries |
 | Speech | Browser `speechSynthesis` | No server involvement; iOS Safari support verified in a spike |
 | Fonts | Bundled with `next/font` | No third-party requests |
 | Tests | Vitest (unit and integration), Playwright (end to end), axe (accessibility) | Section 16 |
 | Tooling | pnpm, ESLint, Prettier, GitHub Actions optional | Standard |
-| Process on the Mac Mini | `next start` supervised by launchd; Docker Desktop or Colima for Postgres | Survives reboots |
+| Process on the Mac Mini | `next start` supervised by launchd; Podman for Postgres | Survives reboots |
 
 ### Layers and boundaries
 
@@ -659,7 +671,7 @@ Postgres runs in a container, the app runs on the Mac Mini host and listens on t
 
 | Component | Where | Notes |
 | --- | --- | --- |
-| Postgres 17 | Docker Compose service, data in a named volume | Bound to `127.0.0.1:5432` only; never exposed to the network |
+| Postgres 17 | Podman container started by `pnpm db:up`, data in a named volume | Bound to `127.0.0.1:5432` only; never exposed to the network |
 | Next.js app | Host process (`pnpm dev` while developing, `next start` in daily use) | Listens on `0.0.0.0:3000` so the iPad can reach it |
 | Image files | `./data/images` on the host | Included in backups |
 | Environment | `.env.local`, never committed; `.env.example` is committed | `DATABASE_URL`, `IMAGE_STORE_DRIVER=fs`, `IMAGE_STORE_PATH`, `PORT` |
@@ -689,7 +701,7 @@ Postgres runs in a container, the app runs on the Mac Mini host and listens on t
 
 ### Running as a service
 
-A launchd job starts `next start` at login or boot; Docker Desktop (or Colima) starts Postgres. A reboot must bring the app back without manual steps.
+A launchd job starts `next start` at login or boot; another starts the Podman machine and the Postgres container. A reboot must bring the app back without manual steps.
 
 ### Privacy and security
 
@@ -699,7 +711,7 @@ A launchd job starts `next start` at login or boot; Docker Desktop (or Colima) s
 
 ### Repository layout
 
-- `docs/` holds this PRD and the design mockup links.
+- `docs/` holds this PRD, the design files in `docs/design/` and the mockup links.
 - `src/` holds `app`, `server`, `domain`, `shared` and `ui` (section 9).
 - `drizzle/` holds migrations; `scripts/` holds backup, restore and import tools.
 - `fixtures/` holds test decks, starting with the school deck and a System Design deck still to be written.
@@ -824,7 +836,8 @@ Test data: the school deck (`science-w2`, 16 cards, 7 images), a synthetic multi
 - [ ] AC9: Reading settings change card text immediately, persist per profile and survive a restart.
 - [ ] AC10: Read aloud speaks the question and the answer on the target iPad.
 - [ ] AC11: A reboot of the Mac Mini brings the app and database back without manual steps; a restore from last night's backup reproduces decks, progress and images.
-- [ ] AC12: Axe reports no serious or critical issues on all screens; every control meets the 44 px target.
+- [ ] AC12: Axe reports no serious or critical issues on all screens in both themes; every control meets the 44 px target.
+- [ ] AC13: The theme toggle switches between light and dark immediately on every screen, persists per profile and survives a restart.
 
 ### Non-functional targets
 
@@ -865,14 +878,15 @@ The biggest risk is not technical: the app may be ignored if practising feels li
 
 | ID | Question | Needed by |
 | --- | --- | --- |
-| OQ1 | Which avatars? A built-in set of about ten illustrations, chosen with the learner | Profile picker build |
 | OQ2 | Default new cards per day: 10 assumed | After first week of use |
-| OQ3 | Day start hour: 04:00 assumed | Scheduler build |
 | OQ4 | Which iPad and iOS version is the primary device? | Device testing |
 | OQ5 | Who writes the System Design deck, and in what form (CSV directly, or converted from notes)? | Before engineering decks are tested |
-| OQ6 | Styling approach: CSS variables with CSS Modules assumed; Tailwind is the alternative | First UI work |
 | OQ7 | Should weak cards also include cards the learner marks "Nearly" repeatedly? | After first week of use |
 | OQ8 | Should sessions mix decks or stay within one by default? Mixed assumed for Today | After first week of use |
+| OQ9 | Should Not yet on a mature card drop one box (`drop_one`) instead of resetting to box 1 (`reset`)? `reset` assumed | After four weeks of use, if mature cards are lost too often |
+| OQ10 | Is the boxed scheduler good enough, or does review load justify trying FSRS? Boxed assumed | After four weeks of use, using `review_log` |
+
+OQ1 (avatars), OQ3 (day start hour) and OQ6 (styling) were resolved on 2026-11-01; see D15 to D17. The assumed defaults for OQ2 and OQ7 to OQ10 were confirmed on the same day (D18). OQ4 and OQ5 do not block the build.
 
 ## 18. Decision log, glossary and references
 
@@ -894,6 +908,16 @@ These are the decisions taken so far; change one here first, then update the sec
 | D10 | A SwiftUI app is a later phase, motivated by reminders; the owner has an Apple developer account | 2026-11-01 |
 | D11 | Voice and LLM feedback is an experimental phase, randomised and guarded | 2026-11-01 |
 | D12 | Content comes in as CSV; the school PPT was converted to the first fixture deck | 2026-11-01 |
+| D13 | The lapse rule is a configuration constant (`reset` default, `drop_one` available); MVP behaviour is unchanged | 2026-11-01 |
+| D14 | `review_log` is kept complete and append-only so a different scheduler can be replayed over it later; no FSRS in the MVP | 2026-11-01 |
+| D15 | Avatars: build the profile picker against a placeholder set behind one registry file; the final illustrations are chosen with the learner and swapped in later (resolves OQ1) | 2026-11-01 |
+| D16 | Day start hour is 07:00 (resolves OQ3) | 2026-11-01 |
+| D17 | Styling is Tailwind CSS, with the design tokens defined once and fed into the Tailwind theme (resolves OQ6) | 2026-11-01 |
+| D18 | The assumed defaults for OQ2, OQ7, OQ8, OQ9 and OQ10 stand until their review triggers; OQ4 and OQ5 are not build blockers | 2026-11-01 |
+| D19 | The Stitch design files in `docs/design/` are canonical for visual tokens and components; the PRD keeps scope, behaviour and accessibility rules | 2026-11-01 |
+| D20 | Postgres runs in Podman instead of Docker, driven by `podman run` with no compose tool | 2026-11-01 |
+| D20 | A light and dark theme toggle is in the MVP (T5, AC13), stored per profile | 2026-11-01 |
+| D21 | The Stitch screens in `docs/design/stitch_flashcard_learning_app/` are reference only (layout and mood); the PRD decides content, behaviour and copy, and `docs/design/README.md` documents the corrections. Only the two DESIGN files are canonical, for visual tokens | 2026-11-01 |
 
 ### Glossary
 
@@ -914,8 +938,10 @@ These are the decisions taken so far; change one here first, then update the sec
 
 ### References
 
-- Design mockup v2 (current): [Flipside v2 canvas](https://claude.ai/artifact/C2dqjpab7V7Jseiwr8k5L9)
+- Design files (canonical for visual tokens): `docs/design/DESIGN.md` (light), `docs/design/DESIGN-DARK.md` (dark)
+- Design mockup v2 (superseded by the Stitch screens in `docs/design/`): [Flipside v2 canvas](https://claude.ai/artifact/C2dqjpab7V7Jseiwr8k5L9)
 - Design mockup v1 (first pass): [GCSE Flashcards canvas](https://claude.ai/artifact/Me41FufM8usUznonLJu6Nd)
 - First fixture deck: `science-w2.csv` and `science-w2-deck.zip` (16 cards, 7 images), converted from the school slides
+- Anki scheduling: [SM-2 and FSRS FAQ](https://docs.ankiweb.net/faqs/what-spaced-repetition-algorithm)
 - Anki manual: [Studying](https://docs.ankiweb.net/studying.html), [Deck options](https://docs.ankiweb.net/deck-options.html), [Statistics](https://docs.ankiweb.net/stats.html)
 - Dyslexia guidance: [British Dyslexia Association style guide summary](https://www.bumc.bu.edu/jmedday/files/2025/05/Dyslexia-friendly-style-guide.docx), [Dyslexia Scotland on fonts](https://dyslexiascotland.org.uk/?p=21280)

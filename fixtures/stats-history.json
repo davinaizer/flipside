@@ -1,0 +1,120 @@
+{
+  "_comment": "Seeded review history for GET /stats (AC8), expected values computed by hand. Europe/London, day start 07:00; London is UTC+1 until 2026-10-25, then UTC+0. 'now' is Wednesday 2026-11-04 20:00Z, so this week is 11-02..11-08 (previous 10-26..11-01) and this month is 10-12..11-08 (previous 09-14..10-11). History is deleted: its reviews (r5, p4) count in tiles and bars, its topic is out of Focus next and By deck. Coasts has two cards, below the three-card minimum for Focus next. Card c5 is deleted, so Cells has four cards. Other's deck and reviews must never appear.",
+  "now": "2026-11-04T20:00:00Z",
+  "profile": { "name": "Me", "timezone": "Europe/London", "dayStartHour": 7 },
+  "otherProfile": { "name": "Other", "timezone": "Europe/London", "dayStartHour": 7 },
+  "decks": [
+    { "key": "bio", "owner": "me", "name": "Biology", "color": "mist", "deleted": false },
+    { "key": "geo", "owner": "me", "name": "Geography", "color": "sage", "deleted": false },
+    { "key": "his", "owner": "me", "name": "History", "color": "cream", "deleted": true },
+    { "key": "empty", "owner": "me", "name": "Empty", "color": null, "deleted": false },
+    { "key": "foreign", "owner": "other", "name": "Foreign", "color": null, "deleted": false }
+  ],
+  "cards": [
+    { "key": "c1", "deck": "bio", "topic": "Cells", "box": 4, "lapses": 0 },
+    { "key": "c2", "deck": "bio", "topic": "Cells", "box": 1, "lapses": 2 },
+    { "key": "c3", "deck": "bio", "topic": "Cells", "box": null, "lapses": 0 },
+    { "key": "c4", "deck": "bio", "topic": "Cells", "box": 5, "lapses": 0 },
+    { "key": "c5", "deck": "bio", "topic": "Cells", "box": 1, "lapses": 0, "deleted": true },
+    { "key": "e1", "deck": "bio", "topic": "Energy", "box": 2, "lapses": 1 },
+    { "key": "e2", "deck": "bio", "topic": "Energy", "box": null, "lapses": 0 },
+    { "key": "e3", "deck": "bio", "topic": "Energy", "box": 4, "lapses": 0 },
+    { "key": "w1", "deck": "bio", "topic": "Waves", "box": 1, "lapses": 2 },
+    { "key": "w2", "deck": "bio", "topic": "Waves", "box": 2, "lapses": 0 },
+    { "key": "w3", "deck": "bio", "topic": "Waves", "box": 4, "lapses": 0 },
+    { "key": "r1", "deck": "geo", "topic": "Rivers", "box": 1, "lapses": 3 },
+    { "key": "r2", "deck": "geo", "topic": "Rivers", "box": 2, "lapses": 0 },
+    { "key": "r3", "deck": "geo", "topic": "Rivers", "box": 3, "lapses": 0 },
+    { "key": "k1", "deck": "geo", "topic": "Coasts", "box": 1, "lapses": 0 },
+    { "key": "k2", "deck": "geo", "topic": "Coasts", "box": 1, "lapses": 0 },
+    { "key": "t1", "deck": "his", "topic": "Tudors", "box": 1, "lapses": 5 },
+    { "key": "t2", "deck": "his", "topic": "Tudors", "box": 1, "lapses": 5 },
+    { "key": "t3", "deck": "his", "topic": "Tudors", "box": 1, "lapses": 5 },
+    { "key": "f1", "deck": "foreign", "topic": "Alien", "box": 1, "lapses": 9 },
+    { "key": "f2", "deck": "foreign", "topic": "Alien", "box": 1, "lapses": 9 },
+    { "key": "f3", "deck": "foreign", "topic": "Alien", "box": 1, "lapses": 9 }
+  ],
+  "reviews": [
+    { "id": "r1", "card": "c1", "reviewedAt": "2026-11-02T08:00:00Z", "grade": "got_it", "durationMs": 10000, "first": true },
+    { "id": "r2", "card": "c2", "reviewedAt": "2026-11-02T08:01:00Z", "grade": "not_yet", "durationMs": 20000, "first": true },
+    { "id": "r3 re-queued repeat: time only", "card": "c2", "reviewedAt": "2026-11-02T08:03:00Z", "grade": "got_it", "durationMs": 30000, "first": false },
+    { "id": "r4 Geography, capped to 120 s", "card": "r1", "reviewedAt": "2026-11-02T08:05:00Z", "grade": "nearly", "durationMs": 200000, "first": true },
+    { "id": "r5 deleted deck, 06:30 counts for 11-02", "card": "t1", "reviewedAt": "2026-11-03T06:30:00Z", "grade": "got_it", "durationMs": 5000, "first": true },
+    { "id": "r6 undone: excluded", "card": "e1", "reviewedAt": "2026-11-03T18:00:00Z", "grade": "got_it", "durationMs": 8000, "first": true, "undoneAt": "2026-11-03T18:00:30Z" },
+    { "id": "r7 regraded after undo", "card": "e1", "reviewedAt": "2026-11-03T18:01:00Z", "grade": "nearly", "durationMs": 12000, "first": true },
+    { "id": "r8", "card": "w1", "reviewedAt": "2026-11-04T09:00:00Z", "grade": "got_it", "durationMs": 40000, "first": true },
+    { "id": "r9 second session same day: time only", "card": "w1", "reviewedAt": "2026-11-04T19:00:00Z", "grade": "got_it", "durationMs": 6000, "first": false },
+    { "id": "p1", "card": "c1", "reviewedAt": "2026-10-27T08:00:00Z", "grade": "got_it", "durationMs": 15000, "first": true },
+    { "id": "p2", "card": "c2", "reviewedAt": "2026-10-27T08:01:00Z", "grade": "not_yet", "durationMs": 25000, "first": true },
+    { "id": "p3 Geography", "card": "r2", "reviewedAt": "2026-10-29T08:00:00Z", "grade": "got_it", "durationMs": 9000, "first": true },
+    { "id": "p4 deleted deck, 06:59 Monday counts for Sunday 11-01", "card": "t2", "reviewedAt": "2026-11-02T06:59:00Z", "grade": "got_it", "durationMs": 7000, "first": true },
+    { "id": "p5 undone: excluded", "card": "e2", "reviewedAt": "2026-10-30T08:00:00Z", "grade": "got_it", "durationMs": 60000, "first": true, "undoneAt": "2026-10-30T08:00:10Z" },
+    { "id": "q1 BST 07:30 Sunday 10-11, previous four weeks", "card": "c1", "reviewedAt": "2026-10-11T06:30:00Z", "grade": "got_it", "durationMs": 14000, "first": true },
+    { "id": "q2 BST 06:30 Monday counts for Sunday 10-11", "card": "c2", "reviewedAt": "2026-10-12T05:30:00Z", "grade": "nearly", "durationMs": 50000, "first": true },
+    { "id": "q3 BST 07:30 Monday 10-12, first day of the four weeks", "card": "e3", "reviewedAt": "2026-10-12T06:30:00Z", "grade": "got_it", "durationMs": 11000, "first": true },
+    { "id": "q4 outside every window", "card": "c4", "reviewedAt": "2026-09-13T12:00:00Z", "grade": "got_it", "durationMs": 1000, "first": true },
+    { "id": "o1 other profile", "card": "f1", "profile": "other", "reviewedAt": "2026-11-03T09:00:00Z", "grade": "got_it", "durationMs": 100000, "first": true },
+    { "id": "o2 other profile", "card": "f2", "profile": "other", "reviewedAt": "2026-11-04T09:00:00Z", "grade": "got_it", "durationMs": 100000, "first": true },
+    { "id": "o3 other profile", "card": "f3", "profile": "other", "reviewedAt": "2026-10-20T09:00:00Z", "grade": "got_it", "durationMs": 100000, "first": true }
+  ],
+  "expected": {
+    "_comment": "week: first attempts r1 r2 r4 r5 r7 r8 = 6, Got it r1 r5 r8 = 3; times 5 6 10 12 20 30 40 120 -> 16. Previous: p1 p2 p3 p4 = 4, Got it 3; times 7 9 15 25 -> 12. Month adds q3 to current (11, Got it 7, 13 times -> 12); previous month q1 q2 (times 14 50 -> 32, one day 10-11). By deck median uses the current window: Biology week 6 10 12 20 30 40 -> 16, month adds 11 15 25 -> 15; Geography week 120, month 9 120 -> 64.5. Focus next: Rivers 0/3 (3 lapses), Waves 1/3 (2 lapses) beats Energy 1/3 (1 lapse); Coasts (2 cards), Tudors (deleted) and Alien (other profile) never appear.",
+    "week": {
+      "today": "2026-11-04",
+      "windows": {
+        "current": { "start": "2026-11-02", "end": "2026-11-08", "days": 7 },
+        "previous": { "start": "2026-10-26", "end": "2026-11-01", "days": 7 }
+      },
+      "current": { "cardsReviewed": 6, "gotItRate": 0.5, "medianSeconds": 16, "daysPractised": 3, "daysInWindow": 7 },
+      "previous": { "cardsReviewed": 4, "gotItRate": 0.75, "medianSeconds": 12, "daysPractised": 3, "daysInWindow": 7 },
+      "changes": {
+        "cardsReviewed": "2 more than last week",
+        "gotItRate": "25 points lower than last week",
+        "timePerCard": "4 s slower than last week",
+        "daysPractised": "Same as last week"
+      },
+      "bars": [
+        { "start": "2026-11-02", "cardsReviewed": 4, "current": false },
+        { "start": "2026-11-03", "cardsReviewed": 1, "current": false },
+        { "start": "2026-11-04", "cardsReviewed": 1, "current": true },
+        { "start": "2026-11-05", "cardsReviewed": 0, "current": false },
+        { "start": "2026-11-06", "cardsReviewed": 0, "current": false },
+        { "start": "2026-11-07", "cardsReviewed": 0, "current": false },
+        { "start": "2026-11-08", "cardsReviewed": 0, "current": false }
+      ],
+      "byDeckMedianSeconds": { "geo": 120, "bio": 16, "empty": null }
+    },
+    "month": {
+      "today": "2026-11-04",
+      "windows": {
+        "current": { "start": "2026-10-12", "end": "2026-11-08", "days": 28 },
+        "previous": { "start": "2026-09-14", "end": "2026-10-11", "days": 28 }
+      },
+      "current": { "cardsReviewed": 11, "gotItRate": 0.6363636363636364, "medianSeconds": 12, "daysPractised": 7, "daysInWindow": 28 },
+      "previous": { "cardsReviewed": 2, "gotItRate": 0.5, "medianSeconds": 32, "daysPractised": 1, "daysInWindow": 28 },
+      "changes": {
+        "cardsReviewed": "9 more than the previous four weeks",
+        "gotItRate": "14 points higher than the previous four weeks",
+        "timePerCard": "20 s faster than the previous four weeks",
+        "daysPractised": "6 more days than the previous four weeks"
+      },
+      "bars": [
+        { "start": "2026-10-12", "cardsReviewed": 1, "current": false },
+        { "start": "2026-10-19", "cardsReviewed": 0, "current": false },
+        { "start": "2026-10-26", "cardsReviewed": 4, "current": false },
+        { "start": "2026-11-02", "cardsReviewed": 6, "current": true }
+      ],
+      "byDeckMedianSeconds": { "geo": 64.5, "bio": 15, "empty": null }
+    },
+    "focusNext": [
+      { "deck": "geo", "deckName": "Geography", "topic": "Rivers", "cards": 3, "mastery": 0, "lapses": 3 },
+      { "deck": "bio", "deckName": "Biology", "topic": "Waves", "cards": 3, "mastery": 0.3333333333333333, "lapses": 2 },
+      { "deck": "bio", "deckName": "Biology", "topic": "Energy", "cards": 3, "mastery": 0.3333333333333333, "lapses": 1 }
+    ],
+    "byDeck": [
+      { "deck": "geo", "name": "Geography", "color": "sage", "cards": 5, "mastered": 0, "mastery": 0, "lastPractisedAt": "2026-11-02T08:05:00.000Z" },
+      { "deck": "bio", "name": "Biology", "color": "mist", "cards": 10, "mastered": 4, "mastery": 0.4, "lastPractisedAt": "2026-11-04T19:00:00.000Z" },
+      { "deck": "empty", "name": "Empty", "color": null, "cards": 0, "mastered": 0, "mastery": null, "lastPractisedAt": null }
+    ]
+  }
+}

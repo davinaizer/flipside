@@ -1,0 +1,43 @@
+# OS and editors
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Next.js and TypeScript build output
+.next/
+out/
+*.tsbuildinfo
+next-env.d.ts
+
+# Environment: .env.local holds real values, .env.example is committed (PRD section 13)
+.env
+.env.*
+!.env.example
+
+# Runtime data: uploaded images and local database files (PRD sections 12 and 13)
+/data/
+
+# Tests and reports
+coverage/
+playwright-report/
+test-results/
+blob-report/
+playwright/.cache/
+
+# Logs and temp
+*.log
+npm-debug.log*
+pnpm-debug.log*
+/.tmp/
+/tmp/
+
+# Claude Code local files
+CLAUDE.local.md
+.claude/settings.local.json
+.claude/worktrees/

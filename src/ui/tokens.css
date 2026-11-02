@@ -1,0 +1,120 @@
+/* The one tokens file: the only place raw colour values may appear.
+   Light is the default; data-theme="dark" on <html> switches theme.
+   Sources: docs/design/DESIGN.md and DESIGN-DARK.md. */
+:root,
+[data-theme="light"] {
+  --surface: #f8f9ff;
+  --surface-container-low: #eff4ff;
+  --surface-container: #e6eeff;
+  --surface-container-high: #dce9ff;
+  --on-surface: #0d1c2e;
+  --on-surface-variant: #464554;
+  --outline: #767586;
+  --outline-variant: #c7c4d7;
+  --primary: #4648d4;
+  --on-primary: #ffffff;
+  --primary-container: #6063ee;
+  --on-primary-container: #ffffff;
+  --secondary: #8e4e14;
+  --on-secondary: #ffffff;
+  --error: #ba1a1a;
+  --on-error: #ffffff;
+  --box-new: #e6eeff;
+  --on-box-new: #464554;
+  --box-not-yet: #ffdcc4;
+  --on-box-not-yet: #6f3800;
+  --box-nearly: #fef9c3;
+  --on-box-nearly: #5c4700;
+  --box-got-it: #4648d4;
+  --on-box-got-it: #ffffff;
+  --card-mist: #dce9ff;
+  --card-cream: #fef9c3;
+  --card-peach: #ffdcc4;
+  --card-sage: #cdeede;
+  --card-lavender: #e4e1ff;
+  --card-night: #2b3550;
+  --on-card-mist: #0d1c2e;
+  --on-card-cream: #0d1c2e;
+  --on-card-peach: #0d1c2e;
+  --on-card-sage: #0d1c2e;
+  --on-card-lavender: #0d1c2e;
+  --on-card-night: #f8f9ff;
+}
+
+[data-theme="dark"] {
+  --surface: #0b1326;
+  --surface-container-low: #131b2e;
+  --surface-container: #171f33;
+  --surface-container-high: #222a3d;
+  --on-surface: #dae2fd;
+  --on-surface-variant: #c6c5d5;
+  --outline: #908f9e;
+  --outline-variant: #454653;
+  --primary: #bdc2ff;
+  --on-primary: #131e8c;
+  --primary-container: #818cf8;
+  --on-primary-container: #101b8a;
+  --secondary: #62dcad;
+  --on-secondary: #003827;
+  --error: #ffb4ab;
+  --on-error: #690005;
+  --box-new: #222a3d;
+  --on-box-new: #c6c5d5;
+  --box-not-yet: #4f2500;
+  --on-box-not-yet: #ffdcc5;
+  --box-nearly: #463c00;
+  --on-box-nearly: #fff1a8;
+  --box-got-it: #bdc2ff;
+  --on-box-got-it: #131e8c;
+  --card-mist: #2a3a5c;
+  --card-cream: #463c00;
+  --card-peach: #4f2500;
+  --card-sage: #1f4a3a;
+  --card-lavender: #3a3c78;
+  --card-night: #0b1326;
+  --on-card-mist: #dae2fd;
+  --on-card-cream: #dae2fd;
+  --on-card-peach: #dae2fd;
+  --on-card-sage: #dae2fd;
+  --on-card-lavender: #dae2fd;
+  --on-card-night: #dae2fd;
+}
+
+@theme inline {
+  --color-surface: var(--surface);
+  --color-surface-container-low: var(--surface-container-low);
+  --color-surface-container: var(--surface-container);
+  --color-surface-container-high: var(--surface-container-high);
+  --color-on-surface: var(--on-surface);
+  --color-on-surface-variant: var(--on-surface-variant);
+  --color-outline: var(--outline);
+  --color-outline-variant: var(--outline-variant);
+  --color-primary: var(--primary);
+  --color-on-primary: var(--on-primary);
+  --color-primary-container: var(--primary-container);
+  --color-on-primary-container: var(--on-primary-container);
+  --color-secondary: var(--secondary);
+  --color-on-secondary: var(--on-secondary);
+  --color-error: var(--error);
+  --color-on-error: var(--on-error);
+  --color-box-new: var(--box-new);
+  --color-on-box-new: var(--on-box-new);
+  --color-box-not-yet: var(--box-not-yet);
+  --color-on-box-not-yet: var(--on-box-not-yet);
+  --color-box-nearly: var(--box-nearly);
+  --color-on-box-nearly: var(--on-box-nearly);
+  --color-box-got-it: var(--box-got-it);
+  --color-on-box-got-it: var(--on-box-got-it);
+  --color-card-mist: var(--card-mist);
+  --color-card-cream: var(--card-cream);
+  --color-card-peach: var(--card-peach);
+  --color-card-sage: var(--card-sage);
+  --color-card-lavender: var(--card-lavender);
+  --color-card-night: var(--card-night);
+  --color-on-card-mist: var(--on-card-mist);
+  --color-on-card-cream: var(--on-card-cream);
+  --color-on-card-peach: var(--on-card-peach);
+  --color-on-card-sage: var(--on-card-sage);
+  --color-on-card-lavender: var(--on-card-lavender);
+  --color-on-card-night: var(--on-card-night);
+}
