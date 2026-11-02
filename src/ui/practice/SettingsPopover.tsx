@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { ReadingSettings } from "@/ui/settings/reading/ReadingSettings";
+import { buttonClass } from "@/ui/button/button-class";
 
 /**
  * Reading settings over the session (R13). It is an overlay, so the session screen underneath
@@ -20,7 +21,7 @@ export function SettingsPopover({ onClose }: { onClose: () => void }) {
     <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-surface-container-high p-4">
       <div role="dialog" aria-modal="true" aria-label="Reading settings" className="w-full max-w-4xl rounded-3xl border border-outline-variant bg-surface p-6 text-on-surface">
         <ReadingSettings />
-        <button ref={closeRef} type="button" onClick={onClose} className="mt-6 min-h-11 rounded-full bg-primary px-8 text-on-primary">
+        <button ref={closeRef} type="button" onClick={onClose} className={buttonClass("primary", { extra: "mt-6" })}>
           Done
         </button>
       </div>

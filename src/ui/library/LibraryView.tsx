@@ -2,6 +2,7 @@ import Link from "next/link";
 import { matchesQuery } from "@/domain/text-match";
 import type { Library } from "@/shared/schemas/library";
 import { MasteryBar } from "@/ui/mastery-bar/MasteryBar";
+import { buttonClass } from "@/ui/button/button-class";
 
 const SWATCH: Record<string, string> = {
   mist: "bg-card-mist",
@@ -12,7 +13,6 @@ const SWATCH: Record<string, string> = {
   night: "bg-card-night",
 };
 
-const button = "min-h-11 rounded-full px-8 font-semibold disabled:opacity-60";
 
 export interface LibraryViewProps {
   library: Library;
@@ -50,7 +50,7 @@ export function LibraryView({
       <div className="mb-6 flex items-center justify-between gap-4">
         <h1 className="text-4xl font-semibold">Library</h1>
         {!noDecks && (
-          <Link href="/import" className={`${button} flex items-center bg-primary text-on-primary`}>
+          <Link href="/import" className={buttonClass("primary")}>
             Add deck
           </Link>
         )}
@@ -69,7 +69,7 @@ export function LibraryView({
           </label>
           <section
             aria-labelledby="today"
-            className="mb-8 max-w-3xl rounded-2xl bg-surface-container p-6"
+            className="mb-8 max-w-3xl rounded-card border border-card-edge bg-surface-card shadow-card p-6"
           >
             <h2 id="today" className="text-2xl font-semibold">
               Today
@@ -83,7 +83,7 @@ export function LibraryView({
                 type="button"
                 disabled={busy || today.startableCount === 0}
                 onClick={() => onStart("all")}
-                className={`${button} bg-primary text-on-primary`}
+                className={buttonClass("primary")}
               >
                 Start practice
               </button>
@@ -91,7 +91,7 @@ export function LibraryView({
                 type="button"
                 disabled={busy || today.weakCount === 0}
                 onClick={() => onStart("weak")}
-                className={`${button} text-on-surface outline outline-1 outline-outline`}
+                className={buttonClass("secondary")}
               >
                 Weak cards ({today.weakCount})
               </button>
@@ -113,13 +113,13 @@ export function LibraryView({
           <div className="mt-4 flex gap-3">
             <Link
               href="/import"
-              className={`${button} flex items-center bg-primary text-on-primary`}
+              className={buttonClass("primary")}
             >
               Add deck
             </Link>
             <a
               href="/api/v1/imports/template"
-              className={`${button} flex items-center text-on-surface outline outline-1 outline-outline`}
+              className={buttonClass("secondary")}
             >
               Download CSV template
             </a>
@@ -135,7 +135,7 @@ export function LibraryView({
             <h2 className="mb-3 text-2xl font-semibold">{g.name}</h2>
             <ul className="grid max-w-5xl gap-4 md:grid-cols-2">
               {g.decks.map((d) => (
-                <li key={d.id} className="rounded-2xl bg-surface-container p-5">
+                <li key={d.id} className="rounded-card border border-card-edge bg-surface-card shadow-card p-5">
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex items-center gap-3">
                       <span

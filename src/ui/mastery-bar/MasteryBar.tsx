@@ -3,10 +3,10 @@ import type { DeckSummary } from "@/shared/schemas/library";
 type Mastery = DeckSummary["mastery"];
 
 const SEGMENTS = [
-  { key: "new", label: "New", bar: "bg-box-new", chip: "bg-box-new text-on-box-new" },
-  { key: "notYet", label: "Not yet", bar: "bg-box-not-yet", chip: "bg-box-not-yet text-on-box-not-yet" },
-  { key: "nearly", label: "Nearly", bar: "bg-box-nearly", chip: "bg-box-nearly text-on-box-nearly" },
-  { key: "gotIt", label: "Got it", bar: "bg-box-got-it", chip: "bg-box-got-it text-on-box-got-it" },
+  { key: "new", label: "New", bar: "bg-bar-new" },
+  { key: "notYet", label: "Not yet", bar: "bg-bar-not-yet" },
+  { key: "nearly", label: "Nearly", bar: "bg-bar-nearly" },
+  { key: "gotIt", label: "Got it", bar: "bg-bar-got-it" },
 ] as const;
 
 /**

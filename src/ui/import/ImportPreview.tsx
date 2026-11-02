@@ -39,7 +39,7 @@ export function ImportPreview({ preview, fileName }: { preview: Preview; fileNam
     ...(preview.kind === "zip" ? [`${preview.imageCount} ${preview.imageCount === 1 ? "image" : "images"}`] : []),
   ];
   return (
-    <section aria-label="Preview" className="flex flex-col gap-4 rounded-2xl bg-surface-container p-6">
+    <section aria-label="Preview" className="flex flex-col gap-4 rounded-card border border-card-edge bg-surface-card shadow-card p-6">
       <StepHeading n={2} title="Check the cards" hint={`Preview of ${fileName}`} />
       <p>{counts.join(", ")}</p>
       <p className="text-on-surface-variant">
@@ -76,7 +76,7 @@ export function ImportPreview({ preview, fileName }: { preview: Preview; fileNam
 /** A file that cannot be imported at all: says why, offers another file. */
 export function ImportBlocked({ issues }: { issues: ImportIssue[] }) {
   return (
-    <div role="alert" className="flex flex-col gap-2 rounded-2xl bg-surface-container p-6">
+    <div role="alert" className="flex flex-col gap-2 rounded-card border border-card-edge bg-surface-card shadow-card p-6">
       <h2 className="text-2xl font-semibold">This file cannot be imported</h2>
       <IssueList title="What to fix" issues={issues} />
       <p className="text-on-surface-variant">Fix the file and choose it again. Nothing was saved.</p>

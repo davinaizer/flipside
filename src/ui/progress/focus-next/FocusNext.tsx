@@ -1,4 +1,5 @@
 import type { Stats } from "@/shared/schemas/stats";
+import { buttonClass } from "@/ui/button/button-class";
 
 export type FocusTopic = Stats["focusNext"][number];
 
@@ -24,7 +25,7 @@ export function FocusNext({
       ) : (
         <ul className="mt-4 grid max-w-4xl gap-4 sm:grid-cols-3">
           {topics.map((t) => (
-            <li key={`${t.deckId}/${t.topic}`} className="flex flex-col rounded-2xl bg-surface-container p-5">
+            <li key={`${t.deckId}/${t.topic}`} className="flex flex-col rounded-card border border-card-edge bg-surface-card shadow-card p-5">
               <p className="text-lg font-semibold">{t.topic}</p>
               <p className="text-base text-on-surface-variant">{t.deckName}</p>
               <p className="mt-2 text-base">Mastery {Math.round(t.mastery * 100)}%</p>
@@ -33,7 +34,7 @@ export function FocusNext({
                 disabled={busy}
                 onClick={() => onPractise(t)}
                 aria-label={`Practise ${t.topic}`}
-                className="mt-4 min-h-11 rounded-full bg-primary px-6 font-semibold text-on-primary disabled:opacity-60"
+                className={buttonClass("primary", { extra: "mt-4" })}
               >
                 Practise
               </button>

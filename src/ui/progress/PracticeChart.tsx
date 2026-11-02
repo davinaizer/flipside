@@ -26,7 +26,7 @@ function summary(bars: Bar[], range: Range) {
 export function PracticeChart({ bars, range }: { bars: Bar[]; range: Range }) {
   const max = Math.max(1, ...bars.map((b) => b.cardsReviewed));
   return (
-    <section className="max-w-4xl rounded-2xl bg-surface-container p-6" aria-labelledby="practice-chart-title">
+    <section className="max-w-4xl rounded-card border border-card-edge bg-surface-card shadow-card p-6" aria-labelledby="practice-chart-title">
       <h2 id="practice-chart-title" className="text-2xl font-semibold">
         {range === "week" ? "Cards practised each day" : "Cards practised each week"}
       </h2>

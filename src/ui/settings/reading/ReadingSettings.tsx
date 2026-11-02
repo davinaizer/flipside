@@ -9,6 +9,7 @@ import {
 import { DEFAULT_SETTINGS, type Settings } from "@/shared/settings";
 import { ReadingCard } from "@/ui/reading-card/ReadingCard";
 import { useSettings } from "../SettingsProvider";
+import { buttonClass } from "@/ui/button/button-class";
 
 const FONT_LABEL: Record<FontId, string> = {
   atkinson: "Atkinson Hyperlegible Next",
@@ -93,7 +94,7 @@ export function ReadingSettings() {
         <button
           type="button"
           onClick={reset}
-          className="mt-8 min-h-11 rounded-full bg-surface-container px-6 font-semibold hover:bg-surface-container-high"
+          className={buttonClass("secondary", { extra: "mt-8" })}
         >
           Reset to defaults
         </button>

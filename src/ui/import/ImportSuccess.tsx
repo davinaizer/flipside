@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { ImportResult } from "@/shared/schemas/import";
+import { buttonClass } from "@/ui/button/button-class";
 
 /** README item 15: deck name, added, updated and unchanged counts, missing ids kept, commit warnings, and the two actions. */
 export function ImportSuccess({ deckName, result }: { deckName: string; result: ImportResult }) {
@@ -33,13 +34,13 @@ export function ImportSuccess({ deckName, result }: { deckName: string; result: 
       <div className="flex gap-3">
         <Link
           href={`/decks/${result.deckId}`}
-          className="flex min-h-11 items-center rounded-full bg-primary px-8 text-on-primary"
+          className={buttonClass("primary")}
         >
           Open deck
         </Link>
         <Link
           href="/library"
-          className="flex min-h-11 items-center rounded-full px-6 text-on-surface outline outline-1 outline-outline"
+          className={buttonClass("secondary")}
         >
           Back to library
         </Link>

@@ -1,6 +1,13 @@
 import type { ReactNode } from "react";
 import type { Grade } from "@/shared/enums";
 
+/** Tint per grade, from the box tokens (README item 9: labels are darkened there, not here). */
+export const GRADE_TONE: Record<Grade, string> = {
+  not_yet: "bg-box-not-yet text-on-box-not-yet",
+  nearly: "bg-box-nearly text-on-box-nearly",
+  got_it: "bg-box-got-it text-on-box-got-it",
+};
+
 const GRADE_BUTTONS: { grade: Grade; label: string; icon: ReactNode }[] = [
   { grade: "not_yet", label: "Not yet", icon: <path d="M4 12a8 8 0 1 0 3-6.2M4 4v4h4" /> },
   { grade: "nearly", label: "Nearly", icon: <path d="M5 12h14M12 5v0M12 19v0" /> },
@@ -38,13 +45,13 @@ export function GradeBar({
             type="button"
             disabled={busy || failed}
             onClick={() => onGrade(grade)}
-            className="flex min-h-20 flex-col items-center justify-center gap-1 rounded-2xl bg-surface-container-high px-2 py-3 text-on-surface disabled:opacity-60"
+            className={`flex min-h-20 flex-col items-center justify-center gap-1 rounded-2xl px-2 py-3 ${GRADE_TONE[grade]} disabled:opacity-60`}
           >
             <svg aria-hidden viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               {icon}
             </svg>
             <span className="font-semibold">{label}</span>
-            <span className="text-sm text-on-surface-variant">{labels[grade]}</span>
+            <span className="text-sm">{labels[grade]}</span>
           </button>
         ))}
       </div>

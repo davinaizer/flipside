@@ -6,6 +6,7 @@ import { api } from "@/ui/api/client";
 import { Avatar } from "@/ui/avatars";
 import { Skeleton } from "@/ui/states/Skeleton";
 import type { ProfileSummary } from "@/shared/schemas/profile";
+import { buttonClass } from "@/ui/button/button-class";
 
 type State =
   | { kind: "loading" }
@@ -58,7 +59,7 @@ export function ProfilePicker() {
           <button
             type="button"
             onClick={retry}
-            className="min-h-11 rounded-full bg-primary px-8 text-on-primary"
+            className={buttonClass("primary")}
           >
             Retry
           </button>

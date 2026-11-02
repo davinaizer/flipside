@@ -5,6 +5,7 @@ import { DeleteDeck } from "./delete-deck/DeleteDeck";
 import { EditDeck, type EditableDeck } from "./edit-deck/EditDeck";
 import { NeedsRewording, type Leech } from "./needs-rewording/NeedsRewording";
 import { anywayPlan, practisePlan } from "./practice-plan";
+import { buttonClass } from "@/ui/button/button-class";
 
 export interface DeckTopic {
   topic: string;
@@ -24,7 +25,6 @@ export interface DeckViewProps {
   onStart: (scope: SessionRequest["scope"]) => void;
 }
 
-const button = "min-h-11 rounded-full px-8 font-semibold disabled:opacity-60";
 
 /** Deck page (D1 to D3): topics with counts and mastery, tick boxes, and the Practise actions. Presentational. */
 export function DeckView({ deck, leeches, ticked, onToggle, busy, startError, onStart }: DeckViewProps) {
@@ -45,7 +45,7 @@ export function DeckView({ deck, leeches, ticked, onToggle, busy, startError, on
           type="button"
           disabled={busy || plan.startable === 0}
           onClick={() => onStart(plan.scope)}
-          className={`${button} bg-primary text-on-primary`}
+          className={buttonClass("primary")}
         >
           {plan.label}
         </button>
@@ -54,7 +54,7 @@ export function DeckView({ deck, leeches, ticked, onToggle, busy, startError, on
             type="button"
             disabled={busy}
             onClick={() => onStart(anyway.scope)}
-            className={`${button} text-on-surface outline outline-1 outline-outline`}
+            className={buttonClass("secondary")}
           >
             {anyway.label}
           </button>
@@ -62,7 +62,7 @@ export function DeckView({ deck, leeches, ticked, onToggle, busy, startError, on
       </div>
       <div className="mb-6 flex flex-wrap items-start gap-3">
         <EditDeck deck={deck} />
-        <Link href={`/import?deckId=${deck.id}`} className="flex min-h-11 items-center rounded-full px-6 font-semibold text-on-surface outline outline-1 outline-outline">
+        <Link href={`/import?deckId=${deck.id}`} className={buttonClass("secondary")}>
           Re-import
         </Link>
         <DeleteDeck deck={deck} />
@@ -75,7 +75,7 @@ export function DeckView({ deck, leeches, ticked, onToggle, busy, startError, on
       <h2 className="mb-3 text-2xl font-semibold">Topics</h2>
       <ul className="grid max-w-5xl gap-4 md:grid-cols-2">
         {deck.topics.map((t) => (
-          <li key={t.topic} className="rounded-2xl bg-surface-container p-5">
+          <li key={t.topic} className="rounded-card border border-card-edge bg-surface-card shadow-card p-5">
             <label className="flex min-h-11 items-center gap-3">
               <input
                 type="checkbox"

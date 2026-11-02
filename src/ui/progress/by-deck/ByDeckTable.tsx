@@ -11,7 +11,7 @@ export function ByDeckTable({ decks }: { decks: Stats["byDeck"] }) {
     <section aria-labelledby="by-deck-title">
       <h2 id="by-deck-title" className="text-2xl font-semibold">By deck</h2>
       <p className="text-base text-on-surface-variant">Sorted by lowest mastery</p>
-      <div className="mt-4 overflow-x-auto rounded-2xl bg-surface-container">
+      <div className="mt-4 overflow-x-auto rounded-card border border-card-edge bg-surface-card shadow-card">
         <table className="w-full min-w-[32rem] text-base">
           <thead>
             <tr>

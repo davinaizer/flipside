@@ -12,7 +12,7 @@ const RANGES: { key: Range; label: string }[] = [
 
 function Tile({ label, value, change }: { label: string; value: string; change: string | null }) {
   return (
-    <li className="rounded-2xl bg-surface-container p-6">
+    <li className="rounded-card border border-card-edge bg-surface-card shadow-card p-6">
       <p className="text-base text-on-surface-variant">{label}</p>
       <p className="mt-2 text-4xl font-semibold">{value}</p>
       <p className="mt-2 text-base text-on-surface-variant">{change ?? "No earlier figure to compare"}</p>
@@ -73,7 +73,7 @@ export function ProgressView({ stats, range, onRangeChange, practising = false, 
         <ByDeckTable decks={stats.byDeck} />
         </div>
       ) : (
-        <section className="max-w-2xl rounded-2xl bg-surface-container p-6">
+        <section className="max-w-2xl rounded-card border border-card-edge bg-surface-card shadow-card p-6">
           <h2 className="text-2xl font-semibold">Nothing to show yet</h2>
           <p className="mt-2 text-lg">
             After your first practice session, this page shows how many cards you reviewed, how

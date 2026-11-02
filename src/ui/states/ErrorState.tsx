@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { buttonClass } from "@/ui/button/button-class";
 
 /** README item 13: plain language, no codes; Retry reloads. Offers Switch profile too. */
 export function ErrorState({ onRetry }: { onRetry: () => void }) {
@@ -12,13 +13,13 @@ export function ErrorState({ onRetry }: { onRetry: () => void }) {
         <button
           type="button"
           onClick={onRetry}
-          className="min-h-11 rounded-full bg-primary px-8 text-on-primary"
+          className={buttonClass("primary")}
         >
           Retry
         </button>
         <Link
           href="/?switch=1"
-          className="flex min-h-11 items-center rounded-full px-6 text-on-surface outline outline-1 outline-outline"
+          className={buttonClass("secondary")}
         >
           Switch profile
         </Link>

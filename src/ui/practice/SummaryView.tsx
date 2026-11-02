@@ -1,6 +1,8 @@
 import Link from "next/link";
 import type { Grade } from "@/shared/enums";
 import type { SessionSummary } from "@/shared/schemas/session";
+import { GRADE_TONE } from "./GradeBar";
+import { buttonClass } from "@/ui/button/button-class";
 
 const GRADE_ROWS: { grade: Grade; label: string }[] = [
   { grade: "got_it", label: "Got it" },
@@ -40,7 +42,7 @@ export function SummaryView({
         </p>
         <ul className="flex flex-wrap gap-3">
           {GRADE_ROWS.map(({ grade, label }) => (
-            <li key={grade} className="rounded-full bg-surface-container-high px-4 py-2 font-semibold">
+            <li key={grade} className={`rounded-full px-4 py-2 font-semibold ${GRADE_TONE[grade]}`}>
               {summary.counts[grade]} {label}
             </li>
           ))}
@@ -72,12 +74,12 @@ export function SummaryView({
             type="button"
             disabled={starting}
             onClick={onPractiseMisses}
-            className="min-h-11 rounded-full bg-primary px-8 text-on-primary disabled:opacity-60"
+            className={buttonClass("primary")}
           >
             Practise the misses
           </button>
         )}
-        <Link href="/library" className="flex min-h-11 items-center justify-center rounded-full px-8 text-on-surface outline outline-1 outline-outline">
+        <Link href="/library" className={buttonClass("secondary")}>
           Back to Library
         </Link>
       </div>

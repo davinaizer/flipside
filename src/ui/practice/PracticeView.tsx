@@ -4,6 +4,7 @@ import { QUESTION_SCALE } from "@/shared/constants";
 import type { SessionCardPayload } from "@/shared/schemas/session";
 import { textToRead, type Reader } from "./speech";
 import { readingStyle, type ReadingSettings } from "@/ui/reading-card/ReadingCard";
+import { buttonClass } from "@/ui/button/button-class";
 
 export const FRONT_HINT = "Say your answer out loud first, then show it.";
 
@@ -131,7 +132,7 @@ export function PracticeView({
         <button
           type="button"
           onClick={onReveal}
-          className="min-h-14 self-center rounded-full bg-primary px-10 text-on-primary"
+          className={buttonClass("primary", { large: true, extra: "self-center" })}
         >
           Show answer
         </button>

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { READING_SPEEDS } from "@/shared/enums";
 import type { Settings } from "@/shared/settings";
 import { useSettings } from "../SettingsProvider";
+import { buttonClass } from "@/ui/button/button-class";
 
 const MAX_NEW = 100; // mirrors settingsSchema.newCardsPerDay
 const LENGTHS: { value: Settings["cardsPerSession"]; label: string }[] = [
@@ -87,7 +88,7 @@ export function PracticeSettings() {
           role="switch"
           aria-checked={settings.readAloud}
           onClick={() => set({ readAloud: !settings.readAloud })}
-          className="min-h-11 rounded-full bg-surface-container px-5 font-semibold hover:bg-surface-container-high"
+          className={buttonClass("secondary")}
         >
           Read questions aloud: {settings.readAloud ? "On" : "Off"}
         </button>

@@ -14,7 +14,7 @@ export function NeedsRewording({ leeches }: { leeches: Leech[] }) {
       <p className="mb-3 text-on-surface-variant">These cards keep being missed. Try splitting or rewording them.</p>
       <ul className="grid gap-3">
         {leeches.map((c) => (
-          <li key={c.id} className="rounded-2xl bg-surface-container p-4">
+          <li key={c.id} className="rounded-card border border-card-edge bg-surface-card shadow-card p-4">
             <p className="font-semibold">{c.front}</p>
             <p className="text-sm text-on-surface-variant">
               {c.topic} · missed {c.lapses} {c.lapses === 1 ? "time" : "times"}

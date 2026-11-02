@@ -39,6 +39,14 @@ const pairs: [string, string][] = [
   ["on-secondary", "secondary"],
   ["on-error", "error"],
   ["primary", "surface"],
+  ["on-surface", "surface-card"],
+  ["on-surface-variant", "surface-card"],
+  ["primary", "surface-card"],
+  ["primary", "surface-container-high"],
+  ["error", "surface-container-high"],
+  ["on-tertiary", "tertiary"],
+  ["on-error-container", "error-container"],
+  ["inverse-on-surface", "inverse-surface"],
   ["on-box-new", "box-new"],
   ["on-box-not-yet", "box-not-yet"],
   ["on-box-nearly", "box-nearly"],
@@ -66,6 +74,12 @@ describe("tokens", () => {
         expect(t[`box-${b}`]).toBeDefined();
         expect(t[`on-box-${b}`]).toBeDefined();
       }
+    }
+  });
+
+  it("has bar tokens for New, Not yet, Nearly and Got it", () => {
+    for (const b of ["new", "not-yet", "nearly", "got-it"]) {
+      for (const t of [light, dark]) expect(t[`bar-${b}`]).toBeDefined();
     }
   });
 

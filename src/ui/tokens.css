@@ -39,6 +39,22 @@
   --on-card-sage: #0d1c2e;
   --on-card-lavender: #0d1c2e;
   --on-card-night: #f8f9ff;
+  --surface-card: #ffffff;
+  --card-edge: #e6eeff;
+  --surface-container-highest: #d5e3fc;
+  --inverse-surface: #233144;
+  --inverse-on-surface: #eaf1ff;
+  --tertiary: #00685d;
+  --on-tertiary: #ffffff;
+  --error-container: #ffdad6;
+  --on-error-container: #93000a;
+  /* Mastery bar fills. Decorative (counts are always printed), so they are separate from the
+     box-* chip fills, which carry text and must stay muted. */
+  --bar-new: #c7d2e5;
+  --bar-not-yet: #f4977c;
+  --bar-nearly: #f6cf6d;
+  --bar-got-it: #6063ee;
+  --elevation-card: 0 8px 24px -4px rgba(99, 102, 241, 0.06);
 }
 
 [data-theme="dark"] {
@@ -78,6 +94,21 @@
   --on-card-sage: #dae2fd;
   --on-card-lavender: #dae2fd;
   --on-card-night: #dae2fd;
+  --surface-card: #131b2e;
+  --card-edge: #222a3d;
+  --surface-container-highest: #2d3449;
+  --inverse-surface: #dae2fd;
+  --inverse-on-surface: #283044;
+  --tertiary: #ffb783;
+  --on-tertiary: #4f2500;
+  --error-container: #93000a;
+  --on-error-container: #ffdad6;
+  --bar-new: #454653;
+  --bar-not-yet: #e08a3c;
+  --bar-nearly: #ffb783;
+  --bar-got-it: #818cf8;
+  /* DESIGN-DARK.md: no drop shadows; depth comes from tonal layers and the card edge. */
+  --elevation-card: none;
 }
 
 @theme inline {
@@ -117,4 +148,19 @@
   --color-on-card-sage: var(--on-card-sage);
   --color-on-card-lavender: var(--on-card-lavender);
   --color-on-card-night: var(--on-card-night);
+  --color-surface-card: var(--surface-card);
+  --color-card-edge: var(--card-edge);
+  --color-surface-container-highest: var(--surface-container-highest);
+  --color-inverse-surface: var(--inverse-surface);
+  --color-inverse-on-surface: var(--inverse-on-surface);
+  --color-tertiary: var(--tertiary);
+  --color-on-tertiary: var(--on-tertiary);
+  --color-error-container: var(--error-container);
+  --color-on-error-container: var(--on-error-container);
+  --color-bar-new: var(--bar-new);
+  --color-bar-not-yet: var(--bar-not-yet);
+  --color-bar-nearly: var(--bar-nearly);
+  --color-bar-got-it: var(--bar-got-it);
+  --shadow-card: var(--elevation-card);
+  --radius-card: 2rem;
 }
