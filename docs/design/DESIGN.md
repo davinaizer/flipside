@@ -128,6 +128,7 @@ rounded:
   lg: 2rem
   xl: 3rem
   full: 9999px
+  card: 2rem
 spacing:
   gutter: 1.5rem
   gutter-sm: 1rem
