@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "base_branch": "develop",
+  "base_branch": "main",
   "note": "Agents may change only status, commit, branch, pr. manual_acs cannot be verified by an agent and go on the PR checklist.",
   "features": [
     {

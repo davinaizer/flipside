@@ -71,7 +71,7 @@ Specified in [PRD section 13](docs/PRD.md#13-local-environment-and-operations). 
 
 ## Checks on pull requests
 
-`.github/workflows/checks.yml` runs `scripts/verify.sh` and the Playwright e2e suite on every pull request into `main` or `develop`, against the merged result. Turn on branch protection for `main` to require both checks before a merge.
+`.github/workflows/checks.yml` runs `scripts/verify.sh` and the Playwright e2e suite on every pull request into `main`, against the merged result. Turn on branch protection for `main` to require both checks before a merge.
 
 ## Running at home
 

@@ -1,11 +1,11 @@
-# Runs on every pull request into main (and develop, where features land first).
+# Runs on every pull request into main, where features land.
 # A pull_request run checks out the merge of the PR into its base branch, so a green run
 # means the result of merging passes, not only the branch on its own.
 name: checks
 
 on:
   pull_request:
-    branches: [main, develop]
+    branches: [main]
 
 concurrency:
   group: checks-${{ github.event.pull_request.number }}
