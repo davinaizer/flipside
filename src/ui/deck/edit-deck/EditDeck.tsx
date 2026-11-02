@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { ANSWER_STYLES, CARD_COLORS } from "@/shared/enums";
+import { buttonClass } from "@/ui/button/button-class";
 
 export interface EditableDeck {
   id: string;
@@ -58,13 +59,13 @@ export function EditDeck({ deck }: { deck: EditableDeck }) {
 
   if (!open) {
     return (
-      <button type="button" onClick={() => setOpen(true)} className="min-h-11 rounded-full px-6 font-semibold text-on-surface outline outline-1 outline-outline">
+      <button type="button" onClick={() => setOpen(true)} className={buttonClass("secondary")}>
         Edit deck
       </button>
     );
   }
   return (
-    <form onSubmit={onSubmit} aria-label="Edit deck" className="mb-6 flex max-w-xl flex-col gap-4 rounded-2xl bg-surface-container p-5">
+    <form onSubmit={onSubmit} aria-label="Edit deck" className="mb-6 flex max-w-xl flex-col gap-4 rounded-card border border-card-edge bg-surface-card shadow-card p-5">
       <label className="flex flex-col gap-1">
         Deck name
         <input name="name" required maxLength={100} defaultValue={deck.name} className={field} />
@@ -100,10 +101,10 @@ export function EditDeck({ deck }: { deck: EditableDeck }) {
       </fieldset>
       {error && <p role="alert" className="text-error">{error}</p>}
       <div className="flex gap-3">
-        <button type="submit" disabled={saving} className="min-h-11 rounded-full bg-primary px-8 font-semibold text-on-primary disabled:opacity-60">
+        <button type="submit" disabled={saving} className={buttonClass("primary")}>
           {saving ? "Saving..." : "Save changes"}
         </button>
-        <button type="button" disabled={saving} onClick={() => setOpen(false)} className="min-h-11 rounded-full px-6 font-semibold outline outline-1 outline-outline">
+        <button type="button" disabled={saving} onClick={() => setOpen(false)} className={buttonClass("secondary")}>
           Cancel
         </button>
       </div>

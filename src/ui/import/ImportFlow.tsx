@@ -7,6 +7,8 @@ import type { ImportIssue, ImportPreview as Preview, ImportResult } from "@/shar
 import { ApiClientError, api } from "@/ui/api/client";
 import { ImportBlocked, ImportPreview, StepHeading } from "./ImportPreview";
 import { ImportSuccess } from "./ImportSuccess";
+import { Icon } from "@/ui/icons/Icon";
+import { buttonClass } from "@/ui/button/button-class";
 
 export interface DeckChoice {
   id: string;
@@ -88,10 +90,10 @@ export function ImportFlow({ decks, initialDeckId }: { decks: DeckChoice[]; init
       }}
     >
       <div className="flex flex-col gap-6">
-        <section aria-label="Choose file" className="flex flex-col gap-4 rounded-2xl bg-surface-container p-6">
+        <section aria-label="Choose file" className="flex flex-col gap-4 rounded-card border border-card-edge bg-surface-card shadow-card p-6">
           <StepHeading n={1} title="Choose file" hint="Import cards using a spreadsheet or packaged archive" />
           <div className="flex flex-wrap items-center gap-4">
-            <label className="flex min-h-11 cursor-pointer items-center rounded-full bg-primary px-8 text-on-primary focus-within:outline focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-primary">
+            <label className={buttonClass("primary", { extra: "cursor-pointer focus-within:outline focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-primary" })}>
               {file ? "Choose a different file" : "Choose CSV or zip"}
               <input
                 type="file"
@@ -101,7 +103,8 @@ export function ImportFlow({ decks, initialDeckId }: { decks: DeckChoice[]; init
               />
             </label>
             {file && <span className="break-all">{file.name}</span>}
-            <a href="/api/v1/imports/template" download className="flex min-h-11 items-center underline">
+            <a href="/api/v1/imports/template" download className={buttonClass("secondary")}>
+              <Icon name="download" />
               Download CSV template
             </a>
           </div>
@@ -117,7 +120,7 @@ export function ImportFlow({ decks, initialDeckId }: { decks: DeckChoice[]; init
       </div>
 
       {canSave && (
-        <section aria-label="Deck details" className="flex flex-col gap-4 rounded-2xl bg-surface-container p-6">
+        <section aria-label="Deck details" className="flex flex-col gap-4 rounded-card border border-card-edge bg-surface-card shadow-card p-6">
           <StepHeading n={3} title="Deck details" hint="Appearance and presentation settings" />
           <label className="flex flex-col gap-1">
             Add to
@@ -173,10 +176,11 @@ export function ImportFlow({ decks, initialDeckId }: { decks: DeckChoice[]; init
           )}
           {step.kind === "error" && <p role="alert" className="text-error">{step.message}</p>}
           <div className="flex flex-wrap gap-3">
-            <button type="submit" disabled={saving} className="min-h-11 rounded-full bg-primary px-8 text-on-primary disabled:opacity-60">
+            <button type="submit" disabled={saving} className={buttonClass("primary")}>
+              <Icon name="save" />
               {saving ? "Saving..." : deckId ? "Update deck" : `Add ${cardsLabel}`}
             </button>
-            <a href="/library" className="flex min-h-11 items-center px-4 underline">Cancel</a>
+            <a href="/library" className={buttonClass("secondary")}>Cancel</a>
           </div>
         </section>
       )}

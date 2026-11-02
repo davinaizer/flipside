@@ -26,8 +26,8 @@ function summary(bars: Bar[], range: Range) {
 export function PracticeChart({ bars, range }: { bars: Bar[]; range: Range }) {
   const max = Math.max(1, ...bars.map((b) => b.cardsReviewed));
   return (
-    <section className="max-w-4xl rounded-2xl bg-surface-container p-6" aria-labelledby="practice-chart-title">
-      <h2 id="practice-chart-title" className="text-2xl font-semibold">
+    <section className="rounded-card border border-card-edge bg-surface-card shadow-card p-6" aria-labelledby="practice-chart-title">
+      <h2 id="practice-chart-title" className="text-headline-md font-semibold">
         {range === "week" ? "Cards practised each day" : "Cards practised each week"}
       </h2>
       <div role="img" aria-label={summary(bars, range)} className="mt-4">
@@ -36,8 +36,8 @@ export function PracticeChart({ bars, range }: { bars: Bar[]; range: Range }) {
             <li key={b.start} data-current={b.current} className="flex h-full min-w-0 flex-1 flex-col justify-end text-center">
               <span className="text-base font-semibold">{b.cardsReviewed}</span>
               <span
-                className={`mt-1 block rounded-t-md ${
-                  b.current ? "bg-primary outline outline-2 outline-on-surface" : "bg-primary-container/40"
+                className={`mt-1 block rounded-full ${
+                  b.current ? "bg-primary outline outline-2 outline-offset-2 outline-primary" : "bg-primary-container/40"
                 }`}
                 style={{ height: `${(b.cardsReviewed / max) * 80}%`, minHeight: "0.25rem" }}
               />

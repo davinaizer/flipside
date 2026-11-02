@@ -14,7 +14,7 @@
   --primary: #4648d4;
   --on-primary: #ffffff;
   --primary-container: #6063ee;
-  --on-primary-container: #ffffff;
+  --on-primary-container: #fffbff;
   --secondary: #8e4e14;
   --on-secondary: #ffffff;
   --error: #ba1a1a;
@@ -39,6 +39,28 @@
   --on-card-sage: #0d1c2e;
   --on-card-lavender: #0d1c2e;
   --on-card-night: #f8f9ff;
+  --surface-card: #ffffff;
+  --card-edge: #e6eeff;
+  --surface-container-highest: #d5e3fc;
+  --inverse-surface: #233144;
+  --inverse-on-surface: #eaf1ff;
+  --tertiary: #00685d;
+  --on-tertiary: #ffffff;
+  --error-container: #ffdad6;
+  --on-error-container: #93000a;
+  /* Mastery bar fills. Decorative (counts are always printed), so they are separate from the
+     box-* chip fills, which carry text and must stay muted. */
+  --bar-new: #c7d2e5;
+  --bar-not-yet: #f4977c;
+  --bar-nearly: #f6cf6d;
+  --bar-got-it: #6063ee;
+  --elevation-card: 0 8px 24px -4px rgba(99, 102, 241, 0.06);
+  --surface-container-lowest: #ffffff;
+  --secondary-container: #ffab69;
+  --on-secondary-container: #783d01;
+  --tertiary-container: #008376;
+  --on-tertiary-container: #f4fffb;
+  --card-radius: 2rem;
 }
 
 [data-theme="dark"] {
@@ -54,8 +76,8 @@
   --on-primary: #131e8c;
   --primary-container: #818cf8;
   --on-primary-container: #101b8a;
-  --secondary: #62dcad;
-  --on-secondary: #003827;
+  --secondary: #ffb783;
+  --on-secondary: #4f2500;
   --error: #ffb4ab;
   --on-error: #690005;
   --box-new: #222a3d;
@@ -78,6 +100,28 @@
   --on-card-sage: #dae2fd;
   --on-card-lavender: #dae2fd;
   --on-card-night: #dae2fd;
+  --surface-card: #131b2e;
+  --card-edge: #222a3d;
+  --surface-container-highest: #2d3449;
+  --inverse-surface: #dae2fd;
+  --inverse-on-surface: #283044;
+  --tertiary: #62dcad;
+  --on-tertiary: #003827;
+  --error-container: #93000a;
+  --on-error-container: #ffdad6;
+  --bar-new: #454653;
+  --bar-not-yet: #e08a3c;
+  --bar-nearly: #ffb783;
+  --bar-got-it: #818cf8;
+  /* DESIGN-DARK.md: no drop shadows; depth comes from tonal layers and the card edge. */
+  --elevation-card: none;
+  --surface-container-lowest: #060e20;
+  --secondary-container: #df7c27;
+  --on-secondary-container: #4c2300;
+  --tertiary-container: #18a479;
+  --on-tertiary-container: #003121;
+  /* DESIGN-DARK.md: cards are 1rem; DESIGN.md: 2rem. */
+  --card-radius: 1rem;
 }
 
 @theme inline {
@@ -117,4 +161,74 @@
   --color-on-card-sage: var(--on-card-sage);
   --color-on-card-lavender: var(--on-card-lavender);
   --color-on-card-night: var(--on-card-night);
+  --color-surface-card: var(--surface-card);
+  --color-card-edge: var(--card-edge);
+  --color-surface-container-highest: var(--surface-container-highest);
+  --color-inverse-surface: var(--inverse-surface);
+  --color-inverse-on-surface: var(--inverse-on-surface);
+  --color-tertiary: var(--tertiary);
+  --color-on-tertiary: var(--on-tertiary);
+  --color-error-container: var(--error-container);
+  --color-on-error-container: var(--on-error-container);
+  --color-bar-new: var(--bar-new);
+  --color-bar-not-yet: var(--bar-not-yet);
+  --color-bar-nearly: var(--bar-nearly);
+  --color-bar-got-it: var(--bar-got-it);
+  --shadow-card: var(--elevation-card);
+  --color-surface-container-lowest: var(--surface-container-lowest);
+  --color-secondary-container: var(--secondary-container);
+  --color-on-secondary-container: var(--on-secondary-container);
+  --color-tertiary-container: var(--tertiary-container);
+  --color-on-tertiary-container: var(--on-tertiary-container);
+  --radius-card: var(--card-radius);
+}
+
+/* Shared by both themes: DESIGN.md and DESIGN-DARK.md carry the same type and spacing scales
+   (tokens.test.ts checks they stay identical). Only colour, elevation and --card-radius vary. */
+@theme {
+  --text-display: 3rem;
+  --text-display--line-height: 3.75rem;
+  --text-display--letter-spacing: -0.02em;
+  --text-display-mobile: 2.25rem;
+  --text-display-mobile--line-height: 2.875rem;
+  --text-display-mobile--letter-spacing: -0.01em;
+  --text-headline-lg: 2.25rem;
+  --text-headline-lg--line-height: 2.875rem;
+  --text-headline-lg--letter-spacing: -0.01em;
+  --text-headline-lg-mobile: 1.75rem;
+  --text-headline-lg-mobile--line-height: 2.375rem;
+  --text-headline-md: 1.75rem;
+  --text-headline-md--line-height: 2.375rem;
+  --text-headline-sm: 1.25rem;
+  --text-headline-sm--line-height: 1.75rem;
+  --text-headline-sm--letter-spacing: 0.01em;
+  --text-body-lg: 1.125rem;
+  --text-body-lg--line-height: 1.875rem;
+  --text-body-lg--letter-spacing: 0.015em;
+  --text-body-md: 1rem;
+  --text-body-md--line-height: 1.625rem;
+  --text-body-md--letter-spacing: 0.02em;
+  --text-body-sm: 0.875rem;
+  --text-body-sm--line-height: 1.375rem;
+  --text-body-sm--letter-spacing: 0.025em;
+  --text-label-lg: 0.9375rem;
+  --text-label-lg--line-height: 1.25rem;
+  --text-label-lg--letter-spacing: 0.01em;
+  --text-label-md: 0.8125rem;
+  --text-label-md--line-height: 1.125rem;
+  --text-label-md--letter-spacing: 0.02em;
+  --text-label-sm: 0.75rem;
+  --text-label-sm--line-height: 1rem;
+  --text-label-sm--letter-spacing: 0.03em;
+  --spacing-gutter: 1.5rem;
+  --spacing-gutter-sm: 1rem;
+  --spacing-gutter-lg: 2rem;
+  --spacing-margin: 1.5rem;
+  --spacing-margin-sm: 1rem;
+  --spacing-margin-lg: 3rem;
+  --spacing-space-xs: 0.25rem;
+  --spacing-space-sm: 0.5rem;
+  --spacing-space-md: 1rem;
+  --spacing-space-lg: 1.5rem;
+  --spacing-space-xl: 2.5rem;
 }

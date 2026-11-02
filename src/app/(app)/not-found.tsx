@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { buttonClass } from "@/ui/button/button-class";
 
 export default function NotFound() {
   return (
@@ -7,7 +8,7 @@ export default function NotFound() {
       <p className="text-on-surface-variant">It may have been removed, or it belongs to someone else.</p>
       <Link
         href="/library"
-        className="flex min-h-11 w-fit items-center rounded-full bg-primary px-8 text-on-primary"
+        className={buttonClass("primary", { extra: "w-fit" })}
       >
         Back to Library
       </Link>

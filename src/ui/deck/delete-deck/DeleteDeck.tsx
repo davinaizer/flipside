@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { buttonClass } from "@/ui/button/button-class";
 
 const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
 
@@ -33,20 +34,20 @@ export function DeleteDeck({ deck }: { deck: { id: string; name: string; cardCou
 
   if (!asking) {
     return (
-      <button type="button" onClick={() => setAsking(true)} className="min-h-11 rounded-full px-6 font-semibold text-error outline outline-1 outline-outline">
+      <button type="button" onClick={() => setAsking(true)} className={buttonClass("danger")}>
         Delete deck
       </button>
     );
   }
   return (
-    <div role="alertdialog" aria-label="Delete deck" className="mb-6 max-w-xl rounded-2xl bg-surface-container p-5">
+    <div role="alertdialog" aria-label="Delete deck" className="mb-6 max-w-xl rounded-card border border-card-edge bg-surface-card shadow-card p-5">
       <p className="mb-4">{deleteSummary(deck.name, deck.cardCount, deck.reviewCount)}</p>
       {error && <p role="alert" className="mb-4 text-error">{error}</p>}
       <div className="flex gap-3">
         <button type="button" disabled={busy} onClick={onDelete} className="min-h-11 rounded-full bg-error px-8 font-semibold text-on-error disabled:opacity-60">
           {busy ? "Deleting..." : "Delete deck"}
         </button>
-        <button type="button" disabled={busy} onClick={() => setAsking(false)} className="min-h-11 rounded-full px-6 font-semibold outline outline-1 outline-outline">
+        <button type="button" disabled={busy} onClick={() => setAsking(false)} className={buttonClass("secondary")}>
           Keep deck
         </button>
       </div>

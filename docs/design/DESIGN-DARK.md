@@ -21,14 +21,14 @@ colors:
   primary-container: '#818cf8'
   on-primary-container: '#101b8a'
   inverse-primary: '#4953bc'
-  secondary: '#62dcad'
-  on-secondary: '#003827'
-  secondary-container: '#18a479'
-  on-secondary-container: '#003121'
-  tertiary: '#ffb783'
-  on-tertiary: '#4f2500'
-  tertiary-container: '#df7c27'
-  on-tertiary-container: '#4c2300'
+  secondary: '#ffb783'
+  on-secondary: '#4f2500'
+  secondary-container: '#df7c27'
+  on-secondary-container: '#4c2300'
+  tertiary: '#62dcad'
+  on-tertiary: '#003827'
+  tertiary-container: '#18a479'
+  on-tertiary-container: '#003121'
   error: '#ffb4ab'
   on-error: '#690005'
   error-container: '#93000a'
@@ -37,196 +37,195 @@ colors:
   primary-fixed-dim: '#bdc2ff'
   on-primary-fixed: '#000767'
   on-primary-fixed-variant: '#2f3aa3'
-  secondary-fixed: '#80f9c8'
-  secondary-fixed-dim: '#62dcad'
-  on-secondary-fixed: '#002115'
-  on-secondary-fixed-variant: '#00513a'
-  tertiary-fixed: '#ffdcc5'
-  tertiary-fixed-dim: '#ffb783'
-  on-tertiary-fixed: '#301400'
-  on-tertiary-fixed-variant: '#713700'
+  secondary-fixed: '#ffdcc5'
+  secondary-fixed-dim: '#ffb783'
+  on-secondary-fixed: '#301400'
+  on-secondary-fixed-variant: '#713700'
+  tertiary-fixed: '#80f9c8'
+  tertiary-fixed-dim: '#62dcad'
+  on-tertiary-fixed: '#002115'
+  on-tertiary-fixed-variant: '#00513a'
   background: '#0b1326'
   on-background: '#dae2fd'
   surface-variant: '#2d3449'
 typography:
-  display-lg:
+  display:
     fontFamily: Lexend
-    fontSize: 40px
-    fontWeight: '600'
-    lineHeight: 52px
+    fontSize: 3rem
+    fontWeight: '700'
+    lineHeight: 3.75rem
     letterSpacing: -0.02em
-  display-lg-mobile:
+  display-mobile:
     fontFamily: Lexend
-    fontSize: 30px
-    fontWeight: '600'
-    lineHeight: 40px
+    fontSize: 2.25rem
+    fontWeight: '700'
+    lineHeight: 2.875rem
     letterSpacing: -0.01em
   headline-lg:
     fontFamily: Lexend
-    fontSize: 28px
+    fontSize: 2.25rem
     fontWeight: '600'
-    lineHeight: 38px
+    lineHeight: 2.875rem
     letterSpacing: -0.01em
+  headline-lg-mobile:
+    fontFamily: Lexend
+    fontSize: 1.75rem
+    fontWeight: '600'
+    lineHeight: 2.375rem
+    letterSpacing: 0em
   headline-md:
     fontFamily: Lexend
-    fontSize: 22px
-    fontWeight: '500'
-    lineHeight: 32px
+    fontSize: 1.75rem
+    fontWeight: '600'
+    lineHeight: 2.375rem
     letterSpacing: 0em
   headline-sm:
     fontFamily: Lexend
-    fontSize: 18px
-    fontWeight: '500'
-    lineHeight: 26px
+    fontSize: 1.25rem
+    fontWeight: '600'
+    lineHeight: 1.75rem
     letterSpacing: 0.01em
-  body-xl:
-    fontFamily: Atkinson Hyperlegible Next
-    fontSize: 22px
-    fontWeight: '400'
-    lineHeight: 36px
-    letterSpacing: 0.02em
   body-lg:
     fontFamily: Atkinson Hyperlegible Next
-    fontSize: 18px
+    fontSize: 1.125rem
     fontWeight: '400'
-    lineHeight: 30px
-    letterSpacing: 0.02em
+    lineHeight: 1.875rem
+    letterSpacing: 0.015em
   body-md:
     fontFamily: Atkinson Hyperlegible Next
-    fontSize: 16px
+    fontSize: 1rem
     fontWeight: '400'
-    lineHeight: 26px
-    letterSpacing: 0.015em
+    lineHeight: 1.625rem
+    letterSpacing: 0.02em
   body-sm:
     fontFamily: Atkinson Hyperlegible Next
-    fontSize: 14px
+    fontSize: 0.875rem
     fontWeight: '400'
-    lineHeight: 22px
-    letterSpacing: 0.015em
+    lineHeight: 1.375rem
+    letterSpacing: 0.025em
   label-lg:
     fontFamily: Lexend
-    fontSize: 15px
-    fontWeight: '500'
-    lineHeight: 20px
-    letterSpacing: 0.02em
+    fontSize: 0.9375rem
+    fontWeight: '600'
+    lineHeight: 1.25rem
+    letterSpacing: 0.01em
   label-md:
     fontFamily: Lexend
-    fontSize: 13px
-    fontWeight: '500'
-    lineHeight: 18px
-    letterSpacing: 0.025em
+    fontSize: 0.8125rem
+    fontWeight: '600'
+    lineHeight: 1.125rem
+    letterSpacing: 0.02em
   label-sm:
     fontFamily: Lexend
-    fontSize: 11px
-    fontWeight: '600'
-    lineHeight: 16px
-    letterSpacing: 0.04em
+    fontSize: 0.75rem
+    fontWeight: '500'
+    lineHeight: 1rem
+    letterSpacing: 0.03em
 rounded:
-  sm: 0.25rem
-  DEFAULT: 0.5rem
-  md: 0.75rem
-  lg: 1rem
-  xl: 1.5rem
+  sm: 0.5rem
+  DEFAULT: 1rem
+  md: 1.5rem
+  lg: 2rem
+  xl: 3rem
   full: 9999px
+  card: 1rem
 spacing:
   gutter: 1.5rem
-  gutter-tablet: 2rem
-  gutter-desktop: 2.5rem
-  margin: 1.25rem
-  margin-tablet: 2.5rem
-  margin-desktop: 4rem
-  space-xs: 0.375rem
-  space-sm: 0.75rem
-  space-md: 1.25rem
-  space-lg: 2rem
-  space-xl: 3rem
+  gutter-sm: 1rem
+  gutter-lg: 2rem
+  margin: 1.5rem
+  margin-sm: 1rem
+  margin-lg: 3rem
+  space-xs: 0.25rem
+  space-sm: 0.5rem
+  space-md: 1rem
+  space-lg: 1.5rem
+  space-xl: 2.5rem
 ---
+
+## Single source of truth
+
+This file and `DESIGN.md` are two themes of one design system. **Only colour, elevation and the card radius differ between them.** Everything else is identical, and the typography, spacing and rounded values in the front matter above are copied from `DESIGN.md` on purpose. If you change one of those in either file, change it in both; `src/ui/tokens.test.ts` fails when they drift.
+
+| Shared in both themes | Per theme |
+| --- | --- |
+| Typography scale (sizes, weights, line heights, tracking) | Colour tokens |
+| Spacing scale and breakpoints | Elevation (light: soft glow, dark: tonal layers and edges) |
+| Radius scale, pill controls, 8px checkboxes | `rounded.card` (light 2rem, dark 1rem) |
+| Reading column of 720px for the card | |
+
+The front matter is canonical. The prose below describes it; where a number appears in both, the front matter wins.
+
+## Semantic colour roles
+
+Roles are the same in both themes; only the hue values change. Components use the role, never the name of a hue.
+
+| Role | Token | Used for |
+| --- | --- | --- |
+| Action | `primary`, `primary-container` | Primary buttons, selected states, "Got it" |
+| Attention | `secondary` (warm peach or coral) | "Not yet", lapses, items to revisit |
+| Success | `tertiary` (mint or teal) | Mastered, saved, completed |
+| Learning | `--box-nearly` (butter or amber) | "Nearly" |
+| Error | `error`, `error-container` | Failures and destructive actions |
+
+In the previous version of this file `secondary` was mint and `tertiary` was coral, the opposite of `DESIGN.md`. They are now swapped to match.
 
 ## Brand & Style
 
-This design system is tailored for an immersive, glare-free, and neuro-inclusive learning environment. Rooted in mindful minimalism with soft tactile nuances, it prioritizes cognitive ease, non-fatiguing contrast, and frictionless readability during intensive study and spaced-repetition sessions.
-
-The aesthetic is quiet, atmospheric, and distinctly luminous against dark surfaces. By pairing deep slate backgrounds with soothing, milky pastel highlights, the interface eliminates harsh light bleed while maintaining strict visual clarity. It emphasizes low cognitive overhead, generous spatial breathing room, and structured information hierarchy designed specifically for tablet touch interactions and dyslexia-friendly reading patterns.
+This theme is the glare-free counterpart of `DESIGN.md`: the same calm, neuro-inclusive, low-cognitive-load interface for long study sessions on a tablet and for dyslexia-friendly reading, with deep slate surfaces and soft pastel highlights instead of a light canvas. It eliminates harsh light bleed while keeping strict visual clarity.
 
 ## Colors
 
-The palette is engineered around dark-adapted circadian comfort and accessible chromatic feedback:
+The palette is dark-adapted for circadian comfort. Use the front matter values.
 
-- **Surface Tiers:**
-  - `canvas`: `#0f172a` (Base environment, eliminating stark optical pitch black while grounding depth)
-  - `surface-container`: `#1e293b` (Default card states, modular panels)
-  - `surface-container-high`: `#334155` (Elevated cards, active flashcard faces, popovers, active sheets)
-  - `surface-container-highest`: `#475569` (Dividers, borders, subtle interactive focus states)
+- **Surface tiers:**
+  - `surface` (`#0b1326`): base canvas, avoiding stark pitch black.
+  - `surface-container-low` (`#131b2e`): resting cards and panels (app token `surface-card`).
+  - `surface-container` (`#171f33`): default modular panels.
+  - `surface-container-high` (`#222a3d`): elevated cards, active flashcard faces, popovers, secondary buttons.
+  - `surface-container-highest` (`#2d3449`): dividers and subtle focus states.
+- **Accents:** `primary` `#bdc2ff` for interactions and CTAs, `primary-container` `#818cf8` for fills, plus the roles above.
+- **Text:** `on-surface` `#dae2fd` for text, `on-surface-variant` `#c6c5d5` for secondary text and labels, `outline` `#908f9e` for metadata. Every text pair must reach 4.5:1 (PRD section 8).
 
-- **Luminous Accent Palette:**
-  - `primary` (`#818cf8` / Periwinkle Indigo): Core brand interactions, deck categories, primary CTAs.
-  - `secondary` (`#6ee7b7` / Soft Mint): Mastery, positive recall ("Easy"), validated responses.
-  - `tertiary` (`#fb923c` / Pastel Coral): Review flags, lapse state ("Hard"), critical attention items.
-  - `accent-amber` (`#fcd34d` / Pastel Butter): Learning progression, intermediate recall ("Good"), streak counters.
-  - `accent-lavender` (`#c084fc` / Soft Lavender): Meta-tags, study analytics, audio/pronunciation controls.
-
-- **Typography & Content Contrast:**
-  - `text-primary`: `#f8fafc` (Slate 50, crisp and anti-glare)
-  - `text-secondary`: `#cbd5e1` (Slate 300, clear contextual labels)
-  - `text-muted`: `#94a3b8` (Slate 400, meta info, inactive keys)
+The earlier prose used a different slate palette (`#0f172a`, `#1e293b`, `#334155`, `#818cf8` as primary, `#f8fafc`). It did not match the front matter or the Stitch screens and is retired.
 
 ## Typography
 
-The typographic system addresses reading endurance and dyslexia accessibility through intentional pairings:
-
-- **Lexend** governs titles, stats, buttons, and navigation. Its hyper-regularized proportions and widened letter spacing minimize visual crowding and cognitive friction.
-- **Atkinson Hyperlegible Next** powers all body text, flashcard prompts, and explanations. Character forms feature unambiguous distinctions between traditionally mirrored or confusing glyphs (e.g., `b`/`d`, `p`/`q`, `I`/`l`/`1`).
-- Line-height across long-form prompt text is expanded to 1.6x–1.7x to prevent line-jumping during prolonged iPad study. Paragraph breaks require deliberate whitespace over indents.
+Identical to `DESIGN.md`: **Lexend** for titles, stats, buttons and navigation, **Atkinson Hyperlegible Next** for body text, flashcard prompts and explanations. Use the scale in the front matter. Long-form prompt text keeps a line height of 1.6 to 1.7. Paragraph breaks use whitespace, not indents.
 
 ## Layout & Spacing
 
-The layout is built around a focused, centered content architecture that shifts seamlessly between iPad orientation regimes and desktop viewports:
-
-- **Touch & Focus Shell:** Flashcards center strictly along a maximum reading column width of `720px` to keep line lengths within 55–70 characters.
-- **Adaptive Canvas:**
-  - **Phone (< 768px):** Single-column stacked mode with persistent bottom action controls, `margin: 1.25rem`.
-  - **iPad Portrait (768px – 1024px):** Single focal study view with floating deck inspector drawers, `margin: 2.5rem`.
-  - **iPad Landscape & Desktop (> 1024px):** Dual-zone layout with an expansive review stage on the right and an index sidebar on the left, `gutter: 2.5rem`.
-- **Rhythm Rules:** Vertical spacing within cards uses `space-md` for metadata and `space-lg` to separate card fronts from backs or hints, maintaining clear focal separation.
+The same grid, breakpoints and spacing scale as `DESIGN.md` (4, 8 and 12 columns; mobile margin `margin-sm`, tablet `margin`, desktop `margin-lg`; gutters `gutter-sm`, `gutter`, `gutter-lg`). The card centres in a reading column of at most `720px` to keep lines at 55 to 70 characters, in both themes. On iPad landscape and desktop the sidebar sits on the left and the study stage on the right. Vertical spacing inside cards uses `space-md` for metadata and `space-lg` between a card's front, back and hint.
 
 ## Elevation & Depth
 
-This design system avoids traditional drop shadows, which cause muddy halo artifacts and optical vibration against deep slate backdrops. Instead, spatial hierarchy is constructed using **Tonal Layers** combined with **Subtle Luminous Tint Borders**:
+Dark avoids drop shadows, which cause muddy halos on deep slate. Hierarchy comes from **tonal layers** and **subtle luminous edges** (the app's `--elevation-card` is `none` in this theme):
 
-- **Level 0 (Canvas Base):** `#0f172a`, completely matte.
-- **Level 1 (Decks & Panels):** Surface `#1e293b` paired with a 1px border of `rgba(255, 255, 255, 0.06)`.
-- **Level 2 (Active Flashcard Surface):** `#334155` complemented by a 1px perimeter highlight of `rgba(255, 255, 255, 0.12)`. When active or hovered, an ambient pastel glow is applied: `0 0 24px -4px rgba(129, 140, 248, 0.18)`.
-- **Level 3 (Modals, Overlays, and Sheets):** Surface `#334155` with an ambient glow tinted to the semantic action color (`rgba(110, 231, 183, 0.15)` for success; `rgba(251, 146, 60, 0.15)` for warning) and a backdrop blur of `16px` on the underlying slate mask.
+- **Level 0 (canvas):** `surface`, matte.
+- **Level 1 (decks and panels):** `surface-container-low` with a 1px edge of `rgba(255, 255, 255, 0.06)` (app token `card-edge`).
+- **Level 2 (active flashcard):** `surface-container-high` with a 1px edge of `rgba(255, 255, 255, 0.12)`. When active or hovered, an ambient glow `0 0 24px -4px rgba(129, 140, 248, 0.18)`.
+- **Level 3 (modals and sheets):** `surface-container-high` with a glow tinted to the role (`tertiary` for success, `secondary` for attention) and a 16px backdrop blur on the mask.
+- **Focus:** the same soft ring as `DESIGN.md`, in `primary`, offset by 2px. Never a heavy black or white outline.
 
 ## Shapes
 
-The geometric personality features soft, ergonomic curves that feel organic and comfortable during long touch interactions:
+The same shape language as `DESIGN.md`; only the card radius differs.
 
-- **Cards & Primary Surfaces:** `1rem` (16px) corner radius, generating a tactile, handheld card deck aesthetic.
-- **Action Buttons & Response Pills:** `0.75rem` (12px) to full capsule/pill shapes (`9999px`) for quick-tap rating controls.
-- **Inputs & Badges:** `0.5rem` (8px) radius for compact data presentation.
-- **Interactive Affordance:** Card edges maintain a consistent geometric continuity without sharp vertexes, preventing eye fatigue during screen scanning.
+- **Interactive controls (buttons, inputs, badges, tabs):** pill (`rounded.full`).
+- **Cards and primary surfaces:** `rounded.card`, `1rem` (16px) in this theme, a tactile handheld-deck feel.
+- **Dividers and progress bars:** pill-capped.
+- **Checkboxes:** `rounded.sm` squircles (8px) with a high-contrast check; radios are concentric circles.
 
 ## Components
 
-- **Flashcard Stage (Core Component):**
-  - Built on `#1e293b` flipping to `#334155`.
-  - Enforces minimum padding of `2rem` on all viewports.
-  - Features an intuitive 3D flip transform with perspective. Card back displays a top anchor accent stripe (3px tall) tinted in `primary` (`#818cf8`) or `accent-amber` (`#fcd34d`).
+Behaviour and copy come from the PRD; this section gives the dark look only.
 
-- **Buttons & Response Controls:**
-  - **Spaced-Repetition Grade Keys:** A 4-button array anchored at the bottom (`Again`, `Hard`, `Good`, `Easy`) styled with tinted pill backgrounds (`rgba(color, 0.12)`), text matched to the respective pastel, and a 1.5px border matching the accent tint.
-  - **Primary Action Buttons:** Solid `#818cf8` with `#0f172a` bold text to ensure maximum contrast and tap feedback.
-  - **Ghost/Tertiary Buttons:** Transparent background with `#cbd5e1` text and hover states shifting to `rgba(255, 255, 255, 0.05)`.
-
-- **Chips & Tags:**
-  - Rendered in `label-sm` with uppercase styling.
-  - Composed of `#0f172a` or `rgba(255, 255, 255, 0.04)` fill with colored dot indicators matching deck categories (Mint, Lavender, Butter, Coral).
-
-- **Form Controls (Inputs, Checkboxes, Toggles):**
-  - **Input Fields:** Filled with `#0f172a`, bordered with `rgba(255, 255, 255, 0.1)`, transitioning to a solid `#818cf8` outline on focus without heavy shadow spread.
-  - **Checkboxes & Radios:** `0.375rem` rounded boxes with high-contrast pastel fills and deep slate check glyphs.
-  - **Touch Sliders / Audio Progress:** Track rendered in `#334155`, active progress bar filled in `#818cf8`, thumb oversized (28px) for iPad touch ergonomics.
-
-- **Study Progress Bar:**
-  - Segmented multi-tone line at the top edge of the study screen showing review composition: Mint (mastered), Amber (learning), Coral (needs review).
+- **Flashcard stage:** on `surface-container-low`, flipping to `surface-container-high`. Minimum padding `2rem`. The back has a 3px top stripe in `primary-container`.
+- **Grade buttons:** the three PRD grades, Not yet, Nearly and Got it, each with an icon, a label and a scheduler sublabel. They use the `--box-not-yet`, `--box-nearly` and `--box-got-it` token pairs (tinted fill, label text matched to the tint, 4.5:1 contrast). The old Again, Hard, Good and Easy keys are not used.
+- **Primary button:** `primary` fill with `on-primary` bold text.
+- **Secondary button:** tinted `surface-container-high` with `primary` text, borderless (the same pill as light).
+- **Ghost button:** transparent with `on-surface-variant` text; hover shifts to `rgba(255, 255, 255, 0.05)`.
+- **Chips and tags:** `label-sm`, pill, a fill of `surface-container` or `rgba(255, 255, 255, 0.04)`, optional colour dot for the deck colour.
+- **Inputs:** pill, filled with `surface`, a 1px border of `rgba(255, 255, 255, 0.1)`, and a solid `primary` outline on focus.
+- **Study progress bar:** segmented line at the top of the study screen: `primary-container` for done, `primary` for current, `surface-container-high` for remaining.
+- **Mastery bars:** the app's `--bar-*` tokens, bright against the dark card. Counts are always printed beside the bar, so colour is never the only signal.

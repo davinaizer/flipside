@@ -12,3 +12,19 @@ export function PageSkeleton() {
     </div>
   );
 }
+
+/** Same shape as the Library (title row, Today panel, deck cards) so the page does not jump when it loads. */
+export function LibrarySkeleton() {
+  return (
+    <div role="status" aria-label="Loading" className="flex flex-col gap-6">
+      <Skeleton className="h-10 w-64" />
+      <Skeleton className="h-40 w-full max-w-6xl rounded-card" />
+      <div className="grid max-w-6xl gap-4 md:grid-cols-2">
+        <Skeleton className="h-36 rounded-card" />
+        <Skeleton className="h-36 rounded-card" />
+        <Skeleton className="h-36 rounded-card" />
+        <Skeleton className="h-36 rounded-card" />
+      </div>
+    </div>
+  );
+}
