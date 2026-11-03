@@ -22,3 +22,4 @@ F9.9: Choice pills, Progress range buttons and colour swatches now have pressed 
 - 2026-11-03: REVIEW F9 round 5: GAPS at 89c77d2 (root error.tsx has no theme switch; low severity, unexpected server failure only)
 - F9.13: root error.tsx now shows the attribute-only theme switch via RootErrorView; picker shares AttributeThemeSwitch.
 - 2026-11-03: REVIEW F9 round 6: PASS at aa03e17
+- 2026-11-03: F9 done (PR 27). MANUAL PENDING: none.

@@ -29,9 +29,9 @@
         "profile_picker"
       ],
       "notes": "Shared top bar on app screens (theme toggle plus a slot for the avatar, which F10 wires to /profile); toggle moves out of the sidebar into the top bar, the practice top bar, and the top-right of the profile picker (login page added in F14 reuses it). Toggle is one switch with sun and moon icons, no visible label, accessible name and state. One elevation token for both themes: update DESIGN-DARK.md first (D24), then tokens.css and every card or surface. Shared hover, pressed and focus states in the button class and tappable cards. Re-run AC12 and AC13 e2e in both themes.",
-      "status": "in_progress",
+      "status": "done",
       "branch": "feat/F9-top-bar-theme-toggle",
-      "pr": null,
+      "pr": 27,
       "tasks": [
         {
           "id": "F9.1",
