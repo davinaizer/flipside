@@ -1,3 +1,4 @@
+import { FOCUS_RING, PRESSED } from "@/ui/button/button-class";
 import { Icon, type IconName } from "@/ui/icons/Icon";
 import type { Stats } from "@/shared/schemas/stats";
 import { ByDeckTable } from "./by-deck/ByDeckTable";
@@ -71,7 +72,7 @@ export function ProgressView({ stats, range, onRangeChange, practising = false, 
               type="button"
               aria-pressed={r.key === range}
               onClick={() => onRangeChange(r.key)}
-              className={`min-h-11 rounded-full px-6 font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary ${
+              className={`min-h-11 rounded-full px-6 font-semibold ${PRESSED} ${FOCUS_RING} ${
                 r.key === range
                   ? "bg-surface-card text-primary shadow-card"
                   : "text-on-surface-variant hover:text-on-surface"

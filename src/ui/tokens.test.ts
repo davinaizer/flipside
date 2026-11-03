@@ -248,4 +248,25 @@ describe("tokens", () => {
     walk(join(__dirname, ".."));
     expect(hits).toEqual([]);
   });
+
+  // U2: every button needs hover/pressed/focus feedback, so it must go through one of the shared helpers.
+  it("gives every <button under src/ui pressed and focus feedback", () => {
+    const offenders: string[] = [];
+    const walk = (dir: string) => {
+      for (const f of readdirSync(dir)) {
+        const p = join(dir, f);
+        if (statSync(p).isDirectory()) walk(p);
+        else if (/\.tsx$/.test(f) && !/\.test\.tsx$/.test(f)) {
+          const src = readFileSync(p, "utf8");
+          for (const m of src.matchAll(/<button\b[\s\S]*?<\/button>/g)) {
+            const tag = m[0];
+            const ok = /buttonClass|TAPPABLE_CARD|iconButton|CONFIRM_DELETE_CLASS/.test(tag) || (/PRESSED/.test(tag) && /FOCUS_RING/.test(tag));
+            if (!ok) offenders.push(`${p}: ${tag.split("\n")[0]}`);
+          }
+        }
+      }
+    };
+    walk(__dirname);
+    expect(offenders).toEqual([]);
+  });
 });

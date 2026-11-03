@@ -162,7 +162,7 @@
           ],
           "area": "src/ui/settings/Choice.tsx, src/ui/progress/ProgressView.tsx, src/ui/settings/reading/ReadingSettings.tsx, src/ui/tokens.test.ts",
           "done_when": "Those buttons have hover, pressed and focus ring; a grep-style test asserts every <button under src/ui uses buttonClass, TAPPABLE_CARD, iconButton or includes PRESSED and FOCUS_RING. verify.sh green.",
-          "status": "todo"
+          "status": "done"
         }
       ]
     },

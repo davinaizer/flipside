@@ -1,6 +1,5 @@
 import type { ReactNode } from "react";
-
-const FOCUS = "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary";
+import { FOCUS_RING, PRESSED } from "@/ui/button/button-class";
 
 /** One option in a settings group: a pill that shows as pressed when chosen. */
 export function Choice({ on, onClick, children }: { on: boolean; onClick: () => void; children: ReactNode }) {
@@ -9,7 +8,7 @@ export function Choice({ on, onClick, children }: { on: boolean; onClick: () => 
       type="button"
       aria-pressed={on}
       onClick={onClick}
-      className={`min-h-11 rounded-full px-5 font-semibold ${FOCUS} ${
+      className={`min-h-11 rounded-full px-5 font-semibold ${PRESSED} ${FOCUS_RING} ${
         on
           ? "bg-primary text-on-primary"
           : "border border-card-edge bg-surface-card text-on-surface hover:bg-surface-container-high"

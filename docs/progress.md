@@ -12,3 +12,4 @@ F9.5: new TopBar (theme switch and profile avatar slot, no product title) in the
 - F9.7: e2e/a11y.spec.ts checks the theme switch on picker, practice and summary (reload on practice); added the missing switch to the summary.
 - 2026-11-03: REVIEW F9 round 1: GAPS at e68a707 (U2 hover/pressed/focus missing on several buttons; fix tasks F9.8, F9.9)
 - F9.8: GradeBar buttons, Try again, ThemeSwitch and the delete confirm button now have hover, pressed (PRESSED) and FOCUS_RING; class assertions added.
+F9.9: Choice pills, Progress range buttons and colour swatches now have pressed and focus; tokens.test.ts greps every <button under src/ui for a shared helper.
