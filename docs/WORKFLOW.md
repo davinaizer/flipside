@@ -37,7 +37,7 @@ Agents are stateless between sessions; these files are the memory.
 - **Feature gate:** verify, e2e and axe for the feature's screens, then one fresh Opus review. Max two review rounds, then it asks you.
 - **Merge condition:** verify, e2e and axe green, reviewer PASS, all tasks done, PR base `main`. Any failure means no merge and a question to you.
 - **Done:** all ACs that agents can verify pass. `manual_acs` (AC10 read-aloud on the iPad, AC11 reboot and restore) are logged as `MANUAL PENDING` and listed in the final report for you.
-- **CI:** `.github/workflows/checks.yml` repeats verify and e2e on GitHub for every pull request into `main`, against the merged result. It does not replace the local gates and blocks a merge only if branch protection requires it, so read it before merging.
+- **CI:** `.github/workflows/checks.yml` repeats verify and e2e on GitHub for every pull request into `main`, against the merged result. PRs that change only `docs/**` or `*.md` files skip it. It does not replace the local gates and blocks a merge only if branch protection requires it, so read it before merging.
 - **Stop hook:** a turn that leaves changed code with red checks cannot end.
 
 ## Visibility

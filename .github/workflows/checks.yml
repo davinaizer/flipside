@@ -1,11 +1,17 @@
 # Runs on every pull request into main, where features land.
 # A pull_request run checks out the merge of the PR into its base branch, so a green run
 # means the result of merging passes, not only the branch on its own.
+# Docs-only PRs skip it: a PR runs checks only if it changes a file outside these paths.
+# If these checks ever become required in branch protection, a skipped run leaves the PR
+# waiting; add an always-passing job for docs-only PRs then.
 name: checks
 
 on:
   pull_request:
     branches: [main]
+    paths-ignore:
+      - "docs/**"
+      - "**/*.md"
 
 concurrency:
   group: checks-${{ github.event.pull_request.number }}
