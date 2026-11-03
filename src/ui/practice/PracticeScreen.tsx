@@ -26,7 +26,7 @@ export function PracticeLoading() {
   );
 }
 
-/** Top-right bar holding the theme switch above a full-screen state (T6: the switch is on every screen). */
+/** Top-right bar holding the theme switch above the summary (practice screens have none, F9.14). */
 export function ThemeBar({ children }: { children: React.ReactNode }) {
   return (
     <>
@@ -38,26 +38,24 @@ export function ThemeBar({ children }: { children: React.ReactNode }) {
   );
 }
 
-export function LoadError({ onRetry }: { onRetry: () => void }) {
-  return (
-    <ThemeBar>
-      <div className="p-8">
-        <ErrorState onRetry={onRetry} />
-      </div>
-    </ThemeBar>
+/** The summary's load error keeps the theme switch; the practice one does not (F9.14). */
+export function LoadError({ onRetry, withTheme = false }: { onRetry: () => void; withTheme?: boolean }) {
+  const body = (
+    <div className="p-8">
+      <ErrorState onRetry={onRetry} />
+    </div>
   );
+  return withTheme ? <ThemeBar>{body}</ThemeBar> : body;
 }
 
 export function NoCards({ onEnd }: { onEnd: () => void }) {
   return (
-    <ThemeBar>
-      <div className="mx-auto flex w-full max-w-3xl flex-col gap-6 p-8">
-        <p>This session has no cards.</p>
-        <button type="button" onClick={onEnd} className={buttonClass("secondary", { extra: "self-start" })}>
-          End session
-        </button>
-      </div>
-    </ThemeBar>
+    <div className="mx-auto flex w-full max-w-3xl flex-col gap-6 p-8">
+      <p>This session has no cards.</p>
+      <button type="button" onClick={onEnd} className={buttonClass("secondary", { extra: "self-start" })}>
+        End session
+      </button>
+    </div>
   );
 }
 
@@ -77,16 +75,6 @@ export function PracticeScreen({ sessionId }: { sessionId: string }) {
   if (failed) return <LoadError onRetry={retry} />;
   if (!data) return <PracticeLoading />;
   return <ActiveSession data={data} />;
-}
-
-/** Top bar actions: the theme switch beside the settings shortcut (T6). */
-export function PracticeHeaderActions({ onOpenSettings }: { onOpenSettings: () => void }) {
-  return (
-    <>
-      <ThemeToggle />
-      <SettingsShortcut onOpen={onOpenSettings} />
-    </>
-  );
 }
 
 function ActiveSession({ data }: { data: SessionResponse }) {
@@ -118,7 +106,7 @@ function ActiveSession({ data }: { data: SessionResponse }) {
     <>
     <PracticeView
       onEnd={() => controller.end()}
-      headerAction={<PracticeHeaderActions onOpenSettings={() => setSettingsOpen(true)} />}
+      headerAction={<SettingsShortcut onOpen={() => setSettingsOpen(true)} />}
       card={card}
       revealed={view.revealed}
       done={view.done}

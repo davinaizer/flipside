@@ -233,7 +233,7 @@
           ],
           "area": "src/ui/practice/PracticeScreen.tsx, src/ui/practice/PracticeHeader.test.tsx, e2e/a11y.spec.ts, docs/decisions.md",
           "done_when": "The practice card header, the 'no cards' state and the practice load-error state no longer render a theme switch; the summary and its load error still do. Unit and e2e checks updated to match (practice no longer expects the switch; summary and picker still do). Log in docs/decisions.md as 'DEVIATION (user-directed): T6/AC16/README item 19 list practice; user asked to remove it from practice. PRD not edited; user to update.' Do not edit PRD text or ACs. verify.sh green, relevant e2e green.",
-          "status": "todo"
+          "status": "done"
         }
       ]
     },

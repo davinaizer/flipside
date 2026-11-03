@@ -8,13 +8,6 @@ vi.mock("@/ui/settings/SettingsProvider", () => ({
 vi.mock("next/navigation", () => ({ useRouter: () => ({ push: () => {} }) }));
 
 import { ProfilePicker } from "@/ui/profile/ProfilePicker";
-import { PracticeHeaderActions } from "./PracticeScreen";
-
-test("practice top bar: the theme switch comes right before the settings shortcut", () => {
-  const html = renderToStaticMarkup(<PracticeHeaderActions onOpenSettings={() => {}} />);
-  expect(html.indexOf('aria-label="Dark theme"')).toBeGreaterThan(-1);
-  expect(html.indexOf('aria-label="Dark theme"')).toBeLessThan(html.indexOf('aria-label="Reading settings"'));
-});
 
 test("profile picker: the same named switch sits top-right", () => {
   const html = renderToStaticMarkup(<ProfilePicker />);
@@ -23,18 +16,11 @@ test("profile picker: the same named switch sits top-right", () => {
   expect(html).toMatch(/absolute right-8 top-4/);
 });
 
-test("load-error states on practice and summary keep the theme switch above the error", async () => {
-  const { LoadError } = await import("./PracticeScreen");
-  const html = renderToStaticMarkup(<LoadError onRetry={() => {}} />);
-  expect(html).toContain('aria-label="Dark theme"');
-  expect(html).toContain("justify-end");
-  expect(html.indexOf('aria-label="Dark theme"')).toBeLessThan(html.indexOf('role="alert"'));
-});
-
-test("the 'session has no cards' state keeps the theme switch above its message", async () => {
-  const { NoCards } = await import("./PracticeScreen");
-  const html = renderToStaticMarkup(<NoCards onEnd={() => {}} />);
-  expect(html).toContain("justify-end");
+test("practice load error and no-cards state have no theme switch; the summary load error keeps it", async () => {
+  const { LoadError, NoCards } = await import("./PracticeScreen");
+  expect(renderToStaticMarkup(<LoadError onRetry={() => {}} />)).not.toContain("Dark theme");
+  expect(renderToStaticMarkup(<NoCards onEnd={() => {}} />)).not.toContain("Dark theme");
+  const html = renderToStaticMarkup(<LoadError onRetry={() => {}} withTheme />);
   expect(html.indexOf('aria-label="Dark theme"')).toBeGreaterThan(-1);
-  expect(html.indexOf('aria-label="Dark theme"')).toBeLessThan(html.indexOf("This session has no cards."));
+  expect(html.indexOf('aria-label="Dark theme"')).toBeLessThan(html.indexOf('role="alert"'));
 });

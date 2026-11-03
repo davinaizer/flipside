@@ -23,3 +23,4 @@ F9.9: Choice pills, Progress range buttons and colour swatches now have pressed 
 - F9.13: root error.tsx now shows the attribute-only theme switch via RootErrorView; picker shares AttributeThemeSwitch.
 - 2026-11-03: REVIEW F9 round 6: PASS at aa03e17
 - 2026-11-03: F9 done (PR 27). MANUAL PENDING: none.
+F9.14: removed the theme switch from practice (card header, no cards, load error); summary and picker keep it. Deviation logged in decisions.md.

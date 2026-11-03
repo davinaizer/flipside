@@ -24,7 +24,7 @@ export function SummaryScreen({ sessionId }: { sessionId: string }) {
     api.summary(sessionId).then(setSummary, () => setLoadFailed(true));
   };
 
-  if (loadFailed) return <LoadError onRetry={load} />;
+  if (loadFailed) return <LoadError onRetry={load} withTheme />;
   if (!summary) return <PracticeLoading />;
   return (
     <ThemeBar>
