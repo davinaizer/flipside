@@ -85,7 +85,7 @@ export function ReadingSettings() {
               type="button"
               aria-pressed={settings.cardColor === c}
               onClick={() => set({ cardColor: c })}
-              className={`flex min-h-11 flex-col items-center gap-1 rounded-2xl px-2 py-1 hover:bg-surface-container-high ${PRESSED} ${FOCUS_RING}`}
+              className={`flex min-h-11 flex-col items-center gap-1 rounded-2xl px-2 py-1 hover:bg-surface-container-high active:bg-surface-container-highest ${PRESSED} ${FOCUS_RING}`}
             >
               <span
                 aria-hidden="true"

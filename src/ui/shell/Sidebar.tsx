@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Avatar } from "@/ui/avatars";
-import { buttonClass } from "@/ui/button/button-class";
+import { buttonClass, FOCUS_RING, PRESSED } from "@/ui/button/button-class";
 import { Icon, Logo, type IconName } from "@/ui/icons/Icon";
 
 const SECTIONS: { href: string; label: string; icon: IconName; match: string[] }[] = [
@@ -31,10 +31,10 @@ export function Sidebar({ name, avatar }: { name: string; avatar: string }) {
                   <Link
                     href={s.href}
                     aria-current={current ? "page" : undefined}
-                    className={`flex min-h-11 items-center gap-3 rounded-full px-4 font-semibold ${
+                    className={`flex min-h-11 items-center gap-3 rounded-full px-4 font-semibold ${PRESSED} ${FOCUS_RING} ${
                       current
-                        ? "bg-primary-container text-on-primary-container"
-                        : "text-on-surface hover:bg-surface-container-high"
+                        ? "bg-primary-container text-on-primary-container active:bg-surface-container-highest"
+                        : "text-on-surface hover:bg-surface-container-high active:bg-surface-container-highest"
                     }`}
                   >
                     <Icon name={s.icon} />

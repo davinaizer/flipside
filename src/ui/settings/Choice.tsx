@@ -10,8 +10,8 @@ export function Choice({ on, onClick, children }: { on: boolean; onClick: () => 
       onClick={onClick}
       className={`min-h-11 rounded-full px-5 font-semibold ${PRESSED} ${FOCUS_RING} ${
         on
-          ? "bg-primary text-on-primary"
-          : "border border-card-edge bg-surface-card text-on-surface hover:bg-surface-container-high"
+          ? "bg-primary text-on-primary hover:bg-primary-container hover:text-on-primary-container active:bg-primary-container active:text-on-primary-container"
+          : "border border-card-edge bg-surface-card text-on-surface hover:bg-surface-container-high active:bg-surface-container-highest"
       }`}
     >
       {children}

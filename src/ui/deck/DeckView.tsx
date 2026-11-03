@@ -92,7 +92,7 @@ export function DeckView({ deck, leeches, ticked, onToggle, busy, startError, on
                   />
                   <span
                     aria-hidden="true"
-                    className="size-7 rounded-md border-2 border-outline bg-surface-card peer-checked:border-primary peer-checked:bg-primary peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-primary"
+                    className="size-7 rounded-md border-2 border-outline bg-surface-card peer-hover:border-primary peer-active:bg-surface-container-high peer-checked:border-primary peer-checked:bg-primary peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-primary"
                   />
                   <span aria-hidden="true" className="pointer-events-none absolute hidden text-on-primary peer-checked:block">
                     <Icon name="check" size={18} />

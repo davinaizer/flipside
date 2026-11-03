@@ -269,4 +269,24 @@ describe("tokens", () => {
     walk(__dirname);
     expect(offenders).toEqual([]);
   });
+
+  // Same rule for label controls (file picker, radio swatches and pills): a cursor-pointer label must show hover and pressed.
+  it("gives every label.cursor-pointer control pressed feedback", () => {
+    const offenders: string[] = [];
+    const walk = (dir: string) => {
+      for (const f of readdirSync(dir)) {
+        const p = join(dir, f);
+        if (statSync(p).isDirectory()) walk(p);
+        else if (/\.tsx$/.test(f) && !/\.test\.tsx$/.test(f)) {
+          const src = readFileSync(p, "utf8");
+          for (const m of src.matchAll(/<label\b[^>]*cursor-pointer[\s\S]*?<\/label>/g)) {
+            const tag = m[0];
+            if (!/buttonClass/.test(tag) && !/peer-active:/.test(tag)) offenders.push(`${p}: ${tag.split("\n")[0]}`);
+          }
+        }
+      }
+    };
+    walk(__dirname);
+    expect(offenders).toEqual([]);
+  });
 });

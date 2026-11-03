@@ -14,3 +14,4 @@ F9.5: new TopBar (theme switch and profile avatar slot, no product title) in the
 - F9.8: GradeBar buttons, Try again, ThemeSwitch and the delete confirm button now have hover, pressed (PRESSED) and FOCUS_RING; class assertions added.
 F9.9: Choice pills, Progress range buttons and colour swatches now have pressed and focus; tokens.test.ts greps every <button under src/ui for a shared helper.
 - 2026-11-03: REVIEW F9 round 2: GAPS at 59dd63f (U2: import radio labels lack hover/pressed; sidebar nav pills; scale-only pressed under reduced motion)
+- F9.10: import swatches/pills, sidebar nav, Choice, range buttons, iconButton gained hover/active colour and focus; guard test covers cursor-pointer labels.

@@ -59,7 +59,7 @@ export function SessionProgress({ done, total }: { done: number; total: number }
 }
 
 export const iconButton =
-  `flex size-11 items-center justify-center rounded-full border border-card-edge bg-surface-card text-on-surface-variant shadow-card hover:text-primary ${PRESSED} ${FOCUS_RING}`;
+  `flex size-11 items-center justify-center rounded-full border border-card-edge bg-surface-card text-on-surface-variant shadow-card hover:text-primary active:bg-surface-container-high ${PRESSED} ${FOCUS_RING}`;
 
 function Answer({ card }: { card: SessionCardPayload }) {
   const lines = bulletLines(card.back, card.answerStyle);

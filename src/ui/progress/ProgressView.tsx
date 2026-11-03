@@ -74,8 +74,8 @@ export function ProgressView({ stats, range, onRangeChange, practising = false, 
               onClick={() => onRangeChange(r.key)}
               className={`min-h-11 rounded-full px-6 font-semibold ${PRESSED} ${FOCUS_RING} ${
                 r.key === range
-                  ? "bg-surface-card text-primary shadow-card"
-                  : "text-on-surface-variant hover:text-on-surface"
+                  ? "bg-surface-card text-primary shadow-card hover:bg-surface-container-low active:bg-surface-container"
+                  : "text-on-surface-variant hover:text-on-surface active:bg-surface-container-high"
               }`}
             >
               {r.label}
