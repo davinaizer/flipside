@@ -88,7 +88,7 @@
           ],
           "area": "src/ui/settings/ThemeToggle.tsx",
           "done_when": "Component test: role=switch with accessible name, aria-checked reflects theme, both icons rendered, no visible text; click flips theme through the settings saver.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F9.5",

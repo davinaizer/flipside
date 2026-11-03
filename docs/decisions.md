@@ -80,3 +80,4 @@ ASSUMED: The light and dark themes share one typography scale, spacing scale and
 ASSUMED: F9.1 dark shadow value is 0 4px 16px -2px rgba(0, 0, 0, 0.4); the PRD (D24) says only "subtle".
 ASSUMED: F9.2 a card or surface is a rounded-card or rounded-3xl box; pills, fields, swatches and skeletons stay flat; the test is a per-line grep.
 ASSUMED: F9.3 the only tappable cards are the profile tile and the read-aloud switch row (DeckTile is a decorative swatch, not tappable); primary hover/pressed uses primary-container, pressed also scales to 0.98 except under reduced motion.
+ASSUMED: F9.4 the switch is named "Dark theme" (state via aria-checked), knob slides over the sun or moon; click is tested by calling the component and firing its onClick (no jsdom); only the existing Sidebar placement is kept, the top bar placement is a later task.
