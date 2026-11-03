@@ -134,7 +134,7 @@
           ],
           "area": "e2e/theme.spec.ts, e2e/a11y.spec.ts",
           "done_when": "pnpm test:e2e: toggle visible on each screen incl. practice and picker, persists after reload, axe has no serious or critical issues and 44 px targets hold in both themes (AC16, AC21, AC12, AC13).",
-          "status": "todo"
+          "status": "done"
         }
       ]
     },
