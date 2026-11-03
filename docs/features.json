@@ -338,7 +338,7 @@
           ],
           "area": "e2e/profiles.spec.ts",
           "done_when": "pnpm test:e2e AC15: tap avatar, change avatar and name, see it in top bar, sidebar and picker, survives reload; empty and 25-char names rejected with message.",
-          "status": "todo"
+          "status": "done"
         }
       ]
     },

@@ -29,3 +29,4 @@ F10.1 added updateProfileRequestSchema (avatar and name both optional, at least 
 F10.2: updateProfile service and PATCH /api/v1/me (422 with issue messages on invalid input); tests in tests/profile-update-api.test.ts.
 F10.3: /profile page with ProfileForm (avatar radio grid with tick, name field with inline error, Save via api.updateProfile PATCH /me); tests in ProfileScreen.test.tsx.
 F10.4: top-bar avatar now links to /profile (named "<name>, open profile"); layout passes name; router.refresh after save updates shell, picker is force-dynamic. Unit tests added.
+F10.5: e2e/profiles.spec.ts covers AC15 (edit avatar and name, top bar, picker, reload, empty and 25-char rejected).
