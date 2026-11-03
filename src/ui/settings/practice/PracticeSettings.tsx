@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { READING_SPEEDS } from "@/shared/enums";
 import type { Settings } from "@/shared/settings";
+import { TAPPABLE_CARD } from "@/ui/button/button-class";
 import { Choice, SwitchTrack } from "../Choice";
 import { useSettings } from "../SettingsProvider";
 
@@ -73,7 +74,7 @@ export function PracticeSettings() {
           role="switch"
           aria-checked={settings.readAloud}
           onClick={() => set({ readAloud: !settings.readAloud })}
-          className="flex min-h-11 w-full items-center justify-between gap-4 rounded-card border border-card-edge bg-surface-card px-5 py-3 text-left font-semibold shadow-card focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+          className={`flex min-h-11 w-full items-center justify-between gap-4 rounded-card border border-card-edge bg-surface-card px-5 py-3 text-left font-semibold shadow-card ${TAPPABLE_CARD}`}
         >
           Read questions aloud: {settings.readAloud ? "On" : "Off"}
           <SwitchTrack on={settings.readAloud} />

@@ -152,7 +152,7 @@ export function ImportFlow({ decks, initialDeckId }: { decks: DeckChoice[]; init
                   {CARD_COLORS.map((c) => (
                     <label key={c} className="relative cursor-pointer">
                       <input type="radio" name="color" value={c} defaultChecked={c === "mist"} className="peer sr-only" />
-                      <span className={`block size-11 rounded-full outline outline-1 outline-outline ${SWATCH[c]} peer-checked:outline-4 peer-checked:outline-primary peer-focus-visible:outline-offset-2`} />
+                      <span className={`block size-11 rounded-full outline outline-1 outline-outline ${SWATCH[c]} peer-checked:outline-4 peer-checked:outline-primary peer-hover:outline-primary peer-active:outline-primary peer-active:scale-95 motion-reduce:peer-active:scale-100 peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-primary`} />
                       <span className="sr-only">{c[0].toUpperCase() + c.slice(1)}</span>
                     </label>
                   ))}
@@ -164,7 +164,7 @@ export function ImportFlow({ decks, initialDeckId }: { decks: DeckChoice[]; init
                   {ANSWER_STYLES.map((a) => (
                     <label key={a} className="relative flex-1 cursor-pointer">
                       <input type="radio" name="answerStyle" value={a} defaultChecked={a === "paragraph"} className="peer sr-only" />
-                      <span className="flex min-h-11 items-center justify-center gap-2 rounded-full px-3 peer-checked:bg-primary peer-checked:text-on-primary peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-primary">
+                      <span className="flex min-h-11 items-center justify-center gap-2 rounded-full px-3 hover:bg-surface-container-high active:bg-surface-container-highest peer-active:scale-[0.98] motion-reduce:peer-active:scale-100 peer-checked:bg-primary peer-checked:text-on-primary peer-checked:hover:bg-primary-container peer-checked:hover:text-on-primary-container peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-primary">
                         <span aria-hidden="true">{a === "bullets" ? "\u2630" : "\u2261"}</span>
                         {a === "bullets" ? "Bullet list" : "Paragraph"}
                       </span>

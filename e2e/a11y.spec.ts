@@ -17,6 +17,8 @@ async function check(page: Page) {
   }
 }
 
+const darkSwitch = (page: Page) => page.getByRole("switch", { name: /Dark theme/ });
+
 const todayZero = { dueCount: 0, startableCount: 0, decksWithDue: 0, sessionLength: 10, weakCount: 0 };
 
 /** Mocked Library and Progress states (loading, error, empty); the real success states are walked by the caller. */
@@ -75,13 +77,16 @@ async function practiceScreens(page: Page) {
   await page.getByRole("button", { name: "Start practice" }).click();
   await page.waitForURL("**/practice/*");
   await expect(page.getByText("Card 1 of 5")).toBeVisible();
+  await expect(darkSwitch(page)).toHaveCount(0); // F9.14: no switch on practice
   await check(page); // front
   await page.getByRole("button", { name: "Show answer" }).click();
   await expect(page.getByRole("button", { name: /^Got it/ })).toBeVisible();
+  await expect(darkSwitch(page)).toHaveCount(0);
   await check(page); // back
   await page.getByRole("button", { name: /^Got it/ }).click();
   await page.getByRole("button", { name: "End session" }).click();
   await expect(page.getByRole("heading", { name: "Session summary" })).toBeVisible();
+  await expect(darkSwitch(page)).toBeVisible();
   await check(page);
 }
 
@@ -93,7 +98,12 @@ test("every screen and state passes axe and 44 px in both themes; toggle, reload
   const picker = await fresh.newPage();
   await picker.goto("/");
   await expect(picker.getByRole("button", { name: "Davi" })).toBeVisible();
+  // AC16: the picker has the switch too; with no profile it only changes the theme on screen.
+  await expect(darkSwitch(picker)).toBeVisible();
   await check(picker);
+  await picker.evaluate(() => document.documentElement.setAttribute("data-theme", "light"));
+  await darkSwitch(picker).click();
+  await expect(picker.locator("html")).toHaveAttribute("data-theme", "dark");
   await fresh.close();
 
   await page.goto("/");

@@ -8,6 +8,7 @@ import { ErrorState } from "@/ui/states/ErrorState";
 import { Skeleton } from "@/ui/states/Skeleton";
 import { buttonClass } from "@/ui/button/button-class";
 import { Icon } from "@/ui/icons/Icon";
+import { ThemeToggle } from "@/ui/settings/ThemeToggle";
 import { GradeBar } from "./GradeBar";
 import { PracticeView } from "./PracticeView";
 import { SummaryScreen } from "./SummaryScreen";
@@ -25,6 +26,39 @@ export function PracticeLoading() {
   );
 }
 
+/** Top-right bar holding the theme switch above the summary (practice screens have none, F9.14). */
+export function ThemeBar({ children }: { children: React.ReactNode }) {
+  return (
+    <>
+      <div className="flex justify-end px-6 pt-4 md:px-8">
+        <ThemeToggle />
+      </div>
+      {children}
+    </>
+  );
+}
+
+/** The summary's load error keeps the theme switch; the practice one does not (F9.14). */
+export function LoadError({ onRetry, withTheme = false }: { onRetry: () => void; withTheme?: boolean }) {
+  const body = (
+    <div className="p-8">
+      <ErrorState onRetry={onRetry} />
+    </div>
+  );
+  return withTheme ? <ThemeBar>{body}</ThemeBar> : body;
+}
+
+export function NoCards({ onEnd }: { onEnd: () => void }) {
+  return (
+    <div className="mx-auto flex w-full max-w-3xl flex-col gap-6 p-8">
+      <p>This session has no cards.</p>
+      <button type="button" onClick={onEnd} className={buttonClass("secondary", { extra: "self-start" })}>
+        End session
+      </button>
+    </div>
+  );
+}
+
 /** Loads the session (an empty PUT resumes it); the loaded session is then driven by use-session. Needs a SettingsProvider. */
 export function PracticeScreen({ sessionId }: { sessionId: string }) {
   const [data, setData] = useState<SessionResponse | null>(null);
@@ -38,7 +72,7 @@ export function PracticeScreen({ sessionId }: { sessionId: string }) {
     api.session(sessionId).then(setData, () => setFailed(true));
   };
 
-  if (failed) return <div className="p-8"><ErrorState onRetry={retry} /></div>;
+  if (failed) return <LoadError onRetry={retry} />;
   if (!data) return <PracticeLoading />;
   return <ActiveSession data={data} />;
 }
@@ -66,14 +100,7 @@ function ActiveSession({ data }: { data: SessionResponse }) {
   );
 
   if (!card || !labels) {
-    return (
-      <div className="mx-auto flex w-full max-w-3xl flex-col gap-6 p-8">
-        <p>This session has no cards.</p>
-        <button type="button" onClick={() => controller.end()} className={buttonClass("secondary", { extra: "self-start" })}>
-          End session
-        </button>
-      </div>
-    );
+    return <NoCards onEnd={() => controller.end()} />;
   }
   return (
     <>

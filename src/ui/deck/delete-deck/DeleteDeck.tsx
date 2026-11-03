@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { buttonClass } from "@/ui/button/button-class";
+import { buttonClass, FOCUS_RING, PRESSED } from "@/ui/button/button-class";
 
 const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
 
@@ -10,6 +10,9 @@ const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one :
 export function deleteSummary(name: string, cardCount: number, reviewCount: number): string {
   return `Delete "${name}"? This hides the deck and its ${plural(cardCount, "card", "cards")} and ${plural(reviewCount, "review record", "review records")}.`;
 }
+
+/** The solid confirm button: hover and pressed go to the error container. Exported for tests. */
+export const CONFIRM_DELETE_CLASS = `min-h-11 rounded-full bg-error px-8 font-semibold text-on-error hover:bg-error-container hover:text-on-error-container active:bg-error-container active:text-on-error-container ${PRESSED} ${FOCUS_RING} disabled:opacity-60`;
 
 /** D5: confirm, then DELETE /decks/{id} and return to the Library. */
 export function DeleteDeck({ deck }: { deck: { id: string; name: string; cardCount: number; reviewCount: number } }) {
@@ -44,7 +47,7 @@ export function DeleteDeck({ deck }: { deck: { id: string; name: string; cardCou
       <p className="mb-4">{deleteSummary(deck.name, deck.cardCount, deck.reviewCount)}</p>
       {error && <p role="alert" className="mb-4 text-error">{error}</p>}
       <div className="flex gap-3">
-        <button type="button" disabled={busy} onClick={onDelete} className="min-h-11 rounded-full bg-error px-8 font-semibold text-on-error disabled:opacity-60">
+        <button type="button" disabled={busy} onClick={onDelete} className={CONFIRM_DELETE_CLASS}>
           {busy ? "Deleting..." : "Delete deck"}
         </button>
         <button type="button" disabled={busy} onClick={() => setAsking(false)} className={buttonClass("secondary")}>

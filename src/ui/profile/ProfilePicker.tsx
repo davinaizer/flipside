@@ -5,9 +5,10 @@ import { useRouter } from "next/navigation";
 import { api } from "@/ui/api/client";
 import { Logo } from "@/ui/icons/Icon";
 import { Avatar } from "@/ui/avatars";
+import { AttributeThemeSwitch } from "@/ui/settings/AttributeThemeSwitch";
 import { Skeleton } from "@/ui/states/Skeleton";
 import type { ProfileSummary } from "@/shared/schemas/profile";
-import { buttonClass } from "@/ui/button/button-class";
+import { buttonClass, TAPPABLE_CARD } from "@/ui/button/button-class";
 
 type State =
   | { kind: "loading" }
@@ -43,7 +44,10 @@ export function ProfilePicker() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center gap-10 bg-surface p-8">
+    <main className="relative flex min-h-screen flex-col items-center justify-center gap-10 bg-surface p-8">
+      <div className="absolute right-8 top-4">
+        <AttributeThemeSwitch />
+      </div>
       <div className="flex items-center gap-3 rounded-full border border-card-edge bg-surface-card py-2 pl-2 pr-5 shadow-card">
         <Logo size={36} />
         <span className="font-semibold text-headline-sm">Flipside</span>
@@ -77,7 +81,7 @@ export function ProfilePicker() {
               <button
                 type="button"
                 onClick={() => pick(p.id)}
-                className="flex min-h-11 min-w-52 flex-col items-center gap-4 overflow-hidden rounded-card border-t-4 border-t-primary-container border-x border-b border-x-card-edge border-b-card-edge bg-surface-card px-8 pb-8 pt-8 text-on-surface shadow-card outline-offset-4 hover:bg-surface-container-low focus-visible:outline-2 focus-visible:outline-primary"
+                className={`flex min-h-11 min-w-52 flex-col items-center gap-4 overflow-hidden rounded-card border-t-4 border-t-primary-container border-x border-b border-x-card-edge border-b-card-edge bg-surface-card px-8 pb-8 pt-8 text-on-surface shadow-card outline-offset-4 ${TAPPABLE_CARD}`}
               >
                 <Avatar id={p.avatar} size={112} />
                 <span className="text-headline-md font-semibold">{p.name}</span>

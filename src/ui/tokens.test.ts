@@ -13,6 +13,13 @@ function block(selector: string): Record<string, string> {
   return out;
 }
 
+function walk(dir: string): string[] {
+  return readdirSync(dir).flatMap((f) => {
+    const p = join(dir, f);
+    return statSync(p).isDirectory() ? walk(p) : [p];
+  });
+}
+
 const light = block(':root,\n[data-theme="light"]');
 const dark = block('[data-theme="dark"]');
 
@@ -118,6 +125,41 @@ describe("tokens", () => {
     expect(layout).toContain("data-theme={theme}");
   });
 
+  it("defines one elevation token in both themes and no per-component shadow values", () => {
+    const elevation = (selector: string) => {
+      const start = css.indexOf(selector + " {");
+      const body = css.slice(css.indexOf("{", start) + 1, css.indexOf("}", start));
+      return body.match(/--elevation-card:\s*([^;]+);/)?.[1];
+    };
+    const l = elevation(':root,\n[data-theme="light"]');
+    const d = elevation('[data-theme="dark"]');
+    expect(l).toBeDefined();
+    expect(d).toBeDefined();
+    expect(d).not.toBe("none");
+    expect(css).toContain("--shadow-card: var(--elevation-card)");
+    const doc = readFileSync(join(__dirname, "../../docs/design/DESIGN-DARK.md"), "utf8");
+    expect(doc).toContain(d!);
+    for (const file of walk(join(__dirname, ".."))) {
+      if (!/\.tsx?$/.test(file) || file.endsWith(".test.ts") || file.endsWith(".test.tsx")) continue;
+      expect(readFileSync(file, "utf8"), file).not.toMatch(/shadow-\[/);
+    }
+  });
+
+  it("gives every card and surface the elevation token", () => {
+    const missing: string[] = [];
+    for (const file of walk(join(__dirname, ".."))) {
+      if (!/\.tsx$/.test(file) || file.endsWith(".test.tsx")) continue;
+      readFileSync(file, "utf8")
+        .split("\n")
+        .forEach((line, i) => {
+          // A card is a rounded-card or rounded-3xl box; pills, fields and Skeleton placeholders are not.
+          const isCard = /rounded-(card|3xl)\b/.test(line) && !/Skeleton/.test(line);
+          if (isCard && !line.includes("shadow-card")) missing.push(`${file}:${i + 1}`);
+        });
+    }
+    expect(missing).toEqual([]);
+  });
+
   it("has box tokens for New, Not yet, Nearly and Got it", () => {
     for (const b of ["new", "not-yet", "nearly", "got-it"]) {
       for (const t of [light, dark]) {
@@ -205,5 +247,67 @@ describe("tokens", () => {
     };
     walk(join(__dirname, ".."));
     expect(hits).toEqual([]);
+  });
+
+  // U2: every button needs hover/pressed/focus feedback, so it must go through one of the shared helpers.
+  it("gives every <button under src/ui pressed and focus feedback", () => {
+    const offenders: string[] = [];
+    const walk = (dir: string) => {
+      for (const f of readdirSync(dir)) {
+        const p = join(dir, f);
+        if (statSync(p).isDirectory()) walk(p);
+        else if (/\.tsx$/.test(f) && !/\.test\.tsx$/.test(f)) {
+          const src = readFileSync(p, "utf8");
+          for (const m of src.matchAll(/<button\b[\s\S]*?<\/button>/g)) {
+            const tag = m[0];
+            const ok = /buttonClass|TAPPABLE_CARD|iconButton|CONFIRM_DELETE_CLASS/.test(tag) || (/PRESSED/.test(tag) && /FOCUS_RING/.test(tag));
+            if (!ok) offenders.push(`${p}: ${tag.split("\n")[0]}`);
+          }
+        }
+      }
+    };
+    walk(__dirname);
+    expect(offenders).toEqual([]);
+  });
+
+  // Same rule for label controls (file picker, radio swatches and pills): a cursor-pointer label must show hover and pressed.
+  it("gives every label.cursor-pointer control pressed feedback", () => {
+    const offenders: string[] = [];
+    const walk = (dir: string) => {
+      for (const f of readdirSync(dir)) {
+        const p = join(dir, f);
+        if (statSync(p).isDirectory()) walk(p);
+        else if (/\.tsx$/.test(f) && !/\.test\.tsx$/.test(f)) {
+          const src = readFileSync(p, "utf8");
+          for (const m of src.matchAll(/<label\b[^>]*cursor-pointer[\s\S]*?<\/label>/g)) {
+            const tag = m[0];
+            if (!/buttonClass/.test(tag) && !/peer-active:/.test(tag)) offenders.push(`${p}: ${tag.split("\n")[0]}`);
+          }
+        }
+      }
+    };
+    walk(__dirname);
+    expect(offenders).toEqual([]);
+  });
+
+  // Same rule for next/link: a Link that does not use buttonClass needs PRESSED, FOCUS_RING and an active: tone.
+  it("gives every <Link not using buttonClass pressed, focus and active tone", () => {
+    const offenders: string[] = [];
+    const walk = (dir: string) => {
+      for (const f of readdirSync(dir)) {
+        const p = join(dir, f);
+        if (statSync(p).isDirectory()) walk(p);
+        else if (/\.tsx$/.test(f) && !/\.test\.tsx$/.test(f)) {
+          const src = readFileSync(p, "utf8");
+          for (const m of src.matchAll(/<Link\b[\s\S]*?>/g)) {
+            const tag = m[0];
+            const ok = /buttonClass|TAPPABLE_CARD/.test(tag) || (/PRESSED/.test(tag) && /FOCUS_RING/.test(tag) && /active:text-|active:bg-/.test(tag));
+            if (!ok) offenders.push(`${p}: ${tag.split("\n")[0]}`);
+          }
+        }
+      }
+    };
+    walk(__dirname);
+    expect(offenders).toEqual([]);
   });
 });

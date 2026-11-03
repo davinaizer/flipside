@@ -1,6 +1,6 @@
 "use client";
 
-import { ErrorState } from "@/ui/states/ErrorState";
+import { RootErrorView } from "@/ui/states/RootErrorView";
 
 /**
  * Catches what (app)/error.tsx cannot: an error boundary never covers its own
@@ -8,9 +8,5 @@ import { ErrorState } from "@/ui/states/ErrorState";
  * unreachable) lands here.
  */
 export default function RootError({ reset }: { error: Error; reset: () => void }) {
-  return (
-    <main className="p-8">
-      <ErrorState onRetry={reset} />
-    </main>
-  );
+  return <RootErrorView onRetry={reset} />;
 }

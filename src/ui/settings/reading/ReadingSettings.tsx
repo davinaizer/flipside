@@ -10,7 +10,7 @@ import { DEFAULT_SETTINGS, type Settings } from "@/shared/settings";
 import { ReadingCard } from "@/ui/reading-card/ReadingCard";
 import { Choice } from "../Choice";
 import { useSettings } from "../SettingsProvider";
-import { buttonClass } from "@/ui/button/button-class";
+import { buttonClass, FOCUS_RING, PRESSED } from "@/ui/button/button-class";
 
 const FONT_LABEL: Record<FontId, string> = {
   atkinson: "Atkinson Hyperlegible Next",
@@ -85,7 +85,7 @@ export function ReadingSettings() {
               type="button"
               aria-pressed={settings.cardColor === c}
               onClick={() => set({ cardColor: c })}
-              className="flex min-h-11 flex-col items-center gap-1 rounded-2xl px-2 py-1 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+              className={`flex min-h-11 flex-col items-center gap-1 rounded-2xl px-2 py-1 hover:bg-surface-container-high active:bg-surface-container-highest ${PRESSED} ${FOCUS_RING}`}
             >
               <span
                 aria-hidden="true"

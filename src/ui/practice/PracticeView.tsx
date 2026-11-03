@@ -5,7 +5,7 @@ import { QUESTION_SCALE } from "@/shared/constants";
 import type { SessionCardPayload } from "@/shared/schemas/session";
 import { textToRead, type Reader } from "./speech";
 import { readingStyle, type ReadingSettings } from "@/ui/reading-card/ReadingCard";
-import { buttonClass } from "@/ui/button/button-class";
+import { buttonClass, FOCUS_RING, PRESSED } from "@/ui/button/button-class";
 
 export const FRONT_HINT = "Say your answer out loud first, then show it.";
 
@@ -59,7 +59,7 @@ export function SessionProgress({ done, total }: { done: number; total: number }
 }
 
 export const iconButton =
-  "flex size-11 items-center justify-center rounded-full border border-card-edge bg-surface-card text-on-surface-variant shadow-card hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary";
+  `flex size-11 items-center justify-center rounded-full border border-card-edge bg-surface-card text-on-surface-variant shadow-card hover:text-primary active:bg-surface-container-high ${PRESSED} ${FOCUS_RING}`;
 
 function Answer({ card }: { card: SessionCardPayload }) {
   const lines = bulletLines(card.back, card.answerStyle);
@@ -133,7 +133,7 @@ export function PracticeView({
         </div>
       </header>
       <SessionProgress done={done} total={total} />
-      <article data-testid="practice-card" className="rounded-3xl p-8 text-left" style={readingStyle(settings)}>
+      <article data-testid="practice-card" className="rounded-3xl p-8 shadow-card text-left" style={readingStyle(settings)}>
         <span className="inline-block rounded-full bg-secondary-container px-4 py-1 text-sm font-semibold text-on-secondary-container">
           {card.topic}
         </span>

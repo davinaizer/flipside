@@ -29,10 +29,213 @@
         "profile_picker"
       ],
       "notes": "Shared top bar on app screens (theme toggle plus a slot for the avatar, which F10 wires to /profile); toggle moves out of the sidebar into the top bar, the practice top bar, and the top-right of the profile picker (login page added in F14 reuses it). Toggle is one switch with sun and moon icons, no visible label, accessible name and state. One elevation token for both themes: update DESIGN-DARK.md first (D24), then tokens.css and every card or surface. Shared hover, pressed and focus states in the button class and tappable cards. Re-run AC12 and AC13 e2e in both themes.",
-      "status": "todo",
-      "branch": null,
-      "pr": null,
-      "tasks": []
+      "status": "done",
+      "branch": "feat/F9-top-bar-theme-toggle",
+      "pr": 27,
+      "tasks": [
+        {
+          "id": "F9.1",
+          "title": "Elevation token for both themes (D24)",
+          "reqs": [
+            "U1"
+          ],
+          "prd_sections": [
+            "4",
+            "8"
+          ],
+          "area": "docs/design/DESIGN-DARK.md, src/ui/tokens.css",
+          "done_when": "DESIGN-DARK.md states the subtle dark shadow; tokens.test.ts asserts one elevation token defined in both themes with the same semantic name, and no raw hex or per-component shadow values.",
+          "status": "done"
+        },
+        {
+          "id": "F9.2",
+          "title": "Apply elevation to every card and surface",
+          "reqs": [
+            "U1"
+          ],
+          "prd_sections": [
+            "4",
+            "8"
+          ],
+          "area": "src/ui/** components",
+          "done_when": "Test (or grep-based tokens test) asserts no component sets its own shadow value; all card and surface classes use the elevation token. verify.sh green.",
+          "status": "done"
+        },
+        {
+          "id": "F9.3",
+          "title": "Hover, pressed and focus states on buttons and tappable cards",
+          "reqs": [
+            "U2"
+          ],
+          "prd_sections": [
+            "4",
+            "8"
+          ],
+          "area": "src/ui/button/button-class.ts, DeckTile, tappable cards",
+          "done_when": "button-class.test.ts asserts hover, active (pressed) and focus-visible ring classes, with pressed motion guarded by motion-reduce; tappable cards use the same classes.",
+          "status": "done"
+        },
+        {
+          "id": "F9.4",
+          "title": "ThemeToggle as one sun and moon switch",
+          "reqs": [
+            "T6",
+            "T5"
+          ],
+          "prd_sections": [
+            "4",
+            "8"
+          ],
+          "area": "src/ui/settings/ThemeToggle.tsx",
+          "done_when": "Component test: role=switch with accessible name, aria-checked reflects theme, both icons rendered, no visible text; click flips theme through the settings saver.",
+          "status": "done"
+        },
+        {
+          "id": "F9.5",
+          "title": "Shared TopBar with toggle and avatar slot; remove toggle from sidebar",
+          "reqs": [
+            "U3",
+            "T6"
+          ],
+          "prd_sections": [
+            "4",
+            "8"
+          ],
+          "area": "src/ui/shell/TopBar.tsx, Sidebar.tsx, src/app/(app)/layout.tsx",
+          "done_when": "Test: app layout renders a top bar with toggle and avatar, no product title; Sidebar no longer renders the toggle. Avatar is a plain slot until F10.",
+          "status": "done"
+        },
+        {
+          "id": "F9.6",
+          "title": "Theme toggle on practice top bar and profile picker",
+          "reqs": [
+            "T6"
+          ],
+          "prd_sections": [
+            "4",
+            "8"
+          ],
+          "area": "src/ui/practice/PracticeScreen.tsx, src/ui/profile/ProfilePicker.tsx",
+          "done_when": "Component tests: toggle present beside the settings shortcut in practice and top-right in the picker, with the same accessible name; reusable by the F14 login page.",
+          "status": "done"
+        },
+        {
+          "id": "F9.7",
+          "title": "E2E: toggle on every screen, AC12/AC13 in both themes",
+          "reqs": [
+            "T6",
+            "U1",
+            "U2",
+            "U3"
+          ],
+          "prd_sections": [
+            "4",
+            "8"
+          ],
+          "area": "e2e/theme.spec.ts, e2e/a11y.spec.ts",
+          "done_when": "pnpm test:e2e: toggle visible on each screen incl. practice and picker, persists after reload, axe has no serious or critical issues and 44 px targets hold in both themes (AC16, AC21, AC12, AC13).",
+          "status": "done"
+        },
+        {
+          "id": "F9.8",
+          "title": "Fix U2 gaps: grade buttons, Try again, theme switch, delete confirm",
+          "reqs": [
+            "U2"
+          ],
+          "prd_sections": [
+            "4",
+            "8"
+          ],
+          "area": "src/ui/practice/GradeBar.tsx, src/ui/settings/ThemeToggle.tsx, src/ui/deck/delete-deck/DeleteDeck.tsx, src/ui/button/button-class.ts",
+          "done_when": "Each of these buttons has hover, pressed (PRESSED, motion-reduce safe) and FOCUS_RING; unit assertions added for GradeBar, ThemeToggle and DeleteDeck classes.",
+          "status": "done"
+        },
+        {
+          "id": "F9.9",
+          "title": "Fix U2 gaps: Choice pills, Progress range buttons, colour swatches; guard test",
+          "reqs": [
+            "U2"
+          ],
+          "prd_sections": [
+            "4",
+            "8"
+          ],
+          "area": "src/ui/settings/Choice.tsx, src/ui/progress/ProgressView.tsx, src/ui/settings/reading/ReadingSettings.tsx, src/ui/tokens.test.ts",
+          "done_when": "Those buttons have hover, pressed and focus ring; a grep-style test asserts every <button under src/ui uses buttonClass, TAPPABLE_CARD, iconButton or includes PRESSED and FOCUS_RING. verify.sh green.",
+          "status": "done"
+        },
+        {
+          "id": "F9.10",
+          "title": "Fix U2 gaps round 2: import labels, sidebar nav, reduced-motion pressed",
+          "reqs": [
+            "U2"
+          ],
+          "prd_sections": [
+            "4",
+            "8"
+          ],
+          "area": "src/ui/import/ImportFlow.tsx, src/ui/shell/Sidebar.tsx, src/ui/settings/Choice.tsx, src/ui/progress/ProgressView.tsx, src/ui/settings/reading/ReadingSettings.tsx, src/ui/practice/PracticeView.tsx, src/ui/tokens.test.ts",
+          "done_when": "Import swatches and answer-style pills have hover, PRESSED and a peer-focus ring matching FOCUS_RING; sidebar nav pills have PRESSED, FOCUS_RING and an active: colour; Choice pills, range buttons, colour swatches and iconButton also change colour on active: so pressed is visible under reduced motion; selected Choice pill and range button get a hover tone; guard test extended to cover label.cursor-pointer controls. verify.sh green.",
+          "status": "done"
+        },
+        {
+          "id": "F9.11",
+          "title": "Fix round 3 gaps: deck link states, theme switch on practice/summary error states",
+          "reqs": [
+            "U2",
+            "T6"
+          ],
+          "prd_sections": [
+            "4",
+            "8"
+          ],
+          "area": "src/ui/library/LibraryView.tsx, src/ui/practice/PracticeScreen.tsx, src/ui/practice/SummaryScreen.tsx, src/ui/tokens.test.ts",
+          "done_when": "Library deck-name link has PRESSED, FOCUS_RING and an active: tone; guard test extended to Link elements not using buttonClass; PracticeScreen and SummaryScreen render ThemeToggle above ErrorState in a top-right bar, with a test. verify.sh green.",
+          "status": "done"
+        },
+        {
+          "id": "F9.12",
+          "title": "Fix round 4 gap: theme switch on the 'session has no cards' practice state",
+          "reqs": [
+            "T6"
+          ],
+          "prd_sections": [
+            "4",
+            "8"
+          ],
+          "area": "src/ui/practice/PracticeScreen.tsx, src/ui/practice/PracticeHeader.test.tsx",
+          "done_when": "The 'This session has no cards.' state renders ThemeToggle in the same top-right bar as LoadError (shared wrapper, no copy); PracticeHeader.test.tsx asserts it. Before finishing, list every other full-screen practice state in PracticeScreen.tsx and SummaryScreen.tsx and confirm each shows the switch, except the loading skeleton. verify.sh green.",
+          "status": "done"
+        },
+        {
+          "id": "F9.13",
+          "title": "Fix round 5 gap: theme switch on the root error page",
+          "reqs": [
+            "T6"
+          ],
+          "prd_sections": [
+            "4",
+            "8"
+          ],
+          "area": "src/app/error.tsx, src/ui/profile/ProfilePicker.tsx, src/ui/settings/ThemeToggle.tsx, src/ui/states/",
+          "done_when": "src/app/error.tsx shows the attribute-only ThemeSwitch (no SettingsProvider needed) in a top-right bar above ErrorState via a small src/ui component; share the existing switch, do not copy it; component test added. Also grep for any other error.tsx, not-found.tsx or global-error.tsx outside the (app) layout and cover them if they exist. verify.sh green.",
+          "status": "done"
+        },
+        {
+          "id": "F9.14",
+          "title": "Remove theme toggle from practice screens (user-directed deviation from T6/AC16)",
+          "reqs": [
+            "T6"
+          ],
+          "prd_sections": [
+            "4",
+            "8"
+          ],
+          "area": "src/ui/practice/PracticeScreen.tsx, src/ui/practice/PracticeHeader.test.tsx, e2e/a11y.spec.ts, docs/decisions.md",
+          "done_when": "The practice card header, the 'no cards' state and the practice load-error state no longer render a theme switch; the summary and its load error still do. Unit and e2e checks updated to match (practice no longer expects the switch; summary and picker still do). Log in docs/decisions.md as 'DEVIATION (user-directed): T6/AC16/README item 19 list practice; user asked to remove it from practice. PRD not edited; user to update.' Do not edit PRD text or ACs. verify.sh green, relevant e2e green.",
+          "status": "done"
+        }
+      ]
     },
     {
       "id": "F10",
@@ -62,7 +265,82 @@
       "status": "todo",
       "branch": null,
       "pr": null,
-      "tasks": []
+      "tasks": [
+        {
+          "id": "F10.1",
+          "title": "Profile update schema",
+          "reqs": [
+            "P7"
+          ],
+          "prd_sections": [
+            "2",
+            "11"
+          ],
+          "area": "src/shared/schemas/profile.ts",
+          "done_when": "shared.test.ts: Zod schema accepts avatar from AVATAR_IDS and name 1 to 24 chars after trim; rejects empty, whitespace-only, 25 chars and unknown avatar.",
+          "status": "todo"
+        },
+        {
+          "id": "F10.2",
+          "title": "Profile service update and PATCH /api/v1/me",
+          "reqs": [
+            "P7",
+            "P4"
+          ],
+          "prd_sections": [
+            "2",
+            "10",
+            "11"
+          ],
+          "area": "src/server/profile.ts, src/app/api/v1/me/route.ts",
+          "done_when": "API test: PATCH updates avatar and name for the current profile only, persists, returns 422 with a clear message on invalid input, leaves other profile untouched, allows duplicate avatars.",
+          "status": "todo"
+        },
+        {
+          "id": "F10.3",
+          "title": "Profile page with avatar grid and name field",
+          "reqs": [
+            "P7"
+          ],
+          "prd_sections": [
+            "4",
+            "8"
+          ],
+          "area": "src/app/(app)/profile/page.tsx, src/ui/profile/ProfileScreen.tsx",
+          "done_when": "Component test: Settings-layout page shows the avatar grid (selected state with icon, not colour only), name field with inline error for empty or over 24, Save calls PATCH; room left for Sign out.",
+          "status": "todo"
+        },
+        {
+          "id": "F10.4",
+          "title": "Top-bar avatar links to /profile; changes show at once",
+          "reqs": [
+            "P6",
+            "P7"
+          ],
+          "prd_sections": [
+            "4",
+            "8"
+          ],
+          "area": "src/ui/shell/TopBar.tsx, Sidebar.tsx, ProfilePicker.tsx",
+          "done_when": "Test: avatar is a link named for the profile; after save, top bar, sidebar and picker show the new avatar and name without manual reload.",
+          "status": "todo"
+        },
+        {
+          "id": "F10.5",
+          "title": "E2E: edit profile",
+          "reqs": [
+            "P6",
+            "P7"
+          ],
+          "prd_sections": [
+            "4",
+            "8"
+          ],
+          "area": "e2e/profiles.spec.ts",
+          "done_when": "pnpm test:e2e AC15: tap avatar, change avatar and name, see it in top bar, sidebar and picker, survives reload; empty and 25-char names rejected with message.",
+          "status": "todo"
+        }
+      ]
     },
     {
       "id": "F11",
@@ -93,7 +371,97 @@
       "status": "todo",
       "branch": null,
       "pr": null,
-      "tasks": []
+      "tasks": [
+        {
+          "id": "F11.1",
+          "title": "Show answer button with eye icon; hint below, outside the card",
+          "reqs": [
+            "R15",
+            "R2"
+          ],
+          "prd_sections": [
+            "4",
+            "8"
+          ],
+          "area": "src/ui/practice/PracticeView.tsx, src/ui/icons/Icon.tsx",
+          "done_when": "PracticeView test: eye icon on Show answer, hint text rendered after the button and not inside the card element.",
+          "status": "todo"
+        },
+        {
+          "id": "F11.2",
+          "title": "3D flip on reveal (button, card tap, Space)",
+          "reqs": [
+            "R16"
+          ],
+          "prd_sections": [
+            "4",
+            "8"
+          ],
+          "area": "src/ui/practice/PracticeView.tsx, ReadingCard, src/app/globals.css",
+          "done_when": "Test: all three triggers reveal the back; CSS uses perspective, rotateY and backface-visibility (no dependency); front is inert/aria-hidden when flipped; next-card render does not animate.",
+          "status": "todo"
+        },
+        {
+          "id": "F11.3",
+          "title": "Reduced motion and Undo last without animation",
+          "reqs": [
+            "R16",
+            "R6"
+          ],
+          "prd_sections": [
+            "4",
+            "8"
+          ],
+          "area": "src/ui/practice/PracticeView.tsx, globals.css",
+          "done_when": "Test: with prefers-reduced-motion no rotation is applied; Undo last returns to the front without a reverse animation.",
+          "status": "todo"
+        },
+        {
+          "id": "F11.4",
+          "title": "Prompt above grade buttons",
+          "reqs": [
+            "R17",
+            "R4"
+          ],
+          "prd_sections": [
+            "4",
+            "8"
+          ],
+          "area": "src/ui/practice/GradeBar.tsx",
+          "done_when": "Test: 'How well did you know this?' renders directly above the three grade buttons and labels the group for assistive tech.",
+          "status": "todo"
+        },
+        {
+          "id": "F11.5",
+          "title": "Keep R12 timing and 200 ms next-card render unaffected",
+          "reqs": [
+            "R12"
+          ],
+          "prd_sections": [
+            "4",
+            "8"
+          ],
+          "area": "src/ui/practice/use-session.ts, e2e/performance.spec.ts",
+          "done_when": "use-session test: time starts when the front appears, not at flip end; e2e performance spec still shows next card under 200 ms.",
+          "status": "todo"
+        },
+        {
+          "id": "F11.6",
+          "title": "E2E: practice flip flow in both themes",
+          "reqs": [
+            "R15",
+            "R16",
+            "R17"
+          ],
+          "prd_sections": [
+            "4",
+            "8"
+          ],
+          "area": "e2e/practice.spec.ts, e2e/a11y.spec.ts",
+          "done_when": "pnpm test:e2e AC17: reveal by button, tap and Space; hover, pressed and focus visible on buttons; axe clean in both themes.",
+          "status": "todo"
+        }
+      ]
     },
     {
       "id": "F12",
@@ -123,7 +491,65 @@
       "status": "todo",
       "branch": null,
       "pr": null,
-      "tasks": []
+      "tasks": [
+        {
+          "id": "F12.1",
+          "title": "Summary fields: deck name and per-card topic",
+          "reqs": [
+            "R18"
+          ],
+          "prd_sections": [
+            "7",
+            "11"
+          ],
+          "area": "src/server/sessions.ts, src/shared/schemas/session.ts",
+          "done_when": "sessions-end-summary.test.ts: summary returns deck name ('Several decks' flag when more than one), and topic for each revisit card; only add fields still missing from the current response.",
+          "status": "todo"
+        },
+        {
+          "id": "F12.2",
+          "title": "Summary view model",
+          "reqs": [
+            "R18",
+            "R11"
+          ],
+          "prd_sections": [
+            "7",
+            "8"
+          ],
+          "area": "src/ui/practice/SummaryView.tsx, SummaryView.test.ts",
+          "done_when": "Unit test: view model gives cards practised, session time, per-grade counts, revisit list (max three) with grade, topic, question and count badge; matches the session figures.",
+          "status": "todo"
+        },
+        {
+          "id": "F12.3",
+          "title": "Rebuild SummaryScreen to the mockup layout",
+          "reqs": [
+            "R18"
+          ],
+          "prd_sections": [
+            "4",
+            "8"
+          ],
+          "area": "src/ui/practice/SummaryScreen.tsx",
+          "done_when": "Component test: deck card, ring with count, time, grade chips with icon and label, Cards to revisit panel, Practise those now (count), Back to Library; none of README items 3, 7, 20 present.",
+          "status": "todo"
+        },
+        {
+          "id": "F12.4",
+          "title": "E2E: summary in both themes",
+          "reqs": [
+            "R18"
+          ],
+          "prd_sections": [
+            "4",
+            "8"
+          ],
+          "area": "e2e/practice.spec.ts, e2e/a11y.spec.ts",
+          "done_when": "pnpm test:e2e AC18: finish a session and check figures against grades given; Practise those now starts a session of the misses; axe clean in both themes.",
+          "status": "todo"
+        }
+      ]
     },
     {
       "id": "F13",
@@ -155,7 +581,82 @@
       "status": "todo",
       "branch": null,
       "pr": null,
-      "tasks": []
+      "tasks": [
+        {
+          "id": "F13.1",
+          "title": "Read questions aloud switch without On/Off text",
+          "reqs": [
+            "T7"
+          ],
+          "prd_sections": [
+            "4",
+            "8"
+          ],
+          "area": "src/ui/settings/practice/PracticeSettings.tsx",
+          "done_when": "PracticeSettings.test.tsx: no 'On' or 'Off' text; role=switch, accessible name and aria-checked still present and toggle correctly.",
+          "status": "todo"
+        },
+        {
+          "id": "F13.2",
+          "title": "Settings preview uses the practice card component",
+          "reqs": [
+            "T8"
+          ],
+          "prd_sections": [
+            "4",
+            "8"
+          ],
+          "area": "src/ui/settings/reading/ReadingSettings.tsx, src/ui/reading-card/ReadingCard.tsx",
+          "done_when": "ReadingSettings.test.tsx: preview shows topic chip, Question label, read-aloud button, question and footer hint via the shared card; updates live when settings change.",
+          "status": "todo"
+        },
+        {
+          "id": "F13.3",
+          "title": "Move Delete deck into Edit deck panel",
+          "reqs": [
+            "D8",
+            "D5"
+          ],
+          "prd_sections": [
+            "4",
+            "8"
+          ],
+          "area": "src/ui/deck/DeckView.tsx, edit-deck/EditDeck.tsx, delete-deck/DeleteDeck.tsx",
+          "done_when": "Test: deck page has no Delete deck control; Edit deck panel contains it; confirmation copy with card and review counts unchanged.",
+          "status": "todo"
+        },
+        {
+          "id": "F13.4",
+          "title": "ImportFlow single column, sections 1, 2, 3",
+          "reqs": [
+            "I7"
+          ],
+          "prd_sections": [
+            "4",
+            "8"
+          ],
+          "area": "src/ui/import/ImportFlow.tsx",
+          "done_when": "import.test.ts: no lg grid classes; sections render in order Choose file, Check the cards, Deck details at every width.",
+          "status": "todo"
+        },
+        {
+          "id": "F13.5",
+          "title": "E2E: settings, deck and import fixes",
+          "reqs": [
+            "T7",
+            "T8",
+            "D8",
+            "I7"
+          ],
+          "prd_sections": [
+            "4",
+            "8"
+          ],
+          "area": "e2e/settings.spec.ts, e2e/deck.spec.ts, e2e/import.spec.ts, e2e/a11y.spec.ts",
+          "done_when": "pnpm test:e2e AC19, AC20: switch state exposed, preview matches practice card, delete only via Edit deck, import single column on desktop, iPad landscape and portrait; axe clean in both themes.",
+          "status": "todo"
+        }
+      ]
     },
     {
       "id": "F14",
@@ -186,7 +687,123 @@
       "status": "todo",
       "branch": null,
       "pr": null,
-      "tasks": []
+      "tasks": [
+        {
+          "id": "F14.1",
+          "title": "ADMIN_PASSWORD env and auth constants",
+          "reqs": [
+            "AG1",
+            "AG2"
+          ],
+          "prd_sections": [
+            "9",
+            "13"
+          ],
+          "area": "src/server/env.ts, src/shared/constants.ts, .env.example, playwright.config.ts",
+          "done_when": "env.test.ts: start fails without ADMIN_PASSWORD; 30-day cookie lifetime and cookie name are constants in src/shared; .env.example has a placeholder.",
+          "status": "todo"
+        },
+        {
+          "id": "F14.2",
+          "title": "Auth service: sign and verify cookie, constant-time password check",
+          "reqs": [
+            "AG1",
+            "AG2"
+          ],
+          "prd_sections": [
+            "9",
+            "11"
+          ],
+          "area": "src/server/auth.ts",
+          "done_when": "Unit tests: node:crypto HMAC-SHA256, key derived from ADMIN_PASSWORD, timingSafeEqual; rejects tampered, expired and wrong-key tokens; changing the password invalidates old tokens. No new dependency.",
+          "status": "todo"
+        },
+        {
+          "id": "F14.3",
+          "title": "POST /auth/login and /auth/logout",
+          "reqs": [
+            "AG1",
+            "AG2",
+            "AG3"
+          ],
+          "prd_sections": [
+            "11"
+          ],
+          "area": "src/app/api/v1/auth/login/route.ts, logout/route.ts, src/shared/schemas",
+          "done_when": "API test: correct password sets httpOnly SameSite=Lax flipside_auth cookie; wrong password returns a neutral error with no reason; logout clears the cookie.",
+          "status": "todo"
+        },
+        {
+          "id": "F14.4",
+          "title": "Access check on pages and /api/v1",
+          "reqs": [
+            "AG2"
+          ],
+          "prd_sections": [
+            "9",
+            "11"
+          ],
+          "area": "src/proxy.ts (or middleware), src/server/http",
+          "done_when": "API test: without a valid cookie pages redirect to /login and every /api/v1 route returns 401 except GET /health and POST /auth/login; valid cookie passes. One check, no per-route copies.",
+          "status": "todo"
+        },
+        {
+          "id": "F14.5",
+          "title": "Login page on the picker layout with theme toggle",
+          "reqs": [
+            "AG1",
+            "T6"
+          ],
+          "prd_sections": [
+            "4",
+            "8"
+          ],
+          "area": "src/app/login/page.tsx, src/ui/profile/LoginScreen.tsx",
+          "done_when": "Component test: password field, neutral error message, theme toggle from F9, picker layout; submits to /auth/login and goes to the picker.",
+          "status": "todo"
+        },
+        {
+          "id": "F14.6",
+          "title": "Sign out on the Profile page",
+          "reqs": [
+            "AG3"
+          ],
+          "prd_sections": [
+            "4"
+          ],
+          "area": "src/ui/profile/ProfileScreen.tsx",
+          "done_when": "Component test: Sign out calls /auth/logout and navigates to /login.",
+          "status": "todo"
+        },
+        {
+          "id": "F14.7",
+          "title": "E2E sign-in helper and AC14 spec",
+          "reqs": [
+            "AG1",
+            "AG2",
+            "AG3"
+          ],
+          "prd_sections": [
+            "13"
+          ],
+          "area": "e2e/helpers/index.ts, all e2e specs, playwright.config.ts",
+          "done_when": "pnpm test:e2e: every spec signs in through the shared helper; new spec covers redirect, 401, wrong password, sign out, and axe on /login in both themes.",
+          "status": "todo"
+        },
+        {
+          "id": "F14.8",
+          "title": "Operations doc and launchd job get ADMIN_PASSWORD",
+          "reqs": [
+            "AG1"
+          ],
+          "prd_sections": [
+            "13"
+          ],
+          "area": "docs/operations.md, ops/",
+          "done_when": "docs/operations.md documents ADMIN_PASSWORD, rotation signs everyone out, and the iPad home-screen shortcut signing in separately; launchd app job passes the variable. verify.sh green.",
+          "status": "todo"
+        }
+      ]
     }
   ]
 }
