@@ -206,6 +206,20 @@
           "area": "src/ui/practice/PracticeScreen.tsx, src/ui/practice/PracticeHeader.test.tsx",
           "done_when": "The 'This session has no cards.' state renders ThemeToggle in the same top-right bar as LoadError (shared wrapper, no copy); PracticeHeader.test.tsx asserts it. Before finishing, list every other full-screen practice state in PracticeScreen.tsx and SummaryScreen.tsx and confirm each shows the switch, except the loading skeleton. verify.sh green.",
           "status": "done"
+        },
+        {
+          "id": "F9.13",
+          "title": "Fix round 5 gap: theme switch on the root error page",
+          "reqs": [
+            "T6"
+          ],
+          "prd_sections": [
+            "4",
+            "8"
+          ],
+          "area": "src/app/error.tsx, src/ui/profile/ProfilePicker.tsx, src/ui/settings/ThemeToggle.tsx, src/ui/states/",
+          "done_when": "src/app/error.tsx shows the attribute-only ThemeSwitch (no SettingsProvider needed) in a top-right bar above ErrorState via a small src/ui component; share the existing switch, do not copy it; component test added. Also grep for any other error.tsx, not-found.tsx or global-error.tsx outside the (app) layout and cover them if they exist. verify.sh green.",
+          "status": "todo"
         }
       ]
     },
