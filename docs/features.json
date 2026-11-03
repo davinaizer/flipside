@@ -219,7 +219,7 @@
           ],
           "area": "src/app/error.tsx, src/ui/profile/ProfilePicker.tsx, src/ui/settings/ThemeToggle.tsx, src/ui/states/",
           "done_when": "src/app/error.tsx shows the attribute-only ThemeSwitch (no SettingsProvider needed) in a top-right bar above ErrorState via a small src/ui component; share the existing switch, do not copy it; component test added. Also grep for any other error.tsx, not-found.tsx or global-error.tsx outside the (app) layout and cover them if they exist. verify.sh green.",
-          "status": "todo"
+          "status": "done"
         }
       ]
     },
