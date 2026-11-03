@@ -135,6 +135,34 @@
           "area": "e2e/theme.spec.ts, e2e/a11y.spec.ts",
           "done_when": "pnpm test:e2e: toggle visible on each screen incl. practice and picker, persists after reload, axe has no serious or critical issues and 44 px targets hold in both themes (AC16, AC21, AC12, AC13).",
           "status": "done"
+        },
+        {
+          "id": "F9.8",
+          "title": "Fix U2 gaps: grade buttons, Try again, theme switch, delete confirm",
+          "reqs": [
+            "U2"
+          ],
+          "prd_sections": [
+            "4",
+            "8"
+          ],
+          "area": "src/ui/practice/GradeBar.tsx, src/ui/settings/ThemeToggle.tsx, src/ui/deck/delete-deck/DeleteDeck.tsx, src/ui/button/button-class.ts",
+          "done_when": "Each of these buttons has hover, pressed (PRESSED, motion-reduce safe) and FOCUS_RING; unit assertions added for GradeBar, ThemeToggle and DeleteDeck classes.",
+          "status": "todo"
+        },
+        {
+          "id": "F9.9",
+          "title": "Fix U2 gaps: Choice pills, Progress range buttons, colour swatches; guard test",
+          "reqs": [
+            "U2"
+          ],
+          "prd_sections": [
+            "4",
+            "8"
+          ],
+          "area": "src/ui/settings/Choice.tsx, src/ui/progress/ProgressView.tsx, src/ui/settings/reading/ReadingSettings.tsx, src/ui/tokens.test.ts",
+          "done_when": "Those buttons have hover, pressed and focus ring; a grep-style test asserts every <button under src/ui uses buttonClass, TAPPABLE_CARD, iconButton or includes PRESSED and FOCUS_RING. verify.sh green.",
+          "status": "todo"
         }
       ]
     },
