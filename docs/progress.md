@@ -8,3 +8,4 @@ F9.2: added shadow-card to the remaining card surfaces (ReadingCard, practice ca
 F9.3: buttonClass now has hover, pressed (active) and focus-visible classes, pressed scale guarded by motion-reduce; profile tile and the read-aloud switch card share TAPPABLE_CARD.
 F9.4: ThemeToggle is now one sun/moon switch with no visible text; component test covers role, name, state, icons and click.
 F9.5: new TopBar (theme switch and profile avatar slot, no product title) in the app layout; ThemeToggle removed from the Sidebar; component test covers both.
+- F9.6: theme switch added to the practice top bar (beside settings) and top-right of the profile picker; ThemeSwitch split out for reuse.

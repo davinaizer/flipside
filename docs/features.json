@@ -117,7 +117,7 @@
           ],
           "area": "src/ui/practice/PracticeScreen.tsx, src/ui/profile/ProfilePicker.tsx",
           "done_when": "Component tests: toggle present beside the settings shortcut in practice and top-right in the picker, with the same accessible name; reusable by the F14 login page.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F9.7",

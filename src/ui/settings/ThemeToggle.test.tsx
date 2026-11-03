@@ -28,9 +28,9 @@ test("a switch with an accessible name, both icons and no visible text", () => {
 
 test("click flips the theme through the settings saver", () => {
   // No DOM here, so call the component and fire the handler it hands to the button.
-  (ThemeToggle().props as { onClick: () => void }).onClick();
+  (ThemeToggle().props as { onToggle: () => void }).onToggle();
   expect(update).toHaveBeenCalledWith({ theme: "dark" });
   theme = "dark";
-  (ThemeToggle().props as { onClick: () => void }).onClick();
+  (ThemeToggle().props as { onToggle: () => void }).onToggle();
   expect(update).toHaveBeenLastCalledWith({ theme: "light" });
 });

@@ -8,6 +8,7 @@ import { ErrorState } from "@/ui/states/ErrorState";
 import { Skeleton } from "@/ui/states/Skeleton";
 import { buttonClass } from "@/ui/button/button-class";
 import { Icon } from "@/ui/icons/Icon";
+import { ThemeToggle } from "@/ui/settings/ThemeToggle";
 import { GradeBar } from "./GradeBar";
 import { PracticeView } from "./PracticeView";
 import { SummaryScreen } from "./SummaryScreen";
@@ -41,6 +42,16 @@ export function PracticeScreen({ sessionId }: { sessionId: string }) {
   if (failed) return <div className="p-8"><ErrorState onRetry={retry} /></div>;
   if (!data) return <PracticeLoading />;
   return <ActiveSession data={data} />;
+}
+
+/** Top bar actions: the theme switch beside the settings shortcut (T6). */
+export function PracticeHeaderActions({ onOpenSettings }: { onOpenSettings: () => void }) {
+  return (
+    <>
+      <ThemeToggle />
+      <SettingsShortcut onOpen={onOpenSettings} />
+    </>
+  );
 }
 
 function ActiveSession({ data }: { data: SessionResponse }) {
@@ -79,7 +90,7 @@ function ActiveSession({ data }: { data: SessionResponse }) {
     <>
     <PracticeView
       onEnd={() => controller.end()}
-      headerAction={<SettingsShortcut onOpen={() => setSettingsOpen(true)} />}
+      headerAction={<PracticeHeaderActions onOpenSettings={() => setSettingsOpen(true)} />}
       card={card}
       revealed={view.revealed}
       done={view.done}

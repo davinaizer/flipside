@@ -10,13 +10,18 @@ import { useSettings } from "./SettingsProvider";
 export function ThemeToggle() {
   const { settings, update } = useSettings();
   const dark = settings.theme === "dark";
+  return <ThemeSwitch dark={dark} onToggle={() => update({ theme: dark ? "light" : "dark" }).catch(() => {})} />;
+}
+
+/** The switch alone, for screens with no signed-in profile to save to (profile picker, later login). */
+export function ThemeSwitch({ dark, onToggle }: { dark: boolean; onToggle: () => void }) {
   return (
     <button
       type="button"
       role="switch"
       aria-label="Dark theme"
       aria-checked={dark}
-      onClick={() => update({ theme: dark ? "light" : "dark" }).catch(() => {})}
+      onClick={onToggle}
       className="flex min-h-11 min-w-11 items-center justify-center rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
     >
       <span className="relative flex h-8 w-16 items-center justify-between rounded-full bg-surface-container-high px-2 text-on-surface-variant">
