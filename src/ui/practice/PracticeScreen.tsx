@@ -26,17 +26,38 @@ export function PracticeLoading() {
   );
 }
 
-/** Load-error state with the theme switch in a top-right bar above it (T6: the switch is on every screen). */
-export function LoadError({ onRetry }: { onRetry: () => void }) {
+/** Top-right bar holding the theme switch above a full-screen state (T6: the switch is on every screen). */
+export function ThemeBar({ children }: { children: React.ReactNode }) {
   return (
     <>
       <div className="flex justify-end px-6 pt-4 md:px-8">
         <ThemeToggle />
       </div>
+      {children}
+    </>
+  );
+}
+
+export function LoadError({ onRetry }: { onRetry: () => void }) {
+  return (
+    <ThemeBar>
       <div className="p-8">
         <ErrorState onRetry={onRetry} />
       </div>
-    </>
+    </ThemeBar>
+  );
+}
+
+export function NoCards({ onEnd }: { onEnd: () => void }) {
+  return (
+    <ThemeBar>
+      <div className="mx-auto flex w-full max-w-3xl flex-col gap-6 p-8">
+        <p>This session has no cards.</p>
+        <button type="button" onClick={onEnd} className={buttonClass("secondary", { extra: "self-start" })}>
+          End session
+        </button>
+      </div>
+    </ThemeBar>
   );
 }
 
@@ -91,14 +112,7 @@ function ActiveSession({ data }: { data: SessionResponse }) {
   );
 
   if (!card || !labels) {
-    return (
-      <div className="mx-auto flex w-full max-w-3xl flex-col gap-6 p-8">
-        <p>This session has no cards.</p>
-        <button type="button" onClick={() => controller.end()} className={buttonClass("secondary", { extra: "self-start" })}>
-          End session
-        </button>
-      </div>
-    );
+    return <NoCards onEnd={() => controller.end()} />;
   }
   return (
     <>

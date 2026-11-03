@@ -30,3 +30,11 @@ test("load-error states on practice and summary keep the theme switch above the 
   expect(html).toContain("justify-end");
   expect(html.indexOf('aria-label="Dark theme"')).toBeLessThan(html.indexOf('role="alert"'));
 });
+
+test("the 'session has no cards' state keeps the theme switch above its message", async () => {
+  const { NoCards } = await import("./PracticeScreen");
+  const html = renderToStaticMarkup(<NoCards onEnd={() => {}} />);
+  expect(html).toContain("justify-end");
+  expect(html.indexOf('aria-label="Dark theme"')).toBeGreaterThan(-1);
+  expect(html.indexOf('aria-label="Dark theme"')).toBeLessThan(html.indexOf("This session has no cards."));
+});

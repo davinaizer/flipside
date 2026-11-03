@@ -205,7 +205,7 @@
           ],
           "area": "src/ui/practice/PracticeScreen.tsx, src/ui/practice/PracticeHeader.test.tsx",
           "done_when": "The 'This session has no cards.' state renders ThemeToggle in the same top-right bar as LoadError (shared wrapper, no copy); PracticeHeader.test.tsx asserts it. Before finishing, list every other full-screen practice state in PracticeScreen.tsx and SummaryScreen.tsx and confirm each shows the switch, except the loading skeleton. verify.sh green.",
-          "status": "todo"
+          "status": "done"
         }
       ]
     },

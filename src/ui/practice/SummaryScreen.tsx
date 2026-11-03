@@ -4,8 +4,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import type { SessionSummary } from "@/shared/schemas/session";
 import { api } from "@/ui/api/client";
-import { ThemeToggle } from "@/ui/settings/ThemeToggle";
-import { LoadError, PracticeLoading } from "./PracticeScreen";
+import { LoadError, PracticeLoading, ThemeBar } from "./PracticeScreen";
 import { startSession } from "./start-session";
 import { SummaryView } from "./SummaryView";
 
@@ -28,11 +27,7 @@ export function SummaryScreen({ sessionId }: { sessionId: string }) {
   if (loadFailed) return <LoadError onRetry={load} />;
   if (!summary) return <PracticeLoading />;
   return (
-    <>
-      {/* AC16: the summary has the theme switch too, as the practice screen does. */}
-      <div className="flex justify-end px-6 pt-4 md:px-8">
-        <ThemeToggle />
-      </div>
+    <ThemeBar>
       <SummaryView
         summary={summary}
         starting={starting}
@@ -49,6 +44,6 @@ export function SummaryScreen({ sessionId }: { sessionId: string }) {
           );
         }}
       />
-    </>
+    </ThemeBar>
   );
 }
