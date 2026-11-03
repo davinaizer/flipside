@@ -1,4 +1,5 @@
 import { expect, test, vi, inject } from "vitest";
+import { eq } from "drizzle-orm";
 import { freshDatabase } from "./helpers/db";
 
 test("seed twice leaves exactly Davi and Nicole; a third profile needs no code change", async () => {
@@ -34,4 +35,12 @@ test("seed twice leaves exactly Davi and Nicole; a third profile needs no code c
   });
   await seedProfiles(db);
   expect(await db.select().from(profiles)).toHaveLength(3);
+
+  // A seed profile left with a retired emoji-set id is repaired; a valid choice is kept.
+  await db.update(profiles).set({ avatar: "fox" }).where(eq(profiles.name, "Davi"));
+  await db.update(profiles).set({ avatar: AVATAR_IDS[5] }).where(eq(profiles.name, "Nicole"));
+  await seedProfiles(db);
+  const byName = Object.fromEntries((await db.select().from(profiles)).map((r) => [r.name, r.avatar]));
+  expect(byName.Davi).toBe(AVATAR_IDS[0]);
+  expect(byName.Nicole).toBe(AVATAR_IDS[5]);
 });

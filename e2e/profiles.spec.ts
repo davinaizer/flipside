@@ -1,5 +1,6 @@
 import { expect, test, type Page } from "@playwright/test";
 import { expectNoSeriousA11y, expectTargetsAtLeast44, setTheme } from "./helpers";
+import { AVATAR_IDS } from "../src/shared/avatars";
 
 const DECK = { Davi: "Davi Science", Nicole: "Nicole History" } as const;
 type Name = keyof typeof DECK;
@@ -58,6 +59,9 @@ test("picker and Library pass axe and 44 px checks in both themes", async ({ pag
 });
 
 // AC15. Each project edits its own seeded profile ("Profile desktop" / "Profile ipad"), so the two projects never race.
+// Seeded profiles use AVATAR_IDS[2]; the test picks a different one.
+const NEW = 3;
+
 test("edit profile: avatar and name show in top bar, sidebar and picker, and survive reload", async ({
   page,
 }, info) => {
@@ -80,26 +84,26 @@ test("edit profile: avatar and name show in top bar, sidebar and picker, and sur
   expect((await (await page.request.get("/api/v1/me")).json()).profile.name).toBe(seeded);
 
   await nameField.fill(renamed);
-  await page.getByLabel("panda").check({ force: true });
+  await page.getByLabel(`Avatar ${NEW + 1}`, { exact: true }).check({ force: true });
   await page.getByRole("button", { name: "Save" }).click();
   await expect(page.getByRole("status").filter({ hasText: "Saved" })).toBeVisible();
 
-  // The avatar is aria-hidden, so its glyph is read from the text content of each place it shows.
-  const PANDA = "🐼";
+  // The avatar is aria-hidden, so it is found by its image source inside each place it shows.
+  const picture = `img[src="/avatars/${AVATAR_IDS[NEW]}.webp"]`;
   const check = async () => {
     const topBar = page.getByRole("link", { name: `${renamed}, open profile` });
-    await expect(topBar).toContainText(PANDA);
+    await expect(topBar.locator(picture)).toBeVisible();
     const sidebar = page.getByRole("complementary");
-    await expect(sidebar).toContainText(PANDA);
+    await expect(sidebar.locator(picture)).toBeVisible();
     await expect(sidebar).toContainText(renamed);
-    expect((await (await page.request.get("/api/v1/me")).json()).profile.avatar).toBe("panda");
+    expect((await (await page.request.get("/api/v1/me")).json()).profile.avatar).toBe(AVATAR_IDS[NEW]);
   };
   await check();
   await page.reload();
   await check();
-  await expect(page.getByLabel("panda")).toBeChecked();
+  await expect(page.getByLabel(`Avatar ${NEW + 1}`, { exact: true })).toBeChecked();
 
   await page.goto("/?switch=1");
   const picker = page.getByRole("button", { name: renamed, exact: true });
-  await expect(picker).toContainText(PANDA);
+  await expect(picker.locator(picture)).toBeVisible();
 });

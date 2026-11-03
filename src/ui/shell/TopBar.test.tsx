@@ -13,7 +13,7 @@ const avatar = AVATAR_IDS[0];
 test("top bar has the toggle and an avatar, and no product title", () => {
   const html = renderToStaticMarkup(<TopBar name="Ada" avatar={avatar} />);
   expect(html).toContain('role="switch"');
-  expect(html).toContain("🦊");
+  expect(html).toContain(`/avatars/${avatar}.webp`);
   expect(html).not.toContain("Flipside");
 });
 
@@ -29,5 +29,5 @@ test("top bar avatar is a link to /profile named for the profile", () => {
 test("sidebar shows the profile name and avatar passed from the layout", () => {
   const html = renderToStaticMarkup(<Sidebar name="Grace" avatar={avatar} />);
   expect(html).toContain("Grace");
-  expect(html).toContain("🦊");
+  expect(html).toContain(`/avatars/${avatar}.webp`);
 });

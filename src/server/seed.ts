@@ -14,11 +14,17 @@ export const SEED_PROFILES = [
 export async function seedProfiles(db: Db): Promise<void> {
   for (const p of SEED_PROFILES) {
     const [existing] = await db
-      .select({ id: profiles.id })
+      .select({ id: profiles.id, avatar: profiles.avatar })
       .from(profiles)
       .where(eq(profiles.name, p.name))
       .limit(1);
-    if (existing) continue;
+    if (existing) {
+      // Repair a row left with an avatar id from the retired emoji set, so it shows an illustration.
+      if (!(AVATAR_IDS as readonly string[]).includes(existing.avatar)) {
+        await db.update(profiles).set({ avatar: p.avatar }).where(eq(profiles.id, existing.id));
+      }
+      continue;
+    }
     await db.insert(profiles).values({
       name: p.name,
       avatar: p.avatar,
