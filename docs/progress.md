@@ -27,3 +27,4 @@ F9.14: removed the theme switch from practice (card header, no cards, load error
 - 2026-11-03: F9.14 user-directed: theme switch removed from practice screens (deviation from T6/AC16; PRD for user to update). Not re-reviewed.
 F10.1 added updateProfileRequestSchema (avatar and name both optional, at least one required, for PATCH /me) and PROFILE_NAME_MAX; tests in shared.test.ts.
 F10.2: updateProfile service and PATCH /api/v1/me (422 with issue messages on invalid input); tests in tests/profile-update-api.test.ts.
+F10.3: /profile page with ProfileForm (avatar radio grid with tick, name field with inline error, Save via api.updateProfile PATCH /me); tests in ProfileScreen.test.tsx.

@@ -36,3 +36,4 @@ export const updateProfileRequestSchema = z
 
 export type ProfileSummary = z.infer<typeof profileSummarySchema>;
 export type Me = z.infer<typeof meSchema>;
+export type UpdateProfileRequest = z.infer<typeof updateProfileRequestSchema>;

@@ -13,6 +13,7 @@ import {
   meSchema,
   profileListSchema,
   type Me,
+  type UpdateProfileRequest,
   type ProfileSummary,
 } from "@/shared/schemas/profile";
 
@@ -71,6 +72,8 @@ export const api = {
   endSession: (id: string) => call(`/sessions/${id}/end`, sessionEndResponseSchema, { method: "POST" }),
   summary: (id: string): Promise<SessionSummary> => call(`/sessions/${id}/summary`, sessionSummarySchema),
   me: (): Promise<Me> => call("/me", meSchema),
+  updateProfile: (body: UpdateProfileRequest): Promise<Me> =>
+    call("/me", meSchema, { method: "PATCH", body: JSON.stringify(body) }),
   /** Commit step of the import (PRD section 6, step 4): the file plus deck details, or a deckId to re-import. */
   commitImport: (form: FormData): Promise<ImportResult> =>
     call("/imports", importResultSchema, { method: "POST", body: form }),

@@ -308,7 +308,7 @@
           ],
           "area": "src/app/(app)/profile/page.tsx, src/ui/profile/ProfileScreen.tsx",
           "done_when": "Component test: Settings-layout page shows the avatar grid (selected state with icon, not colour only), name field with inline error for empty or over 24, Save calls PATCH; room left for Sign out.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F10.4",
