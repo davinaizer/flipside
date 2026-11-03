@@ -1,11 +1,11 @@
 "use client";
 
-import { useCallback, useEffect, useState, useSyncExternalStore } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { api } from "@/ui/api/client";
 import { Logo } from "@/ui/icons/Icon";
 import { Avatar } from "@/ui/avatars";
-import { ThemeSwitch } from "@/ui/settings/ThemeToggle";
+import { AttributeThemeSwitch } from "@/ui/settings/AttributeThemeSwitch";
 import { Skeleton } from "@/ui/states/Skeleton";
 import type { ProfileSummary } from "@/shared/schemas/profile";
 import { buttonClass, TAPPABLE_CARD } from "@/ui/button/button-class";
@@ -14,19 +14,6 @@ type State =
   | { kind: "loading" }
   | { kind: "error" }
   | { kind: "ready"; profiles: ProfileSummary[] };
-
-/** No profile is chosen yet, so there are no settings to save to: the choice only sets data-theme until a profile is picked. */
-function PickerThemeSwitch() {
-  // The server renders the theme (the last profile's, or light); follow the attribute so the switch always shows it.
-  const dark = useSyncExternalStore(watchTheme, () => document.documentElement.getAttribute("data-theme") === "dark", () => false);
-  return <ThemeSwitch dark={dark} onToggle={() => document.documentElement.setAttribute("data-theme", dark ? "light" : "dark")} />;
-}
-
-function watchTheme(notify: () => void) {
-  const observer = new MutationObserver(notify);
-  observer.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
-  return () => observer.disconnect();
-}
 
 export function ProfilePicker() {
   const router = useRouter();
@@ -59,7 +46,7 @@ export function ProfilePicker() {
   return (
     <main className="relative flex min-h-screen flex-col items-center justify-center gap-10 bg-surface p-8">
       <div className="absolute right-8 top-4">
-        <PickerThemeSwitch />
+        <AttributeThemeSwitch />
       </div>
       <div className="flex items-center gap-3 rounded-full border border-card-edge bg-surface-card py-2 pl-2 pr-5 shadow-card">
         <Logo size={36} />

@@ -20,3 +20,4 @@ F9.9: Choice pills, Progress range buttons and colour swatches now have pressed 
 - 2026-11-03: REVIEW F9 round 4: GAPS at 57c4618 (no theme switch on the 'session has no cards' practice state)
 - F9.12: shared ThemeBar now wraps LoadError, the no-cards state and the summary; test added in PracticeHeader.test.tsx.
 - 2026-11-03: REVIEW F9 round 5: GAPS at 89c77d2 (root error.tsx has no theme switch; low severity, unexpected server failure only)
+- F9.13: root error.tsx now shows the attribute-only theme switch via RootErrorView; picker shares AttributeThemeSwitch.
