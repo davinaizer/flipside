@@ -177,6 +177,21 @@
           "area": "src/ui/import/ImportFlow.tsx, src/ui/shell/Sidebar.tsx, src/ui/settings/Choice.tsx, src/ui/progress/ProgressView.tsx, src/ui/settings/reading/ReadingSettings.tsx, src/ui/practice/PracticeView.tsx, src/ui/tokens.test.ts",
           "done_when": "Import swatches and answer-style pills have hover, PRESSED and a peer-focus ring matching FOCUS_RING; sidebar nav pills have PRESSED, FOCUS_RING and an active: colour; Choice pills, range buttons, colour swatches and iconButton also change colour on active: so pressed is visible under reduced motion; selected Choice pill and range button get a hover tone; guard test extended to cover label.cursor-pointer controls. verify.sh green.",
           "status": "done"
+        },
+        {
+          "id": "F9.11",
+          "title": "Fix round 3 gaps: deck link states, theme switch on practice/summary error states",
+          "reqs": [
+            "U2",
+            "T6"
+          ],
+          "prd_sections": [
+            "4",
+            "8"
+          ],
+          "area": "src/ui/library/LibraryView.tsx, src/ui/practice/PracticeScreen.tsx, src/ui/practice/SummaryScreen.tsx, src/ui/tokens.test.ts",
+          "done_when": "Library deck-name link has PRESSED, FOCUS_RING and an active: tone; guard test extended to Link elements not using buttonClass; PracticeScreen and SummaryScreen render ThemeToggle above ErrorState in a top-right bar, with a test. verify.sh green.",
+          "status": "todo"
         }
       ]
     },
