@@ -1,4 +1,5 @@
 import { expect, test, vi, inject } from "vitest";
+import { AVATAR_IDS } from "@/shared/avatars";
 import { freshDatabase } from "./helpers/db";
 
 async function setup() {
@@ -14,8 +15,8 @@ async function setup() {
 test("PATCH /me updates the current profile only, 422 on bad input, duplicate avatars allowed", async () => {
   const db = await setup();
   const { createProfile } = await import("./factories");
-  const a = await createProfile(db, { name: "Ada", avatar: "fox" });
-  const b = await createProfile(db, { name: "Bo", avatar: "owl" });
+  const a = await createProfile(db, { name: "Ada", avatar: AVATAR_IDS[0] });
+  const b = await createProfile(db, { name: "Bo", avatar: AVATAR_IDS[1] });
   const me = await import("@/app/api/v1/me/route");
   const as = (id: string) => (body: unknown) =>
     me.PATCH(
@@ -27,17 +28,17 @@ test("PATCH /me updates the current profile only, 422 on bad input, duplicate av
     );
   const patchA = as(a.id);
 
-  const ok = await patchA({ avatar: "otter", name: "  Ada L  " });
+  const ok = await patchA({ avatar: AVATAR_IDS[2], name: "  Ada L  " });
   expect(ok.status).toBe(200);
   const got = await ok.json();
-  expect(got.profile).toMatchObject({ name: "Ada L", avatar: "otter" });
+  expect(got.profile).toMatchObject({ name: "Ada L", avatar: AVATAR_IDS[2] });
 
   const again = await me.GET(new Request("http://x/", { headers: { cookie: `flipside_profile=${a.id}` } }));
-  expect((await again.json()).profile).toMatchObject({ name: "Ada L", avatar: "otter" });
+  expect((await again.json()).profile).toMatchObject({ name: "Ada L", avatar: AVATAR_IDS[2] });
   const other = await me.GET(new Request("http://x/", { headers: { cookie: `flipside_profile=${b.id}` } }));
-  expect((await other.json()).profile).toMatchObject({ name: "Bo", avatar: "owl" });
+  expect((await other.json()).profile).toMatchObject({ name: "Bo", avatar: AVATAR_IDS[1] });
 
-  const dup = await patchA({ avatar: "owl" });
+  const dup = await patchA({ avatar: AVATAR_IDS[1] });
   expect(dup.status).toBe(200);
   expect((await dup.json()).profile.name).toBe("Ada L");
 

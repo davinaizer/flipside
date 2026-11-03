@@ -52,7 +52,7 @@ export function ProfileForm({ name: initialName, avatar: initialAvatar, onSave }
       <fieldset>
         <legend className="mb-3 text-headline-sm font-semibold">Avatar</legend>
         <div className="flex flex-wrap gap-4">
-          {AVATAR_IDS.map((id) => (
+          {AVATAR_IDS.map((id, i) => (
             <label key={id} className="relative cursor-pointer">
               <input
                 type="radio"
@@ -60,7 +60,7 @@ export function ProfileForm({ name: initialName, avatar: initialAvatar, onSave }
                 value={id}
                 checked={avatar === id}
                 onChange={() => setAvatar(id)}
-                aria-label={id}
+                aria-label={`Avatar ${i + 1}`}
                 className="peer sr-only"
               />
               <span className={`flex min-h-11 min-w-11 rounded-full p-1 outline outline-2 outline-transparent peer-checked:outline-primary peer-active:scale-[0.98] motion-reduce:peer-active:scale-100 peer-focus-visible:outline-primary peer-focus-visible:outline-offset-2 hover:bg-surface-container-low`}>
