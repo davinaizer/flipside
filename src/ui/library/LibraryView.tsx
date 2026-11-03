@@ -4,7 +4,7 @@ import type { Library } from "@/shared/schemas/library";
 import { DeckTile } from "@/ui/deck-tile/DeckTile";
 import { Icon } from "@/ui/icons/Icon";
 import { MasteryBar } from "@/ui/mastery-bar/MasteryBar";
-import { buttonClass } from "@/ui/button/button-class";
+import { buttonClass, FOCUS_RING, PRESSED } from "@/ui/button/button-class";
 
 export interface LibraryViewProps {
   library: Library;
@@ -145,7 +145,7 @@ export function LibraryView({
                         <h3 className="text-headline-sm font-semibold">
                           <Link
                             href={`/decks/${d.id}`}
-                            className="flex min-h-11 items-center hover:underline"
+                            className={`flex min-h-11 items-center hover:underline hover:text-primary active:text-primary-container ${PRESSED} ${FOCUS_RING}`}
                           >
                             {d.name}
                           </Link>

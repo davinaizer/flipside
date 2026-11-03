@@ -86,3 +86,4 @@ ASSUMED: F9.6 the picker has no profile, so its switch (ThemeSwitch, the present
 ASSUMED: F9.7 the practice summary had no theme switch (AC16), so SummaryScreen now renders ThemeToggle above SummaryView; the a11y walk checks the switch on picker, practice front and back and summary, and practice persistence across reload.
 ASSUMED: F9.9 the button guard test also accepts CONFIRM_DELETE_CLASS (the solid delete confirm, which already includes PRESSED and FOCUS_RING); it scans <button ... </button> text, so a class built in a constant needs a helper name in the allow list.
 ASSUMED: F9.10 pressed on swatches and answer pills is peer-active (outline and scale) since the input is sr-only; the label guard accepts buttonClass or peer-active:.
+ASSUMED: F9.11 the Link guard accepts buttonClass/TAPPABLE_CARD or PRESSED+FOCUS_RING+an active:text-/bg- tone; the shared LoadError lives in PracticeScreen.tsx and is tested by static render (no jsdom).

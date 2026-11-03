@@ -191,7 +191,7 @@
           ],
           "area": "src/ui/library/LibraryView.tsx, src/ui/practice/PracticeScreen.tsx, src/ui/practice/SummaryScreen.tsx, src/ui/tokens.test.ts",
           "done_when": "Library deck-name link has PRESSED, FOCUS_RING and an active: tone; guard test extended to Link elements not using buttonClass; PracticeScreen and SummaryScreen render ThemeToggle above ErrorState in a top-right bar, with a test. verify.sh green.",
-          "status": "todo"
+          "status": "done"
         }
       ]
     },

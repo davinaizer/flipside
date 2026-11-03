@@ -22,3 +22,11 @@ test("profile picker: the same named switch sits top-right", () => {
   expect(html).toContain('aria-label="Dark theme"');
   expect(html).toMatch(/absolute right-8 top-4/);
 });
+
+test("load-error states on practice and summary keep the theme switch above the error", async () => {
+  const { LoadError } = await import("./PracticeScreen");
+  const html = renderToStaticMarkup(<LoadError onRetry={() => {}} />);
+  expect(html).toContain('aria-label="Dark theme"');
+  expect(html).toContain("justify-end");
+  expect(html.indexOf('aria-label="Dark theme"')).toBeLessThan(html.indexOf('role="alert"'));
+});

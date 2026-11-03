@@ -289,4 +289,25 @@ describe("tokens", () => {
     walk(__dirname);
     expect(offenders).toEqual([]);
   });
+
+  // Same rule for next/link: a Link that does not use buttonClass needs PRESSED, FOCUS_RING and an active: tone.
+  it("gives every <Link not using buttonClass pressed, focus and active tone", () => {
+    const offenders: string[] = [];
+    const walk = (dir: string) => {
+      for (const f of readdirSync(dir)) {
+        const p = join(dir, f);
+        if (statSync(p).isDirectory()) walk(p);
+        else if (/\.tsx$/.test(f) && !/\.test\.tsx$/.test(f)) {
+          const src = readFileSync(p, "utf8");
+          for (const m of src.matchAll(/<Link\b[\s\S]*?>/g)) {
+            const tag = m[0];
+            const ok = /buttonClass|TAPPABLE_CARD/.test(tag) || (/PRESSED/.test(tag) && /FOCUS_RING/.test(tag) && /active:text-|active:bg-/.test(tag));
+            if (!ok) offenders.push(`${p}: ${tag.split("\n")[0]}`);
+          }
+        }
+      }
+    };
+    walk(__dirname);
+    expect(offenders).toEqual([]);
+  });
 });

@@ -26,6 +26,20 @@ export function PracticeLoading() {
   );
 }
 
+/** Load-error state with the theme switch in a top-right bar above it (T6: the switch is on every screen). */
+export function LoadError({ onRetry }: { onRetry: () => void }) {
+  return (
+    <>
+      <div className="flex justify-end px-6 pt-4 md:px-8">
+        <ThemeToggle />
+      </div>
+      <div className="p-8">
+        <ErrorState onRetry={onRetry} />
+      </div>
+    </>
+  );
+}
+
 /** Loads the session (an empty PUT resumes it); the loaded session is then driven by use-session. Needs a SettingsProvider. */
 export function PracticeScreen({ sessionId }: { sessionId: string }) {
   const [data, setData] = useState<SessionResponse | null>(null);
@@ -39,7 +53,7 @@ export function PracticeScreen({ sessionId }: { sessionId: string }) {
     api.session(sessionId).then(setData, () => setFailed(true));
   };
 
-  if (failed) return <div className="p-8"><ErrorState onRetry={retry} /></div>;
+  if (failed) return <LoadError onRetry={retry} />;
   if (!data) return <PracticeLoading />;
   return <ActiveSession data={data} />;
 }

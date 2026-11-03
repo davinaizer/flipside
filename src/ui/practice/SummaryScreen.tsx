@@ -5,8 +5,7 @@ import { useEffect, useState } from "react";
 import type { SessionSummary } from "@/shared/schemas/session";
 import { api } from "@/ui/api/client";
 import { ThemeToggle } from "@/ui/settings/ThemeToggle";
-import { ErrorState } from "@/ui/states/ErrorState";
-import { PracticeLoading } from "./PracticeScreen";
+import { LoadError, PracticeLoading } from "./PracticeScreen";
 import { startSession } from "./start-session";
 import { SummaryView } from "./SummaryView";
 
@@ -26,12 +25,7 @@ export function SummaryScreen({ sessionId }: { sessionId: string }) {
     api.summary(sessionId).then(setSummary, () => setLoadFailed(true));
   };
 
-  if (loadFailed)
-    return (
-      <div className="p-8">
-        <ErrorState onRetry={load} />
-      </div>
-    );
+  if (loadFailed) return <LoadError onRetry={load} />;
   if (!summary) return <PracticeLoading />;
   return (
     <>
