@@ -43,3 +43,7 @@ The light and dark screens were generated separately and differ in content. Wher
 16. **Navigation:** the sidebar highlights the section being shown. The error and empty screens highlight Progress; it should be Library.
 17. **Progress copy:** subtitle and Focus next say mastery, not "retention". Omit "Consistent practice builds lasting retention".
 18. Hidden states in `practice_session` and `practice_session_dark_mode` still hold the old grade labels; see item 1. Several PNGs lag their `code.html` (profile picker, add deck, answer revealed, session summary, empty Library, dark practice); the PRD and this list win over both.
+19. **Top bar (v0.3, U3 and T6):** app screens show a top bar with the theme toggle (one sun and moon switch, no text) and the current avatar, which opens `/profile`. Omit the "Flashcards Studio" title in the `settings` screen. Practice keeps its own top bar and adds the theme toggle beside the settings shortcut.
+20. **Session summary (v0.3, R18):** build the `practice_session_summary` layout, but still apply item 3: no Focus clue lines, Box chips, Review all answers or summary toolbar (read aloud, layout, text size), and no "Flipside Focus / CALM HORIZON" eyebrow (item 7).
+21. **Add or re-import (v0.3, I7):** single column at every width, sections in order 1, 2, 3, as in `add_deck_re_import_dark_mode`.
+22. **Shadows (v0.3, U1):** dark cards get a subtle shadow too; `DESIGN-DARK.md` is updated to say so (D24).

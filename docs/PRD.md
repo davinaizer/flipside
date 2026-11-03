@@ -3,7 +3,7 @@
 | | |
 | --- | --- |
 | Status | Draft 1, ready for MVP build planning |
-| Last updated | 2026-11-01 |
+| Last updated | 2026-11-03 (v0.3 review: requirements U, AG, P6-P7, R15-R18, T6-T8, D8, I7; AC14-AC21) |
 | Owner | Davi |
 | Source | Written from the planning conversation; the decision log is section 18 |
 
@@ -101,7 +101,7 @@ The model is multi-profile, not two hard-coded users: adding a profile later is 
 
 ### Security stance for the MVP
 
-The app runs on the home network only. Anyone on that network can open it and pick either profile; this is accepted for the MVP because the data is a family's revision cards and statistics. The Postgres port is not exposed to the network. If the app is ever deployed beyond the home network, an access gate is a prerequisite (section 15).
+The app runs on the home network only. Since v0.3 a single shared app password (AG1 to AG3) gates every screen and API route, so someone on the network must sign in once per device before picking a profile. Profiles themselves stay password-free behind the gate. This is a household lock, not per-user authentication: it keeps casual visitors on the Wi-Fi out, and nothing more is claimed. The Postgres port is not exposed to the network. If the app is ever deployed beyond the home network, an access gate is a prerequisite (section 15).
 
 ## 3. Scope and phases
 
@@ -122,7 +122,7 @@ The MVP is a web app running locally on a Mac Mini, used from an iPad over the h
 
 ### Explicitly out of scope for the MVP
 
-- Deployment to Netlify, Cloudflare or Vercel, and any authentication.
+- Deployment to Netlify, Cloudflare or Vercel, and per-user authentication. The single shared app password (AG1 to AG3) is in scope; it is not an access gate for an internet-facing host (section 15).
 - Offline mode, service workers, push or local notifications.
 - Deck sharing between profiles, in-app card editing, card search by text beyond deck and topic names.
 - FSRS or any scheduler other than the boxed one.
@@ -154,6 +154,8 @@ Each requirement has an id so tests, tickets and the changelog can point at it. 
 | P3 | Sidebar shows the current profile and a Switch profile action at any time. | Must |
 | P4 | Every query is scoped to the current profile; requests for another profile's data return 404. | Must |
 | P5 | Profiles are created by seed script in the MVP; no create-profile UI. | Must |
+| P6 | Tapping the current avatar in the top bar opens the Profile page (`/profile`). | Must |
+| P7 | The Profile page lets the current profile change its avatar (choosing from the built-in set, P-fields) and its display name (1 to 24 characters, trimmed). The change is saved on the server and shows at once in the top bar, sidebar and profile picker. Two profiles may share an avatar. | Must |
 
 ### Library (L)
 
@@ -179,6 +181,7 @@ Each requirement has an id so tests, tickets and the changelog can point at it. 
 | D5 | Delete deck, with a confirmation that states how many cards and review records will be removed. Deleted decks are soft-deleted and hidden. | Must |
 | D6 | A Needs rewording list shows cards flagged as leeches, with their lapse counts. | Should |
 | D7 | Re-import into an existing deck uses the same import flow (section 6). | Must |
+| D8 | Delete deck (D5) is reached from inside Edit deck, not from the deck page itself. | Must |
 
 ### Practice (R)
 
@@ -198,6 +201,10 @@ Each requirement has an id so tests, tickets and the changelog can point at it. 
 | R12 | Time per card is measured silently from the front appearing to the grade being tapped. No timer is shown. | Must |
 | R13 | A settings shortcut in the top bar opens reading settings and returns to the same card. | Should |
 | R14 | Keyboard shortcuts for desktop: Space shows the answer, 1, 2, 3 grade. | Could |
+| R15 | Show answer carries an eye icon. The hint "Say your answer out loud first, then show it." sits outside the card, directly below the Show answer button. | Must |
+| R16 | Showing the answer turns the card over with a 3D flip about its vertical axis, like a real card: the front rotates away and the back rotates in. With reduced motion the back replaces the front without rotation. Undo last returns to the front without a reverse animation. | Must |
+| R17 | The grade buttons are introduced by the prompt "How well did you know this?" directly above them. | Must |
+| R18 | The summary (R11) follows the `practice_session_summary` layout: a deck card with the deck name (or "Several decks" when the session spans more than one), a ring with the number of cards practised, the session time, and a breakdown by grade with icon, label and count; a Cards to revisit panel listing the cards to go again, each with its grade chip, topic and question, and a count badge; Practise those now (with the count) and Back to Library. Items listed as not in the MVP in `docs/design/README.md` stay out. | Must |
 
 ### Progress (S)
 
@@ -218,6 +225,9 @@ Each requirement has an id so tests, tickets and the changelog can point at it. 
 | T3 | Settings are stored per profile on the server and applied immediately on every device. | Must |
 | T4 | Reset to defaults. | Should |
 | T5 | Theme: a toggle between the light and dark theme, default light, stored in the profile's settings and applied immediately. | Must |
+| T6 | The theme toggle sits in the top bar of every screen (app screens, practice, summary, profile picker and login). It is one switch showing both a sun and a moon icon, with no visible text label; it keeps an accessible name and exposes its state. | Must |
+| T7 | Read questions aloud is a switch whose position shows its state; no "On" or "Off" text is shown. The switch keeps its accessible name and checked state. | Must |
+| T8 | The Settings live preview renders the same card component as a practice session, with the same elements (topic chip, Question label, question, read-aloud button and the footer with the flip hint), so it shows exactly what practice will look like. | Must |
 
 ### Import (I) and System (X)
 
@@ -229,8 +239,25 @@ Each requirement has an id so tests, tickets and the changelog can point at it. 
 | I4 | Re-import updates cards matched by id and keeps their progress. | Must |
 | I5 | Download a CSV template. | Should |
 | I6 | Export a deck as a zip (CSV plus images) for backup and round trips. | Should |
+| I7 | The Add or re-import screen is a single column at every supported width, with its sections always in the order 1 Choose file, 2 Check the cards, 3 Deck details. | Must |
 | X1 | Health endpoint, database migrations on start, and seed script for the two profiles. | Must |
 | X2 | Backup and restore scripts for the database and the images folder (section 13). | Must |
+
+### Interface (U)
+
+| ID | Requirement | Priority |
+| --- | --- | --- |
+| U1 | Cards and surfaces carry a subtle shadow in both themes: light uses the DESIGN.md resting elevation; dark uses a subtle shadow defined in DESIGN-DARK.md. One elevation token, no per-component values. | Must |
+| U2 | Every button and tappable card has visible hover, pressed (tap) and keyboard focus states; focus uses the DESIGN.md focus ring. Pressed feedback respects reduced motion. | Must |
+| U3 | App screens have a top bar holding the theme toggle (T6) and the current avatar (P6). It shows no product title. | Must |
+
+### Access gate (AG)
+
+| ID | Requirement | Priority |
+| --- | --- | --- |
+| AG1 | A Login page (`/login`) asks for the app password. The password is the `ADMIN_PASSWORD` environment variable, required and validated at start, compared in constant time with Node `crypto` (no new dependency). A wrong password shows a neutral message and nothing about why. | Must |
+| AG2 | A correct password sets `flipside_auth`, an httpOnly, SameSite=Lax cookie signed with HMAC-SHA256 under a key derived from `ADMIN_PASSWORD`, valid for 30 days (a `src/shared` constant). Changing the password signs every device out. Without a valid cookie every page redirects to `/login` and every `/api/v1` route returns 401, except `GET /health` and the login endpoint. | Must |
+| AG3 | Sign out on the Profile page clears `flipside_auth` and returns to `/login`. | Must |
 
 ## 5. Learning model
 
@@ -450,8 +477,8 @@ Colour is never the only signal: every state also has text or an icon.
 ### Layout and navigation
 
 - Primary target: iPad landscape (1180 × 820 design size). Supported: iPad portrait and desktop browsers. Phones are out of scope.
-- A left sidebar holds Library, Progress, Settings and the current profile with Switch profile. Practice is full screen with no sidebar, to reduce distraction.
-- The profile picker is the only screen shown before a profile is chosen.
+- A left sidebar holds Library, Progress, Settings and the current profile with Switch profile. App screens have a top bar with the theme toggle and the current avatar (U3). Practice is full screen with no sidebar, to reduce distraction; its own top bar holds the theme toggle beside the settings shortcut.
+- The login page is the only screen shown before signing in (AG2); the profile picker is the only screen shown before a profile is chosen.
 
 ### Screens
 
@@ -463,7 +490,9 @@ Colour is never the only signal: every state also has text or an icon.
 | Practice and summary | `/practice/[sessionId]` | `practice_session` |
 | Progress | `/progress` | `progress` |
 | Settings | `/settings` | `settings` |
-| Add or re-import deck | `/import` | Not yet designed |
+| Add or re-import deck | `/import` | `add_deck_re_import` (single column, I7) |
+| Profile | `/profile` | Not designed; uses the Settings layout |
+| Login | `/login` | Not designed; uses the profile picker layout |
 
 ### Changes required to the Stitch screens
 
@@ -529,6 +558,7 @@ The browser and, later, the SwiftUI app reach the same Route Handlers; services 
 - The API is the contract. Domain operations are never Server Actions or server-only data fetches, so a native client can call them.
 - The server decides scheduling outcomes; the client renders them.
 - One function, `getCurrentProfile(request)`, resolves the profile from the cookie (later a header or token). Nothing else reads the cookie.
+- One check, in `src/server`, verifies the `flipside_auth` cookie (AG2) and is applied in one place for all pages and API routes. Nothing else reads that cookie.
 - Configuration is by environment variable and validated at start.
 - Small, reversible steps: no queue, cache, search engine or event bus until a measured need appears.
 
@@ -587,6 +617,7 @@ The API is a versioned JSON interface under `/api/v1` that the web UI uses for e
 - **Errors:** `{ "error": { "code": "...", "message": "...", "details": [...] } }` with the proper HTTP status. Messages are written for a person, not a stack trace.
 - **Idempotency:** review and session writes carry a client-generated UUID in the path (`PUT`), so a retry returns the original result.
 - **Time:** ISO 8601 in UTC; due dates as `YYYY-MM-DD` in the profile's calendar.
+- **Access:** every route needs a valid `flipside_auth` cookie (AG2) except `GET /health` and `POST /auth/login`; without it the response is 401.
 - **No Server Actions** for any domain operation.
 
 ### Endpoints
@@ -596,6 +627,9 @@ The API is a versioned JSON interface under `/api/v1` that the web UI uses for e
 | `GET /profiles` | List profiles for the picker (id, name, avatar) |
 | `POST /session/profile` | Select a profile; sets the cookie |
 | `GET /me` | Current profile and settings |
+| `PATCH /me` | Change the current profile's avatar or name (P7) |
+| `POST /auth/login` | Check the app password and set `flipside_auth` (AG1, AG2) |
+| `POST /auth/logout` | Clear `flipside_auth` (AG3) |
 | `GET /library` | Groups, decks and counts (cards, due, mastery boxes), plus today's totals |
 | `GET /decks/{id}` | Deck details with topics and their counts |
 | `PATCH /decks/{id}` | Rename, regroup, recolour, change answer style |
@@ -707,7 +741,7 @@ A launchd job starts `next start` at login or boot; another starts the Podman ma
 
 - Everything stays on the home network. No analytics, no third-party requests, and fonts are bundled.
 - Dependencies are kept current; Next.js security advisories are checked when updating, since the app is reachable by anyone on the network.
-- Secrets live only in environment files outside version control.
+- Secrets live only in environment files outside version control. `ADMIN_PASSWORD` (AG1) is one of them; `.env.example` holds a placeholder and the launchd app job reads the real value from `.env`.
 
 ### Repository layout
 
@@ -839,6 +873,17 @@ Test data: the science deck (`science-w2`, 16 cards, 7 images), a synthetic mult
 - [ ] AC12: Axe reports no serious or critical issues on all screens in both themes; every control meets the 44 px target.
 - [ ] AC13: The theme toggle switches between light and dark immediately on every screen, persists per profile and survives a restart.
 
+#### v0.3 review (added 2026-11-03)
+
+- [ ] AC14: Without signing in, every page redirects to `/login` and every `/api/v1` route except `GET /health` and `POST /auth/login` returns 401. The correct password opens the app and stays signed in across a restart; a wrong password shows a neutral error; Sign out ends it; changing `ADMIN_PASSWORD` signs every device out.
+- [ ] AC15: Tapping the avatar opens the Profile page; a new avatar and name save, appear at once in the top bar, sidebar and picker, and survive a restart; an empty name or one over 24 characters is rejected with a clear message.
+- [ ] AC16: The theme toggle appears in the top bar of every screen, including practice, summary, profile picker and login, as one sun and moon switch with no visible text, and AC13 still holds.
+- [ ] AC17: In practice, Show answer has an eye icon and the hint sits below it outside the card; showing the answer by button, card tap or Space turns the card with a 3D flip, or with no rotation under reduced motion; "How well did you know this?" sits above the grade buttons; every button shows hover, pressed and focus states.
+- [ ] AC18: The summary shows the deck name, cards practised, session time, counts per grade with icon and label, the cards to revisit with their grade, topic and a count, Practise those now and Back to Library; all figures match the session and no item the design README omits appears.
+- [ ] AC19: The Settings preview shows the same elements as the practice card and updates live; Read questions aloud shows no On or Off text and still exposes its state to assistive technology.
+- [ ] AC20: Delete deck is reached only from Edit deck, with the D5 confirmation unchanged; the Add or re-import screen is one column with sections 1, 2 and 3 in that order on desktop and on iPad landscape and portrait.
+- [ ] AC21: Cards and surfaces show the subtle shadow in both themes, and AC12 still passes.
+
 ### Non-functional targets
 
 These are initial heuristics, measured on the home network.
@@ -918,6 +963,11 @@ These are the decisions taken so far; change one here first, then update the sec
 | D20 | Postgres runs in Podman instead of Docker, driven by `podman run` with no compose tool | 2026-11-01 |
 | D20 | A light and dark theme toggle is in the MVP (T5, AC13), stored per profile | 2026-11-01 |
 | D21 | The Stitch screens in `docs/design/stitch_flashcard_learning_app/` are reference only (layout and mood); the PRD decides content, behaviour and copy, and `docs/design/README.md` documents the corrections. Only the two DESIGN files are canonical, for visual tokens | 2026-11-01 |
+| D22 | v0.3 review: a single shared app password in `.env` gates the whole app (AG1 to AG3) with a 30-day signed cookie; profiles stay password-free behind it. Refines D5's "no authentication" | 2026-11-03 |
+| D23 | A profile can change its own avatar and name on a Profile page opened from the top-bar avatar (P6, P7); still no create-profile UI (P5) | 2026-11-03 |
+| D24 | Dark theme gains a subtle card shadow (U1); DESIGN-DARK.md is updated to match, replacing "no drop shadows" | 2026-11-03 |
+| D25 | The summary follows the mockup layout minus the README omissions (R18): no Focus clue, Box chips, Review all answers or summary toolbar | 2026-11-03 |
+| D26 | The v0.3 review backlog is features F9 to F14; the v0.1 and v0.2 ledger, progress log and design audit are archived in `docs/archive/v0.2/` | 2026-11-03 |
 
 ### Glossary
 

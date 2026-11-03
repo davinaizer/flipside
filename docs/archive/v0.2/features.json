@@ -1,0 +1,1533 @@
+{
+  "version": 1,
+  "base_branch": "main",
+  "note": "Agents may change only status, commit, branch, pr. manual_acs cannot be verified by an agent and go on the PR checklist.",
+  "features": [
+    {
+      "id": "F0",
+      "name": "Foundation",
+      "depends_on": [],
+      "reqs": [
+        "X1",
+        "P5"
+      ],
+      "acs": [],
+      "manual_acs": [],
+      "prd_sections": [
+        "9",
+        "10",
+        "11",
+        "13",
+        "16"
+      ],
+      "notes": "Scaffold, schema for PRD section 10, Podman Postgres, verify/test/e2e harness, seed, health. Land the full schema here so later features do not collide on migrations.",
+      "status": "done",
+      "branch": "feat/F0-foundation",
+      "pr": "https://github.com/davinaizer/flipside/pull/3",
+      "tasks": [
+        {
+          "id": "F0.1",
+          "title": "Scaffold Next.js app and tooling",
+          "reqs": [],
+          "prd_sections": [
+            "9",
+            "13"
+          ],
+          "area": "package.json, tsconfig, eslint, prettier, vitest config, src/{app,server,domain,shared,ui}, .gitignore",
+          "done_when": "verify.sh runs green with pnpm scripts typecheck, lint and test plus one smoke test; dev and start scripts bind 0.0.0.0:3000 and next build succeeds; ESLint fails on a test sample where src/domain imports src/server, a database module or node:fs; git check-ignore matches .DS_Store, .env, .env.local, data/x, CLAUDE.local.md and .claude/settings.local.json, and .env.example is not ignored.",
+          "status": "done"
+        },
+        {
+          "id": "F0.2",
+          "title": "Add shared constants, enums, settings schema and UUIDv7",
+          "reqs": [],
+          "prd_sections": [
+            "5",
+            "6",
+            "7",
+            "9",
+            "10",
+            "12",
+            "14"
+          ],
+          "area": "src/shared/constants.ts, src/shared/enums.ts, src/shared/settings.ts, src/shared/uuid.ts",
+          "done_when": "Unit tests assert: day start hour 7, box intervals 0/1/3/7/14, LAPSE_RULE reset, leech threshold 8, re-queue gap 4 and max 2, new-card cap 10, session lengths, import, image and zip limits, 120 s time cap; settings defaults parse through Zod and store font ids, not CSS stacks (N5); uuidv7 returns time-sortable v7 ids using crypto.getRandomValues, never crypto.randomUUID, which is unavailable to the iPad on plain HTTP.",
+          "status": "done"
+        },
+        {
+          "id": "F0.3",
+          "title": "Add Podman Postgres and validated environment",
+          "reqs": [],
+          "prd_sections": [
+            "9",
+            "13"
+          ],
+          "area": "scripts/db.sh (podman run, no compose tool), .env.example, src/server/env.ts, package.json scripts db:up and db:down",
+          "done_when": "pnpm db:up starts a healthy docker.io/library/postgres:17 container with podman, bound to 127.0.0.1:5432 with a named volume, safe to run twice, and pnpm db:down stops it and keeps the volume (checked with podman ps, podman port and pg_isready); .env.example lists DATABASE_URL, IMAGE_STORE_DRIVER, IMAGE_STORE_PATH and PORT; a unit test proves env parsing rejects a missing DATABASE_URL.",
+          "status": "done",
+          "commit": "bfe7722"
+        },
+        {
+          "id": "F0.4",
+          "title": "Make pnpm test start its own test database",
+          "reqs": [],
+          "prd_sections": [
+            "13",
+            "16"
+          ],
+          "area": "vitest global setup, disposable podman container on tmpfs, tests/helpers",
+          "done_when": "With the dev database stopped, pnpm test starts a disposable Postgres 17 with podman under a unique name and free port, runs an integration test reading the server version, and removes the container afterwards, also on failure; two concurrent runs do not collide; a missing podman or a stopped podman machine fails with a clear one-line message.",
+          "status": "done",
+          "commit": "85f560c"
+        },
+        {
+          "id": "F0.5",
+          "title": "Define Drizzle schema for all of section 10",
+          "reqs": [],
+          "prd_sections": [
+            "10",
+            "14"
+          ],
+          "area": "src/server/db/schema.ts, drizzle.config.ts, drizzle/, src/server/db/client.ts, a Postgres driver for Drizzle",
+          "done_when": "An integration test introspecting the migrated test database proves: all nine tables exist, including the drizzle-kit journal configured under the name schema_migrations; every column in section 10, created_at and updated_at everywhere, deleted_at on decks and cards, meta on review_log and sessions; unique (deck_id, external_id) and (owner_profile_id, sha256); composite primary key on card_state; the indexes on card_state, review_log and cards; box 0 and 6 are rejected. The test database is built by migrations, not push.",
+          "status": "done",
+          "commit": "af42dfd"
+        },
+        {
+          "id": "F0.6",
+          "title": "Run migrations on start and add health endpoint",
+          "reqs": [
+            "X1"
+          ],
+          "prd_sections": [
+            "9",
+            "10",
+            "11",
+            "13"
+          ],
+          "area": "src/instrumentation.ts, src/server/db/migrate.ts, src/app/api/v1/health/route.ts, src/server/http (error format), pnpm db:migrate",
+          "done_when": "Integration tests: GET /api/v1/health returns 200 with the database check, and 503 in the section 11 error format when the database is unreachable; migrate is safe to run twice. Check: next start against an empty database creates the tables and health returns 200.",
+          "status": "done",
+          "commit": "14af137"
+        },
+        {
+          "id": "F0.7",
+          "title": "Add seed script for two profiles",
+          "reqs": [
+            "X1",
+            "P5"
+          ],
+          "prd_sections": [
+            "2",
+            "4",
+            "10",
+            "13"
+          ],
+          "area": "scripts/seed.ts, pnpm db:seed, src/shared/avatars.ts (placeholder avatar ids, D15)",
+          "done_when": "Integration test: running the seed twice leaves exactly Davi and Nicole, each with a different avatar id, timezone Europe/London, day start hour 7 and default settings; a third profile added by insert needs no code change.",
+          "status": "done",
+          "commit": "0e6c390"
+        },
+        {
+          "id": "F0.8",
+          "title": "Build tokens file and Tailwind theme for both themes",
+          "reqs": [],
+          "prd_sections": [
+            "8",
+            "9",
+            "14"
+          ],
+          "area": "src/ui/tokens.css (the one tokens file), Tailwind config, src/app/layout.tsx; source docs/design/DESIGN.md, DESIGN-DARK.md and README.md",
+          "done_when": "Unit tests parse the tokens file and prove: light and dark define the same semantic names, switched by a data-theme attribute, default light; box tokens exist for New, Not yet, Nearly and Got it; every text and surface pair used by those tokens reaches 4.5:1 in both themes (any adjusted value logged as ASSUMED); no raw hex appears in src outside the tokens file.",
+          "status": "done",
+          "commit": "cc22e32"
+        },
+        {
+          "id": "F0.9",
+          "title": "Bundle Lexend and Atkinson Hyperlegible Next",
+          "reqs": [],
+          "prd_sections": [
+            "8",
+            "9",
+            "13",
+            "14"
+          ],
+          "area": "src/ui/fonts/ (committed font files), next/font/local in src/app/layout.tsx, src/ui/font-ids.ts",
+          "done_when": "next build succeeds with no network access to font hosts and the output contains the font files; the build output has no reference to fonts.googleapis.com or fonts.gstatic.com; a unit test maps font ids atkinson, lexend and system-sans to the app's font variables and default text is Atkinson with Lexend headings.",
+          "status": "done",
+          "commit": "0b4f5f0"
+        },
+        {
+          "id": "F0.10",
+          "title": "Add Playwright with desktop and iPad viewports plus axe",
+          "reqs": [],
+          "prd_sections": [
+            "8",
+            "16"
+          ],
+          "area": "playwright.config.ts, e2e/, e2e/helpers (axe in both themes, 44 px target check, third-party request guard), pnpm test:e2e",
+          "done_when": "pnpm test:e2e starts its own database and app, then passes a smoke spec on desktop and iPad (1180 x 820) projects: page renders, axe reports no serious or critical issue with data-theme light and dark, every control is at least 44 px, and no request leaves the local host. verify.sh does not run e2e and vitest ignores e2e/.",
+          "status": "done",
+          "commit": "a8a3126"
+        },
+        {
+          "id": "F0.11",
+          "title": "List the commands in CLAUDE.md",
+          "reqs": [],
+          "prd_sections": [
+            "13"
+          ],
+          "area": "CLAUDE.md Commands section",
+          "done_when": "CLAUDE.md lists dev, build, start, db:up, db:down, db:migrate, db:seed, test and test:e2e, and each command listed was run successfully in this task.",
+          "status": "done",
+          "commit": "3203eca"
+        }
+      ]
+    },
+    {
+      "id": "F1",
+      "name": "Domain core",
+      "depends_on": [
+        "F0"
+      ],
+      "reqs": [],
+      "acs": [],
+      "manual_acs": [],
+      "prd_sections": [
+        "5",
+        "6",
+        "7",
+        "14"
+      ],
+      "notes": "Pure functions in src/domain with table-driven JSON fixtures (N4): scheduler, session builder, re-queue, undo maths, day boundary, CSV validation, stats definitions. Provides the logic behind AC4 to AC8; those ACs close in F6 and F7.",
+      "status": "done",
+      "branch": "feat/F1-domain-core",
+      "pr": "https://github.com/davinaizer/flipside/pull/5",
+      "tasks": [
+        {
+          "id": "F1.1",
+          "title": "Implement day-boundary maths",
+          "reqs": [],
+          "prd_sections": [
+            "2",
+            "5",
+            "14"
+          ],
+          "area": "src/domain/day.ts, fixtures/domain/day-boundary.json",
+          "done_when": "Table-driven JSON fixtures pass: 06:30 local counts as the previous day and 07:00 as the new one; both Europe/London clock changes; a non-London timezone; date addition across month and year; Monday week start on the local day. Uses Intl only, with no new dependency.",
+          "status": "done",
+          "commit": "792e758",
+          "model": "opus"
+        },
+        {
+          "id": "F1.2",
+          "title": "Implement scheduler applyGrade",
+          "reqs": [
+            "R4"
+          ],
+          "prd_sections": [
+            "5",
+            "14"
+          ],
+          "area": "src/domain/scheduler.ts, fixtures/domain/scheduler.json",
+          "done_when": "JSON fixtures cover every state (New, boxes 1 to 5) times every grade under both LAPSE_RULE values, asserting box, due date, lapses, reps, last grade and re-queue; lapses only rise for box 2 or higher; box 5 Got it stays 5; status becomes leech at 8 lapses and the card stays scheduled.",
+          "status": "done",
+          "commit": "fc0699e",
+          "model": "opus"
+        },
+        {
+          "id": "F1.3",
+          "title": "Compute grade labels from the scheduler",
+          "reqs": [
+            "R4"
+          ],
+          "prd_sections": [
+            "5",
+            "11"
+          ],
+          "area": "src/domain/grade-labels.ts, fixtures/domain/grade-labels.json",
+          "done_when": "Fixtures assert the three labels for every state (Again today, Tomorrow, In 3 days and so on); a test over all states proves each label is derived from the applyGrade due date, so label and outcome cannot disagree.",
+          "status": "done",
+          "commit": "f6e97fc"
+        },
+        {
+          "id": "F1.4",
+          "title": "Implement session builder",
+          "reqs": [
+            "R1",
+            "L3"
+          ],
+          "prd_sections": [
+            "5",
+            "14"
+          ],
+          "area": "src/domain/session-builder.ts, fixtures/domain/session-builder.json",
+          "done_when": "Fixtures with an injected random source cover: scopes all, deck, topics, weak, topics ignoring due dates (D3) and an explicit card list (misses, R11); order by lowest box, oldest due, shuffled ties, new last; lengths 5, 10, 20 and all; suspended excluded; weak means box 1 graded at least once plus leeches; with 16 new cards and 10 remaining, never more than 10 new, in every scope.",
+          "status": "done",
+          "commit": "69b439d",
+          "model": "opus"
+        },
+        {
+          "id": "F1.5",
+          "title": "Implement session queue with re-queue and undo",
+          "reqs": [
+            "R5",
+            "R6",
+            "R8"
+          ],
+          "prd_sections": [
+            "5",
+            "14"
+          ],
+          "area": "src/domain/session-queue.ts, fixtures/domain/session-queue.json",
+          "done_when": "Fixtures prove: Not yet reappears after four other cards, or at the end when fewer remain; at most two re-queues per card; undoing any step restores the exact previous queue and position back to the session start; done, current and remaining counts stay correct. Pure and importable by client and server.",
+          "status": "done",
+          "commit": "d56782e",
+          "model": "opus"
+        },
+        {
+          "id": "F1.6",
+          "title": "Implement CSV parsing and validation",
+          "reqs": [
+            "I1",
+            "I2"
+          ],
+          "prd_sections": [
+            "6"
+          ],
+          "area": "src/domain/csv-import.ts, fixtures/csv/ (one broken CSV per rule), papaparse",
+          "done_when": "Table-driven tests run one broken file per validation rule and assert block, row error or warning with the row number; free column order, trimmed cells, unknown columns warned, CO₂ and → preserved, duplicate id skips the later row, missing id derives a stable id with the warning; 2,001 rows blocks; a bullet helper returns a list only for bullets style with two or more non-empty lines. Browser-safe, no Node APIs.",
+          "status": "done",
+          "commit": "c50210e"
+        },
+        {
+          "id": "F1.7",
+          "title": "Implement zip and image validation",
+          "reqs": [
+            "I1",
+            "I2"
+          ],
+          "prd_sections": [
+            "6",
+            "12"
+          ],
+          "area": "src/domain/zip-import.ts, src/domain/image-check.ts, fflate, file-type",
+          "done_when": "Tests build zips in memory and prove: absolute path, .. segment and symlink entries block the import (the symlink check reads entry attributes from the zip directory if fflate does not expose them); over 2,000 entries or 200 MB uncompressed blocks; a missing image, a wrong type by bytes with a misleading extension, SVG, over 5 MB and over 4,096 px each warn and drop the image; a CSV image name matches a zip entry by base file name, so q02-back.png finds images/q02-back.png as in the school zip, and two entries with the same base name warn and drop the image; width and height are read from PNG, JPEG, WebP and GIF headers with no new dependency; sha256 and storage key are computed. Browser-safe.",
+          "status": "done",
+          "commit": "0957c9b"
+        },
+        {
+          "id": "F1.8",
+          "title": "Implement statistics definitions",
+          "reqs": [
+            "S1",
+            "S3",
+            "S4"
+          ],
+          "prd_sections": [
+            "5",
+            "7",
+            "10"
+          ],
+          "area": "src/domain/stats.ts, fixtures/domain/stats.json",
+          "done_when": "Hand-computed JSON fixtures over review rows cover: first-attempt-only counting, undone rows excluded, Got it rate with Nearly as not Got it, median time with the 120 s cap using all attempts, days practised, mastery including New, mastery bar buckets, week and four-week windows aligned to the Monday of the local day, previous-period change in plain words, Focus next (at least 3 cards, tie to more lapses).",
+          "status": "done",
+          "commit": "97cda69",
+          "model": "opus"
+        }
+      ]
+    },
+    {
+      "id": "F2",
+      "name": "Profiles",
+      "depends_on": [
+        "F0"
+      ],
+      "reqs": [
+        "P1",
+        "P2",
+        "P3",
+        "P4"
+      ],
+      "acs": [
+        "AC1"
+      ],
+      "manual_acs": [],
+      "prd_sections": [
+        "2",
+        "4",
+        "11",
+        "14"
+      ],
+      "notes": "",
+      "status": "done",
+      "branch": "feat/F2-profiles",
+      "pr": 7,
+      "tasks": [
+        {
+          "id": "F2.1",
+          "title": "Add getCurrentProfile and profile scoping helpers",
+          "reqs": [
+            "P4"
+          ],
+          "prd_sections": [
+            "2",
+            "4",
+            "9",
+            "11",
+            "14"
+          ],
+          "area": "src/server/profile.ts, src/server/http, tests/factories",
+          "done_when": "Integration tests: cookie and X-Profile-Id each resolve a profile; missing, unknown or malformed returns 401 in the error format; a source scan proves no other module reads flipside_profile; factories create decks, cards and card state for later tests.",
+          "status": "done"
+        },
+        {
+          "id": "F2.2",
+          "title": "Add profile API and typed client",
+          "reqs": [
+            "P1",
+            "P2"
+          ],
+          "prd_sections": [
+            "2",
+            "4",
+            "11",
+            "14"
+          ],
+          "area": "src/app/api/v1/{profiles,session/profile,me}, src/shared/schemas/profile.ts, src/ui/api/client.ts",
+          "done_when": "Integration tests: GET /profiles returns only id, name and avatar; POST /session/profile sets flipside_profile as HttpOnly, SameSite=Lax and without Secure (the iPad uses plain HTTP) and rejects an unknown id; GET /me returns profile and settings. Responses parse with the shared Zod schemas.",
+          "status": "done"
+        },
+        {
+          "id": "F2.3",
+          "title": "Add scoped library and deck read endpoints",
+          "reqs": [
+            "P4"
+          ],
+          "prd_sections": [
+            "2",
+            "4",
+            "10",
+            "11"
+          ],
+          "area": "src/app/api/v1/library, src/app/api/v1/decks/[id], src/server/decks.ts",
+          "done_when": "Integration tests with factory data for both profiles (AC1, ahead of import): GET /library lists only the current profile's non-deleted decks, with no counts from the other profile; GET /decks/{id} for the other profile's deck returns 404, the same as an unknown id. Counts are completed in F4.",
+          "status": "done"
+        },
+        {
+          "id": "F2.4",
+          "title": "Build profile picker",
+          "reqs": [
+            "P1",
+            "P2"
+          ],
+          "prd_sections": [
+            "2",
+            "4",
+            "8"
+          ],
+          "area": "src/app/page.tsx, src/ui/profile, src/ui/avatars (placeholder set behind one registry, D15); screen profile_picker and README items 6 and 7",
+          "done_when": "Component or e2e tests: no cookie or an invalid cookie shows the picker with avatar and name and no deck counts; a valid cookie redirects to /library unless ?switch=1 is present; picking sets the cookie and opens /library. Loading and error states render. Works in both themes.",
+          "status": "done"
+        },
+        {
+          "id": "F2.5",
+          "title": "Build app shell with sidebar and Switch profile",
+          "reqs": [
+            "P3"
+          ],
+          "prd_sections": [
+            "2",
+            "4",
+            "8"
+          ],
+          "area": "src/app/(app)/layout.tsx, src/ui/shell, src/ui/states (Skeleton, ErrorState), pages /library (deck names only), /decks/[id], /progress and /settings as stubs; README items 13 and 16",
+          "done_when": "Component or e2e tests: sidebar shows Library, Progress, Settings and the current avatar and name, highlights the current section, and Switch profile returns to the picker from any page; /library lists the profile's decks by name; a missing profile redirects to the picker; a foreign deck URL shows a not-found state; the error state offers Retry and Switch profile.",
+          "status": "done"
+        },
+        {
+          "id": "F2.6",
+          "title": "Close AC1 with e2e and axe",
+          "reqs": [
+            "P1",
+            "P2",
+            "P3",
+            "P4"
+          ],
+          "prd_sections": [
+            "2",
+            "4",
+            "16"
+          ],
+          "area": "e2e/profiles.spec.ts",
+          "done_when": "On both viewports: pick each profile, see only that profile's seeded deck, get not found by URL for the other's deck and 404 from its API, switch profile; axe and 44 px checks pass on picker and Library in both themes.",
+          "status": "done"
+        },
+        {
+          "id": "F2.7",
+          "title": "Catch layout and home errors with a root error boundary",
+          "reqs": [
+            "P1",
+            "P2"
+          ],
+          "prd_sections": [
+            "8"
+          ],
+          "area": "src/app/error.tsx",
+          "done_when": "src/app/error.tsx (client component) renders ErrorState with Retry and Switch profile when the (app) layout or / throws, e.g. the database is unreachable; an e2e or component test proves it.",
+          "status": "done"
+        },
+        {
+          "id": "F2.8",
+          "title": "Use skeletons for the picker loading state",
+          "reqs": [
+            "P1"
+          ],
+          "prd_sections": [
+            "8"
+          ],
+          "area": "src/ui/profile/ProfilePicker.tsx",
+          "done_when": "The picker loading state renders Skeleton blocks sized like the avatar cards inside a role=status element with aria-label Loading, not a text line; the e2e check matches the label; axe and 44 px checks still pass in both themes.",
+          "status": "done"
+        }
+      ],
+      "design_screens": [
+        "profile_picker"
+      ]
+    },
+    {
+      "id": "F3",
+      "name": "Import and image storage",
+      "depends_on": [
+        "F1",
+        "F2"
+      ],
+      "reqs": [
+        "I1",
+        "I2",
+        "I3",
+        "I4",
+        "I5",
+        "I6"
+      ],
+      "acs": [
+        "AC2",
+        "AC3"
+      ],
+      "manual_acs": [],
+      "prd_sections": [
+        "4",
+        "6",
+        "11",
+        "12"
+      ],
+      "notes": "Includes the ImageStore interface, disk driver and contract tests.",
+      "status": "done",
+      "branch": "feat/F3-import-and-image-storage",
+      "pr": 8,
+      "tasks": [
+        {
+          "id": "F3.1",
+          "title": "Add ImageStore with disk driver and contract tests",
+          "reqs": [],
+          "prd_sections": [
+            "12"
+          ],
+          "area": "src/server/images/store.ts, src/server/images/disk-driver.ts, tests/contract/image-store.test.ts",
+          "done_when": "One contract suite run per driver proves: put then get returns the same bytes, repeated put is harmless, a missing key fails cleanly, delete is idempotent, exists is accurate; a key escaping IMAGE_STORE_PATH is refused; the driver is chosen from IMAGE_STORE_DRIVER.",
+          "status": "done"
+        },
+        {
+          "id": "F3.2",
+          "title": "Serve images by id",
+          "reqs": [],
+          "prd_sections": [
+            "11",
+            "12"
+          ],
+          "area": "src/app/api/v1/images/[id]/route.ts, src/server/images/service.ts",
+          "done_when": "Integration tests: the owner gets the bytes with sniffed Content-Type, nosniff, Cache-Control private, max-age=31536000, immutable and ETag equal to the hash; a matching If-None-Match returns 304; the other profile and unknown ids return 404.",
+          "status": "done"
+        },
+        {
+          "id": "F3.3",
+          "title": "Add import dry run endpoint",
+          "reqs": [
+            "I1",
+            "I2"
+          ],
+          "prd_sections": [
+            "4",
+            "6",
+            "11"
+          ],
+          "area": "src/app/api/v1/imports/route.ts (dryRun=true), src/server/imports.ts, src/shared/schemas/import.ts",
+          "done_when": "Integration tests with CSV and zip multipart input: the response has detected columns, row counts, first three cards, warnings and errors with row numbers; a row count check of every table and the image folder shows nothing was saved; blocked files return the error format.",
+          "status": "done"
+        },
+        {
+          "id": "F3.4",
+          "title": "Commit a new deck import in one transaction",
+          "reqs": [
+            "I1",
+            "I3"
+          ],
+          "prd_sections": [
+            "4",
+            "6",
+            "10",
+            "11",
+            "12"
+          ],
+          "area": "POST /imports commit path in src/server/imports.ts",
+          "done_when": "Integration tests: the server revalidates input; deck with name, group, colour and answer style, cards with position and newlines kept, images and import_runs are saved together; a forced failure mid-way leaves no rows; the same image twice stores one row and one file; another profile's cards never share its image row.",
+          "status": "done"
+        },
+        {
+          "id": "F3.5",
+          "title": "Implement re-import keeping progress",
+          "reqs": [
+            "I4"
+          ],
+          "prd_sections": [
+            "6",
+            "10",
+            "11"
+          ],
+          "area": "src/server/imports.ts re-import path (deckId in the form)",
+          "done_when": "Integration tests with card_state and review_log from factories (AC3): the same file adds nothing and changes no progress; an edited back updates the card and keeps box, due date and history; new ids are added; missing ids are kept and listed; the report gives added, updated, unchanged and skipped, stored in import_runs with no schema change; another profile's deckId returns 404.",
+          "status": "done",
+          "model": "opus"
+        },
+        {
+          "id": "F3.6",
+          "title": "Add CSV template and deck export",
+          "reqs": [
+            "I5",
+            "I6"
+          ],
+          "prd_sections": [
+            "4",
+            "6",
+            "11"
+          ],
+          "area": "CSV template download, src/app/api/v1/decks/[id]/export/route.ts",
+          "done_when": "Tests: the template parses with no errors through the CSV validator; the export is a zip of CSV plus images, 404 for another profile; exporting and re-importing a deck reports nothing added or changed.",
+          "status": "done"
+        },
+        {
+          "id": "F3.7",
+          "title": "Add import CLI",
+          "reqs": [
+            "I1"
+          ],
+          "prd_sections": [
+            "6",
+            "13"
+          ],
+          "area": "scripts/import-cli.ts, pnpm import:cli",
+          "done_when": "Integration test: pnpm import:cli <file> --profile <name> imports through the same service and prints the report; an unknown profile exits non-zero.",
+          "status": "done"
+        },
+        {
+          "id": "F3.8",
+          "title": "Add school and multi-point fixtures and prove AC2",
+          "reqs": [
+            "I1",
+            "I4"
+          ],
+          "prd_sections": [
+            "6",
+            "16"
+          ],
+          "area": "move res/science-w2.csv and res/science-w2-deck.zip to fixtures/, add fixtures/multi-point.csv, tests/integration/school-deck.test.ts",
+          "done_when": "res/ is gone and the fixtures are unchanged in fixtures/. Integration test: importing the school zip creates one deck of 16 cards across four topics with 7 images and no image warnings, and every card's front_image_id and back_image_id serves the bytes of the file named in its CSV row, including the two question-side images (sci-w2-08 and sci-w2-09).",
+          "status": "done"
+        },
+        {
+          "id": "F3.9",
+          "title": "Build import screen",
+          "reqs": [
+            "I1",
+            "I2",
+            "I3",
+            "I4",
+            "I5"
+          ],
+          "prd_sections": [
+            "4",
+            "6",
+            "8",
+            "11"
+          ],
+          "area": "src/app/(app)/import, src/ui/import; screens add_deck_re_import and import_success, README item 15",
+          "done_when": "Component or e2e tests: choosing a CSV or zip parses it in the browser with the shared domain functions and previews columns, counts, first three cards, warnings and errors by row, with nothing sent yet; the deck form or existing deck choice follows; commit posts to /imports; success shows deck name and cards added and updated; blocked, loading and error states render; ?deckId= preselects the re-import target.",
+          "status": "done"
+        },
+        {
+          "id": "F3.10",
+          "title": "Close AC2 and AC3 with e2e and axe",
+          "reqs": [
+            "I1",
+            "I2",
+            "I3",
+            "I4",
+            "I5"
+          ],
+          "prd_sections": [
+            "6",
+            "16"
+          ],
+          "area": "e2e/import.spec.ts",
+          "done_when": "On both viewports: import the school zip through the UI, then re-import it and see nothing added; import an edited back and see one updated; a broken CSV shows its row errors; axe and 44 px checks pass on each import step in both themes.",
+          "status": "done"
+        },
+        {
+          "id": "F3.11",
+          "title": "Warn on missing images for CSV-only uploads and give image warnings a row number",
+          "reqs": [
+            "I1",
+            "I2"
+          ],
+          "prd_sections": [
+            "6"
+          ],
+          "area": "src/domain/import-file.ts, src/ui/import/ImportPreview.tsx",
+          "done_when": "Tests: a CSV-only upload that names images returns a missing_image warning per referencing row; zip image warnings (missing, rejected) carry the row number of each CSV row that references the file and the preview shows Row N; re-import still keeps the card current image.",
+          "status": "done"
+        },
+        {
+          "id": "F3.12",
+          "title": "Show the full re-import report on the success screen",
+          "reqs": [
+            "I4"
+          ],
+          "prd_sections": [
+            "6"
+          ],
+          "area": "src/ui/import/ImportSuccess.tsx, src/ui/import/import.test.ts",
+          "done_when": "Component test: success shows added, updated and unchanged counts, lists missing ids kept, and shows commit warnings.",
+          "status": "done"
+        },
+        {
+          "id": "F3.13",
+          "title": "Match the add_deck_re_import layout",
+          "reqs": [
+            "I1",
+            "I2",
+            "I3"
+          ],
+          "prd_sections": [
+            "6",
+            "8"
+          ],
+          "area": "src/ui/import/ImportFlow.tsx, src/ui/import",
+          "done_when": "Screen follows the add_deck_re_import reference using existing tokens and components: numbered steps (Choose file, Check the cards, Deck details), deck details beside the preview, colour swatches, list-style segmented control, Topic/Front/Back preview table, primary Add N cards action; any simplification logged ASSUMED; existing e2e and axe checks still pass on both viewports and themes.",
+          "status": "done"
+        }
+      ],
+      "design_screens": [
+        "add_deck_re_import",
+        "import_success"
+      ]
+    },
+    {
+      "id": "F4",
+      "name": "Library and deck page",
+      "depends_on": [
+        "F3"
+      ],
+      "reqs": [
+        "L1",
+        "L2",
+        "L3",
+        "L4",
+        "L5",
+        "L6",
+        "L7",
+        "L8",
+        "D1",
+        "D2",
+        "D3",
+        "D4",
+        "D5",
+        "D6",
+        "D7"
+      ],
+      "acs": [],
+      "manual_acs": [],
+      "prd_sections": [
+        "4",
+        "5",
+        "7",
+        "8",
+        "11"
+      ],
+      "notes": "",
+      "status": "done",
+      "branch": "feat/F4-library-and-deck-page",
+      "pr": 9,
+      "tasks": [
+        {
+          "id": "F4.1",
+          "title": "Complete library API counts",
+          "reqs": [
+            "L1",
+            "L3",
+            "L4",
+            "L5"
+          ],
+          "prd_sections": [
+            "4",
+            "5",
+            "7",
+            "10",
+            "11"
+          ],
+          "area": "GET /library in src/server/decks.ts, src/shared/schemas/library.ts",
+          "done_when": "Integration tests with factories: today's totals (due, decks with due cards, session length) use the profile's local day; the weak count matches the domain definition; groups are alphabetical with Other for no group; each deck has topic, card and due counts and New, Not yet, Nearly and Got it buckets; deleted decks and cards and the other profile's data are excluded; topic names are included for search.",
+          "status": "done"
+        },
+        {
+          "id": "F4.2",
+          "title": "Complete deck read, edit, delete and leeches API",
+          "reqs": [
+            "D1",
+            "D4",
+            "D5",
+            "D6"
+          ],
+          "prd_sections": [
+            "4",
+            "7",
+            "10",
+            "11"
+          ],
+          "area": "src/app/api/v1/decks/[id] (GET, PATCH, DELETE), decks/[id]/leeches",
+          "done_when": "Integration tests: topics carry card count, due count, buckets and mastered percentage including New; PATCH validates rename, group, colour and answer style; the deck response gives the card and review record counts for the delete confirmation; DELETE soft-deletes deck and cards and keeps review_log and card_state; leeches returns flagged cards with lapses; each endpoint returns 404 for the other profile.",
+          "status": "done"
+        },
+        {
+          "id": "F4.3",
+          "title": "Build Library page",
+          "reqs": [
+            "L1",
+            "L2",
+            "L3",
+            "L4",
+            "L5"
+          ],
+          "prd_sections": [
+            "4",
+            "5",
+            "7",
+            "8"
+          ],
+          "area": "src/app/(app)/library, src/ui/library, src/ui/mastery-bar, src/ui/practice/start-session.ts, /practice/[sessionId] stub; screens library and loading_skeleton",
+          "done_when": "Component or e2e tests: Today panel, grouped decks and mastery bar with counts in the legend as well as colour; loading uses skeletons and errors offer Retry. Start practice and Weak cards each PUT /api/v1/sessions/{uuid} with the right scope and length and open /practice/{id}, asserted by intercepting the request, because the session API lands in F6, which closes the flow end to end.",
+          "status": "done"
+        },
+        {
+          "id": "F4.4",
+          "title": "Add search, Add deck and empty state",
+          "reqs": [
+            "L6",
+            "L7",
+            "L8"
+          ],
+          "prd_sections": [
+            "4",
+            "8"
+          ],
+          "area": "src/ui/library/search, src/domain/text-match.ts; screen empty_library, README item 14",
+          "done_when": "Tests: search filters decks and topics as you type, ignoring case and accents (quimica matches Química); Add deck opens /import; a profile with no decks shows one Add deck action, Download CSV template and one plain line on how to add cards; no match shows a neutral message.",
+          "status": "done"
+        },
+        {
+          "id": "F4.5",
+          "title": "Build Deck page with topic selection",
+          "reqs": [
+            "D1",
+            "D2",
+            "D3"
+          ],
+          "prd_sections": [
+            "4",
+            "5",
+            "8"
+          ],
+          "area": "src/app/(app)/decks/[id], src/ui/deck; screen deck_detail",
+          "done_when": "Component or e2e tests: topics show counts, mastery bar and mastered percentage; with none ticked Practise scopes the deck, with some ticked those topics, and the label states topic and due counts; a ticked topic with no due cards offers a clearly labelled practise-anyway that sends ignoring due dates. Session requests asserted by intercept as in the Library task; not-found, loading and error states render.",
+          "status": "done"
+        },
+        {
+          "id": "F4.6",
+          "title": "Add deck edit, delete, leeches and re-import actions",
+          "reqs": [
+            "D4",
+            "D5",
+            "D6",
+            "D7"
+          ],
+          "prd_sections": [
+            "4",
+            "8"
+          ],
+          "area": "src/ui/deck/edit-deck, src/ui/deck/delete-deck, src/ui/deck/needs-rewording",
+          "done_when": "Component or e2e tests: edit saves name, group, colour and answer style and updates the page; delete states how many cards and review records will go, then returns to Library with the deck hidden; Needs rewording lists leeches with lapse counts and is absent when there are none; re-import opens /import?deckId=.",
+          "status": "done"
+        },
+        {
+          "id": "F4.7",
+          "title": "Add Library and Deck e2e and axe",
+          "reqs": [
+            "L1",
+            "L4",
+            "L5",
+            "L6",
+            "L7",
+            "L8",
+            "D1",
+            "D2",
+            "D4",
+            "D5",
+            "D7"
+          ],
+          "prd_sections": [
+            "4",
+            "8",
+            "16"
+          ],
+          "area": "e2e/library.spec.ts, e2e/deck.spec.ts; screen error_with_retry",
+          "done_when": "On both viewports with seeded data: empty, loading, error with Retry, populated Library, search, Deck page, edit and delete all pass; axe and 44 px checks pass on each state in both themes.",
+          "status": "done"
+        },
+        {
+          "id": "F4.8",
+          "title": "Fix: allow starting practice when cards are all New",
+          "reqs": [
+            "L2",
+            "D2"
+          ],
+          "prd_sections": [
+            "5",
+            "7",
+            "11"
+          ],
+          "area": "src/server/decks.ts, src/ui/library/LibraryView.tsx, src/ui/deck/DeckView.tsx",
+          "done_when": "Review gap 1: Start practice (Library) and Practise deck (Deck) are enabled whenever the scope has session candidates per PRD section 5 (due cards plus new cards up to the remaining daily cap), built from the domain rule, not dueCount alone. Test: a deck with only New cards can start practice from both Library and Deck; with no candidates the buttons stay disabled.",
+          "status": "done"
+        },
+        {
+          "id": "F4.9",
+          "title": "Fix: test Deck page loading and error states",
+          "reqs": [
+            "D1"
+          ],
+          "prd_sections": [
+            "8",
+            "16"
+          ],
+          "area": "e2e/deck.spec.ts",
+          "done_when": "Review gap 2: e2e shows the /decks/[id] route rendering the loading skeleton and the error-with-Retry state, with axe and 44 px checks in both themes on both viewports.",
+          "status": "done"
+        }
+      ],
+      "design_screens": [
+        "library",
+        "deck_detail",
+        "empty_library",
+        "loading_skeleton",
+        "error_with_retry"
+      ]
+    },
+    {
+      "id": "F5",
+      "name": "Settings and theme",
+      "depends_on": [
+        "F2"
+      ],
+      "reqs": [
+        "T1",
+        "T2",
+        "T3",
+        "T4",
+        "T5"
+      ],
+      "acs": [
+        "AC9",
+        "AC13"
+      ],
+      "manual_acs": [],
+      "prd_sections": [
+        "4",
+        "8",
+        "11"
+      ],
+      "notes": "",
+      "status": "done",
+      "branch": "feat/F5-settings-and-theme",
+      "pr": 10,
+      "tasks": [
+        {
+          "id": "F5.1",
+          "title": "Add settings API",
+          "reqs": [
+            "T3"
+          ],
+          "prd_sections": [
+            "4",
+            "11",
+            "14"
+          ],
+          "area": "src/app/api/v1/settings/route.ts, src/server/settings.ts",
+          "done_when": "Integration tests: GET returns stored values merged over defaults; PUT validates with the shared schema and rejects unknown font ids, sizes and colours; values are per profile and the other profile is untouched; a new client sees the saved value.",
+          "status": "done"
+        },
+        {
+          "id": "F5.2",
+          "title": "Apply settings and theme across the app",
+          "reqs": [
+            "T3",
+            "T5"
+          ],
+          "prd_sections": [
+            "4",
+            "8"
+          ],
+          "area": "src/ui/settings/provider, theme toggle, src/app/layout.tsx",
+          "done_when": "Component or e2e tests: the toggle switches data-theme at once with no reload and saves to the profile; another browser context for that profile picks it up; switching profile applies that profile's theme; default is light; a reload of a dark profile does not flash light (local cache, with the server value winning).",
+          "status": "done"
+        },
+        {
+          "id": "F5.3",
+          "title": "Build reading settings with live preview",
+          "reqs": [
+            "T1",
+            "T4"
+          ],
+          "prd_sections": [
+            "4",
+            "8",
+            "14"
+          ],
+          "area": "src/app/(app)/settings, src/ui/settings/reading, src/ui/reading-card (reused by Practice), card colour tokens in src/ui/tokens.css; screen settings, README item 8",
+          "done_when": "Tests: all T1 options exist (three fonts including System Sans, 4 sizes, 3 letter and 3 line spacings, Mist, Cream, Peach, Sage, Lavender, Night); the preview changes at once and only card text changes, not chrome; each card colour reaches 4.5:1 with its text (values not in the design files logged as ASSUMED); minimum 16 px; Reset to defaults works.",
+          "status": "done"
+        },
+        {
+          "id": "F5.4",
+          "title": "Add practice settings section",
+          "reqs": [
+            "T2",
+            "T4"
+          ],
+          "prd_sections": [
+            "4",
+            "5",
+            "8"
+          ],
+          "area": "src/ui/settings/practice",
+          "done_when": "Component or e2e tests: cards per session 5, 10, 20, All due (default 5), new cards per day (default 10), read aloud off and reading speed Normal all save per profile; the new-card value is validated as a non-negative whole number; the Library Today panel shows the configured session length.",
+          "status": "done"
+        },
+        {
+          "id": "F5.5",
+          "title": "Close AC9 and AC13 with e2e and axe",
+          "reqs": [
+            "T1",
+            "T3",
+            "T5"
+          ],
+          "prd_sections": [
+            "4",
+            "8",
+            "16"
+          ],
+          "area": "e2e/settings.spec.ts",
+          "done_when": "On both viewports: changing reading settings changes preview text at once; settings and theme persist per profile, across a new browser context and across an app server restart; the theme toggles on every screen built so far (F8 repeats this on all of them); axe and 44 px checks pass on Settings in both themes.",
+          "status": "done"
+        }
+      ],
+      "design_screens": [
+        "settings"
+      ]
+    },
+    {
+      "id": "F6",
+      "name": "Practice",
+      "depends_on": [
+        "F1",
+        "F4",
+        "F5"
+      ],
+      "reqs": [
+        "R1",
+        "R2",
+        "R3",
+        "R4",
+        "R5",
+        "R6",
+        "R7",
+        "R8",
+        "R9",
+        "R10",
+        "R11",
+        "R12",
+        "R13",
+        "R14"
+      ],
+      "acs": [
+        "AC4",
+        "AC5",
+        "AC6",
+        "AC7",
+        "AC10"
+      ],
+      "manual_acs": [
+        "AC10"
+      ],
+      "prd_sections": [
+        "4",
+        "5",
+        "8",
+        "11"
+      ],
+      "notes": "AC10 (read aloud on the target iPad) is manual.",
+      "status": "done",
+      "branch": "feat/F6-practice",
+      "pr": 11,
+      "tasks": [
+        {
+          "id": "F6.1",
+          "title": "Implement session creation",
+          "reqs": [
+            "R1"
+          ],
+          "prd_sections": [
+            "5",
+            "10",
+            "11",
+            "14"
+          ],
+          "area": "src/app/api/v1/sessions/[id]/route.ts, src/server/sessions.ts, src/shared/schemas/session.ts",
+          "done_when": "Integration tests: PUT builds the queue for every scope and length and returns each card's text, images and grade labels; the ordered queue is stored in sessions.meta, with no schema change, so a retry with the same id returns the identical queue and an empty-body PUT resumes it with grades so far; the new-card allowance is the setting minus today's non-undone introduced_new (AC7, 16 new with cap 10); other profile's scope returns 404; no candidates returns an empty queue.",
+          "status": "done",
+          "model": "opus"
+        },
+        {
+          "id": "F6.2",
+          "title": "Implement review recording",
+          "reqs": [
+            "R4",
+            "R5",
+            "R12"
+          ],
+          "prd_sections": [
+            "5",
+            "7",
+            "10",
+            "11",
+            "14"
+          ],
+          "area": "src/app/api/v1/reviews/[id]/route.ts, src/server/reviews.ts, src/shared/schemas/review.ts",
+          "done_when": "Integration tests (AC4): PUT applies the scheduler in one transaction and returns state, next due, re-queue and fresh labels for a re-queued card; all review_log fields are complete, including prev_state, is_first_attempt_today and introduced_new; a retry returns the original without double-counting; rejects a card outside the queue and another profile's session; a card's profile mismatch is refused (section 10); no more than two re-queues per card.",
+          "status": "done",
+          "model": "opus"
+        },
+        {
+          "id": "F6.3",
+          "title": "Implement undo",
+          "reqs": [
+            "R6"
+          ],
+          "prd_sections": [
+            "5",
+            "10",
+            "11"
+          ],
+          "area": "DELETE /reviews/{id} in src/server/reviews.ts",
+          "done_when": "Integration tests (AC6): undo marks undone_at, keeps the row, and restores box, due date, lapses, reps and status, removing the state row for a card that was New; the new-card allowance and first-attempt flag recover, so regrading is a first attempt; stepping back through the whole session works; only the latest live review of a session can be undone, others return 409; a repeated DELETE is safe; another profile gets 404; the response has the card's labels.",
+          "status": "done",
+          "model": "opus"
+        },
+        {
+          "id": "F6.4",
+          "title": "Implement session end and summary",
+          "reqs": [
+            "R7",
+            "R11"
+          ],
+          "prd_sections": [
+            "4",
+            "7",
+            "11"
+          ],
+          "area": "POST /sessions/{id}/end, GET /sessions/{id}/summary, src/server/sessions.ts",
+          "done_when": "Integration tests: end marks ended_early and keeps grades; grading the last card marks completed; summary gives counts by grade from each card's first grade in the session (ASSUMED if the PRD stays silent), session time, up to three cards to go again and the ids for Practise the misses; undone reviews never count; other profile gets 404.",
+          "status": "done"
+        },
+        {
+          "id": "F6.5",
+          "title": "Build practice question and answer views",
+          "reqs": [
+            "R2",
+            "R3",
+            "R8"
+          ],
+          "prd_sections": [
+            "4",
+            "8"
+          ],
+          "area": "src/app/practice/[sessionId], src/ui/practice; screens practice_session and practice_answer_revealed, README items 1, 3, 4 and 18",
+          "done_when": "Component or e2e tests: full screen with no sidebar; front shows chip, question, exact hint and Show answer; back shows small question, paragraph or bullets per the deck's style, and images on the correct side; segmented progress shows done, current and remaining with a text count; HTML in card text renders as literal text; reading settings from F5 apply to card text; loading skeleton and error state render.",
+          "status": "done"
+        },
+        {
+          "id": "F6.6",
+          "title": "Wire grading, re-queue, undo and end session",
+          "reqs": [
+            "R4",
+            "R5",
+            "R6",
+            "R7",
+            "R12"
+          ],
+          "prd_sections": [
+            "4",
+            "5",
+            "8",
+            "11"
+          ],
+          "area": "src/ui/practice/use-session.ts (uses src/domain/session-queue)",
+          "done_when": "Component or e2e tests with a mocked clock: three buttons with icon, label and server sublabel; Not yet reappears per the queue with fresh labels; Undo last returns to the previous front and repeats to the start; End session leaves at once; duration runs from front shown to grade with no visible timer; a failed grade retries with the same id; reloading the page resumes at the same card.",
+          "status": "done"
+        },
+        {
+          "id": "F6.7",
+          "title": "Build session summary and Practise the misses",
+          "reqs": [
+            "R11"
+          ],
+          "prd_sections": [
+            "4",
+            "8"
+          ],
+          "area": "src/ui/practice/summary; screen practice_session_summary",
+          "done_when": "Component or e2e tests: counts by grade with text labels, session time, up to three cards, Back to Library; Practise the misses starts a new session from an explicit card list; the action is hidden with no misses; no streak or pressure copy.",
+          "status": "done"
+        },
+        {
+          "id": "F6.8",
+          "title": "Add read aloud and auto-read",
+          "reqs": [
+            "R9",
+            "R10"
+          ],
+          "prd_sections": [
+            "4",
+            "8",
+            "13"
+          ],
+          "area": "src/ui/practice/speech.ts",
+          "done_when": "Unit tests with a mocked speechSynthesis: the button speaks the question on the front and answer on the back; auto-read speaks each new question only when enabled; Slow, Normal and Fast map to rates; navigating cancels speech; unsupported browsers hide the button with no error. Real-device behaviour is manual AC10.",
+          "status": "done"
+        },
+        {
+          "id": "F6.9",
+          "title": "Add practice settings shortcut and keyboard shortcuts",
+          "reqs": [
+            "R13",
+            "R14"
+          ],
+          "prd_sections": [
+            "4",
+            "8"
+          ],
+          "area": "src/ui/practice/settings-popover, src/ui/practice/shortcuts",
+          "done_when": "Component or e2e tests: the top-bar shortcut opens reading settings over the session, changes apply live, and closing returns to the same card and side; Space shows the answer, 1, 2 and 3 grade only when the answer is visible; shortcuts do not fire inside inputs or while a dialog is open.",
+          "status": "done"
+        },
+        {
+          "id": "F6.10",
+          "title": "Close AC4 to AC7 with e2e and axe",
+          "reqs": [
+            "R1",
+            "R2",
+            "R3",
+            "R4",
+            "R5",
+            "R6",
+            "R7",
+            "R8",
+            "R11",
+            "L2",
+            "L3",
+            "D2",
+            "D3"
+          ],
+          "prd_sections": [
+            "4",
+            "5",
+            "8",
+            "16"
+          ],
+          "area": "e2e/practice.spec.ts, using the school fixture",
+          "done_when": "On both viewports: Start practice, Weak cards and Deck Practise each open a real session (closing the F4 intercepts); a 5-card session shows sublabels and box and due updates match section 5 (AC4); Not yet reappears after about four cards, at most twice (AC5); undo restores state (AC6); 16 new cards with cap 10 yields no more than 10 in a local day (AC7); images appear on the correct side (AC2); front, back and summary pass axe and 44 px in both themes.",
+          "status": "done"
+        }
+      ],
+      "design_screens": [
+        "practice_session",
+        "practice_answer_revealed",
+        "practice_session_summary"
+      ]
+    },
+    {
+      "id": "F7",
+      "name": "Progress",
+      "depends_on": [
+        "F1",
+        "F6"
+      ],
+      "reqs": [
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "S5"
+      ],
+      "acs": [
+        "AC8"
+      ],
+      "manual_acs": [],
+      "prd_sections": [
+        "4",
+        "7",
+        "8",
+        "11"
+      ],
+      "notes": "",
+      "status": "done",
+      "branch": "feat/F7-progress",
+      "pr": 12,
+      "tasks": [
+        {
+          "id": "F7.1",
+          "title": "Implement statistics API",
+          "reqs": [
+            "S1",
+            "S2",
+            "S3",
+            "S4"
+          ],
+          "prd_sections": [
+            "4",
+            "7",
+            "10",
+            "11"
+          ],
+          "area": "src/app/api/v1/stats/route.ts, src/server/stats.ts, src/shared/schemas/stats.ts, fixtures/stats-history",
+          "done_when": "Integration test (AC8) over a seeded history with hand-computed expected values: week and month tiles and changes, per-day and per-week bars, first-attempt-only counting, undone rows excluded, median with the 120 s cap, Focus next, by-deck. Reviews from deleted decks stay in tiles and bars but deleted decks are out of Focus next and by-deck. The other profile's data never appears.",
+          "status": "done",
+          "model": "opus"
+        },
+        {
+          "id": "F7.2",
+          "title": "Document the statistics queries and test them",
+          "reqs": [
+            "S1"
+          ],
+          "prd_sections": [
+            "7",
+            "16"
+          ],
+          "area": "docs/statistics-queries.md, tests/integration/stats-documented-queries.test.ts",
+          "done_when": "A test extracts the SQL from the document, runs it on the seeded history and matches GET /stats, so the numbers on screen are reproducible from review_log.",
+          "status": "done",
+          "model": "opus"
+        },
+        {
+          "id": "F7.3",
+          "title": "Build Progress page with tiles and empty state",
+          "reqs": [
+            "S1",
+            "S5"
+          ],
+          "prd_sections": [
+            "4",
+            "7",
+            "8"
+          ],
+          "area": "src/app/(app)/progress, src/ui/progress; screen progress, README items 5 and 17",
+          "done_when": "Component or e2e tests: the range switch changes all figures; four tiles show values and plain-word changes (\"38 more than last week\"), the second tile is Got it rate and days practised reads like 5 of 7; no streaks or badges; empty state explains what appears after the first session; loading and error states render.",
+          "status": "done"
+        },
+        {
+          "id": "F7.4",
+          "title": "Build practice frequency chart",
+          "reqs": [
+            "S2"
+          ],
+          "prd_sections": [
+            "4",
+            "7",
+            "8"
+          ],
+          "area": "src/ui/progress/practice-chart (SVG or CSS, no chart library)",
+          "done_when": "Component tests: per-day bars for week and per-week for month; every bar shows its value; the current period is marked by more than colour; the chart has a text alternative and uses semantic tokens only.",
+          "status": "done"
+        },
+        {
+          "id": "F7.5",
+          "title": "Add Focus next and by-deck table",
+          "reqs": [
+            "S3",
+            "S4"
+          ],
+          "prd_sections": [
+            "4",
+            "7",
+            "8"
+          ],
+          "area": "src/ui/progress/focus-next, src/ui/progress/by-deck",
+          "done_when": "Component or e2e tests: three lowest-mastery topics say mastery and each starts a session on that topic, ignoring due dates when none are due; the by-deck table has Cards, Mastered, median time and last practised, lowest mastery first, and no mastery shown as a rate.",
+          "status": "done"
+        },
+        {
+          "id": "F7.6",
+          "title": "Close AC8 with e2e and axe",
+          "reqs": [
+            "S1",
+            "S2",
+            "S3",
+            "S4",
+            "S5"
+          ],
+          "prd_sections": [
+            "4",
+            "7",
+            "16"
+          ],
+          "area": "e2e/progress.spec.ts",
+          "done_when": "On both viewports with the seeded history: the screen shows the hand-computed figures; undo removes a review's contribution (AC6); Focus next opens a session; the empty state shows for a new profile; axe and 44 px checks pass in both themes.",
+          "status": "done"
+        },
+        {
+          "id": "F7.7",
+          "title": "Fix review gaps: By deck shows mastery share and sort note",
+          "reqs": [],
+          "prd_sections": [
+            "7"
+          ],
+          "area": "src/ui/progress/by-deck/ByDeckTable.tsx, src/ui/progress/progress-view.test.ts",
+          "done_when": "By deck Mastered column shows the mastery share as a whole percent (dash when null) per PRD section 7 and design README item 5; the section says it is sorted by lowest mastery; tests updated to expect both; verify.sh green.",
+          "status": "done"
+        }
+      ],
+      "design_screens": [
+        "progress"
+      ]
+    },
+    {
+      "id": "F8",
+      "name": "Operations and hardening",
+      "depends_on": [
+        "F7"
+      ],
+      "reqs": [
+        "X2"
+      ],
+      "acs": [
+        "AC11",
+        "AC12"
+      ],
+      "manual_acs": [
+        "AC11"
+      ],
+      "prd_sections": [
+        "13",
+        "16"
+      ],
+      "notes": "Backup/restore scripts, launchd service, full e2e journey, axe on every screen in both themes. AC11 (reboot, restore drill) is manual.",
+      "status": "done",
+      "branch": "feat/F8-operations",
+      "pr": 13,
+      "tasks": [
+        {
+          "id": "F8.1",
+          "title": "Add backup script",
+          "reqs": [
+            "X2"
+          ],
+          "prd_sections": [
+            "13"
+          ],
+          "area": "scripts/backup.sh (pg_dump through podman exec), pnpm backup",
+          "done_when": "Integration test against a disposable database and temp folders: writes a dated folder outside the repository with pg_dump output and an images archive; retention removes only backups older than 14 days; failure exits non-zero and leaves no partial folder reported as complete.",
+          "status": "done"
+        },
+        {
+          "id": "F8.2",
+          "title": "Add restore script and automated drill",
+          "reqs": [
+            "X2"
+          ],
+          "prd_sections": [
+            "13",
+            "16"
+          ],
+          "area": "scripts/restore.sh (through podman exec), pnpm restore, tests/integration/backup-restore.test.ts",
+          "done_when": "Automated drill on a disposable database: seed decks, progress and images, back up, destroy, restore, then card_state, review_log, stats and image bytes match. The script refuses to overwrite non-empty data without an explicit confirm flag.",
+          "status": "done"
+        },
+        {
+          "id": "F8.3",
+          "title": "Add launchd service templates and operations runbook",
+          "reqs": [],
+          "prd_sections": [
+            "13",
+            "16"
+          ],
+          "area": "ops/launchd/*.plist (app, Podman machine and Postgres, nightly backup), docs/operations.md, README.md",
+          "done_when": "plutil -lint passes on every plist; one job starts the Podman machine and then the Postgres container, and the app job waits until the database accepts connections; the runbook gives install steps, the iPad address and shortcut, and the manual AC11 reboot and restore checklist. Agents do not install anything on the host; AC11 stays MANUAL 0e6c390.",
+          "status": "done"
+        },
+        {
+          "id": "F8.4",
+          "title": "Add full journey e2e",
+          "reqs": [],
+          "prd_sections": [
+            "16"
+          ],
+          "area": "e2e/journey.spec.ts",
+          "done_when": "On both viewports against a production build (next build and next start): pick profile, import the school deck, practise, undo, finish, see statistics; no request leaves the local host.",
+          "status": "done"
+        },
+        {
+          "id": "F8.5",
+          "title": "Run axe and target checks on every screen and state",
+          "reqs": [],
+          "prd_sections": [
+            "8",
+            "16"
+          ],
+          "area": "e2e/a11y.spec.ts",
+          "done_when": "AC12 and AC13: one spec walks every screen and state in section 8, including empty, loading, error and success, on both viewports and iPad portrait: no serious or critical axe issue, every control at least 44 px, in both themes; the theme toggle switches each screen at once and survives reload; emulated reduced motion shows no animation. Any token fix is logged as ASSUMED.",
+          "status": "done"
+        },
+        {
+          "id": "F8.6",
+          "title": "Measure non-functional targets",
+          "reqs": [],
+          "prd_sections": [
+            "16"
+          ],
+          "area": "e2e/performance.spec.ts, tests/integration/import-performance.test.ts",
+          "done_when": "Against a production build: first card within 1 s of Start, next card rendered under 200 ms after a grade, a 2,000-row import under 30 s. Results are appended to docs/progress.md.",
+          "status": "done"
+        }
+      ]
+    }
+  ]
+}
