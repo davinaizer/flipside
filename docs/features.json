@@ -339,6 +339,21 @@
           "area": "e2e/profiles.spec.ts",
           "done_when": "pnpm test:e2e AC15: tap avatar, change avatar and name, see it in top bar, sidebar and picker, survives reload; empty and 25-char names rejected with message.",
           "status": "done"
+        },
+        {
+          "id": "F10.6",
+          "title": "Fix review gaps: isolate profile e2e, assert avatar on screen",
+          "reqs": [
+            "P6",
+            "P7"
+          ],
+          "prd_sections": [
+            "4",
+            "8"
+          ],
+          "area": "e2e/profiles.spec.ts, scripts/e2e-seed.ts",
+          "done_when": "The AC15 e2e uses its own seeded profile per project (e.g. 'Profile <project>', exact match, as other specs do), so desktop and iPad no longer race and no restore is needed. Before and after reload it asserts the new avatar glyph and name in the top-bar link, the sidebar (scoped to its landmark) and the picker button. Two full pnpm test:e2e runs show no profiles.spec.ts failure.",
+          "status": "todo"
         }
       ]
     },
