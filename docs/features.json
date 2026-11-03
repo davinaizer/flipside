@@ -323,7 +323,7 @@
           ],
           "area": "src/ui/shell/TopBar.tsx, Sidebar.tsx, ProfilePicker.tsx",
           "done_when": "Test: avatar is a link named for the profile; after save, top bar, sidebar and picker show the new avatar and name without manual reload.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F10.5",

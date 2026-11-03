@@ -28,3 +28,4 @@ F9.14: removed the theme switch from practice (card header, no cards, load error
 F10.1 added updateProfileRequestSchema (avatar and name both optional, at least one required, for PATCH /me) and PROFILE_NAME_MAX; tests in shared.test.ts.
 F10.2: updateProfile service and PATCH /api/v1/me (422 with issue messages on invalid input); tests in tests/profile-update-api.test.ts.
 F10.3: /profile page with ProfileForm (avatar radio grid with tick, name field with inline error, Save via api.updateProfile PATCH /me); tests in ProfileScreen.test.tsx.
+F10.4: top-bar avatar now links to /profile (named "<name>, open profile"); layout passes name; router.refresh after save updates shell, picker is force-dynamic. Unit tests added.
