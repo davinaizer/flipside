@@ -17,3 +17,4 @@ F9.9: Choice pills, Progress range buttons and colour swatches now have pressed 
 - F9.10: import swatches/pills, sidebar nav, Choice, range buttons, iconButton gained hover/active colour and focus; guard test covers cursor-pointer labels.
 - 2026-11-03: REVIEW F9 round 3: GAPS at 18cab98 (Library deck link lacks pressed/focus ring; no theme switch on practice/summary load-error states)
 - F9.11: Library deck link has pressed, focus ring and active tone; LoadError (theme switch above ErrorState) used by practice and summary load failures; guard test covers Link.
+- 2026-11-03: REVIEW F9 round 4: GAPS at 57c4618 (no theme switch on the 'session has no cards' practice state)
