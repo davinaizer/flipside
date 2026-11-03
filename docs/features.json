@@ -163,6 +163,20 @@
           "area": "src/ui/settings/Choice.tsx, src/ui/progress/ProgressView.tsx, src/ui/settings/reading/ReadingSettings.tsx, src/ui/tokens.test.ts",
           "done_when": "Those buttons have hover, pressed and focus ring; a grep-style test asserts every <button under src/ui uses buttonClass, TAPPABLE_CARD, iconButton or includes PRESSED and FOCUS_RING. verify.sh green.",
           "status": "done"
+        },
+        {
+          "id": "F9.10",
+          "title": "Fix U2 gaps round 2: import labels, sidebar nav, reduced-motion pressed",
+          "reqs": [
+            "U2"
+          ],
+          "prd_sections": [
+            "4",
+            "8"
+          ],
+          "area": "src/ui/import/ImportFlow.tsx, src/ui/shell/Sidebar.tsx, src/ui/settings/Choice.tsx, src/ui/progress/ProgressView.tsx, src/ui/settings/reading/ReadingSettings.tsx, src/ui/practice/PracticeView.tsx, src/ui/tokens.test.ts",
+          "done_when": "Import swatches and answer-style pills have hover, PRESSED and a peer-focus ring matching FOCUS_RING; sidebar nav pills have PRESSED, FOCUS_RING and an active: colour; Choice pills, range buttons, colour swatches and iconButton also change colour on active: so pressed is visible under reduced motion; selected Choice pill and range button get a hover tone; guard test extended to cover label.cursor-pointer controls. verify.sh green.",
+          "status": "todo"
         }
       ]
     },
