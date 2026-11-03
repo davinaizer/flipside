@@ -294,7 +294,7 @@
           ],
           "area": "src/server/profile.ts, src/app/api/v1/me/route.ts",
           "done_when": "API test: PATCH updates avatar and name for the current profile only, persists, returns 422 with a clear message on invalid input, leaves other profile untouched, allows duplicate avatars.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F10.3",
