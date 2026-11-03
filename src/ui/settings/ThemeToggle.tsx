@@ -1,5 +1,6 @@
 "use client";
 
+import { FOCUS_RING, PRESSED } from "@/ui/button/button-class";
 import { Icon } from "@/ui/icons/Icon";
 import { useSettings } from "./SettingsProvider";
 
@@ -22,9 +23,9 @@ export function ThemeSwitch({ dark, onToggle }: { dark: boolean; onToggle: () =>
       aria-label="Dark theme"
       aria-checked={dark}
       onClick={onToggle}
-      className="flex min-h-11 min-w-11 items-center justify-center rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+      className={`group flex min-h-11 min-w-11 items-center justify-center rounded-full ${PRESSED} ${FOCUS_RING}`}
     >
-      <span className="relative flex h-8 w-16 items-center justify-between rounded-full bg-surface-container-high px-2 text-on-surface-variant">
+      <span className="relative flex h-8 w-16 items-center justify-between rounded-full bg-surface-container-high px-2 group-hover:bg-surface-container-highest group-active:bg-surface-container-highest text-on-surface-variant">
         <span
           aria-hidden="true"
           className={`absolute left-1 size-6 rounded-full bg-primary transition-transform ${dark ? "translate-x-8" : ""}`}

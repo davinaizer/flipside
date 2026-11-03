@@ -148,7 +148,7 @@
           ],
           "area": "src/ui/practice/GradeBar.tsx, src/ui/settings/ThemeToggle.tsx, src/ui/deck/delete-deck/DeleteDeck.tsx, src/ui/button/button-class.ts",
           "done_when": "Each of these buttons has hover, pressed (PRESSED, motion-reduce safe) and FOCUS_RING; unit assertions added for GradeBar, ThemeToggle and DeleteDeck classes.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F9.9",

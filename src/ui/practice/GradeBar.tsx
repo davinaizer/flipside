@@ -1,3 +1,4 @@
+import { FOCUS_RING, PRESSED } from "@/ui/button/button-class";
 import { Icon, type IconName } from "@/ui/icons/Icon";
 import type { Grade } from "@/shared/enums";
 
@@ -33,7 +34,7 @@ export function GradeBar({
       {failed && (
         <p role="alert" className="text-center text-error">
           Your answer was not saved.{" "}
-          <button type="button" onClick={onRetry} className="min-h-11 font-semibold underline">
+          <button type="button" onClick={onRetry} className={`min-h-11 rounded-full px-2 font-semibold underline hover:bg-surface-container-high active:bg-surface-container-highest ${PRESSED} ${FOCUS_RING}`}>
             Try again
           </button>
         </p>
@@ -45,7 +46,7 @@ export function GradeBar({
             type="button"
             disabled={busy || failed}
             onClick={() => onGrade(grade)}
-            className={`flex min-h-20 flex-col items-center justify-center gap-1 rounded-2xl px-2 py-3 ${GRADE_TONE[grade]} disabled:opacity-60`}
+            className={`flex min-h-20 flex-col items-center justify-center gap-1 rounded-2xl px-2 py-3 ${GRADE_TONE[grade]} hover:brightness-95 active:brightness-90 ${PRESSED} ${FOCUS_RING} disabled:opacity-60`}
           >
             <Icon name={icon} size={24} />
             <span className="text-body-lg font-semibold">{label}</span>

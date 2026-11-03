@@ -34,3 +34,11 @@ test("click flips the theme through the settings saver", () => {
   (ThemeToggle().props as { onToggle: () => void }).onToggle();
   expect(update).toHaveBeenLastCalledWith({ theme: "light" });
 });
+
+test("the switch has hover, pressed and focus classes", () => {
+  const html = renderToStaticMarkup(<ThemeToggle />);
+  expect(html).toContain("group-hover:");
+  expect(html).toContain("group-active:");
+  expect(html).toContain("active:scale-[0.98] motion-reduce:active:scale-100");
+  expect(html).toContain("focus-visible:outline-2");
+});
