@@ -7,7 +7,7 @@ import { Logo } from "@/ui/icons/Icon";
 import { Avatar } from "@/ui/avatars";
 import { Skeleton } from "@/ui/states/Skeleton";
 import type { ProfileSummary } from "@/shared/schemas/profile";
-import { buttonClass } from "@/ui/button/button-class";
+import { buttonClass, TAPPABLE_CARD } from "@/ui/button/button-class";
 
 type State =
   | { kind: "loading" }
@@ -77,7 +77,7 @@ export function ProfilePicker() {
               <button
                 type="button"
                 onClick={() => pick(p.id)}
-                className="flex min-h-11 min-w-52 flex-col items-center gap-4 overflow-hidden rounded-card border-t-4 border-t-primary-container border-x border-b border-x-card-edge border-b-card-edge bg-surface-card px-8 pb-8 pt-8 text-on-surface shadow-card outline-offset-4 hover:bg-surface-container-low focus-visible:outline-2 focus-visible:outline-primary"
+                className={`flex min-h-11 min-w-52 flex-col items-center gap-4 overflow-hidden rounded-card border-t-4 border-t-primary-container border-x border-b border-x-card-edge border-b-card-edge bg-surface-card px-8 pb-8 pt-8 text-on-surface shadow-card outline-offset-4 ${TAPPABLE_CARD}`}
               >
                 <Avatar id={p.avatar} size={112} />
                 <span className="text-headline-md font-semibold">{p.name}</span>

@@ -73,7 +73,7 @@
           ],
           "area": "src/ui/button/button-class.ts, DeckTile, tappable cards",
           "done_when": "button-class.test.ts asserts hover, active (pressed) and focus-visible ring classes, with pressed motion guarded by motion-reduce; tappable cards use the same classes.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F9.4",
