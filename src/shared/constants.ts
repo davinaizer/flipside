@@ -63,3 +63,6 @@ export const LINE_SPACING_STEPS = [
 ] as const;
 /** The question is set this many times larger than the answer text. */
 export const QUESTION_SCALE = 1.5;
+
+/** Display name length limit after trim (P7). */
+export const PROFILE_NAME_MAX = 24;

@@ -25,3 +25,12 @@ F9.9: Choice pills, Progress range buttons and colour swatches now have pressed 
 - 2026-11-03: F9 done (PR 27). MANUAL PENDING: none.
 F9.14: removed the theme switch from practice (card header, no cards, load error); summary and picker keep it. Deviation logged in decisions.md.
 - 2026-11-03: F9.14 user-directed: theme switch removed from practice screens (deviation from T6/AC16; PRD for user to update). Not re-reviewed.
+F10.1 added updateProfileRequestSchema (avatar and name both optional, at least one required, for PATCH /me) and PROFILE_NAME_MAX; tests in shared.test.ts.
+F10.2: updateProfile service and PATCH /api/v1/me (422 with issue messages on invalid input); tests in tests/profile-update-api.test.ts.
+F10.3: /profile page with ProfileForm (avatar radio grid with tick, name field with inline error, Save via api.updateProfile PATCH /me); tests in ProfileScreen.test.tsx.
+F10.4: top-bar avatar now links to /profile (named "<name>, open profile"); layout passes name; router.refresh after save updates shell, picker is force-dynamic. Unit tests added.
+F10.5: e2e/profiles.spec.ts covers AC15 (edit avatar and name, top bar, picker, reload, empty and 25-char rejected).
+REVIEW F10 round 1: GAPS at bd94793
+F10.6: profile e2e now uses its own seeded profile per project and asserts glyph and name in top bar, sidebar and picker, before and after reload.
+REVIEW F10 round 2: PASS at 4226c87
+F10 done: PR 28, review PASS, verify and e2e green. MANUAL PENDING: none.

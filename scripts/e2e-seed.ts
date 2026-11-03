@@ -39,7 +39,9 @@ const JOURNEY = ["Journey desktop", "Journey ipad"];
 const A11Y = ["A11y desktop", "A11y ipad"];
 // performance.spec.ts times Start and grading on a fresh imported deck; one profile per project.
 const PERF = ["Perf desktop", "Perf ipad"];
-for (const name of ["Settings Desktop", "Settings iPad", ...PRACTICE, ...JOURNEY, ...A11Y, ...PERF]) {
+// profiles.spec.ts renames the profile and changes its avatar (AC15); one per project.
+const PROFILE = ["Profile desktop", "Profile ipad"];
+for (const name of ["Settings Desktop", "Settings iPad", ...PRACTICE, ...JOURNEY, ...A11Y, ...PERF, ...PROFILE]) {
   await db.insert(profiles).values({
     name,
     avatar: AVATAR_IDS[2] ?? AVATAR_IDS[0],

@@ -3,6 +3,7 @@ import type { Db } from "@/server/db/client";
 import { getDb } from "@/server/db/client";
 import { profiles } from "@/server/db/schema";
 import { ApiError } from "@/server/http/errors";
+import { updateProfileRequestSchema } from "@/shared/schemas/profile";
 import { settingsSchema } from "@/shared/settings";
 
 /** The only module that knows the cookie name (PRD section 11); others import this constant. */
@@ -65,6 +66,32 @@ export function toMe(profile: Profile) {
     },
     settings: settingsSchema.parse(profile.settings),
   };
+}
+
+/**
+ * Changes the current profile's avatar and/or name (P7). Invalid input is a 422 whose message
+ * names the problem. Duplicate avatars and names are allowed (P4); only this profile's row is touched.
+ */
+export async function updateProfile(
+  profileId: string,
+  body: unknown,
+  db: Db = getDb(),
+): Promise<Profile> {
+  const parsed = updateProfileRequestSchema.safeParse(body);
+  if (!parsed.success) {
+    throw new ApiError(
+      422,
+      "validation_failed",
+      parsed.error.issues.map((i) => i.message).join(". "),
+      parsed.error.issues.map((i) => ({ path: i.path.join("."), message: i.message })),
+    );
+  }
+  const [updated] = await db
+    .update(profiles)
+    .set(parsed.data)
+    .where(eq(profiles.id, profileId))
+    .returning();
+  return updated;
 }
 
 /**

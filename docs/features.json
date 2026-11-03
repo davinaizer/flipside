@@ -262,9 +262,9 @@
         "settings"
       ],
       "notes": "Top-bar avatar links to /profile. PATCH /api/v1/me (Zod schema in src/shared; avatar from AVATAR_IDS, name 1-24 chars trimmed) through a profile service; no schema change, the columns exist. Page uses the Settings layout: avatar grid from the built-in set, name field, Save. Top bar, sidebar and picker show the change at once. Duplicate avatars allowed. Leave room for Sign out (F14).",
-      "status": "todo",
-      "branch": null,
-      "pr": null,
+      "status": "done",
+      "branch": "feat/F10-profile-page",
+      "pr": 28,
       "tasks": [
         {
           "id": "F10.1",
@@ -278,7 +278,7 @@
           ],
           "area": "src/shared/schemas/profile.ts",
           "done_when": "shared.test.ts: Zod schema accepts avatar from AVATAR_IDS and name 1 to 24 chars after trim; rejects empty, whitespace-only, 25 chars and unknown avatar.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F10.2",
@@ -294,7 +294,7 @@
           ],
           "area": "src/server/profile.ts, src/app/api/v1/me/route.ts",
           "done_when": "API test: PATCH updates avatar and name for the current profile only, persists, returns 422 with a clear message on invalid input, leaves other profile untouched, allows duplicate avatars.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F10.3",
@@ -308,7 +308,7 @@
           ],
           "area": "src/app/(app)/profile/page.tsx, src/ui/profile/ProfileScreen.tsx",
           "done_when": "Component test: Settings-layout page shows the avatar grid (selected state with icon, not colour only), name field with inline error for empty or over 24, Save calls PATCH; room left for Sign out.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F10.4",
@@ -323,7 +323,7 @@
           ],
           "area": "src/ui/shell/TopBar.tsx, Sidebar.tsx, ProfilePicker.tsx",
           "done_when": "Test: avatar is a link named for the profile; after save, top bar, sidebar and picker show the new avatar and name without manual reload.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F10.5",
@@ -338,7 +338,22 @@
           ],
           "area": "e2e/profiles.spec.ts",
           "done_when": "pnpm test:e2e AC15: tap avatar, change avatar and name, see it in top bar, sidebar and picker, survives reload; empty and 25-char names rejected with message.",
-          "status": "todo"
+          "status": "done"
+        },
+        {
+          "id": "F10.6",
+          "title": "Fix review gaps: isolate profile e2e, assert avatar on screen",
+          "reqs": [
+            "P6",
+            "P7"
+          ],
+          "prd_sections": [
+            "4",
+            "8"
+          ],
+          "area": "e2e/profiles.spec.ts, scripts/e2e-seed.ts",
+          "done_when": "The AC15 e2e uses its own seeded profile per project (e.g. 'Profile <project>', exact match, as other specs do), so desktop and iPad no longer race and no restore is needed. Before and after reload it asserts the new avatar glyph and name in the top-bar link, the sidebar (scoped to its landmark) and the picker button. Two full pnpm test:e2e runs show no profiles.spec.ts failure.",
+          "status": "done"
         }
       ]
     },
