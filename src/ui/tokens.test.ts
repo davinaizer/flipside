@@ -145,6 +145,21 @@ describe("tokens", () => {
     }
   });
 
+  it("gives every card and surface the elevation token", () => {
+    const missing: string[] = [];
+    for (const file of walk(join(__dirname, ".."))) {
+      if (!/\.tsx$/.test(file) || file.endsWith(".test.tsx")) continue;
+      readFileSync(file, "utf8")
+        .split("\n")
+        .forEach((line, i) => {
+          // A card is a rounded-card or rounded-3xl box; pills, fields and Skeleton placeholders are not.
+          const isCard = /rounded-(card|3xl)\b/.test(line) && !/Skeleton/.test(line);
+          if (isCard && !line.includes("shadow-card")) missing.push(`${file}:${i + 1}`);
+        });
+    }
+    expect(missing).toEqual([]);
+  });
+
   it("has box tokens for New, Not yet, Nearly and Got it", () => {
     for (const b of ["new", "not-yet", "nearly", "got-it"]) {
       for (const t of [light, dark]) {

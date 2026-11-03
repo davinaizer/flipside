@@ -38,7 +38,7 @@ export function ReadingCard({
   return (
     <div
       data-testid="reading-card"
-      className="rounded-3xl p-8 text-left"
+      className="rounded-3xl p-8 shadow-card text-left"
       style={readingStyle(settings)}
     >
       <p className="font-semibold" style={{ fontSize: `${QUESTION_SCALE}em` }}>

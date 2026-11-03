@@ -59,7 +59,7 @@
           ],
           "area": "src/ui/** components",
           "done_when": "Test (or grep-based tokens test) asserts no component sets its own shadow value; all card and surface classes use the elevation token. verify.sh green.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F9.3",

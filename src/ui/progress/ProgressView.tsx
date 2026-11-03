@@ -32,7 +32,7 @@ function Tile({
   tone: keyof typeof TILE_TONE;
 }) {
   return (
-    <li className={`rounded-card p-6 ${TILE_TONE[tone]}`}>
+    <li className={`rounded-card p-6 shadow-card ${TILE_TONE[tone]}`}>
       <div className="flex items-center justify-between">
         <p className="text-label-md font-semibold uppercase">{label}</p>
         <Icon name={icon} />

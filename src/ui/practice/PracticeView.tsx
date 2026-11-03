@@ -133,7 +133,7 @@ export function PracticeView({
         </div>
       </header>
       <SessionProgress done={done} total={total} />
-      <article data-testid="practice-card" className="rounded-3xl p-8 text-left" style={readingStyle(settings)}>
+      <article data-testid="practice-card" className="rounded-3xl p-8 shadow-card text-left" style={readingStyle(settings)}>
         <span className="inline-block rounded-full bg-secondary-container px-4 py-1 text-sm font-semibold text-on-secondary-container">
           {card.topic}
         </span>
