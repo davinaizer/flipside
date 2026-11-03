@@ -91,3 +91,4 @@ ASSUMED: F9.12 the top-right switch bar is a shared ThemeBar in PracticeScreen.t
 ASSUMED: F9.13 the picker's attribute-only switch moved to src/ui/settings/AttributeThemeSwitch (shared with the root error page via RootErrorView); (app)/error.tsx and not-found.tsx sit inside the layout with the top bar, and there is no global-error.tsx.
 DEVIATION (user-directed): T6/AC16/README item 19 list practice; user asked to remove it from practice. PRD not edited; user to update.
 ASSUMED: F9.14 practice card header, no-cards state and practice load error lose the switch (LoadError takes withTheme, only the summary passes it); the practice persistence-across-reload e2e check is dropped, other screens still cover AC13.
+ASSUMED: F10.1 PATCH /me body allows avatar, name or both (PRD: 'avatar or name'); an empty body is rejected; name is trimmed by the schema; limit 24 lives in PROFILE_NAME_MAX.

@@ -1,5 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import * as c from "./constants";
+import { AVATAR_IDS } from "./avatars";
+import { updateProfileRequestSchema as upd } from "./schemas/profile";
 import { DEFAULT_SETTINGS, settingsSchema } from "./settings";
 import { uuidv7 } from "./uuid";
 
@@ -52,5 +54,22 @@ describe("uuidv7", () => {
     );
     expect(rnd).not.toHaveBeenCalled();
     expect(uuidv7()).not.toBe(uuidv7());
+  });
+});
+
+describe("updateProfileRequestSchema", () => {
+  const ok = AVATAR_IDS[0];
+  it("accepts every avatar id and a 1 to 24 char name, trimmed", () => {
+    for (const a of AVATAR_IDS) expect(upd.safeParse({ avatar: a, name: "Nicole" }).success).toBe(true);
+    expect(upd.parse({ avatar: ok, name: "  Zo  " }).name).toBe("Zo");
+    expect(upd.safeParse({ name: "a".repeat(24) }).success).toBe(true);
+    expect(upd.safeParse({ name: "a" }).success).toBe(true);
+  });
+  it("rejects empty, whitespace-only, 25 chars, unknown avatar and no change", () => {
+    expect(upd.safeParse({ avatar: ok, name: "" }).success).toBe(false);
+    expect(upd.safeParse({ avatar: ok, name: "   " }).success).toBe(false);
+    expect(upd.safeParse({ avatar: ok, name: "a".repeat(25) }).success).toBe(false);
+    expect(upd.safeParse({ avatar: "dragon", name: "Zo" }).success).toBe(false);
+    expect(upd.safeParse({}).success).toBe(false);
   });
 });

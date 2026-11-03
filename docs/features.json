@@ -278,7 +278,7 @@
           ],
           "area": "src/shared/schemas/profile.ts",
           "done_when": "shared.test.ts: Zod schema accepts avatar from AVATAR_IDS and name 1 to 24 chars after trim; rejects empty, whitespace-only, 25 chars and unknown avatar.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F10.2",
