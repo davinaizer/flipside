@@ -103,7 +103,7 @@
           ],
           "area": "src/ui/shell/TopBar.tsx, Sidebar.tsx, src/app/(app)/layout.tsx",
           "done_when": "Test: app layout renders a top bar with toggle and avatar, no product title; Sidebar no longer renders the toggle. Avatar is a plain slot until F10.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F9.6",

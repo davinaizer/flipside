@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation";
 import { Avatar } from "@/ui/avatars";
 import { buttonClass } from "@/ui/button/button-class";
 import { Icon, Logo, type IconName } from "@/ui/icons/Icon";
-import { ThemeToggle } from "@/ui/settings/ThemeToggle";
 
 const SECTIONS: { href: string; label: string; icon: IconName; match: string[] }[] = [
   { href: "/library", label: "Library", icon: "library", match: ["/library", "/decks", "/import"] },
@@ -52,7 +51,6 @@ export function Sidebar({ name, avatar }: { name: string; avatar: string }) {
           <Avatar id={avatar} size={44} />
           <span className="font-semibold">{name}</span>
         </div>
-        <ThemeToggle />
         <Link href="/?switch=1" className={buttonClass("secondary", { size: "compact", extra: "w-full whitespace-nowrap" })}>
           <Icon name="switchProfile" />
           Switch profile
