@@ -13,6 +13,13 @@ function block(selector: string): Record<string, string> {
   return out;
 }
 
+function walk(dir: string): string[] {
+  return readdirSync(dir).flatMap((f) => {
+    const p = join(dir, f);
+    return statSync(p).isDirectory() ? walk(p) : [p];
+  });
+}
+
 const light = block(':root,\n[data-theme="light"]');
 const dark = block('[data-theme="dark"]');
 
@@ -116,6 +123,26 @@ describe("tokens", () => {
     const layout = readFileSync(join(__dirname, "../app/layout.tsx"), "utf8");
     expect(layout).toContain('"light"');
     expect(layout).toContain("data-theme={theme}");
+  });
+
+  it("defines one elevation token in both themes and no per-component shadow values", () => {
+    const elevation = (selector: string) => {
+      const start = css.indexOf(selector + " {");
+      const body = css.slice(css.indexOf("{", start) + 1, css.indexOf("}", start));
+      return body.match(/--elevation-card:\s*([^;]+);/)?.[1];
+    };
+    const l = elevation(':root,\n[data-theme="light"]');
+    const d = elevation('[data-theme="dark"]');
+    expect(l).toBeDefined();
+    expect(d).toBeDefined();
+    expect(d).not.toBe("none");
+    expect(css).toContain("--shadow-card: var(--elevation-card)");
+    const doc = readFileSync(join(__dirname, "../../docs/design/DESIGN-DARK.md"), "utf8");
+    expect(doc).toContain(d!);
+    for (const file of walk(join(__dirname, ".."))) {
+      if (!/\.tsx?$/.test(file) || file.endsWith(".test.ts") || file.endsWith(".test.tsx")) continue;
+      expect(readFileSync(file, "utf8"), file).not.toMatch(/shadow-\[/);
+    }
   });
 
   it("has box tokens for New, Not yet, Nearly and Got it", () => {

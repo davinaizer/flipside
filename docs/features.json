@@ -45,7 +45,7 @@
           ],
           "area": "docs/design/DESIGN-DARK.md, src/ui/tokens.css",
           "done_when": "DESIGN-DARK.md states the subtle dark shadow; tokens.test.ts asserts one elevation token defined in both themes with the same semantic name, and no raw hex or per-component shadow values.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F9.2",

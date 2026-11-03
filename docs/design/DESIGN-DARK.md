@@ -150,7 +150,7 @@ This file and `DESIGN.md` are two themes of one design system. **Only colour, el
 | Shared in both themes | Per theme |
 | --- | --- |
 | Typography scale (sizes, weights, line heights, tracking) | Colour tokens |
-| Spacing scale and breakpoints | Elevation (light: soft glow, dark: tonal layers and edges) |
+| Spacing scale and breakpoints | Elevation (light: soft glow, dark: subtle shadow with tonal layers and edges) |
 | Radius scale, pill controls, 8px checkboxes | `rounded.card` (light 2rem, dark 1rem) |
 | Reading column of 720px for the card | |
 
@@ -199,7 +199,7 @@ The same grid, breakpoints and spacing scale as `DESIGN.md` (4, 8 and 12 columns
 
 ## Elevation & Depth
 
-Dark avoids drop shadows, which cause muddy halos on deep slate. Hierarchy comes from **tonal layers** and **subtle luminous edges** (the app's `--elevation-card` is `none` in this theme):
+Dark keeps shadows subtle, because heavy ones cause muddy halos on deep slate. Hierarchy comes from **tonal layers** and **subtle luminous edges**, with one soft shadow under cards: `0 4px 16px -2px rgba(0, 0, 0, 0.4)` (the app's `--elevation-card`, defined in both themes under the same name):
 
 - **Level 0 (canvas):** `surface`, matte.
 - **Level 1 (decks and panels):** `surface-container-low` with a 1px edge of `rgba(255, 255, 255, 0.06)` (app token `card-edge`).
