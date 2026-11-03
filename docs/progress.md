@@ -33,3 +33,4 @@ F10.5: e2e/profiles.spec.ts covers AC15 (edit avatar and name, top bar, picker, 
 REVIEW F10 round 1: GAPS at bd94793
 F10.6: profile e2e now uses its own seeded profile per project and asserts glyph and name in top bar, sidebar and picker, before and after reload.
 REVIEW F10 round 2: PASS at 4226c87
+F10 done: PR 28, review PASS, verify and e2e green. MANUAL PENDING: none.
