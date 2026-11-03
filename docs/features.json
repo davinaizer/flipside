@@ -264,7 +264,7 @@
       "notes": "Top-bar avatar links to /profile. PATCH /api/v1/me (Zod schema in src/shared; avatar from AVATAR_IDS, name 1-24 chars trimmed) through a profile service; no schema change, the columns exist. Page uses the Settings layout: avatar grid from the built-in set, name field, Save. Top bar, sidebar and picker show the change at once. Duplicate avatars allowed. Leave room for Sign out (F14).",
       "status": "in_progress",
       "branch": "feat/F10-profile-page",
-      "pr": null,
+      "pr": 28,
       "tasks": [
         {
           "id": "F10.1",
