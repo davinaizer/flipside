@@ -192,6 +192,20 @@
           "area": "src/ui/library/LibraryView.tsx, src/ui/practice/PracticeScreen.tsx, src/ui/practice/SummaryScreen.tsx, src/ui/tokens.test.ts",
           "done_when": "Library deck-name link has PRESSED, FOCUS_RING and an active: tone; guard test extended to Link elements not using buttonClass; PracticeScreen and SummaryScreen render ThemeToggle above ErrorState in a top-right bar, with a test. verify.sh green.",
           "status": "done"
+        },
+        {
+          "id": "F9.12",
+          "title": "Fix round 4 gap: theme switch on the 'session has no cards' practice state",
+          "reqs": [
+            "T6"
+          ],
+          "prd_sections": [
+            "4",
+            "8"
+          ],
+          "area": "src/ui/practice/PracticeScreen.tsx, src/ui/practice/PracticeHeader.test.tsx",
+          "done_when": "The 'This session has no cards.' state renders ThemeToggle in the same top-right bar as LoadError (shared wrapper, no copy); PracticeHeader.test.tsx asserts it. Before finishing, list every other full-screen practice state in PracticeScreen.tsx and SummaryScreen.tsx and confirm each shows the switch, except the loading skeleton. verify.sh green.",
+          "status": "todo"
         }
       ]
     },
