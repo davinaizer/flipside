@@ -2,7 +2,7 @@ import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { expect, test } from "vitest";
 import type { SessionSummary } from "@/shared/schemas/session";
-import { formatDuration, SummaryView } from "./SummaryView";
+import { formatDuration, SummaryView, summaryViewModel } from "./SummaryView";
 
 const id = (n: number) => `00000000-0000-4000-8000-00000000000${n}`;
 const base: SessionSummary = {
@@ -45,4 +45,27 @@ test("no streak or pressure copy", () => {
 test("formatDuration", () => {
   expect(formatDuration(500)).toBe("under a minute");
   expect(formatDuration(60000)).toBe("1 minute");
+});
+
+test("view model matches the session figures", () => {
+  const vm = summaryViewModel(base);
+  expect(vm.deckLabel).toBe("Bio");
+  expect(vm.cardsPractised).toBe(6);
+  expect(vm.time).toBe("4 minutes");
+  expect(vm.grades.map((g) => [g.grade, g.label, g.count])).toEqual([
+    ["got_it", "Got it", 3],
+    ["nearly", "Nearly", 1],
+    ["not_yet", "Not yet", 2],
+  ]);
+  expect(vm.revisit).toHaveLength(3);
+  expect(vm.revisit[0]).toEqual({ cardId: id(1), grade: "not_yet", topic: "Cells", question: "Question 1" });
+  expect(vm.revisitCount).toBe(2);
+});
+
+test("view model says Several decks and caps revisit at three", () => {
+  const extra = { cardId: id(4), deckName: "Bio", topic: "Cells", front: "Q4" };
+  const vm = summaryViewModel({ ...base, deckName: null, severalDecks: true, goAgain: [...base.goAgain, extra] as never, missIds: [1, 2, 3, 4].map(id) });
+  expect(vm.deckLabel).toBe("Several decks");
+  expect(vm.revisit).toHaveLength(3);
+  expect(vm.revisitCount).toBe(4);
 });

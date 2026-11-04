@@ -534,7 +534,7 @@
           ],
           "area": "src/ui/practice/SummaryView.tsx, SummaryView.test.ts",
           "done_when": "Unit test: view model gives cards practised, session time, per-grade counts, revisit list (max three) with grade, topic, question and count badge; matches the session figures.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F12.3",

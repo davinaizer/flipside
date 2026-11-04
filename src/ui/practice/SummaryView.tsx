@@ -18,6 +18,29 @@ export function formatDuration(ms: number): string {
   return minutes === 1 ? "1 minute" : `${minutes} minutes`;
 }
 
+export interface SummaryViewModel {
+  deckLabel: string;
+  cardsPractised: number;
+  time: string;
+  grades: { grade: Grade; label: string; count: number }[];
+  revisit: { cardId: string; grade: Grade; topic: string; question: string }[];
+  /** Count badge on the Cards to revisit panel and on Practise those now: every miss, not only the three shown. */
+  revisitCount: number;
+}
+
+/** R18 figures for the summary, straight from the session summary so they match it. */
+export function summaryViewModel(summary: SessionSummary): SummaryViewModel {
+  return {
+    deckLabel: summary.severalDecks ? "Several decks" : (summary.deckName ?? ""),
+    cardsPractised: summary.gradedCount,
+    time: formatDuration(summary.durationMs),
+    grades: GRADE_ROWS.map(({ grade, label }) => ({ grade, label, count: summary.counts[grade] })),
+    // goAgain holds only Not yet cards (max three).
+    revisit: summary.goAgain.slice(0, 3).map((c) => ({ cardId: c.cardId, grade: "not_yet" as Grade, topic: c.topic, question: c.front })),
+    revisitCount: summary.missIds.length,
+  };
+}
+
 /**
  * Session summary (R11): counts by grade as text, time spent, up to three cards to go again,
  * Practise the misses (only when there are misses) and Back to Library. Calm copy, no streaks.
