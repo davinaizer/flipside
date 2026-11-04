@@ -959,7 +959,7 @@
           ],
           "area": "e2e/app-shell.spec.ts or new e2e/profile-menu.spec.ts",
           "done_when": "pnpm test:e2e on desktop and iPad: the menu opens from the footer, lists the four items, Profile opens /profile, Settings opens /settings, Switch profile returns to the picker, Log out ends the session; Escape closes it; axe reports no serious or critical issues with the menu open in light and dark; every item is at least 44 px tall.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F15.5",
