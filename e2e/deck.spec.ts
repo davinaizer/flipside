@@ -64,72 +64,18 @@ test("a deck that does not exist shows the not-found page", async ({ page }) => 
   await expect(page.getByRole("heading", { name: "We can't find that deck" })).toBeVisible();
 });
 
-test("edit saves name, group, colour and answer style, and the page updates", async ({ page }) => {
+test("Select all ticks every topic and Deselect all clears them", async ({ page }) => {
   await openSeededDeck(page);
-  const edit = async (name: string, group: string, colour: string, style: string) => {
-    await page.getByRole("button", { name: "Edit deck" }).click();
-    const form = page.getByRole("form", { name: "Edit deck" });
-    await form.getByLabel("Deck name").fill(name);
-    await form.getByLabel("Group (optional)").fill(group);
-    await form.getByText(colour, { exact: true }).click({ force: true });
-    await form.getByText(style, { exact: true }).click({ force: true });
-    const patch = page.waitForRequest((r) => r.method() === "PATCH");
-    await form.getByRole("button", { name: "Save changes" }).click();
-    return (await patch).postDataJSON();
-  };
-  expect(await edit("Davi Biology", "Sciences", "Sage", "Bullet list")).toEqual({
-    name: "Davi Biology",
-    groupName: "Sciences",
-    color: "sage",
-    answerStyle: "bullets",
-  });
-  await expect(page.getByRole("heading", { name: "Davi Biology" })).toBeVisible();
-  // Restore, so the other tests still find the seeded name.
-  await edit("Davi Science", "", "Mist", "Paragraph");
-  await expect(page.getByRole("heading", { name: "Davi Science" })).toBeVisible();
-});
-
-test("Re-import opens the import screen for this deck", async ({ page }) => {
-  const id = await openSeededDeck(page);
-  await page.getByRole("link", { name: "Re-import" }).click();
-  await page.waitForURL(`**/import?deckId=${id}`);
-});
-
-test("edit panel passes axe and 44 px in both themes", async ({ page }) => {
-  await openSeededDeck(page);
-  await page.getByRole("button", { name: "Edit deck" }).click();
-  await expect(page.getByRole("form", { name: "Edit deck" })).toBeVisible();
-  for (const theme of ["light", "dark"] as const) {
-    await setTheme(page, theme);
-    await expectNoSeriousA11y(page);
-    await expectTargetsAtLeast44(page);
-  }
-});
-
-test("delete confirms, sends DELETE, returns to the Library; Keep deck cancels", async ({
-  page,
-}) => {
-  const id = await openSeededDeck(page);
-  // Mocked so the shared seeded deck survives the other tests.
-  await page.route(`**/api/v1/decks/${id}`, (r) =>
-    r.request().method() === "DELETE" ? r.fulfill({ status: 204 }) : r.continue(),
-  );
-  await page.getByRole("button", { name: "Edit deck" }).click();
-  await page.getByRole("button", { name: "Delete deck" }).click();
-  const dialog = page.getByRole("alertdialog", { name: "Delete deck" });
-  await expect(dialog).toContainText(/Delete ".+"\? This hides the deck and its 2 cards/);
-  for (const theme of ["light", "dark"] as const) {
-    await setTheme(page, theme);
-    await expectNoSeriousA11y(page);
-    await expectTargetsAtLeast44(page);
-  }
-  await dialog.getByRole("button", { name: "Keep deck" }).click();
-  await expect(dialog).toHaveCount(0);
-  await page.getByRole("button", { name: "Delete deck" }).click();
-  const del = page.waitForRequest((r) => r.method() === "DELETE");
-  await page.getByRole("alertdialog").getByRole("button", { name: "Delete deck" }).click();
-  await del;
-  await page.waitForURL("**/library");
+  const boxes = page.getByRole("checkbox");
+  await expect(boxes.first()).toBeVisible();
+  const n = await boxes.count();
+  expect(n).toBeGreaterThan(1);
+  await page.getByRole("button", { name: "Select all", exact: true }).click();
+  for (let i = 0; i < n; i++) await expect(boxes.nth(i)).toBeChecked();
+  await expect(page.getByRole("button", { name: /Practise \d+ topics/ })).toBeVisible();
+  await page.getByRole("button", { name: "Deselect all" }).click();
+  for (let i = 0; i < n; i++) await expect(boxes.nth(i)).not.toBeChecked();
+  await checkBothThemes(page);
 });
 
 test("not-found page passes axe in both themes", async ({ page }) => {
@@ -195,10 +141,10 @@ test("a deck that fails to load shows the error with Retry", async ({ page }) =>
   await checkBothThemes(page);
 });
 
-test("Delete deck is not on the deck page, only inside Edit deck (D8)", async ({ page }) => {
+test("the deck page has no Edit deck, Re-import or Delete deck (L9, D8)", async ({ page }) => {
   await openSeededDeck(page);
-  await expect(page.getByRole("button", { name: "Delete deck" })).toHaveCount(0);
-  await page.getByRole("button", { name: "Edit deck" }).click();
-  await expect(page.getByRole("form", { name: "Edit deck" })).toBeVisible();
-  await expect(page.getByRole("button", { name: "Delete deck" })).toBeVisible();
+  for (const name of ["Edit deck", "Re-import", "Delete deck"]) {
+    await expect(page.getByRole("button", { name })).toHaveCount(0);
+    await expect(page.getByRole("link", { name })).toHaveCount(0);
+  }
 });
