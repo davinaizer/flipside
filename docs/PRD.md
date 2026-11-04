@@ -3,7 +3,7 @@
 | | |
 | --- | --- |
 | Status | Draft 1, ready for MVP build planning |
-| Last updated | 2026-11-04 (v0.4: profile menu in the sidebar footer; P3, P6, U3, AG3, AC15, D27) |
+| Last updated | 2026-11-04 (v0.5: collapsible sidebar, deck card menu, select all topics, thinner bars, settings sections, Add User; U4, L9, D9, S6, T9, P8, AC22 to AC26, D28) |
 | Owner | Davi |
 | Source | Written from the planning conversation; the decision log is section 18 |
 
@@ -153,9 +153,10 @@ Each requirement has an id so tests, tickets and the changelog can point at it. 
 | P2 | Selecting a profile sets the cookie and opens the Library. | Must |
 | P3 | The sidebar footer shows the current profile (avatar and name) at any time. Tapping it opens a menu with Profile, Settings, Switch profile and Log out. Switch profile returns to the picker. | Must |
 | P4 | Every query is scoped to the current profile; requests for another profile's data return 404. | Must |
-| P5 | Profiles are created by seed script in the MVP; no create-profile UI. | Must |
+| P5 | Profiles are created by seed script or from the picker (P8). | Must |
 | P6 | The Profile entry in the sidebar profile menu opens the Profile page (`/profile`). The top bar has no avatar. | Must |
 | P7 | The Profile page lets the current profile change its avatar (choosing from the built-in set, P-fields) and its display name (1 to 24 characters, trimmed). The change is saved on the server and shows at once in the sidebar and profile picker. Two profiles may share an avatar. | Must |
+| P8 | The picker has an Add User button below the list of profiles. It opens a form for a display name (1 to 24 characters, trimmed) and an avatar from the built-in set; saving creates the profile with the default timezone and day start hour, then returns to the picker with the new profile listed. Reachable only behind the app password (AG1). | Must |
 
 ### Library (L)
 
@@ -169,6 +170,7 @@ Each requirement has an id so tests, tickets and the changelog can point at it. 
 | L6 | Search filters decks and topics by name as the user types, ignoring case and accents. | Should |
 | L7 | An Add deck action opens the import flow. | Must |
 | L8 | Empty state when the profile has no decks: explains the import flow and links to it. | Must |
+| L9 | Each deck card has an ellipsis menu at its top right with Edit deck and Re-import (D4, D7). The Up to date tag sits next to the deck title. The deck page no longer has Edit deck or Re-import buttons. | Must |
 
 ### Deck page (D)
 
@@ -182,6 +184,7 @@ Each requirement has an id so tests, tickets and the changelog can point at it. 
 | D6 | A Needs rewording list shows cards flagged as leeches, with their lapse counts. | Should |
 | D7 | Re-import into an existing deck uses the same import flow (section 6). | Must |
 | D8 | Delete deck (D5) is reached from inside Edit deck, not from the deck page itself. | Must |
+| D9 | The Topics list has Select all and Deselect all buttons that tick or clear every topic (D2). | Must |
 
 ### Practice (R)
 
@@ -215,6 +218,7 @@ Each requirement has an id so tests, tickets and the changelog can point at it. 
 | S3 | Focus next lists the three topics with the lowest mastery; each opens a practice session on that topic. | Must |
 | S4 | By-deck table sorted by lowest mastery first. | Must |
 | S5 | Empty state for a profile with no reviews yet. | Must |
+| S6 | Progress bars on the Progress and Library screens are thin (about 6 px high); the legend or figures still carry the counts, so colour is never the only signal. | Must |
 
 ### Settings (T)
 
@@ -228,6 +232,7 @@ Each requirement has an id so tests, tickets and the changelog can point at it. 
 | T6 | The theme toggle sits in the top bar of every screen (app screens, practice, summary, profile picker and login). It is one switch showing both a sun and a moon icon, with no visible text label; it keeps an accessible name and exposes its state. | Must |
 | T7 | Read questions aloud is a switch whose position shows its state; no "On" or "Off" text is shown. The switch keeps its accessible name and checked state. | Must |
 | T8 | The Settings live preview renders the same card component as a practice session, with the same elements (topic chip, Question label, question, read-aloud button and the footer with the flip hint), so it shows exactly what practice will look like. | Must |
+| T9 | Settings groups its controls into two sections, Reading and Practice, each on its own surface. | Must |
 
 ### Import (I) and System (X)
 
@@ -250,6 +255,7 @@ Each requirement has an id so tests, tickets and the changelog can point at it. 
 | U1 | Cards and surfaces carry a subtle shadow in both themes: light uses the DESIGN.md resting elevation; dark uses a subtle shadow defined in DESIGN-DARK.md. One elevation token, no per-component values. | Must |
 | U2 | Every button and tappable card has visible hover, pressed (tap) and keyboard focus states; focus uses the DESIGN.md focus ring. Pressed feedback respects reduced motion. | Must |
 | U3 | App screens have a top bar holding the theme toggle (T6). It shows no product title and no avatar. | Must |
+| U4 | The sidebar has a collapse toggle. Collapsed, it shows only the Library and Progress icons (each with an accessible name) and the profile avatar; the choice is remembered on the device. Practice is unchanged. | Must |
 
 ### Access gate (AG)
 
@@ -625,6 +631,7 @@ The API is a versioned JSON interface under `/api/v1` that the web UI uses for e
 | Method and path | Purpose |
 | --- | --- |
 | `GET /profiles` | List profiles for the picker (id, name, avatar) |
+| `POST /profiles` | Create a profile from name and avatar (P8); returns the new profile |
 | `POST /session/profile` | Select a profile; sets the cookie |
 | `GET /me` | Current profile and settings |
 | `PATCH /me` | Change the current profile's avatar or name (P7) |
@@ -883,6 +890,11 @@ Test data: the science deck (`science-w2`, 16 cards, 7 images), a synthetic mult
 - [ ] AC19: The Settings preview shows the same elements as the practice card and updates live; Read questions aloud shows no On or Off text and still exposes its state to assistive technology.
 - [ ] AC20: Delete deck is reached only from Edit deck, with the D5 confirmation unchanged; the Add or re-import screen is one column with sections 1, 2 and 3 in that order on desktop and on iPad landscape and portrait.
 - [ ] AC21: Cards and surfaces show the subtle shadow in both themes, and AC12 still passes.
+- [ ] AC22: The sidebar collapse toggle shrinks it to the Library and Progress icons plus the avatar and expands it again; the state survives a reload; navigation, the profile menu and axe work in both states and both themes.
+- [ ] AC23: A deck card's ellipsis menu opens Edit deck and Re-import and is keyboard operable; the Up to date tag sits next to the deck title; the deck page has neither button; axe passes in both themes.
+- [ ] AC24: Select all ticks every topic and Deselect all clears them, and the Practise button label follows.
+- [ ] AC25: Settings shows Reading and Practice each on its own surface, and Progress bars are visibly thinner, in both themes with axe passing.
+- [ ] AC26: Add User on the picker creates a profile with a valid name and avatar and lists it; an empty name or one over 24 characters is rejected; the new profile can sign in and has no decks.
 
 ### Non-functional targets
 
@@ -969,6 +981,7 @@ These are the decisions taken so far; change one here first, then update the sec
 | D25 | The summary follows the mockup layout minus the README omissions (R18): no Focus clue, Box chips, Review all answers or summary toolbar | 2026-11-03 |
 | D26 | The v0.3 review backlog is features F9 to F14; the v0.1 and v0.2 ledger, progress log and design audit are archived in `docs/archive/v0.2/` | 2026-11-03 |
 | D27 | v0.4: the top-bar avatar is removed. The sidebar footer shows the profile (avatar and name) and opens a menu with Profile, Settings, Switch profile and Log out, as in Claude Code Desktop. Log out moves from the Profile page to this menu. Refines D23; the theme toggle stays in the top bar (AC16) | 2026-11-04 |
+| D28 | v0.5: a create-profile UI is added (Add User on the picker, P8), refining D5 and D23 and replacing the "no create-profile UI" part of P5. Collapsed sidebar state is stored on the device (U4), not on the profile | 2026-11-04 |
 
 ### Glossary
 
