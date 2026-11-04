@@ -6,6 +6,8 @@ test("without signing in pages redirect to /login and the API answers 401, excep
   await page.goto("/library");
   await expect(page).toHaveURL(/\/login$/);
   await expect(page.getByRole("heading", { name: "Enter the app password" })).toBeVisible();
+  // The version stamp is inlined from package.json at build time, so a real build shows a semver, not "dev".
+  await expect(page.getByText(/^Version \d+\.\d+\.\d+$/)).toBeVisible();
 
   expect((await page.request.get("/api/v1/decks")).status()).toBe(401);
   expect((await page.request.get("/api/v1/health")).status()).toBe(200);

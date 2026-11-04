@@ -6,6 +6,7 @@ import { api, ApiClientError } from "@/ui/api/client";
 import { Logo } from "@/ui/icons/Icon";
 import { AttributeThemeSwitch } from "@/ui/settings/AttributeThemeSwitch";
 import { buttonClass } from "@/ui/button/button-class";
+import { APP_VERSION } from "@/shared/version";
 
 const NEUTRAL_ERROR = "That password did not work. Please try again.";
 
@@ -55,6 +56,7 @@ export function LoginForm({
           Sign in
         </button>
       </form>
+      <p className="absolute bottom-4 text-sm text-on-surface-variant">Version {APP_VERSION}</p>
     </main>
   );
 }

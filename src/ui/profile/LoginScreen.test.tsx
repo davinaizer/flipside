@@ -33,3 +33,12 @@ test("login posts the password to /auth/login", async () => {
   );
   vi.unstubAllGlobals();
 });
+
+test("stamps the app version at the bottom of the page", async () => {
+  const { default: nextConfig } = await import("../../../next.config");
+  const { default: pkg } = await import("../../../package.json");
+  // The stamp reads the build-time value, which next.config sets from package.json.
+  expect(nextConfig.env?.NEXT_PUBLIC_APP_VERSION).toBe(pkg.version);
+  const html = renderToStaticMarkup(<LoginForm onSubmit={() => {}} error={null} />);
+  expect(html).toMatch(/Version [^<]+/);
+});
