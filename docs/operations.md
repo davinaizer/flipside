@@ -47,7 +47,7 @@ Uninstall: `launchctl bootout gui/$(id -u)/com.flipside.<job>` and delete the pl
 - Every page and `/api/v1` route needs the app password, set as `ADMIN_PASSWORD` in `.env` (required: the app does not start without it; `.env.example` holds the placeholder `change-me`, so pick your own). The launchd app job sources `.env`, so no plist edit is needed.
 - Rotation: edit `ADMIN_PASSWORD` in `.env`, then `launchctl kickstart -k gui/$(id -u)/com.flipside.app`. The cookie is signed under a key derived from the password, so this signs every device out; each one must sign in again with the new password.
 - The sign-in lasts 30 days per device. Safari and the iPad home-screen shortcut keep separate cookies, so sign in once in each (the shortcut shows `/login` on its first open). Rotation signs out both.
-- Profile > Sign out ends the sign-in on that device only.
+- Log out in the sidebar profile menu ends the sign-in on that device only.
 
 ## Backup and restore
 

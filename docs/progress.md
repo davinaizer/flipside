@@ -76,3 +76,4 @@ F15.1: logOut(push) moved to src/ui/profile/sign-out.ts (tests for 401 and fetch
 F15.2: sidebar footer is now a ProfileMenu button (Profile, Settings, Switch profile, Log out); Settings left the main nav; e2e open the menu first.
 F15.3: top bar is the theme toggle only (no props); Sign out button removed from the Profile page; auth and profiles e2e go through the sidebar menu.
 F15.4: e2e/profile-menu.spec.ts covers the menu items, 44 px targets, Escape, navigation and axe open in both themes on desktop and iPad; Log out stays in auth.spec.
+F15.5: manual checks and operations now say Log out in the sidebar profile menu; added an iPad touch check for the menu.
