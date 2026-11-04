@@ -5,11 +5,11 @@ import { getDb } from "@/server/db/client";
 import { cardState, cards, decks, reviewLog, sessions } from "@/server/db/schema";
 import { ApiError } from "@/server/http/errors";
 import type { Profile } from "@/server/profile";
-import { sessionMetaSchema } from "@/server/sessions";
+import { liveSessionCardIds, sessionMetaSchema } from "@/server/sessions";
 import { dayStartUtc, learningDay } from "@/domain/day";
 import { gradeLabels } from "@/domain/grade-labels";
 import { applyGrade, type Box, type SchedulerState } from "@/domain/scheduler";
-import { REQUEUE_MAX_PER_SESSION } from "@/shared/constants";
+import { currentEntry, gradeCurrent, hasAttemptLeft, isFinished, replayQueue, wouldRequeue } from "@/domain/session-queue";
 import type { CardStatus, Grade } from "@/shared/enums";
 import {
   reviewRequestSchema,
@@ -53,8 +53,8 @@ function toResponse(profile: Profile, row: ReviewRow): ReviewResponse {
 
 /**
  * PUT /reviews/{id} (R4, R5, R12, N2). Records one grade in one transaction: checks the
- * session and card belong to the profile and that the card has an attempt left in the
- * session's queue, applies the scheduler, writes card_state and an append-only review_log
+ * session and card belong to the profile and that the card is the current card of the
+ * session's replayed queue (domain/session-queue), applies the scheduler, writes card_state and an append-only review_log
  * row. The client picks the id, so a retry returns the stored result and changes nothing.
  */
 export async function putReview(
@@ -88,7 +88,8 @@ export async function putReview(
     }
 
     if (!session || session.profileId !== profile.id) throw notFound("session");
-    if (!sessionMetaSchema.parse(session.meta).cardIds.includes(cardId)) {
+    const meta = sessionMetaSchema.parse(session.meta);
+    if (!meta.cardIds.includes(cardId)) {
       throw new ApiError(409, "card_not_in_session", "That card is not in this session.");
     }
 
@@ -101,14 +102,18 @@ export async function putReview(
       .for("update", { of: cards });
     if (!card || card.owner !== profile.id) throw notFound("card");
 
-    // One attempt per queue entry: the first, plus one per Not yet that re-queued (at most two).
-    const inSession = await tx
-      .select({ grade: reviewLog.grade })
+    // Replay the queue the client sees, over the cards still live, and accept only its current card.
+    const liveIds = await liveSessionCardIds(tx, profile.id, meta.cardIds);
+    const given = await tx
+      .select({ cardId: reviewLog.cardId, grade: reviewLog.grade })
       .from(reviewLog)
-      .where(and(eq(reviewLog.sessionId, sessionId), eq(reviewLog.cardId, cardId), isNull(reviewLog.undoneAt)));
-    const notYets = inSession.filter((r) => r.grade === "not_yet").length;
-    if (inSession.length >= 1 + Math.min(notYets, REQUEUE_MAX_PER_SESSION)) {
-      throw new ApiError(409, "no_attempt_left", "That card has no attempt left in this session.");
+      .where(and(eq(reviewLog.sessionId, sessionId), isNull(reviewLog.undoneAt)))
+      .orderBy(asc(reviewLog.reviewedAt), asc(reviewLog.createdAt));
+    const { queue } = replayQueue(liveIds, given.map((g) => ({ cardId: g.cardId, grade: g.grade as Grade })));
+    if (currentEntry(queue)?.cardId !== cardId) {
+      throw hasAttemptLeft(queue, cardId)
+        ? new ApiError(409, "not_current_card", "That card is not the current card in this session.")
+        : new ApiError(409, "no_attempt_left", "That card has no attempt left in this session.");
     }
 
     const today = learningDay(now, profile.timezone, profile.dayStartHour);
@@ -129,7 +134,7 @@ export async function putReview(
       : null;
     const before: SchedulerState | null = prevState && { ...prevState, box: prevState.box as Box };
     const { state } = applyGrade(before, grade, today);
-    const requeue = grade === "not_yet" && notYets < REQUEUE_MAX_PER_SESSION;
+    const requeue = grade === "not_yet" && wouldRequeue(queue);
 
     // Section 7: the first live review of this card on this learning day, in any session.
     const [earlierToday] = await tx
@@ -171,33 +176,13 @@ export async function putReview(
         meta: { state, requeue },
       })
       .returning();
-    await completeIfFinished(tx, sessionId, session.endedAt, now);
+    // R7: the session is completed by the grade that finishes its queue. An ended session keeps
+    // its first end, and undoing a grade later does not reopen a completed session.
+    if (!session.endedAt && isFinished(gradeCurrent(queue, grade))) {
+      await tx.update(sessions).set({ endedAt: now, endedReason: "completed" }).where(eq(sessions.id, sessionId));
+    }
     return toResponse(profile, row!);
   });
-}
-
-/**
- * Marks the session completed once every card in its queue has a live grade that did not
- * re-queue (R7). Runs inside the grade's transaction, under the session lock. An ended
- * session keeps its first end. Undoing a grade later does not reopen a completed session.
- */
-type Tx = Parameters<Parameters<Db["transaction"]>[0]>[0];
-
-async function completeIfFinished(tx: Tx, sessionId: string, endedAt: Date | null, now: Date): Promise<void> {
-  if (endedAt) return;
-  const [session] = await tx.select({ meta: sessions.meta }).from(sessions).where(eq(sessions.id, sessionId));
-  const { cardIds } = sessionMetaSchema.parse(session!.meta);
-  const live = await tx
-    .select({ cardId: reviewLog.cardId, meta: reviewLog.meta })
-    .from(reviewLog)
-    .where(and(eq(reviewLog.sessionId, sessionId), isNull(reviewLog.undoneAt)))
-    .orderBy(asc(reviewLog.reviewedAt), asc(reviewLog.createdAt));
-  // The latest live grade of each card says whether it still has a re-queued attempt.
-  const settled = new Map<string, boolean>();
-  for (const r of live) settled.set(r.cardId, !reviewMetaSchema.parse(r.meta).requeue);
-  if (cardIds.length > 0 && cardIds.every((c) => settled.get(c) === true)) {
-    await tx.update(sessions).set({ endedAt: now, endedReason: "completed" }).where(eq(sessions.id, sessionId));
-  }
 }
 
 /** The response for an undone review: the restored state and labels for regrading it, from the day of the undo. */

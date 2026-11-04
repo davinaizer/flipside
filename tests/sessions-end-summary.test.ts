@@ -80,7 +80,8 @@ test("end keeps grades, the last grade completes, and the summary counts first g
   // session's time runs to its last grade.
   const s3 = await session([c[4]!.id, c[5]!.id]);
   const first = await grade(s3, c[4]!.id, "not_yet", 1);
-  const second = await grade(s3, c[4]!.id, "got_it", 2);
+  // The queue is c4, c5, c4 again: c5 comes next.
+  const second = await grade(s3, c[5]!.id, "got_it", 2);
   await undoReview(me, second, at(3), db);
   await undoReview(me, first, at(3), db);
   await grade(s3, c[4]!.id, "nearly", 4);
@@ -92,12 +93,13 @@ test("end keeps grades, the last grade completes, and the summary counts first g
   expect(sum3.durationMs).toBe(4 * 60_000);
   expect(sum3.session.endedAt).toBeNull();
 
-  // More than three misses: three shown, all ids kept.
+  // More than three misses: three shown, all ids kept. Each Not yet re-queues ahead of the
+  // last card, so grading in queue order misses the first five.
   const s4 = await session(c.map((x) => x.id));
-  for (const [i, x] of c.entries()) await grade(s4, x.id, "not_yet", i + 1);
+  for (const [i, x] of c.slice(0, 5).entries()) await grade(s4, x.id, "not_yet", i + 1);
   const sum4 = await getSummary(me, s4, db);
   expect(sum4.goAgain.length).toBe(3);
-  expect(sum4.missIds.length).toBe(6);
+  expect(sum4.missIds.length).toBe(5);
 
   // Routes: profile header, 404 for another profile or unknown id, 400-free bad id is 404.
   const ctx = (id: string) => ({ params: Promise.resolve({ id }) });

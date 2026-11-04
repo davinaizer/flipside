@@ -8,10 +8,9 @@ type StateKey = keyof typeof fixtures.states;
 const states = fixtures.states as Record<StateKey, SchedulerState | null>;
 
 function run(prev: SchedulerState | null, grade: string, lapseRule: string) {
-  const { state, requeue } = applyGrade(prev, grade as Grade, fixtures.today, {
+  return applyGrade(prev, grade as Grade, fixtures.today, {
     lapseRule: lapseRule as LapseRule,
-  });
-  return { ...state, requeue };
+  }).state;
 }
 
 describe("applyGrade matrix", () => {

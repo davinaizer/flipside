@@ -104,6 +104,7 @@ test("DELETE /reviews/{id} undoes the latest grade, steps back through the sessi
   // Regrading is a first attempt again, and the New card counts toward the cap once more.
   const g1 = await grade(fresh.id, "nearly", 12);
   expect(await logOf(g1)).toMatchObject({ isFirstAttemptToday: true, introducedNew: true, boxBefore: null, boxAfter: 1 });
+  await grade(box3.id, "nearly", 12.5); // the queue is fresh, box3, box2: grades follow it
   const g2 = await grade(box2.id, "got_it", 13);
   expect(await logOf(g2)).toMatchObject({ isFirstAttemptToday: true, boxBefore: 2, boxAfter: 3 });
   expect(await newCardsRemaining(me, "2026-02-02", db)).toBe(9);

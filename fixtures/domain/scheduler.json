@@ -10,43 +10,43 @@
     "box5": { "box": 5, "dueDate": "2026-12-14", "reps": 5, "lapses": 2, "lastGrade": "got_it", "status": "active" }
   },
   "matrix": [
-    { "lapseRule": "reset", "from": "new", "grade": "not_yet", "expected": { "box": 1, "dueDate": "2026-12-28", "reps": 1, "lapses": 0, "lastGrade": "not_yet", "status": "active", "requeue": true } },
-    { "lapseRule": "reset", "from": "new", "grade": "nearly", "expected": { "box": 1, "dueDate": "2026-12-28", "reps": 1, "lapses": 0, "lastGrade": "nearly", "status": "active", "requeue": false } },
-    { "lapseRule": "reset", "from": "new", "grade": "got_it", "expected": { "box": 2, "dueDate": "2026-12-29", "reps": 1, "lapses": 0, "lastGrade": "got_it", "status": "active", "requeue": false } },
-    { "lapseRule": "reset", "from": "box1", "grade": "not_yet", "expected": { "box": 1, "dueDate": "2026-12-28", "reps": 6, "lapses": 2, "lastGrade": "not_yet", "status": "active", "requeue": true } },
-    { "lapseRule": "reset", "from": "box1", "grade": "nearly", "expected": { "box": 1, "dueDate": "2026-12-28", "reps": 6, "lapses": 2, "lastGrade": "nearly", "status": "active", "requeue": false } },
-    { "lapseRule": "reset", "from": "box1", "grade": "got_it", "expected": { "box": 2, "dueDate": "2026-12-29", "reps": 6, "lapses": 2, "lastGrade": "got_it", "status": "active", "requeue": false } },
-    { "lapseRule": "reset", "from": "box2", "grade": "not_yet", "expected": { "box": 1, "dueDate": "2026-12-28", "reps": 6, "lapses": 3, "lastGrade": "not_yet", "status": "active", "requeue": true } },
-    { "lapseRule": "reset", "from": "box2", "grade": "nearly", "expected": { "box": 2, "dueDate": "2026-12-29", "reps": 6, "lapses": 2, "lastGrade": "nearly", "status": "active", "requeue": false } },
-    { "lapseRule": "reset", "from": "box2", "grade": "got_it", "expected": { "box": 3, "dueDate": "2026-12-31", "reps": 6, "lapses": 2, "lastGrade": "got_it", "status": "active", "requeue": false } },
-    { "lapseRule": "reset", "from": "box3", "grade": "not_yet", "expected": { "box": 1, "dueDate": "2026-12-28", "reps": 6, "lapses": 3, "lastGrade": "not_yet", "status": "active", "requeue": true } },
-    { "lapseRule": "reset", "from": "box3", "grade": "nearly", "expected": { "box": 3, "dueDate": "2026-12-31", "reps": 6, "lapses": 2, "lastGrade": "nearly", "status": "active", "requeue": false } },
-    { "lapseRule": "reset", "from": "box3", "grade": "got_it", "expected": { "box": 4, "dueDate": "2027-01-04", "reps": 6, "lapses": 2, "lastGrade": "got_it", "status": "active", "requeue": false } },
-    { "lapseRule": "reset", "from": "box4", "grade": "not_yet", "expected": { "box": 1, "dueDate": "2026-12-28", "reps": 6, "lapses": 3, "lastGrade": "not_yet", "status": "active", "requeue": true } },
-    { "lapseRule": "reset", "from": "box4", "grade": "nearly", "expected": { "box": 4, "dueDate": "2027-01-04", "reps": 6, "lapses": 2, "lastGrade": "nearly", "status": "active", "requeue": false } },
-    { "lapseRule": "reset", "from": "box4", "grade": "got_it", "expected": { "box": 5, "dueDate": "2027-01-11", "reps": 6, "lapses": 2, "lastGrade": "got_it", "status": "active", "requeue": false } },
-    { "lapseRule": "reset", "from": "box5", "grade": "not_yet", "expected": { "box": 1, "dueDate": "2026-12-28", "reps": 6, "lapses": 3, "lastGrade": "not_yet", "status": "active", "requeue": true } },
-    { "lapseRule": "reset", "from": "box5", "grade": "nearly", "expected": { "box": 5, "dueDate": "2027-01-11", "reps": 6, "lapses": 2, "lastGrade": "nearly", "status": "active", "requeue": false } },
-    { "lapseRule": "reset", "from": "box5", "grade": "got_it", "expected": { "box": 5, "dueDate": "2027-01-11", "reps": 6, "lapses": 2, "lastGrade": "got_it", "status": "active", "requeue": false } },
+    { "lapseRule": "reset", "from": "new", "grade": "not_yet", "expected": { "box": 1, "dueDate": "2026-12-28", "reps": 1, "lapses": 0, "lastGrade": "not_yet", "status": "active" } },
+    { "lapseRule": "reset", "from": "new", "grade": "nearly", "expected": { "box": 1, "dueDate": "2026-12-28", "reps": 1, "lapses": 0, "lastGrade": "nearly", "status": "active" } },
+    { "lapseRule": "reset", "from": "new", "grade": "got_it", "expected": { "box": 2, "dueDate": "2026-12-29", "reps": 1, "lapses": 0, "lastGrade": "got_it", "status": "active" } },
+    { "lapseRule": "reset", "from": "box1", "grade": "not_yet", "expected": { "box": 1, "dueDate": "2026-12-28", "reps": 6, "lapses": 2, "lastGrade": "not_yet", "status": "active" } },
+    { "lapseRule": "reset", "from": "box1", "grade": "nearly", "expected": { "box": 1, "dueDate": "2026-12-28", "reps": 6, "lapses": 2, "lastGrade": "nearly", "status": "active" } },
+    { "lapseRule": "reset", "from": "box1", "grade": "got_it", "expected": { "box": 2, "dueDate": "2026-12-29", "reps": 6, "lapses": 2, "lastGrade": "got_it", "status": "active" } },
+    { "lapseRule": "reset", "from": "box2", "grade": "not_yet", "expected": { "box": 1, "dueDate": "2026-12-28", "reps": 6, "lapses": 3, "lastGrade": "not_yet", "status": "active" } },
+    { "lapseRule": "reset", "from": "box2", "grade": "nearly", "expected": { "box": 2, "dueDate": "2026-12-29", "reps": 6, "lapses": 2, "lastGrade": "nearly", "status": "active" } },
+    { "lapseRule": "reset", "from": "box2", "grade": "got_it", "expected": { "box": 3, "dueDate": "2026-12-31", "reps": 6, "lapses": 2, "lastGrade": "got_it", "status": "active" } },
+    { "lapseRule": "reset", "from": "box3", "grade": "not_yet", "expected": { "box": 1, "dueDate": "2026-12-28", "reps": 6, "lapses": 3, "lastGrade": "not_yet", "status": "active" } },
+    { "lapseRule": "reset", "from": "box3", "grade": "nearly", "expected": { "box": 3, "dueDate": "2026-12-31", "reps": 6, "lapses": 2, "lastGrade": "nearly", "status": "active" } },
+    { "lapseRule": "reset", "from": "box3", "grade": "got_it", "expected": { "box": 4, "dueDate": "2027-01-04", "reps": 6, "lapses": 2, "lastGrade": "got_it", "status": "active" } },
+    { "lapseRule": "reset", "from": "box4", "grade": "not_yet", "expected": { "box": 1, "dueDate": "2026-12-28", "reps": 6, "lapses": 3, "lastGrade": "not_yet", "status": "active" } },
+    { "lapseRule": "reset", "from": "box4", "grade": "nearly", "expected": { "box": 4, "dueDate": "2027-01-04", "reps": 6, "lapses": 2, "lastGrade": "nearly", "status": "active" } },
+    { "lapseRule": "reset", "from": "box4", "grade": "got_it", "expected": { "box": 5, "dueDate": "2027-01-11", "reps": 6, "lapses": 2, "lastGrade": "got_it", "status": "active" } },
+    { "lapseRule": "reset", "from": "box5", "grade": "not_yet", "expected": { "box": 1, "dueDate": "2026-12-28", "reps": 6, "lapses": 3, "lastGrade": "not_yet", "status": "active" } },
+    { "lapseRule": "reset", "from": "box5", "grade": "nearly", "expected": { "box": 5, "dueDate": "2027-01-11", "reps": 6, "lapses": 2, "lastGrade": "nearly", "status": "active" } },
+    { "lapseRule": "reset", "from": "box5", "grade": "got_it", "expected": { "box": 5, "dueDate": "2027-01-11", "reps": 6, "lapses": 2, "lastGrade": "got_it", "status": "active" } },
 
-    { "lapseRule": "drop_one", "from": "new", "grade": "not_yet", "expected": { "box": 1, "dueDate": "2026-12-28", "reps": 1, "lapses": 0, "lastGrade": "not_yet", "status": "active", "requeue": true } },
-    { "lapseRule": "drop_one", "from": "new", "grade": "nearly", "expected": { "box": 1, "dueDate": "2026-12-28", "reps": 1, "lapses": 0, "lastGrade": "nearly", "status": "active", "requeue": false } },
-    { "lapseRule": "drop_one", "from": "new", "grade": "got_it", "expected": { "box": 2, "dueDate": "2026-12-29", "reps": 1, "lapses": 0, "lastGrade": "got_it", "status": "active", "requeue": false } },
-    { "lapseRule": "drop_one", "from": "box1", "grade": "not_yet", "expected": { "box": 1, "dueDate": "2026-12-28", "reps": 6, "lapses": 2, "lastGrade": "not_yet", "status": "active", "requeue": true } },
-    { "lapseRule": "drop_one", "from": "box1", "grade": "nearly", "expected": { "box": 1, "dueDate": "2026-12-28", "reps": 6, "lapses": 2, "lastGrade": "nearly", "status": "active", "requeue": false } },
-    { "lapseRule": "drop_one", "from": "box1", "grade": "got_it", "expected": { "box": 2, "dueDate": "2026-12-29", "reps": 6, "lapses": 2, "lastGrade": "got_it", "status": "active", "requeue": false } },
-    { "lapseRule": "drop_one", "from": "box2", "grade": "not_yet", "expected": { "box": 1, "dueDate": "2026-12-28", "reps": 6, "lapses": 3, "lastGrade": "not_yet", "status": "active", "requeue": true } },
-    { "lapseRule": "drop_one", "from": "box2", "grade": "nearly", "expected": { "box": 2, "dueDate": "2026-12-29", "reps": 6, "lapses": 2, "lastGrade": "nearly", "status": "active", "requeue": false } },
-    { "lapseRule": "drop_one", "from": "box2", "grade": "got_it", "expected": { "box": 3, "dueDate": "2026-12-31", "reps": 6, "lapses": 2, "lastGrade": "got_it", "status": "active", "requeue": false } },
-    { "lapseRule": "drop_one", "from": "box3", "grade": "not_yet", "expected": { "box": 2, "dueDate": "2026-12-28", "reps": 6, "lapses": 3, "lastGrade": "not_yet", "status": "active", "requeue": true } },
-    { "lapseRule": "drop_one", "from": "box3", "grade": "nearly", "expected": { "box": 3, "dueDate": "2026-12-31", "reps": 6, "lapses": 2, "lastGrade": "nearly", "status": "active", "requeue": false } },
-    { "lapseRule": "drop_one", "from": "box3", "grade": "got_it", "expected": { "box": 4, "dueDate": "2027-01-04", "reps": 6, "lapses": 2, "lastGrade": "got_it", "status": "active", "requeue": false } },
-    { "lapseRule": "drop_one", "from": "box4", "grade": "not_yet", "expected": { "box": 3, "dueDate": "2026-12-28", "reps": 6, "lapses": 3, "lastGrade": "not_yet", "status": "active", "requeue": true } },
-    { "lapseRule": "drop_one", "from": "box4", "grade": "nearly", "expected": { "box": 4, "dueDate": "2027-01-04", "reps": 6, "lapses": 2, "lastGrade": "nearly", "status": "active", "requeue": false } },
-    { "lapseRule": "drop_one", "from": "box4", "grade": "got_it", "expected": { "box": 5, "dueDate": "2027-01-11", "reps": 6, "lapses": 2, "lastGrade": "got_it", "status": "active", "requeue": false } },
-    { "lapseRule": "drop_one", "from": "box5", "grade": "not_yet", "expected": { "box": 4, "dueDate": "2026-12-28", "reps": 6, "lapses": 3, "lastGrade": "not_yet", "status": "active", "requeue": true } },
-    { "lapseRule": "drop_one", "from": "box5", "grade": "nearly", "expected": { "box": 5, "dueDate": "2027-01-11", "reps": 6, "lapses": 2, "lastGrade": "nearly", "status": "active", "requeue": false } },
-    { "lapseRule": "drop_one", "from": "box5", "grade": "got_it", "expected": { "box": 5, "dueDate": "2027-01-11", "reps": 6, "lapses": 2, "lastGrade": "got_it", "status": "active", "requeue": false } }
+    { "lapseRule": "drop_one", "from": "new", "grade": "not_yet", "expected": { "box": 1, "dueDate": "2026-12-28", "reps": 1, "lapses": 0, "lastGrade": "not_yet", "status": "active" } },
+    { "lapseRule": "drop_one", "from": "new", "grade": "nearly", "expected": { "box": 1, "dueDate": "2026-12-28", "reps": 1, "lapses": 0, "lastGrade": "nearly", "status": "active" } },
+    { "lapseRule": "drop_one", "from": "new", "grade": "got_it", "expected": { "box": 2, "dueDate": "2026-12-29", "reps": 1, "lapses": 0, "lastGrade": "got_it", "status": "active" } },
+    { "lapseRule": "drop_one", "from": "box1", "grade": "not_yet", "expected": { "box": 1, "dueDate": "2026-12-28", "reps": 6, "lapses": 2, "lastGrade": "not_yet", "status": "active" } },
+    { "lapseRule": "drop_one", "from": "box1", "grade": "nearly", "expected": { "box": 1, "dueDate": "2026-12-28", "reps": 6, "lapses": 2, "lastGrade": "nearly", "status": "active" } },
+    { "lapseRule": "drop_one", "from": "box1", "grade": "got_it", "expected": { "box": 2, "dueDate": "2026-12-29", "reps": 6, "lapses": 2, "lastGrade": "got_it", "status": "active" } },
+    { "lapseRule": "drop_one", "from": "box2", "grade": "not_yet", "expected": { "box": 1, "dueDate": "2026-12-28", "reps": 6, "lapses": 3, "lastGrade": "not_yet", "status": "active" } },
+    { "lapseRule": "drop_one", "from": "box2", "grade": "nearly", "expected": { "box": 2, "dueDate": "2026-12-29", "reps": 6, "lapses": 2, "lastGrade": "nearly", "status": "active" } },
+    { "lapseRule": "drop_one", "from": "box2", "grade": "got_it", "expected": { "box": 3, "dueDate": "2026-12-31", "reps": 6, "lapses": 2, "lastGrade": "got_it", "status": "active" } },
+    { "lapseRule": "drop_one", "from": "box3", "grade": "not_yet", "expected": { "box": 2, "dueDate": "2026-12-28", "reps": 6, "lapses": 3, "lastGrade": "not_yet", "status": "active" } },
+    { "lapseRule": "drop_one", "from": "box3", "grade": "nearly", "expected": { "box": 3, "dueDate": "2026-12-31", "reps": 6, "lapses": 2, "lastGrade": "nearly", "status": "active" } },
+    { "lapseRule": "drop_one", "from": "box3", "grade": "got_it", "expected": { "box": 4, "dueDate": "2027-01-04", "reps": 6, "lapses": 2, "lastGrade": "got_it", "status": "active" } },
+    { "lapseRule": "drop_one", "from": "box4", "grade": "not_yet", "expected": { "box": 3, "dueDate": "2026-12-28", "reps": 6, "lapses": 3, "lastGrade": "not_yet", "status": "active" } },
+    { "lapseRule": "drop_one", "from": "box4", "grade": "nearly", "expected": { "box": 4, "dueDate": "2027-01-04", "reps": 6, "lapses": 2, "lastGrade": "nearly", "status": "active" } },
+    { "lapseRule": "drop_one", "from": "box4", "grade": "got_it", "expected": { "box": 5, "dueDate": "2027-01-11", "reps": 6, "lapses": 2, "lastGrade": "got_it", "status": "active" } },
+    { "lapseRule": "drop_one", "from": "box5", "grade": "not_yet", "expected": { "box": 4, "dueDate": "2026-12-28", "reps": 6, "lapses": 3, "lastGrade": "not_yet", "status": "active" } },
+    { "lapseRule": "drop_one", "from": "box5", "grade": "nearly", "expected": { "box": 5, "dueDate": "2027-01-11", "reps": 6, "lapses": 2, "lastGrade": "nearly", "status": "active" } },
+    { "lapseRule": "drop_one", "from": "box5", "grade": "got_it", "expected": { "box": 5, "dueDate": "2027-01-11", "reps": 6, "lapses": 2, "lastGrade": "got_it", "status": "active" } }
   ],
   "edge": [
     {
@@ -54,42 +54,42 @@
       "lapseRule": "reset",
       "prev": { "box": 2, "dueDate": "2026-12-27", "reps": 20, "lapses": 7, "lastGrade": "got_it", "status": "active" },
       "grade": "not_yet",
-      "expected": { "box": 1, "dueDate": "2026-12-28", "reps": 21, "lapses": 8, "lastGrade": "not_yet", "status": "leech", "requeue": true }
+      "expected": { "box": 1, "dueDate": "2026-12-28", "reps": 21, "lapses": 8, "lastGrade": "not_yet", "status": "leech" }
     },
     {
       "name": "drop_one: 8th lapse from box 3 flags a leech and drops one box",
       "lapseRule": "drop_one",
       "prev": { "box": 3, "dueDate": "2026-12-25", "reps": 20, "lapses": 7, "lastGrade": "got_it", "status": "active" },
       "grade": "not_yet",
-      "expected": { "box": 2, "dueDate": "2026-12-28", "reps": 21, "lapses": 8, "lastGrade": "not_yet", "status": "leech", "requeue": true }
+      "expected": { "box": 2, "dueDate": "2026-12-28", "reps": 21, "lapses": 8, "lastGrade": "not_yet", "status": "leech" }
     },
     {
       "name": "Not yet in box 1 at 7 lapses does not add a lapse, so no leech",
       "lapseRule": "reset",
       "prev": { "box": 1, "dueDate": "2026-12-28", "reps": 20, "lapses": 7, "lastGrade": "not_yet", "status": "active" },
       "grade": "not_yet",
-      "expected": { "box": 1, "dueDate": "2026-12-28", "reps": 21, "lapses": 7, "lastGrade": "not_yet", "status": "active", "requeue": true }
+      "expected": { "box": 1, "dueDate": "2026-12-28", "reps": 21, "lapses": 7, "lastGrade": "not_yet", "status": "active" }
     },
     {
       "name": "a leech graded Got it stays a leech and keeps moving up",
       "lapseRule": "reset",
       "prev": { "box": 1, "dueDate": "2026-12-28", "reps": 21, "lapses": 8, "lastGrade": "not_yet", "status": "leech" },
       "grade": "got_it",
-      "expected": { "box": 2, "dueDate": "2026-12-29", "reps": 22, "lapses": 8, "lastGrade": "got_it", "status": "leech", "requeue": false }
+      "expected": { "box": 2, "dueDate": "2026-12-29", "reps": 22, "lapses": 8, "lastGrade": "got_it", "status": "leech" }
     },
     {
       "name": "a leech graded Not yet in box 2 stays a leech with 9 lapses",
       "lapseRule": "reset",
       "prev": { "box": 2, "dueDate": "2026-12-27", "reps": 22, "lapses": 8, "lastGrade": "got_it", "status": "leech" },
       "grade": "not_yet",
-      "expected": { "box": 1, "dueDate": "2026-12-28", "reps": 23, "lapses": 9, "lastGrade": "not_yet", "status": "leech", "requeue": true }
+      "expected": { "box": 1, "dueDate": "2026-12-28", "reps": 23, "lapses": 9, "lastGrade": "not_yet", "status": "leech" }
     },
     {
       "name": "a suspended card keeps its status when graded",
       "lapseRule": "reset",
       "prev": { "box": 4, "dueDate": "2026-12-21", "reps": 30, "lapses": 7, "lastGrade": "got_it", "status": "suspended" },
       "grade": "not_yet",
-      "expected": { "box": 1, "dueDate": "2026-12-28", "reps": 31, "lapses": 8, "lastGrade": "not_yet", "status": "suspended", "requeue": true }
+      "expected": { "box": 1, "dueDate": "2026-12-28", "reps": 31, "lapses": 8, "lastGrade": "not_yet", "status": "suspended" }
     }
   ]
 }

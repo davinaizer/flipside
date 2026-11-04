@@ -3,14 +3,14 @@ import { and, asc, eq, inArray, isNull } from "drizzle-orm";
 import type { Db } from "@/server/db/client";
 import { getDb } from "@/server/db/client";
 import { cardState, cards, decks, images, reviewLog, sessions } from "@/server/db/schema";
+import { stateColumns, toSchedulerState } from "@/server/card-state";
 import { findDeck, newCardsRemaining } from "@/server/decks";
 import { ApiError } from "@/server/http/errors";
 import type { Profile } from "@/server/profile";
 import { learningDay } from "@/domain/day";
 import { gradeLabels } from "@/domain/grade-labels";
-import type { Box, SchedulerState } from "@/domain/scheduler";
 import { buildSession, type SessionScope } from "@/domain/session-builder";
-import type { AnswerStyle, CardStatus, Grade } from "@/shared/enums";
+import type { AnswerStyle, Grade } from "@/shared/enums";
 import {
   sessionRequestSchema,
   type SessionCardPayload,
@@ -35,33 +35,27 @@ type SessionRow = typeof sessions.$inferSelect;
 
 const notFound = () => new ApiError(404, "session_not_found", "That session does not exist.");
 
-function toState(r: {
-  box: number | null;
-  dueDate: string | null;
-  reps: number | null;
-  lapses: number | null;
-  lastGrade: string | null;
-  status: string | null;
-}): SchedulerState | null {
-  if (r.box === null) return null;
-  return {
-    box: r.box as Box,
-    dueDate: r.dueDate!,
-    reps: r.reps!,
-    lapses: r.lapses!,
-    lastGrade: r.lastGrade as Grade | null,
-    status: r.status as CardStatus,
-  };
+/**
+ * Which of the session's cards are still live for the profile: not deleted, in a deck the
+ * profile owns that is not deleted. Needs cards joined to decks. The session shows only
+ * these, and grading replays the queue over the same set, so a card deleted mid-session
+ * drops out on both sides.
+ */
+function liveSessionCards(profileId: string, cardIds: string[]) {
+  return and(inArray(cards.id, cardIds), eq(decks.ownerProfileId, profileId), isNull(decks.deletedAt), isNull(cards.deletedAt));
 }
 
-const stateColumns = {
-  box: cardState.box,
-  dueDate: cardState.dueDate,
-  reps: cardState.reps,
-  lapses: cardState.lapses,
-  lastGrade: cardState.lastGrade,
-  status: cardState.status,
-};
+/** The session's live card ids, in stored order: the card list its queue is replayed over. */
+export async function liveSessionCardIds(db: Pick<Db, "select">, profileId: string, cardIds: string[]): Promise<string[]> {
+  if (cardIds.length === 0) return [];
+  const rows = await db
+    .select({ id: cards.id })
+    .from(cards)
+    .innerJoin(decks, eq(decks.id, cards.deckId))
+    .where(liveSessionCards(profileId, cardIds));
+  const live = new Set(rows.map((r) => r.id));
+  return cardIds.filter((id) => live.has(id));
+}
 
 /** The API scope as the domain builder takes it; deck and topic scopes must name an owned deck (404 otherwise). */
 async function toDomainScope(profile: Profile, scope: SessionRequest["scope"], db: Db): Promise<SessionScope> {
@@ -99,7 +93,7 @@ async function buildQueue(profile: Profile, request: SessionRequest, now: Date, 
       .orderBy(asc(decks.createdAt), asc(decks.id), asc(cards.position), asc(cards.id)),
   ]);
   return buildSession({
-    cards: rows.map((r) => ({ id: r.id, deckId: r.deckId, topic: r.topic, state: toState(r) })),
+    cards: rows.map((r) => ({ id: r.id, deckId: r.deckId, topic: r.topic, state: toSchedulerState(r) })),
     scope,
     length: request.length,
     today,
@@ -132,14 +126,7 @@ async function loadSession(profile: Profile, row: SessionRow, now: Date, db: Db)
           .from(cards)
           .innerJoin(decks, eq(decks.id, cards.deckId))
           .leftJoin(cardState, and(eq(cardState.cardId, cards.id), eq(cardState.profileId, profile.id)))
-          .where(
-            and(
-              inArray(cards.id, meta.cardIds),
-              eq(decks.ownerProfileId, profile.id),
-              isNull(decks.deletedAt),
-              isNull(cards.deletedAt),
-            ),
-          );
+          .where(liveSessionCards(profile.id, meta.cardIds));
 
   const imageIds = cardRows.flatMap((c) => [c.frontImageId, c.backImageId]).filter((i): i is string => i !== null);
   const imageRows =
@@ -168,7 +155,7 @@ async function loadSession(profile: Profile, row: SessionRow, now: Date, db: Db)
         back: c.back,
         frontImage: image(c.frontImageId),
         backImage: image(c.backImageId),
-        labels: gradeLabels(toState(c), today),
+        labels: gradeLabels(toSchedulerState(c), today),
       },
     ];
   });
@@ -177,7 +164,8 @@ async function loadSession(profile: Profile, row: SessionRow, now: Date, db: Db)
     .select({ reviewId: reviewLog.id, cardId: reviewLog.cardId, grade: reviewLog.grade, reviewedAt: reviewLog.reviewedAt })
     .from(reviewLog)
     .where(and(eq(reviewLog.sessionId, row.id), eq(reviewLog.profileId, profile.id), isNull(reviewLog.undoneAt)))
-    .orderBy(asc(reviewLog.reviewedAt), asc(reviewLog.id));
+    // The order grading replays them in (reviews.ts), so client and server build the same queue.
+    .orderBy(asc(reviewLog.reviewedAt), asc(reviewLog.createdAt));
 
   return {
     session: {

@@ -1,8 +1,9 @@
 /**
  * Statistics definitions (PRD section 7, S1, S3, S4; derived values in section 10).
  *
- * Pure: the server loads review rows and card states, these functions compute
- * the figures. Undone rows are ignored everywhere. Counts use only rows flagged
+ * Pure: the server loads live review rows (undone rows filtered out in SQL, as in
+ * docs/statistics-queries.md) and card states; computeStats turns them into every
+ * Progress figure. Counts use only rows flagged
  * `isFirstAttemptToday` (the same filter as the documented SQL query); time per
  * card uses every attempt, each capped at DURATION_CAP_SECONDS. Days are the
  * profile's learning days (timezone and day start hour), weeks start on Monday.
@@ -15,10 +16,12 @@ import {
   STATS_MONTH_WEEKS,
 } from "../shared/constants";
 import type { Grade } from "../shared/enums";
+import type { Stats } from "../shared/schemas/stats";
 import { addDays, daysBetween, learningDay, weekStart, type LocalDate } from "./day";
 
 export type StatsRange = "week" | "month";
 
+/** A live review: never undone (the caller filters undone rows out). */
 export interface StatsReview {
   cardId: string;
   /** ISO instant. */
@@ -26,7 +29,6 @@ export interface StatsReview {
   grade: Grade;
   durationMs: number;
   isFirstAttemptToday: boolean;
-  undoneAt: string | null;
 }
 
 export interface DayWindow {
@@ -77,29 +79,27 @@ function inWindow(day: LocalDate, w: DayWindow): boolean {
   return day >= w.start && day <= w.end;
 }
 
-function datedLive(reviews: readonly StatsReview[], ctx: DayContext): DatedReview[] {
-  return reviews
-    .filter((r) => r.undoneAt === null)
-    .map((r) => ({ ...r, day: learningDay(r.reviewedAt, ctx.timeZone, ctx.dayStartHour) }));
+function dated(reviews: readonly StatsReview[], ctx: DayContext): DatedReview[] {
+  return reviews.map((r) => ({ ...r, day: learningDay(r.reviewedAt, ctx.timeZone, ctx.dayStartHour) }));
 }
 
-export function median(values: readonly number[]): number | null {
+function median(values: readonly number[]): number | null {
   if (values.length === 0) return null;
   const sorted = [...values].sort((a, b) => a - b);
   const mid = Math.floor(sorted.length / 2);
   return sorted.length % 2 === 1 ? sorted[mid]! : (sorted[mid - 1]! + sorted[mid]!) / 2;
 }
 
-export function cappedSeconds(durationMs: number): number {
+function cappedSeconds(durationMs: number): number {
   return Math.min(Math.max(durationMs, 0) / 1000, DURATION_CAP_SECONDS);
 }
 
-export function windowMetrics(
+function windowMetrics(
   reviews: readonly StatsReview[],
   window: DayWindow,
   ctx: DayContext,
 ): WindowMetrics {
-  const rows = datedLive(reviews, ctx).filter((r) => inWindow(r.day, window));
+  const rows = dated(reviews, ctx).filter((r) => inWindow(r.day, window));
   const first = rows.filter((r) => r.isFirstAttemptToday);
   const gotIt = first.filter((r) => r.grade === "got_it").length;
   return {
@@ -119,7 +119,7 @@ export interface PracticeBar {
 }
 
 /** Cards reviewed per day (week) or per week (month), highlighting today's period. */
-export function practiceBars(
+function practiceBars(
   reviews: readonly StatsReview[],
   range: StatsRange,
   today: LocalDate,
@@ -136,7 +136,7 @@ export function practiceBars(
       current: range === "week" ? start === today : start === weekStart(today),
     });
   }
-  for (const r of datedLive(reviews, ctx)) {
+  for (const r of dated(reviews, ctx)) {
     if (!r.isFirstAttemptToday || !inWindow(r.day, current)) continue;
     bars[Math.floor(daysBetween(current.start, r.day) / step)]!.cardsReviewed++;
   }
@@ -234,7 +234,7 @@ export interface FocusTopic {
  * FOCUS_NEXT_MIN_CARDS cards; ties go to more lapses, then topic name.
  * Topics are (deckId, topic) pairs since topics live per deck.
  */
-export function focusNext(cards: readonly MasteryCard[]): FocusTopic[] {
+function focusNext(cards: readonly MasteryCard[]): FocusTopic[] {
   const groups = new Map<string, MasteryCard[]>();
   for (const c of cards) {
     const key = JSON.stringify([c.deckId, c.topic]);
@@ -264,7 +264,7 @@ export function focusNext(cards: readonly MasteryCard[]): FocusTopic[] {
 }
 
 /** By-deck order: lowest mastery first, decks without cards last, then by name. */
-export function sortByLowestMastery<T extends { name: string; mastery: number | null }>(
+function sortByLowestMastery<T extends { name: string; mastery: number | null }>(
   decks: readonly T[],
 ): T[] {
   return [...decks].sort((a, b) => {
@@ -273,4 +273,65 @@ export function sortByLowestMastery<T extends { name: string; mastery: number | 
     } else if (a.mastery !== b.mastery) return a.mastery - b.mastery;
     return a.name.localeCompare(b.name);
   });
+}
+
+export interface StatsInput {
+  range: StatsRange;
+  /** The profile's learning day now. */
+  today: LocalDate;
+  ctx: DayContext;
+  /** Live reviews in the previous and current windows, each with its card's deck (deleted decks included). */
+  reviews: readonly (StatsReview & { deckId: string })[];
+  /** ISO instant of each deck's latest live review, any time, deleted decks included. */
+  lastReviewByDeck: ReadonlyMap<string, string>;
+  /** Live decks, in name order. */
+  decks: readonly { id: string; name: string; color: string | null }[];
+  /** Live cards of live decks. */
+  cards: readonly MasteryCard[];
+}
+
+/**
+ * Every Progress figure for one range (S1 to S4): the GET /stats payload. Reviews of
+ * deleted decks count in the tiles and bars; Focus next and By deck list live decks only.
+ */
+export function computeStats(input: StatsInput): Stats {
+  const { range, today, ctx, reviews, cards } = input;
+  const windows = statsWindows(range, today);
+  const current = windowMetrics(reviews, windows.current, ctx);
+  const previous = windowMetrics(reviews, windows.previous, ctx);
+  const deckName = new Map(input.decks.map((d) => [d.id, d.name]));
+
+  const byDeck = sortByLowestMastery(
+    input.decks.map((d) => {
+      const m = masteryBuckets(cards.filter((c) => c.deckId === d.id));
+      return {
+        deckId: d.id,
+        name: d.name,
+        color: d.color,
+        cards: m.total,
+        mastered: m.gotIt,
+        mastery: m.mastery,
+        medianSeconds: windowMetrics(reviews.filter((r) => r.deckId === d.id), windows.current, ctx).medianSeconds,
+        lastPractisedAt: input.lastReviewByDeck.get(d.id) ?? null,
+      };
+    }),
+  );
+
+  return {
+    range,
+    today,
+    hasReviews: input.lastReviewByDeck.size > 0,
+    windows,
+    current,
+    previous,
+    changes: {
+      cardsReviewed: changeInWords("cardsReviewed", current, previous, range),
+      gotItRate: changeInWords("gotItRate", current, previous, range),
+      timePerCard: changeInWords("timePerCard", current, previous, range),
+      daysPractised: changeInWords("daysPractised", current, previous, range),
+    },
+    bars: practiceBars(reviews, range, today, ctx),
+    focusNext: focusNext(cards).map((t) => ({ ...t, deckName: deckName.get(t.deckId)! })),
+    byDeck,
+  };
 }
