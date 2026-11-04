@@ -1,0 +1,35 @@
+import { renderToStaticMarkup } from "react-dom/server";
+import { expect, test, vi } from "vitest";
+
+vi.mock("next/navigation", () => ({ useRouter: () => ({ push: () => {} }) }));
+
+import { LoginForm } from "./LoginScreen";
+
+test("shows a password field, the theme toggle and the picker layout, with no error at first", () => {
+  const html = renderToStaticMarkup(<LoginForm onSubmit={() => {}} error={null} />);
+  expect(html).toMatch(/<input[^>]*type="password"[^>]*name="password"|<input[^>]*name="password"[^>]*type="password"/);
+  expect(html).toContain("Flipside");
+  expect(html).toContain("min-h-screen");
+  expect(html).toMatch(/role="switch"|type="checkbox"/);
+  expect(html).not.toContain('role="alert"');
+});
+
+test("shows the neutral error in an alert", () => {
+  const html = renderToStaticMarkup(
+    <LoginForm onSubmit={() => {}} error="That password did not work. Please try again." />,
+  );
+  expect(html).toContain('role="alert"');
+  expect(html).toContain("That password did not work");
+});
+
+test("login posts the password to /auth/login", async () => {
+  const fetchMock = vi.fn(async () => Response.json({ ok: true }));
+  vi.stubGlobal("fetch", fetchMock);
+  const { api } = await import("@/ui/api/client");
+  await api.login("pw");
+  expect(fetchMock).toHaveBeenCalledWith(
+    "/api/v1/auth/login",
+    expect.objectContaining({ method: "POST", body: JSON.stringify({ password: "pw" }) }),
+  );
+  vi.unstubAllGlobals();
+});

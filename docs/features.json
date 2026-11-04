@@ -819,7 +819,7 @@
           ],
           "area": "src/app/login/page.tsx, src/ui/profile/LoginScreen.tsx",
           "done_when": "Component test: password field, neutral error message, theme toggle from F9, picker layout; submits to /auth/login and goes to the picker.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F14.6",
