@@ -96,3 +96,8 @@ F18.1: Reading and Practice each render as their own surface card (rounded-card,
 F18.2: mastery bar is now h-1.5 (BAR_HEIGHT in MasteryBar.tsx); legend unchanged. Progress and Library e2e, axe, Settings e2e green on desktop and iPad.
 REVIEW F18 round 1: PASS at 94e48fa
 F18 done: settings sections and thinner bars, PR 45. MANUAL PENDING: none from the ledger.
+F19.1: POST /profiles (createProfileRequestSchema, createProfile service, route); tests/profiles-create-api.test.ts. verify.sh green.
+F19.2: Add User button below the picker list opens the shared ProfileForm; api.createProfile added; component tests in ProfilePicker.test.tsx.
+F19.3: e2e/add-user.spec.ts covers open, cancel, invalid names, create, pick, empty Library, axe in both themes, and 401 without cookie; desktop and iPad pass.
+REVIEW F19 round 1: PASS at 9a947f3
+F19 done: add user from the picker, PR 46. MANUAL PENDING: none from the ledger.

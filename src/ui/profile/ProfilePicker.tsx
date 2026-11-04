@@ -7,6 +7,8 @@ import { Logo } from "@/ui/icons/Icon";
 import { Avatar } from "@/ui/avatars";
 import { AttributeThemeSwitch } from "@/ui/settings/AttributeThemeSwitch";
 import { Skeleton } from "@/ui/states/Skeleton";
+import { AVATAR_IDS, type AvatarId } from "@/shared/avatars";
+import { ProfileForm } from "@/ui/profile/ProfileScreen";
 import type { ProfileSummary } from "@/shared/schemas/profile";
 import { buttonClass, TAPPABLE_CARD } from "@/ui/button/button-class";
 
@@ -75,20 +77,11 @@ export function ProfilePicker() {
         </div>
       )}
       {state.kind === "ready" && (
-        <ul className="flex flex-wrap justify-center gap-8">
-          {state.profiles.map((p) => (
-            <li key={p.id}>
-              <button
-                type="button"
-                onClick={() => pick(p.id)}
-                className={`flex min-h-11 min-w-52 flex-col items-center gap-4 overflow-hidden rounded-card border-t-4 border-t-primary-container border-x border-b border-x-card-edge border-b-card-edge bg-surface-card px-8 pb-8 pt-8 text-on-surface shadow-card outline-offset-4 ${TAPPABLE_CARD}`}
-              >
-                <Avatar id={p.avatar} size={112} />
-                <span className="text-headline-md font-semibold">{p.name}</span>
-              </button>
-            </li>
-          ))}
-        </ul>
+        <ProfilePickerReady
+          profiles={state.profiles}
+          onPick={pick}
+          onCreated={(p) => setState({ kind: "ready", profiles: [...state.profiles, p] })}
+        />
       )}
       <p className="rounded-full border border-card-edge bg-surface-card px-5 py-2 text-body-sm text-on-surface-variant">
         Each profile keeps its own cards, progress and reading settings.
@@ -99,5 +92,67 @@ export function ProfilePicker() {
         </p>
       )}
     </main>
+  );
+}
+
+/** The profile list with Add User below it (P8). */
+export function ProfilePickerReady({
+  profiles,
+  onPick,
+  onCreated,
+}: {
+  profiles: ProfileSummary[];
+  onPick: (id: string) => void;
+  onCreated: (p: ProfileSummary) => void;
+}) {
+  return (
+    <>
+        <ul className="flex flex-wrap justify-center gap-8">
+          {profiles.map((p) => (
+            <li key={p.id}>
+              <button
+                type="button"
+                onClick={() => onPick(p.id)}
+                className={`flex min-h-11 min-w-52 flex-col items-center gap-4 overflow-hidden rounded-card border-t-4 border-t-primary-container border-x border-b border-x-card-edge border-b-card-edge bg-surface-card px-8 pb-8 pt-8 text-on-surface shadow-card outline-offset-4 ${TAPPABLE_CARD}`}
+              >
+                <Avatar id={p.avatar} size={112} />
+                <span className="text-headline-md font-semibold">{p.name}</span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      <AddUser onCreated={onCreated} />
+    </>
+  );
+}
+
+export function AddUser({ onCreated }: { onCreated: (p: ProfileSummary) => void }) {
+  const [open, setOpen] = useState(false);
+  if (!open) {
+    return (
+      <button type="button" onClick={() => setOpen(true)} className={buttonClass("secondary")}>
+        Add User
+      </button>
+    );
+  }
+  return (
+    <section
+      aria-label="Add User"
+      className="w-full max-w-xl rounded-card border border-card-edge bg-surface-card p-8 shadow-card"
+    >
+      <h2 className="text-headline-md font-semibold">Add User</h2>
+      <ProfileForm
+        name=""
+        avatar={AVATAR_IDS[0]}
+        idPrefix="new-profile"
+        submitLabel="Add"
+        onCancel={() => setOpen(false)}
+        onSave={async (v) => {
+          const created = await api.createProfile({ name: v.name, avatar: v.avatar as AvatarId });
+          onCreated(created);
+          setOpen(false);
+        }}
+      />
+    </section>
   );
 }

@@ -1223,7 +1223,7 @@
       ],
       "design_screens": [],
       "notes": "PRD amended in v0.5 (P5, P8, D28). Reuse the Profile page's avatar chooser and the 1 to 24 character name rule (P7). Defaults: timezone Europe/London, day start 07:00. Endpoint sits behind the app password gate.",
-      "status": "todo",
+      "status": "done",
       "tasks": [
         {
           "id": "F19.1",
@@ -1237,7 +1237,7 @@
           ],
           "area": "src/shared/schemas/profile.ts, src/server/profile.ts, src/app/api/v1/profiles/route.ts",
           "done_when": "API test: a valid name and avatar creates a profile with default timezone and day start and returns it; empty, whitespace-only or over-24-character names return 400; an unknown avatar returns 400; 401 without the auth cookie. verify.sh green.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F19.2",
@@ -1251,7 +1251,7 @@
           ],
           "area": "src/ui/profile/ProfilePicker.tsx, src/ui/api/client.ts",
           "done_when": "Component test: Add User sits below the profile list; it opens a name and avatar form with the same validation messages as the Profile page; saving calls api.createProfile and shows the new profile; cancel closes the form. verify.sh green.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F19.3",
@@ -1264,9 +1264,11 @@
           ],
           "area": "e2e/profiles.spec.ts",
           "done_when": "pnpm test:e2e desktop and iPad: create a profile, see it in the picker, select it and land on an empty Library; invalid names rejected; axe has no serious or critical issues with the form open in both themes. The test cleans up its profile.",
-          "status": "todo"
+          "status": "done"
         }
-      ]
+      ],
+      "branch": "feat/F19-add-user",
+      "pr": 46
     }
   ]
 }

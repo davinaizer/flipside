@@ -3,8 +3,10 @@ import type { Db } from "@/server/db/client";
 import { getDb } from "@/server/db/client";
 import { profiles } from "@/server/db/schema";
 import { ApiError } from "@/server/http/errors";
-import { updateProfileRequestSchema } from "@/shared/schemas/profile";
-import { settingsSchema } from "@/shared/settings";
+import { DEFAULT_ACCENT } from "@/shared/avatars";
+import { DEFAULT_DAY_START_HOUR, DEFAULT_TIMEZONE } from "@/shared/constants";
+import { createProfileRequestSchema, updateProfileRequestSchema } from "@/shared/schemas/profile";
+import { DEFAULT_SETTINGS, settingsSchema } from "@/shared/settings";
 
 /** The only module that knows the cookie name (PRD section 11); others import this constant. */
 export const PROFILE_COOKIE = "flipside_profile";
@@ -66,6 +68,33 @@ export function toMe(profile: Profile) {
     },
     settings: settingsSchema.parse(profile.settings),
   };
+}
+
+/**
+ * Creates a profile from a name and avatar (P8) with the default timezone, day start hour and
+ * settings. Invalid input is a 400 naming the problem. Duplicates are allowed (P4).
+ */
+export async function createProfile(body: unknown, db: Db = getDb()): Promise<Profile> {
+  const parsed = createProfileRequestSchema.safeParse(body);
+  if (!parsed.success) {
+    throw new ApiError(
+      400,
+      "validation_failed",
+      parsed.error.issues.map((i) => i.message).join(". "),
+      parsed.error.issues.map((i) => ({ path: i.path.join("."), message: i.message })),
+    );
+  }
+  const [created] = await db
+    .insert(profiles)
+    .values({
+      ...parsed.data,
+      accent: DEFAULT_ACCENT,
+      timezone: DEFAULT_TIMEZONE,
+      dayStartHour: DEFAULT_DAY_START_HOUR,
+      settings: DEFAULT_SETTINGS,
+    })
+    .returning();
+  return created;
 }
 
 /**
