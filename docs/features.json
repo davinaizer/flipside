@@ -474,7 +474,7 @@
           ],
           "area": "e2e/practice.spec.ts, e2e/a11y.spec.ts",
           "done_when": "pnpm test:e2e AC17: reveal by button, tap and Space; hover, pressed and focus visible on buttons; axe clean in both themes.",
-          "status": "todo"
+          "status": "done"
         }
       ]
     },

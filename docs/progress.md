@@ -39,3 +39,4 @@ F11.2: both card faces render in a CSS 3D flip (perspective, rotateY, backface-v
 F11.3: reduced motion applies no rotation or transition (inert face hidden); Undo last remounts the card scene so it lands on the front with no reverse flip.
 F11.4: "How well did you know this?" prompt sits above the grade buttons and labels the button group (aria-labelledby).
 F11.5: no code change needed; the timer starts in showFront (front shown) and the existing use-session test covers it; performance e2e passes (next card 54-127 ms).
+F11.6: e2e AC17 (reveal by button, card tap and Space; hover, pressed, focus-visible on Show answer in both themes; hover skipped on touch). Seeded "Practice flip" profiles; fixed the 5-card test to look at the visible face since both faces are now in the DOM. Axe in both themes already covered by existing walks.

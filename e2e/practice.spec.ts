@@ -115,9 +115,10 @@ test("a 5-card session shows sublabels, schedules per section 5 and shows images
 
   // Card 2 has its picture on the back only.
   await expect(question(page)).toContainText("test for oxygen");
-  await expect(page.getByTestId("practice-card").locator("img")).toHaveCount(0);
+  // Both faces are in the DOM since the flip (F11.2), so look at the face that is showing.
+  await expect(page.locator('[data-face="front"] img')).toHaveCount(0);
   await reveal(page);
-  const img = page.getByTestId("practice-card").locator("img");
+  const img = page.locator('[data-face="back"] img');
   await expect(img).toHaveCount(1);
   await expect.poll(() => img.evaluate((i: HTMLImageElement) => i.naturalWidth)).toBeGreaterThan(0);
   done = page.waitForResponse((r) => r.request().method() === "PUT" && r.url().includes("/api/v1/reviews/"));
@@ -201,4 +202,68 @@ test("16 new cards with a cap of 10 give no more than 10 new cards in a local da
   }
   const second = await putSession(page, "all");
   expect(second.queue).toHaveLength(0); // 6 cards are still New, but today's cap is used up
+});
+
+// AC17: three ways to reveal, and hover, pressed and focus-visible on the buttons, in both themes.
+test("reveal by button, card tap and Space; buttons show hover, pressed and focus states in both themes", async ({ page }, info) => {
+  await signInWithDeck(page, "flip", info);
+  const { session } = await putSession(page, 10);
+  await page.goto(`/practice/${session.id}`);
+  await expect(page.getByText("Card 1 of 10")).toBeVisible();
+  const card = page.getByTestId("practice-card");
+  const gotIt = page.getByRole("button", { name: /^Got it/ });
+  const showAnswer = page.getByRole("button", { name: "Show answer" });
+  await expect(page.getByText("How well did you know this?")).toHaveCount(0); // only after the reveal
+
+  // Button.
+  await expect(card).toHaveAttribute("data-revealed", "false");
+  await showAnswer.click();
+  await expect(card).toHaveAttribute("data-revealed", "true");
+  await expect(page.getByText("How well did you know this?")).toBeVisible();
+  await gotIt.click();
+
+  // Card tap.
+  await expect(card).toHaveAttribute("data-revealed", "false");
+  await question(page).click();
+  await expect(card).toHaveAttribute("data-revealed", "true");
+  await gotIt.click();
+
+  // Space.
+  await expect(card).toHaveAttribute("data-revealed", "false");
+  await page.keyboard.press("Space");
+  await expect(card).toHaveAttribute("data-revealed", "true");
+  await gotIt.click();
+  await expect(card).toHaveAttribute("data-revealed", "false");
+
+  const read = (loc: ReturnType<Page["locator"]>) =>
+    loc.evaluate((el) => {
+      const s = getComputedStyle(el);
+      return { bg: s.backgroundColor, filter: s.filter, scale: s.scale, outline: s.outlineStyle + " " + s.outlineWidth };
+    });
+
+  for (const theme of ["light", "dark"] as const) {
+    await setTheme(page, theme);
+    // Rest state, after moving the pointer away and blurring.
+    await page.mouse.move(0, 0);
+    await showAnswer.evaluate((el) => (el as HTMLElement).blur());
+    const rest = await read(showAnswer);
+    expect(rest.outline).toMatch(/^none/);
+
+    await showAnswer.hover();
+    // Touch devices (iPad) report hover: none, so Tailwind hover styles do not apply there; pressed and focus still do.
+    if (await page.evaluate(() => matchMedia("(hover: hover)").matches)) {
+      await expect.poll(async () => (await read(showAnswer)).bg).not.toBe(rest.bg); // hover recolours
+    }
+
+    await page.mouse.down();
+    await expect.poll(async () => (await read(showAnswer)).scale).not.toBe(rest.scale); // pressed shrinks
+    await page.mouse.move(0, 0);
+    await page.mouse.up();
+
+    await showAnswer.focus(); // then Shift+Tab and Tab make the focus come from the keyboard, so :focus-visible matches
+    await page.keyboard.press("Shift+Tab");
+    await page.keyboard.press("Tab");
+    await expect(showAnswer).toBeFocused();
+    expect((await read(showAnswer)).outline).not.toMatch(/^none/);
+  }
 });
