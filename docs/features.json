@@ -760,7 +760,7 @@
           ],
           "area": "src/server/env.ts, src/shared/constants.ts, .env.example, playwright.config.ts",
           "done_when": "env.test.ts: start fails without ADMIN_PASSWORD; 30-day cookie lifetime and cookie name are constants in src/shared; .env.example has a placeholder.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F14.2",

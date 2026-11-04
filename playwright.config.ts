@@ -1,5 +1,8 @@
 import { defineConfig, devices } from "@playwright/test";
 
+// The app refuses to start without it; workers and both app servers inherit it.
+process.env.ADMIN_PASSWORD ??= "e2e-password";
+
 const port = process.env.E2E_PORT ?? "3100";
 
 export default defineConfig({

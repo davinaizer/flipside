@@ -60,3 +60,4 @@ REVIEW F13 round 2: GAPS at 160c2ad
 F13.8: Read question aloud stops click propagation so it no longer reveals the answer; unit and e2e tests added.
 REVIEW F13 round 3: PASS at 165c106
 F13 done: PR 34, review PASS (round 3), verify and e2e green. MANUAL PENDING: none.
+F14.1 done: ADMIN_PASSWORD required in env schema, AUTH_COOKIE_NAME and 30-day max age in src/shared/constants, .env.example placeholder, vitest and playwright set a test password.
