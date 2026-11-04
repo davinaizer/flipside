@@ -1223,7 +1223,7 @@
       ],
       "design_screens": [],
       "notes": "PRD amended in v0.5 (P5, P8, D28). Reuse the Profile page's avatar chooser and the 1 to 24 character name rule (P7). Defaults: timezone Europe/London, day start 07:00. Endpoint sits behind the app password gate.",
-      "status": "in_progress",
+      "status": "done",
       "tasks": [
         {
           "id": "F19.1",
@@ -1267,7 +1267,8 @@
           "status": "done"
         }
       ],
-      "branch": "feat/F19-add-user"
+      "branch": "feat/F19-add-user",
+      "pr": 46
     }
   ]
 }
