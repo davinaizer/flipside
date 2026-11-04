@@ -18,6 +18,15 @@ test("the menu lists four items, each at least 44 px tall, and Escape closes it"
   }
   await page.keyboard.press("Escape");
   await expect(items).toHaveCount(0);
+  const trigger = page.getByRole("complementary").getByRole("button", { expanded: false });
+  await expect(trigger).toBeFocused();
+
+  // Clicking outside closes the menu; focus follows the click, it is not pulled back to the trigger.
+  await trigger.click();
+  await expect(items).toHaveCount(4);
+  await page.locator("main").click({ position: { x: 5, y: 5 } });
+  await expect(items).toHaveCount(0);
+  await expect(trigger).not.toBeFocused();
 });
 
 test("Profile and Settings open their pages, Switch profile returns to the picker", async ({ page }) => {

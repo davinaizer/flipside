@@ -986,7 +986,7 @@
           ],
           "area": "e2e/profile-menu.spec.ts, docs/decisions.md",
           "done_when": "e2e/profile-menu.spec.ts asserts the trigger is focused after Escape, and that an outside click (e.g. on main) closes the menu and returns focus to the trigger; passes on desktop and iPad. The ASSUMED entry in docs/decisions.md about focus return is corrected to name the spec that now covers it. verify.sh green.",
-          "status": "todo"
+          "status": "done"
         }
       ]
     }

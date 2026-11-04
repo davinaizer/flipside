@@ -78,3 +78,4 @@ F15.3: top bar is the theme toggle only (no props); Sign out button removed from
 F15.4: e2e/profile-menu.spec.ts covers the menu items, 44 px targets, Escape, navigation and axe open in both themes on desktop and iPad; Log out stays in auth.spec.
 F15.5: manual checks and operations now say Log out in the sidebar profile menu; added an iPad touch check for the menu.
 REVIEW F15 round 1: GAPS at 3dc070a (focus return after Escape and outside-click close not asserted in e2e; fix task F15.6)
+F15.6: profile menu e2e asserts focus returns to the trigger after Escape and that an outside click closes the menu; outside click no longer pulls focus back to the trigger (it followed the click anyway).

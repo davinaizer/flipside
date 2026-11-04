@@ -72,7 +72,7 @@ export function ProfileMenu({ name, avatar }: { name: string; avatar: string }) 
     if (!open) return;
     items()[0]?.focus();
     const onDown = (e: MouseEvent) => {
-      if (!root.current?.contains(e.target as Node)) close(true);
+      if (!root.current?.contains(e.target as Node)) close(false);
     };
     document.addEventListener("mousedown", onDown);
     return () => document.removeEventListener("mousedown", onDown);
