@@ -111,7 +111,11 @@ export function PracticeView({
       <button
         type="button"
         aria-label={revealed ? "Read answer aloud" : "Read question aloud"}
-        onClick={() => reader.speak(textToRead(card, revealed))}
+        onClick={(e) => {
+          // The front button sits inside the flip scene, whose click reveals: speaking must not flip the card.
+          e.stopPropagation();
+          reader.speak(textToRead(card, revealed));
+        }}
         className={iconButton}
       >
         <Icon name="volume" />

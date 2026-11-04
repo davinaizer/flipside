@@ -713,7 +713,7 @@
           ],
           "area": "src/ui/practice/PracticeView.tsx, src/ui/reading-card/ReadingCard.tsx, e2e/practice.spec.ts",
           "done_when": "REVIEW F13 round 2 gap 1 closed: tapping or clicking Read question aloud on the practice front speaks the question and does not reveal the answer (the click does not reach the flip-scene reveal handler); card tap elsewhere, Show answer and Space still reveal; a test clicks Read question aloud and checks the card stays on the front (unit and e2e).",
-          "status": "todo"
+          "status": "done"
         }
       ]
     },

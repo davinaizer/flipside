@@ -235,6 +235,13 @@ test("reveal by button, card tap and Space; buttons show hover, pressed and focu
   await gotIt.click();
   await expect(card).toHaveAttribute("data-revealed", "false");
 
+  // Read question aloud speaks and leaves the card on the front (the click must not reach the flip scene).
+  const readQuestion = page.getByRole("button", { name: "Read question aloud" });
+  if (await readQuestion.count()) {
+    await readQuestion.click();
+    await expect(card).toHaveAttribute("data-revealed", "false");
+  }
+
   const read = (loc: ReturnType<Page["locator"]>) =>
     loc.evaluate((el) => {
       const s = getComputedStyle(el);

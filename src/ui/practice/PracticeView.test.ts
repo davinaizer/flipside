@@ -156,3 +156,27 @@ test("Undo last remounts the card scene (key includes done), so it returns to th
   expect(keyOf(1)).toBeDefined();
   expect(keyOf(1)).not.toBe(keyOf(0));
 });
+
+test("clicking Read question aloud speaks and does not bubble to the flip-scene reveal", () => {
+  const spoken: string[] = [];
+  const reader = { speak: (t: string) => void spoken.push(t), cancel: () => {} };
+  const tree = PracticeView({ card, revealed: false, done: 0, total: 1, settings: DEFAULT_SETTINGS, onReveal: () => {}, reader });
+  const find = (n: unknown): { props: { onClick: (e: unknown) => void } } | null => {
+    if (!n || typeof n !== "object") return null;
+    const el = n as { props?: Record<string, unknown> };
+    if (el.props?.["aria-label"] === "Read question aloud") return el as never;
+    for (const v of Object.values(el.props ?? {})) {
+      for (const c of Array.isArray(v) ? v : [v]) {
+        const r = find(c);
+        if (r) return r;
+      }
+    }
+    return null;
+  };
+  const button = find(tree);
+  expect(button).not.toBeNull();
+  let stopped = false;
+  button!.props.onClick({ stopPropagation: () => (stopped = true) });
+  expect(stopped).toBe(true);
+  expect(spoken).toHaveLength(1);
+});
