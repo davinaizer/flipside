@@ -3,7 +3,7 @@
 | | |
 | --- | --- |
 | Status | Draft 1, ready for MVP build planning |
-| Last updated | 2026-11-03 (v0.3 review: requirements U, AG, P6-P7, R15-R18, T6-T8, D8, I7; AC14-AC21) |
+| Last updated | 2026-11-04 (v0.4: profile menu in the sidebar footer; P3, P6, U3, AG3, AC15, D27) |
 | Owner | Davi |
 | Source | Written from the planning conversation; the decision log is section 18 |
 
@@ -151,11 +151,11 @@ Each requirement has an id so tests, tickets and the changelog can point at it. 
 | --- | --- | --- |
 | P1 | Show a profile picker with avatar and name when no valid profile cookie exists. | Must |
 | P2 | Selecting a profile sets the cookie and opens the Library. | Must |
-| P3 | Sidebar shows the current profile and a Switch profile action at any time. | Must |
+| P3 | The sidebar footer shows the current profile (avatar and name) at any time. Tapping it opens a menu with Profile, Settings, Switch profile and Log out. Switch profile returns to the picker. | Must |
 | P4 | Every query is scoped to the current profile; requests for another profile's data return 404. | Must |
 | P5 | Profiles are created by seed script in the MVP; no create-profile UI. | Must |
-| P6 | Tapping the current avatar in the top bar opens the Profile page (`/profile`). | Must |
-| P7 | The Profile page lets the current profile change its avatar (choosing from the built-in set, P-fields) and its display name (1 to 24 characters, trimmed). The change is saved on the server and shows at once in the top bar, sidebar and profile picker. Two profiles may share an avatar. | Must |
+| P6 | The Profile entry in the sidebar profile menu opens the Profile page (`/profile`). The top bar has no avatar. | Must |
+| P7 | The Profile page lets the current profile change its avatar (choosing from the built-in set, P-fields) and its display name (1 to 24 characters, trimmed). The change is saved on the server and shows at once in the sidebar and profile picker. Two profiles may share an avatar. | Must |
 
 ### Library (L)
 
@@ -249,7 +249,7 @@ Each requirement has an id so tests, tickets and the changelog can point at it. 
 | --- | --- | --- |
 | U1 | Cards and surfaces carry a subtle shadow in both themes: light uses the DESIGN.md resting elevation; dark uses a subtle shadow defined in DESIGN-DARK.md. One elevation token, no per-component values. | Must |
 | U2 | Every button and tappable card has visible hover, pressed (tap) and keyboard focus states; focus uses the DESIGN.md focus ring. Pressed feedback respects reduced motion. | Must |
-| U3 | App screens have a top bar holding the theme toggle (T6) and the current avatar (P6). It shows no product title. | Must |
+| U3 | App screens have a top bar holding the theme toggle (T6). It shows no product title and no avatar. | Must |
 
 ### Access gate (AG)
 
@@ -257,7 +257,7 @@ Each requirement has an id so tests, tickets and the changelog can point at it. 
 | --- | --- | --- |
 | AG1 | A Login page (`/login`) asks for the app password. The password is the `ADMIN_PASSWORD` environment variable, required and validated at start, compared in constant time with Node `crypto` (no new dependency). A wrong password shows a neutral message and nothing about why. | Must |
 | AG2 | A correct password sets `flipside_auth`, an httpOnly, SameSite=Lax cookie signed with HMAC-SHA256 under a key derived from `ADMIN_PASSWORD`, valid for 30 days (a `src/shared` constant). Changing the password signs every device out. Without a valid cookie every page redirects to `/login` and every `/api/v1` route returns 401, except `GET /health` and the login endpoint. | Must |
-| AG3 | Sign out on the Profile page clears `flipside_auth` and returns to `/login`. | Must |
+| AG3 | Log out in the sidebar profile menu (P3) clears `flipside_auth` and returns to `/login`. It is the only log-out control. | Must |
 
 ## 5. Learning model
 
@@ -477,7 +477,7 @@ Colour is never the only signal: every state also has text or an icon.
 ### Layout and navigation
 
 - Primary target: iPad landscape (1180 × 820 design size). Supported: iPad portrait and desktop browsers. Phones are out of scope.
-- A left sidebar holds Library, Progress, Settings and the current profile with Switch profile. App screens have a top bar with the theme toggle and the current avatar (U3). Practice is full screen with no sidebar, to reduce distraction; its own top bar holds the theme toggle beside the settings shortcut.
+- A left sidebar holds Library and Progress, and a footer with the current profile whose menu holds Profile, Settings, Switch profile and Log out (P3). App screens have a top bar with the theme toggle (U3). Practice is full screen with no sidebar, to reduce distraction; its own top bar holds the theme toggle beside the settings shortcut.
 - The login page is the only screen shown before signing in (AG2); the profile picker is the only screen shown before a profile is chosen.
 
 ### Screens
@@ -876,7 +876,7 @@ Test data: the science deck (`science-w2`, 16 cards, 7 images), a synthetic mult
 #### v0.3 review (added 2026-11-03)
 
 - [ ] AC14: Without signing in, every page redirects to `/login` and every `/api/v1` route except `GET /health` and `POST /auth/login` returns 401. The correct password opens the app and stays signed in across a restart; a wrong password shows a neutral error; Sign out ends it; changing `ADMIN_PASSWORD` signs every device out.
-- [ ] AC15: Tapping the avatar opens the Profile page; a new avatar and name save, appear at once in the top bar, sidebar and picker, and survive a restart; an empty name or one over 24 characters is rejected with a clear message.
+- [ ] AC15: Tapping the profile in the sidebar footer opens a menu whose Profile entry opens the Profile page; a new avatar and name save, appear at once in the sidebar and picker, and survive a restart; an empty name or one over 24 characters is rejected with a clear message.
 - [ ] AC16: The theme toggle appears in the top bar of every screen, including practice, summary, profile picker and login, as one sun and moon switch with no visible text, and AC13 still holds.
 - [ ] AC17: In practice, Show answer has an eye icon and the hint sits below it outside the card; showing the answer by button, card tap or Space turns the card with a 3D flip, or with no rotation under reduced motion; "How well did you know this?" sits above the grade buttons; every button shows hover, pressed and focus states.
 - [ ] AC18: The summary shows the deck name, cards practised, session time, counts per grade with icon and label, the cards to revisit with their grade, topic and a count, Practise those now and Back to Library; all figures match the session and no item the design README omits appears.
@@ -968,6 +968,7 @@ These are the decisions taken so far; change one here first, then update the sec
 | D24 | Dark theme gains a subtle card shadow (U1); DESIGN-DARK.md is updated to match, replacing "no drop shadows" | 2026-11-03 |
 | D25 | The summary follows the mockup layout minus the README omissions (R18): no Focus clue, Box chips, Review all answers or summary toolbar | 2026-11-03 |
 | D26 | The v0.3 review backlog is features F9 to F14; the v0.1 and v0.2 ledger, progress log and design audit are archived in `docs/archive/v0.2/` | 2026-11-03 |
+| D27 | v0.4: the top-bar avatar is removed. The sidebar footer shows the profile (avatar and name) and opens a menu with Profile, Settings, Switch profile and Log out, as in Claude Code Desktop. Log out moves from the Profile page to this menu. Refines D23; the theme toggle stays in the top bar (AC16) | 2026-11-04 |
 
 ### Glossary
 
