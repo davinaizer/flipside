@@ -1223,7 +1223,7 @@
       ],
       "design_screens": [],
       "notes": "PRD amended in v0.5 (P5, P8, D28). Reuse the Profile page's avatar chooser and the 1 to 24 character name rule (P7). Defaults: timezone Europe/London, day start 07:00. Endpoint sits behind the app password gate.",
-      "status": "todo",
+      "status": "in_progress",
       "tasks": [
         {
           "id": "F19.1",
@@ -1266,7 +1266,8 @@
           "done_when": "pnpm test:e2e desktop and iPad: create a profile, see it in the picker, select it and land on an empty Library; invalid names rejected; axe has no serious or critical issues with the form open in both themes. The test cleans up its profile.",
           "status": "todo"
         }
-      ]
+      ],
+      "branch": "feat/F19-add-user"
     }
   ]
 }
