@@ -57,6 +57,7 @@ export function LibraryScreen() {
       onStart={onStart}
       query={query}
       onQueryChange={setQuery}
+      onDeckChanged={fetchLibrary}
     />
   );
 }

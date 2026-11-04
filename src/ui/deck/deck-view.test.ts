@@ -23,6 +23,8 @@ const html = (ticked: string[]) =>
       leeches: [],
       ticked: new Set(ticked),
       onToggle() {},
+      onSelectAll() {},
+      onDeselectAll() {},
       busy: false,
       startError: null,
       onStart() {},
@@ -59,18 +61,19 @@ test("a ticked topic with nothing due offers a labelled practise-anyway ignoring
   expect(html(["Cells"])).not.toContain("anyway");
 });
 
-test("the deck page offers edit and re-import but no Delete deck; the Edit deck panel holds it", () => {
+test("the deck page has no Edit deck or Re-import (they moved to the Library menu); the Edit deck panel holds Delete deck", () => {
   const out = html([]);
-  expect(out).toContain("Edit deck");
+  expect(out).not.toContain("Edit deck");
+  expect(out).not.toContain("Re-import");
   expect(out).not.toContain("Delete deck");
   const panel = renderToStaticMarkup(
     createElement(EditDeckPanel, {
       deck: { id: D, name: "Science", groupName: null, color: null, answerStyle: "paragraph", cardCount: 8, reviewCount: 12 },
       onClose() {},
+      onChanged() {},
     }),
   );
   expect(panel).toContain("Delete deck");
-  expect(out).toContain(`href="/import?deckId=${D}"`);
 });
 
 test("delete confirmation states how many cards and review records go", () => {
@@ -94,4 +97,20 @@ test("Practise is startable with only New cards while the daily cap allows, and 
   expect(practisePlan(D, fresh, new Set(), 2).startable).toBe(2);
   expect(practisePlan(D, fresh, new Set(), 0).startable).toBe(0);
   expect(practisePlan(D, [{ topic: "Cells", dueCount: 0, mastery: { new: 0 } }], new Set(), 10).startable).toBe(0);
+});
+
+test("Select all and Deselect all buttons are on the topics list", () => {
+  const out = html([]);
+  expect(out).toContain("Select all");
+  expect(out).toContain("Deselect all");
+});
+
+test("ticking every topic labels Practise with all topics and due counts; clearing returns the all-due form", () => {
+  const all = practisePlan(D, topics, new Set(topics.map((t) => t.topic)), 10);
+  expect(all.label).toContain("2 topics");
+  expect(all.label).toContain("3 due");
+  expect(html(topics.map((t) => t.topic))).toContain(all.label);
+  const none = practisePlan(D, topics, new Set(), 10);
+  expect(none.label).not.toContain("2 topics");
+  expect(html([])).toContain(none.label);
 });

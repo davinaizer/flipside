@@ -12,6 +12,8 @@ export const deckSummarySchema = z.object({
   /** Topic names, so the library search can match topics (L6). */
   topics: z.array(z.string()),
   cardCount: count,
+  /** Non-undone review records, stated by the delete confirmation in Edit deck (D5). */
+  reviewCount: count,
   dueCount: count,
   /** Mastery bar buckets (section 7); they add up to cardCount. */
   mastery: z.object({ new: count, notYet: count, nearly: count, gotIt: count }),

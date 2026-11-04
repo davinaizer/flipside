@@ -1,8 +1,11 @@
 import Link from "next/link";
+import { useState } from "react";
 import { matchesQuery } from "@/domain/text-match";
 import type { Library } from "@/shared/schemas/library";
+import { EditDeckPanel } from "@/ui/deck/edit-deck/EditDeck";
 import { DeckTile } from "@/ui/deck-tile/DeckTile";
 import { Icon } from "@/ui/icons/Icon";
+import { DeckMenu } from "./DeckMenu";
 import { MasteryBar } from "@/ui/mastery-bar/MasteryBar";
 import { buttonClass, FOCUS_RING, PRESSED } from "@/ui/button/button-class";
 
@@ -15,6 +18,8 @@ export interface LibraryViewProps {
   /** Search text (L6). Decks match by name or any topic name. */
   query: string;
   onQueryChange: (query: string) => void;
+  /** Called after a deck is edited or deleted from its menu, so the Library reloads. */
+  onDeckChanged: () => void;
 }
 
 /** Library screen (L1 to L5, L7, L8): Today panel, then decks in groups. Presentational; the data comes in as props. */
@@ -25,7 +30,9 @@ export function LibraryView({
   onStart,
   query,
   onQueryChange,
+  onDeckChanged,
 }: LibraryViewProps) {
+  const [editingId, setEditingId] = useState<string | null>(null);
   const { today } = library;
   const groups = library.groups
     .map((g) => ({
@@ -142,20 +149,23 @@ export function LibraryView({
                     <div className="flex items-center gap-3">
                       <DeckTile name={d.name} color={d.color} />
                       <div>
-                        <h3 className="text-headline-sm font-semibold">
-                          <Link
-                            href={`/decks/${d.id}`}
-                            className={`flex min-h-11 items-center hover:underline hover:text-primary active:text-primary-container ${PRESSED} ${FOCUS_RING}`}
-                          >
-                            {d.name}
-                          </Link>
-                        </h3>
+                        <div>
+                          <h3 className="text-headline-sm font-semibold">
+                            <Link
+                              href={`/decks/${d.id}`}
+                              className={`flex min-h-11 items-center hover:underline hover:text-primary active:text-primary-container ${PRESSED} ${FOCUS_RING}`}
+                            >
+                              {d.name}
+                            </Link>
+                          </h3>
+                        </div>
                         <p className="text-body-sm text-on-surface-variant">
                           {d.topicCount} {d.topicCount === 1 ? "topic" : "topics"} · {d.cardCount}{" "}
                           {d.cardCount === 1 ? "card" : "cards"}
                         </p>
                       </div>
                     </div>
+                    <div className="flex items-center gap-2">
                     {d.dueCount > 0 ? (
                       <span className="rounded-full bg-inverse-surface px-3 py-1 text-label-md font-semibold text-inverse-on-surface">
                         {d.dueCount} due
@@ -165,7 +175,18 @@ export function LibraryView({
                         Up to date
                       </span>
                     )}
+                    <DeckMenu deckId={d.id} deckName={d.name} onEdit={() => setEditingId(d.id)} />
+                    </div>
                   </div>
+                  {editingId === d.id && (
+                    <div className="mt-4">
+                      <EditDeckPanel
+                        deck={d}
+                        onClose={() => setEditingId(null)}
+                        onChanged={onDeckChanged}
+                      />
+                    </div>
+                  )}
                   <div className="mt-4">
                     <MasteryBar mastery={d.mastery} />
                   </div>
