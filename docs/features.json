@@ -1066,7 +1066,7 @@
         "deck_detail"
       ],
       "notes": "Ellipsis menu at the top right of the Library deck card with Edit deck and Re-import; both leave the deck page (Delete deck stays inside Edit deck, D8). Up to date tag moves next to the deck title. Topics list gets Select all and Deselect all.",
-      "status": "in_progress",
+      "status": "done",
       "tasks": [
         {
           "id": "F17.1",
@@ -1127,7 +1127,8 @@
           "status": "done"
         }
       ],
-      "branch": "feat/F17-library-deck-menu"
+      "branch": "feat/F17-library-deck-menu",
+      "pr": 44
     },
     {
       "id": "F18",
