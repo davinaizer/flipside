@@ -6,10 +6,10 @@ import { cardState, cards, decks, reviewLog } from "@/server/db/schema";
 import { ApiError } from "@/server/http/errors";
 import type { Profile } from "@/server/profile";
 import { dayStartUtc, learningDay } from "@/domain/day";
-import type { Box } from "@/domain/scheduler";
-import { isWeak, sessionCandidateCount } from "@/domain/session-builder";
+import { stateColumns, toSchedulerState } from "@/server/card-state";
+import { candidateCounts, isWeak, sessionCandidateCount } from "@/domain/session-builder";
 import { masteryBuckets } from "@/domain/stats";
-import { ANSWER_STYLES, CARD_COLORS, type CardStatus, type Grade } from "@/shared/enums";
+import { ANSWER_STYLES, CARD_COLORS } from "@/shared/enums";
 import type { DeckSummary, Library } from "@/shared/schemas/library";
 import { settingsSchema } from "@/shared/settings";
 
@@ -57,17 +57,7 @@ export async function getLibrary(profile: Profile, now: Date = new Date(), db: D
       .where(and(eq(decks.ownerProfileId, profile.id), isNull(decks.deletedAt)))
       .orderBy(asc(decks.name)),
     db
-      .select({
-        id: cards.id,
-        deckId: cards.deckId,
-        topic: cards.topic,
-        box: cardState.box,
-        dueDate: cardState.dueDate,
-        reps: cardState.reps,
-        lapses: cardState.lapses,
-        lastGrade: cardState.lastGrade,
-        status: cardState.status,
-      })
+      .select({ id: cards.id, deckId: cards.deckId, topic: cards.topic, ...stateColumns })
       .from(cards)
       .innerJoin(decks, eq(decks.id, cards.deckId))
       .leftJoin(
@@ -80,25 +70,16 @@ export async function getLibrary(profile: Profile, now: Date = new Date(), db: D
   ]);
 
   const byDeck = new Map<string, typeof cardRows>();
+  for (const c of cardRows) byDeck.set(c.deckId, [...(byDeck.get(c.deckId) ?? []), c]);
+  const sessionCards = cardRows.map((c) => ({ id: c.id, deckId: c.deckId, topic: c.topic, state: toSchedulerState(c) }));
+  const weakCount = sessionCards.filter(isWeak).length;
   let dueCount = 0;
-  let weakCount = 0;
+  let newCount = 0;
   const dueByDeck = new Map<string, number>();
-  for (const c of cardRows) {
-    byDeck.set(c.deckId, [...(byDeck.get(c.deckId) ?? []), c]);
-    if (c.box === null) continue;
-    const state = {
-      box: c.box as Box,
-      dueDate: c.dueDate!,
-      reps: c.reps!,
-      lapses: c.lapses!,
-      lastGrade: c.lastGrade as Grade | null,
-      status: c.status as CardStatus,
-    };
-    if (isWeak({ id: c.id, deckId: c.deckId, topic: c.topic, state })) weakCount++;
-    if (state.status !== "suspended" && state.dueDate <= today) {
-      dueCount++;
-      dueByDeck.set(c.deckId, (dueByDeck.get(c.deckId) ?? 0) + 1);
-    }
+  for (const k of candidateCounts(sessionCards, today)) {
+    dueCount += k.due;
+    newCount += k.new;
+    if (k.due > 0) dueByDeck.set(k.deckId, (dueByDeck.get(k.deckId) ?? 0) + k.due);
   }
 
   const groups = new Map<string, DeckSummary[]>();
@@ -120,7 +101,6 @@ export async function getLibrary(profile: Profile, now: Date = new Date(), db: D
     ]);
   }
 
-  const newCount = cardRows.filter((c) => c.box === null).length;
   return {
     today: {
       dueCount,
@@ -167,12 +147,7 @@ export async function getDeck(profile: Profile, deckId: string, now: Date = new 
   const [newRemaining, rows, [{ n: reviewCount }]] = await Promise.all([
     newCardsRemaining(profile, today, db),
     db
-      .select({
-        topic: cards.topic,
-        box: cardState.box,
-        dueDate: cardState.dueDate,
-        status: cardState.status,
-      })
+      .select({ id: cards.id, topic: cards.topic, ...stateColumns })
       .from(cards)
       .leftJoin(
         cardState,
@@ -194,14 +169,18 @@ export async function getDeck(profile: Profile, deckId: string, now: Date = new 
   ]);
   const byTopic = new Map<string, typeof rows>();
   for (const r of rows) byTopic.set(r.topic, [...(byTopic.get(r.topic) ?? []), r]);
+  const dueByTopic = new Map(
+    candidateCounts(
+      rows.map((r) => ({ id: r.id, deckId: deck.id, topic: r.topic, state: toSchedulerState(r) })),
+      today,
+    ).map((k) => [k.topic, k.due]),
+  );
   const topics = [...byTopic.entries()].map(([topic, list]) => {
     const m = masteryBuckets(list);
     return {
       topic,
       cardCount: list.length,
-      dueCount: list.filter(
-        (c) => c.box !== null && c.status !== "suspended" && c.dueDate! <= today,
-      ).length,
+      dueCount: dueByTopic.get(topic) ?? 0,
       mastery: { new: m.new, notYet: m.notYet, nearly: m.nearly, gotIt: m.gotIt },
       masteredPercent: m.mastery === null ? 0 : Math.round(m.mastery * 100),
     };

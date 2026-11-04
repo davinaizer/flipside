@@ -3,14 +3,14 @@ import { and, asc, eq, inArray, isNull } from "drizzle-orm";
 import type { Db } from "@/server/db/client";
 import { getDb } from "@/server/db/client";
 import { cardState, cards, decks, images, reviewLog, sessions } from "@/server/db/schema";
+import { stateColumns, toSchedulerState } from "@/server/card-state";
 import { findDeck, newCardsRemaining } from "@/server/decks";
 import { ApiError } from "@/server/http/errors";
 import type { Profile } from "@/server/profile";
 import { learningDay } from "@/domain/day";
 import { gradeLabels } from "@/domain/grade-labels";
-import type { Box, SchedulerState } from "@/domain/scheduler";
 import { buildSession, type SessionScope } from "@/domain/session-builder";
-import type { AnswerStyle, CardStatus, Grade } from "@/shared/enums";
+import type { AnswerStyle, Grade } from "@/shared/enums";
 import {
   sessionRequestSchema,
   type SessionCardPayload,
@@ -57,34 +57,6 @@ export async function liveSessionCardIds(db: Pick<Db, "select">, profileId: stri
   return cardIds.filter((id) => live.has(id));
 }
 
-function toState(r: {
-  box: number | null;
-  dueDate: string | null;
-  reps: number | null;
-  lapses: number | null;
-  lastGrade: string | null;
-  status: string | null;
-}): SchedulerState | null {
-  if (r.box === null) return null;
-  return {
-    box: r.box as Box,
-    dueDate: r.dueDate!,
-    reps: r.reps!,
-    lapses: r.lapses!,
-    lastGrade: r.lastGrade as Grade | null,
-    status: r.status as CardStatus,
-  };
-}
-
-const stateColumns = {
-  box: cardState.box,
-  dueDate: cardState.dueDate,
-  reps: cardState.reps,
-  lapses: cardState.lapses,
-  lastGrade: cardState.lastGrade,
-  status: cardState.status,
-};
-
 /** The API scope as the domain builder takes it; deck and topic scopes must name an owned deck (404 otherwise). */
 async function toDomainScope(profile: Profile, scope: SessionRequest["scope"], db: Db): Promise<SessionScope> {
   switch (scope.kind) {
@@ -121,7 +93,7 @@ async function buildQueue(profile: Profile, request: SessionRequest, now: Date, 
       .orderBy(asc(decks.createdAt), asc(decks.id), asc(cards.position), asc(cards.id)),
   ]);
   return buildSession({
-    cards: rows.map((r) => ({ id: r.id, deckId: r.deckId, topic: r.topic, state: toState(r) })),
+    cards: rows.map((r) => ({ id: r.id, deckId: r.deckId, topic: r.topic, state: toSchedulerState(r) })),
     scope,
     length: request.length,
     today,
@@ -183,7 +155,7 @@ async function loadSession(profile: Profile, row: SessionRow, now: Date, db: Db)
         back: c.back,
         frontImage: image(c.frontImageId),
         backImage: image(c.backImageId),
-        labels: gradeLabels(toState(c), today),
+        labels: gradeLabels(toSchedulerState(c), today),
       },
     ];
   });

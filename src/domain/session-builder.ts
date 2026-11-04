@@ -61,6 +61,37 @@ export function isWeak(card: SessionCard): boolean {
   return s.status === "leech" || (s.box === 1 && s.reps >= 1);
 }
 
+/** Due: graded, not suspended, and due on or before the learning day (PRD section 5). */
+function isDue(state: SchedulerState | null, today: LocalDate): state is SchedulerState {
+  return state !== null && state.status !== "suspended" && state.dueDate <= today;
+}
+
+export interface CandidateCount {
+  deckId: string;
+  topic: string;
+  /** Due cards: what buildSession picks first. */
+  due: number;
+  /** New cards, before the daily new-card cap. */
+  new: number;
+}
+
+/**
+ * Candidates per deck and topic, by the same rules buildSession uses, for screens that
+ * show counts (Library, Deck page). Every deck and topic among the cards is listed, with
+ * zeros when nothing is due. Combine with sessionCandidateCount to apply the daily cap.
+ */
+export function candidateCounts(cards: readonly SessionCard[], today: LocalDate): CandidateCount[] {
+  const byKey = new Map<string, CandidateCount>();
+  for (const c of cards) {
+    const key = `${c.deckId}|${c.topic}`;
+    let count = byKey.get(key);
+    if (!count) byKey.set(key, (count = { deckId: c.deckId, topic: c.topic, due: 0, new: 0 }));
+    if (c.state === null) count.new++;
+    else if (isDue(c.state, today)) count.due++;
+  }
+  return [...byKey.values()];
+}
+
 /**
  * How many cards a session over a scope can hold before the length cut: the due cards
  * plus New cards up to what the daily cap still allows. Same rule as buildSession, for
@@ -106,7 +137,7 @@ export function buildSession(input: BuildSessionInput): BuiltSession {
 
   const active = scoped.filter(
     (c): c is SessionCard & { state: SchedulerState } =>
-      c.state !== null && (skipDue || c.state.dueDate <= today),
+      c.state !== null && (skipDue || isDue(c.state, today)),
   );
   const fresh = scoped
     .filter((c) => c.state === null)

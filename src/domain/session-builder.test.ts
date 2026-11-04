@@ -3,7 +3,9 @@ import fixtures from "../../fixtures/domain/session-builder.json";
 import { SESSION_LENGTHS } from "../shared/constants";
 import {
   buildSession,
+  candidateCounts,
   isWeak,
+  sessionCandidateCount,
   type SessionCard,
   type SessionLength,
   type SessionScope,
@@ -155,4 +157,32 @@ describe("isWeak", () => {
     const weak = cards.filter(isWeak).map((c) => c.id);
     expect(weak).toEqual(["a1", "a2", "a3", "a8", "b1", "b3"]);
   });
+});
+
+describe("candidate counts", () => {
+  const counts = candidateCounts(cards, fixtures.today);
+  const sum = (keep: (k: (typeof counts)[number]) => boolean) =>
+    counts.filter(keep).reduce((t, k) => ({ due: t.due + k.due, new: t.new + k.new }), { due: 0, new: 0 });
+
+  it("lists every deck and topic, with suspended cards never due", () => {
+    expect(counts.map((k) => `${k.deckId}|${k.topic}`).sort()).toEqual(["A|cells", "A|plants", "B|atoms"]);
+    const suspended = cards.filter((c) => c.state?.status === "suspended").length;
+    expect(suspended).toBeGreaterThan(0);
+    expect(sum(() => true).due + sum(() => true).new).toBeLessThanOrEqual(cards.length - suspended);
+  });
+
+  // The Library and Deck page counts must equal what a session over the same scope would hold.
+  const scopes: [string, SessionScope, (k: (typeof counts)[number]) => boolean][] = [
+    ["all decks", { kind: "all" }, () => true],
+    ["one deck", { kind: "deck", deckId: "A" }, (k) => k.deckId === "A"],
+    ["topics", { kind: "topics", topics: [{ deckId: "A", topic: "cells" }, { deckId: "B", topic: "atoms" }] }, (k) => k.topic !== "plants"],
+  ];
+  it.each(scopes.flatMap(([name, scope, keep]) => [0, 3, 50].map((newRemaining) => ({ name, scope, keep, newRemaining }))))(
+    "agree with buildSession for $name, $newRemaining new allowed",
+    ({ scope, keep, newRemaining }) => {
+      const { due, new: fresh } = sum(keep);
+      const built = buildSession({ cards, scope, length: "all", today: fixtures.today, newRemaining, random: seeded(1) });
+      expect(sessionCandidateCount(due, fresh, newRemaining)).toBe(built.candidateCount);
+    },
+  );
 });
