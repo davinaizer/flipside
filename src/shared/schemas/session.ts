@@ -95,6 +95,9 @@ export const sessionSummarySchema = z.object({
   counts: z.object({ not_yet: z.number().int(), nearly: z.number().int(), got_it: z.number().int() }),
   gradedCount: z.number().int(),
   durationMs: z.number().int().nonnegative(),
+  /** The deck of the session's cards; null with severalDecks true when they span more than one (R18). */
+  deckName: z.string().nullable(),
+  severalDecks: z.boolean(),
   goAgain: z.array(z.object({ cardId: z.string().uuid(), deckName: z.string(), topic: z.string(), front: z.string() })).max(3),
   missIds: z.array(z.string().uuid()),
 });

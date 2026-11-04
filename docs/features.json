@@ -503,9 +503,9 @@
         "session_summary_dark_mode"
       ],
       "notes": "Rebuild SummaryView to the mockup layout: deck card (deck name, or 'Several decks'), ring with cards practised, session time, breakdown chips per grade (icon, label, count), Cards to revisit panel (grade chip, topic, question, count badge), Practise those now (count) and Back to Library. Extend GET /sessions/{id}/summary only if a field is missing (deck name, topic per card). Omit per README items 3, 7 and 20.",
-      "status": "todo",
-      "branch": null,
-      "pr": null,
+      "status": "done",
+      "branch": "feat/F12-session-summary",
+      "pr": 33,
       "tasks": [
         {
           "id": "F12.1",
@@ -519,7 +519,7 @@
           ],
           "area": "src/server/sessions.ts, src/shared/schemas/session.ts",
           "done_when": "sessions-end-summary.test.ts: summary returns deck name ('Several decks' flag when more than one), and topic for each revisit card; only add fields still missing from the current response.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F12.2",
@@ -534,7 +534,7 @@
           ],
           "area": "src/ui/practice/SummaryView.tsx, SummaryView.test.ts",
           "done_when": "Unit test: view model gives cards practised, session time, per-grade counts, revisit list (max three) with grade, topic, question and count badge; matches the session figures.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F12.3",
@@ -548,7 +548,7 @@
           ],
           "area": "src/ui/practice/SummaryScreen.tsx",
           "done_when": "Component test: deck card, ring with count, time, grade chips with icon and label, Cards to revisit panel, Practise those now (count), Back to Library; none of README items 3, 7, 20 present.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F12.4",
@@ -562,7 +562,7 @@
           ],
           "area": "e2e/practice.spec.ts, e2e/a11y.spec.ts",
           "done_when": "pnpm test:e2e AC18: finish a session and check figures against grades given; Practise those now starts a session of the misses; axe clean in both themes.",
-          "status": "todo"
+          "status": "done"
         }
       ]
     },
