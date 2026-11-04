@@ -53,3 +53,4 @@ F13.2: Settings preview now shows topic chip, Question label, question, read-alo
 F13.3 Delete deck moved into the Edit deck panel (EditDeckPanel); e2e delete test opens Edit deck first (not run).
 F13.4 ImportFlow form is a single flex column (max-w-3xl); the wrapper div stays, sections 1, 2, 3 in source order; test reads the source (no jsdom).
 F13.5 done: e2e for switch state, preview elements, Delete only in Edit deck, import single column (desktop, iPad landscape and portrait, both themes).
+REVIEW F13 round 1: GAPS at 5ca7b3e
