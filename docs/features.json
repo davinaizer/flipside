@@ -943,7 +943,7 @@
           ],
           "area": "src/ui/shell/TopBar.tsx, src/app/(app)/layout.tsx, src/ui/profile/ProfileScreen.tsx, e2e/auth.spec.ts",
           "done_when": "TopBar test: renders only the theme toggle, no avatar link, and takes no profile props. ProfileScreen test: no Sign out button. e2e/auth.spec.ts logs out through the sidebar menu and still lands on /login with the cookie cleared; profiles.spec edits the avatar and name and checks them in the sidebar and picker only. verify.sh and pnpm test:e2e green.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F15.4",

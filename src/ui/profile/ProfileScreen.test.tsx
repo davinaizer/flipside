@@ -44,6 +44,6 @@ test("Save calls PATCH /me with the avatar and name", async () => {
   expect(JSON.parse(init.body as string)).toEqual({ name: "Nic", avatar: AVATAR_IDS[0] });
 });
 
-test("the screen renders a Sign out button", () => {
-  expect(renderToStaticMarkup(<ProfileScreen name="Nicole" avatar={second} />)).toContain("Sign out");
+test("the screen has no Sign out button (it lives in the sidebar menu)", () => {
+  expect(renderToStaticMarkup(<ProfileScreen name="Nicole" avatar={second} />)).not.toContain("Sign out");
 });
