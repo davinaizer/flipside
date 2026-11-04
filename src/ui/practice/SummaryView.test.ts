@@ -18,23 +18,37 @@ const base: SessionSummary = {
 const render = (s: SessionSummary, failed = false) =>
   renderToStaticMarkup(createElement(SummaryView, { summary: s, starting: false, failed, onPractiseMisses: () => {} }));
 
-test("shows counts with text labels, time, three cards and Back to Library", () => {
+test("shows deck card, ring, time, grade chips, revisit panel and actions", () => {
   const html = render(base);
+  expect(html).toContain("Bio");
+  expect(html).toContain("<circle");
+  expect(html).toContain(">6</span>");
+  expect(html).toContain("Time spent: 4 minutes");
   expect(html).toContain("3 Got it");
   expect(html).toContain("1 Nearly");
   expect(html).toContain("2 Not yet");
-  expect(html).toContain("4 minutes");
+  expect(html).toContain("<svg"); // chip icons
+  expect(html).toContain("Cards to revisit");
+  expect(html).toContain("2 for review");
   expect(html).toContain("Question 1");
   expect(html).toContain("Question 3");
-  expect(html).toContain("Practise the misses");
+  expect(html).not.toContain("Question 4");
+  expect(html).toContain("Practise those now (2 cards)");
   expect(html).toContain('href="/library"');
   expect(html).toContain("Back to Library");
 });
 
-test("hides Practise the misses and the go-again list with no misses", () => {
+test("omits the README items 3, 7 and 20 extras", () => {
+  const html = render(base);
+  for (const banned of ["Focus clue", "Box 1", "Review all answers", "Flipside Focus", "Calm Horizon", "CALM HORIZON", "Retention", "Cram"]) {
+    expect(html).not.toContain(banned);
+  }
+});
+
+test("hides the revisit panel and Practise those now with no misses", () => {
   const html = render({ ...base, counts: { not_yet: 0, nearly: 1, got_it: 3 }, goAgain: [], missIds: [] });
-  expect(html).not.toContain("Practise the misses");
-  expect(html).not.toContain("Cards to go again");
+  expect(html).not.toContain("Practise those now");
+  expect(html).not.toContain("Cards to revisit");
   expect(html).toContain("Back to Library");
 });
 

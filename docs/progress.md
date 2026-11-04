@@ -44,3 +44,4 @@ REVIEW F11 round 1: PASS at e1a2d27
 F11 done: PR 32, review PASS, verify and e2e green. MANUAL PENDING: none.
 F12.1: GET /sessions/{id}/summary now returns deckName and severalDecks (goAgain already had topic and deckName); tested with one and two decks.
 F12.2: added summaryViewModel (deck label, cards, time, grade counts, revisit max three, badge count) with unit tests.
+F12.3: SummaryView rebuilt to the mockup (deck card, count ring, time, grade chips with icons, Cards to revisit panel, Practise those now, Back to Library); e2e button name updated.

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { Grade } from "@/shared/enums";
 import type { SessionSummary } from "@/shared/schemas/session";
-import { Icon } from "@/ui/icons/Icon";
+import { Icon, type IconName } from "@/ui/icons/Icon";
 import { GRADE_TONE } from "./GradeBar";
 import { buttonClass } from "@/ui/button/button-class";
 
@@ -41,9 +41,31 @@ export function summaryViewModel(summary: SessionSummary): SummaryViewModel {
   };
 }
 
+const GRADE_ICON: Record<Grade, IconName> = { got_it: "checkCircle", nearly: "trend", not_yet: "refresh" };
+
+/** Ring of cards practised out of cards planned; the count sits inside, so the ring is decoration. */
+function CountRing({ count, planned }: { count: number; planned: number }) {
+  const r = 36;
+  const circ = 2 * Math.PI * r;
+  const fraction = planned > 0 ? Math.min(1, count / planned) : 1;
+  return (
+    <div className="relative size-24 shrink-0">
+      <svg viewBox="0 0 88 88" className="size-full -rotate-90" aria-hidden="true">
+        <circle cx="44" cy="44" r={r} fill="none" strokeWidth="8" className="stroke-outline-variant" />
+        <circle cx="44" cy="44" r={r} fill="none" strokeWidth="8" strokeLinecap="round" className="stroke-primary" strokeDasharray={circ} strokeDashoffset={circ * (1 - fraction)} />
+      </svg>
+      <p className="absolute inset-0 flex flex-col items-center justify-center leading-tight">
+        <span className="text-headline-md font-semibold">{count}</span>
+        <span className="text-body-sm">{count === 1 ? "card" : "cards"}</span>
+      </p>
+    </div>
+  );
+}
+
 /**
- * Session summary (R11): counts by grade as text, time spent, up to three cards to go again,
- * Practise the misses (only when there are misses) and Back to Library. Calm copy, no streaks.
+ * Session summary (R11, R18): deck card with a count ring, time and grade chips (icon, label, count),
+ * a Cards to revisit panel with Practise those now (only when there are misses) and Back to Library.
+ * Calm copy, no streaks.
  */
 export function SummaryView({
   summary,
@@ -56,43 +78,50 @@ export function SummaryView({
   failed: boolean;
   onPractiseMisses: () => void;
 }) {
-  const hasMisses = summary.missIds.length > 0;
+  const vm = summaryViewModel(summary);
   return (
     <div className="mx-auto flex w-full max-w-5xl flex-col gap-6 p-6 md:p-8">
       <h1 className="text-headline-lg font-semibold">Session summary</h1>
       <div className="grid items-start gap-6 md:grid-cols-2">
-        <section aria-label="Results" className="flex flex-col gap-4 rounded-card border border-card-edge bg-surface-card p-6 shadow-card">
-          <p className="flex items-center gap-2 text-body-lg">
-            <Icon name="clock" />
-            {summary.gradedCount} {summary.gradedCount === 1 ? "card" : "cards"} in {formatDuration(summary.durationMs)}
-          </p>
+        <section aria-label="Results" className="flex flex-col gap-5 rounded-card border border-card-edge bg-surface-card p-6 shadow-card">
+          <h2 className="text-headline-md font-semibold">{vm.deckLabel}</h2>
+          <div className="flex items-center gap-4 rounded-2xl bg-surface-container p-4">
+            <CountRing count={vm.cardsPractised} planned={summary.session.plannedCount} />
+            <p className="flex items-center gap-2 text-body-lg">
+              <Icon name="clock" />
+              Time spent: {vm.time}
+            </p>
+          </div>
           <ul className="flex flex-wrap gap-3">
-            {GRADE_ROWS.map(({ grade, label }) => (
-              <li key={grade} className={`rounded-full px-4 py-2 font-semibold ${GRADE_TONE[grade]}`}>
-                {summary.counts[grade]} {label}
+            {vm.grades.map(({ grade, label, count }) => (
+              <li key={grade} className={`flex items-center gap-2 rounded-full px-4 py-2 font-semibold ${GRADE_TONE[grade]}`}>
+                <Icon name={GRADE_ICON[grade]} size={18} />
+                {count} {label}
               </li>
             ))}
           </ul>
         </section>
-        {summary.goAgain.length > 0 && (
-          <section aria-label="Cards to go again" className="flex flex-col gap-3 rounded-card border border-card-edge bg-surface-card p-6 shadow-card">
-            <h2 className="text-headline-md font-semibold">Cards to go again</h2>
+        {vm.revisitCount > 0 && (
+          <section aria-label="Cards to revisit" className="flex flex-col gap-3 rounded-card border border-card-edge bg-surface-card p-6 shadow-card">
+            <div className="flex items-center justify-between gap-3">
+              <h2 className="text-headline-md font-semibold">Cards to revisit</h2>
+              <span className="rounded-full bg-box-not-yet px-3 py-1 text-body-sm font-semibold text-on-box-not-yet">{vm.revisitCount} for review</span>
+            </div>
             <ul className="flex flex-col gap-3">
-              {summary.goAgain.map((c) => (
-                <li key={c.cardId} className="rounded-2xl bg-box-not-yet p-4 text-on-box-not-yet">
-                  <p className="text-body-sm">
-                    {c.deckName} · {c.topic}
+              {vm.revisit.map((c) => (
+                <li key={c.cardId} className="flex flex-col gap-2 rounded-2xl bg-box-not-yet p-4 text-on-box-not-yet">
+                  <p className="flex items-center gap-2 text-body-sm font-semibold">
+                    <Icon name={GRADE_ICON[c.grade]} size={16} />
+                    Not yet · {c.topic}
                   </p>
-                  <p className="text-body-lg">{c.front}</p>
+                  <p className="text-body-lg">{c.question}</p>
                 </li>
               ))}
             </ul>
-            {hasMisses && (
-              <button type="button" disabled={starting} onClick={onPractiseMisses} className={buttonClass("secondary", { extra: "w-full" })}>
-                <Icon name="play" size={18} />
-                Practise the misses
-              </button>
-            )}
+            <button type="button" disabled={starting} onClick={onPractiseMisses} className={buttonClass("secondary", { extra: "w-full" })}>
+              <Icon name="play" size={18} />
+              Practise those now ({vm.revisitCount} {vm.revisitCount === 1 ? "card" : "cards"})
+            </button>
           </section>
         )}
       </div>
@@ -101,13 +130,7 @@ export function SummaryView({
           Could not start that session. Please try again.
         </p>
       )}
-      <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
-        {hasMisses && summary.goAgain.length === 0 && (
-          <button type="button" disabled={starting} onClick={onPractiseMisses} className={buttonClass("secondary")}>
-            <Icon name="play" size={18} />
-            Practise the misses
-          </button>
-        )}
+      <div className="flex justify-end">
         <Link href="/library" className={buttonClass("primary")}>
           <Icon name="home" />
           Back to Library

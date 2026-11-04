@@ -77,7 +77,7 @@ test("Start practice, Weak cards and Deck Practise open real sessions; front, ba
   await checkBothThemes(page); // summary
 
   const summaryUrl = page.url();
-  await page.getByRole("button", { name: "Practise the misses" }).click();
+  await page.getByRole("button", { name: "Practise those now" }).click();
   await page.waitForURL((u) => /\/practice\/[^/]+$/.test(u.pathname) && u.href !== summaryUrl);
   await expect(page.getByText("Card 1 of 1")).toBeVisible();
   await expect(question(page)).toContainText("If a chemical reaction has occurred");

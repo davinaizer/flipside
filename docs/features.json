@@ -548,7 +548,7 @@
           ],
           "area": "src/ui/practice/SummaryScreen.tsx",
           "done_when": "Component test: deck card, ring with count, time, grade chips with icon and label, Cards to revisit panel, Practise those now (count), Back to Library; none of README items 3, 7, 20 present.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F12.4",
