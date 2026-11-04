@@ -88,6 +88,18 @@ export const AVATAR_IDS = [
   "sheet9-r3c2",
   "sheet9-r3c3",
   "sheet9-r3c4",
+  "cats-r1c1",
+  "cats-r1c2",
+  "cats-r1c3",
+  "cats-r1c4",
+  "cats-r2c1",
+  "cats-r2c2",
+  "cats-r2c3",
+  "cats-r2c4",
+  "cats-r3c1",
+  "cats-r3c2",
+  "cats-r3c3",
+  "cats-r3c4",
 ] as const;
 export type AvatarId = (typeof AVATAR_IDS)[number];
 

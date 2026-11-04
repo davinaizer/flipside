@@ -48,37 +48,11 @@ export function ProfileForm({ name: initialName, avatar: initialAvatar, onSave }
   }
 
   return (
-    <form onSubmit={submit} noValidate className="mt-8 flex max-w-xl flex-col gap-8">
-      <fieldset>
-        <legend className="mb-3 text-headline-sm font-semibold">Avatar</legend>
-        <div className="flex flex-wrap gap-4">
-          {AVATAR_IDS.map((id, i) => (
-            <label key={id} className="relative cursor-pointer">
-              <input
-                type="radio"
-                name="avatar"
-                value={id}
-                checked={avatar === id}
-                onChange={() => setAvatar(id)}
-                aria-label={`Avatar ${i + 1}`}
-                className="peer sr-only"
-              />
-              <span className={`flex min-h-11 min-w-11 rounded-full p-1 outline outline-2 outline-transparent peer-checked:outline-primary peer-active:scale-[0.98] motion-reduce:peer-active:scale-100 peer-focus-visible:outline-primary peer-focus-visible:outline-offset-2 hover:bg-surface-container-low`}>
-                <Avatar id={id} size={72} />
-              </span>
-              {/* Selected is shown by a tick as well as the ring, so it is not colour alone. */}
-              {avatar === id && (
-                <span data-selected className="absolute -right-1 -top-1 flex h-7 w-7 items-center justify-center rounded-full bg-primary text-on-primary">
-                  <Icon name="check" size={16} />
-                </span>
-              )}
-            </label>
-          ))}
-        </div>
-      </fieldset>
-
-      <div className="flex flex-col gap-2">
-        <label htmlFor="profile-name" className="text-headline-sm font-semibold">Name</label>
+    <form onSubmit={submit} noValidate className="mt-8 flex max-w-full flex-col gap-8">
+      <div className="flex flex-col gap-2 max-w-xs">
+        <label htmlFor="profile-name" className="text-headline-sm font-semibold">
+          Name
+        </label>
         <input
           id="profile-name"
           value={name}
@@ -95,12 +69,53 @@ export function ProfileForm({ name: initialName, avatar: initialAvatar, onSave }
         )}
       </div>
 
+      <fieldset>
+        <legend className="mb-3 text-headline-sm font-semibold">Avatar</legend>
+        <div className="flex flex-wrap gap-4">
+          {AVATAR_IDS.map((id, i) => (
+            <label key={id} className="relative cursor-pointer">
+              <input
+                type="radio"
+                name="avatar"
+                value={id}
+                checked={avatar === id}
+                onChange={() => setAvatar(id)}
+                aria-label={`Avatar ${i + 1}`}
+                className="peer sr-only"
+              />
+              <span
+                className={`flex min-h-11 min-w-11 rounded-full p-1 outline outline-2 outline-transparent peer-checked:outline-primary peer-active:scale-[0.98] motion-reduce:peer-active:scale-100 peer-focus-visible:outline-primary peer-focus-visible:outline-offset-2 hover:bg-surface-container-low`}
+              >
+                <Avatar id={id} size={128} />
+              </span>
+              {/* Selected is shown by a tick as well as the ring, so it is not colour alone. */}
+              {avatar === id && (
+                <span
+                  data-selected
+                  className="absolute -right-1 -top-1 flex h-7 w-7 items-center justify-center rounded-full bg-primary text-on-primary"
+                >
+                  <Icon name="check" size={16} />
+                </span>
+              )}
+            </label>
+          ))}
+        </div>
+      </fieldset>
+
       <div className="flex items-center gap-4">
         <button type="submit" disabled={status === "saving"} className={buttonClass("primary")}>
           Save
         </button>
-        {status === "saved" && <p role="status" className="text-on-surface-variant">Saved</p>}
-        {status === "error" && <p role="alert" className="text-error">{message}</p>}
+        {status === "saved" && (
+          <p role="status" className="text-on-surface-variant">
+            Saved
+          </p>
+        )}
+        {status === "error" && (
+          <p role="alert" className="text-error">
+            {message}
+          </p>
+        )}
       </div>
       {/* Room for Sign out (AG3, a later task). */}
       <div data-slot="sign-out" />
