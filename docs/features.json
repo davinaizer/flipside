@@ -609,7 +609,7 @@
           ],
           "area": "src/ui/settings/practice/PracticeSettings.tsx",
           "done_when": "PracticeSettings.test.tsx: no 'On' or 'Off' text; role=switch, accessible name and aria-checked still present and toggle correctly.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F13.2",

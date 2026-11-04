@@ -48,3 +48,4 @@ F12.3: SummaryView rebuilt to the mockup (deck card, count ring, time, grade chi
 F12.4: e2e AC18 (grades given vs summary figures, Practise those now starts the misses, axe in both themes); added "summary" e2e-seed profiles.
 REVIEW F12 round 1: PASS at dec10ce
 F12 done: PR 33, review PASS, verify and e2e green. MANUAL PENDING: none.
+F13.1 read-aloud switch no longer prints On/Off; state is carried by aria-checked and the track; label stays "Read questions aloud" (e2e regex unchanged).

@@ -76,7 +76,7 @@ export function PracticeSettings() {
           onClick={() => set({ readAloud: !settings.readAloud })}
           className={`flex min-h-11 w-full items-center justify-between gap-4 rounded-card border border-card-edge bg-surface-card px-5 py-3 text-left font-semibold shadow-card ${TAPPABLE_CARD}`}
         >
-          Read questions aloud: {settings.readAloud ? "On" : "Off"}
+          Read questions aloud
           <SwitchTrack on={settings.readAloud} />
         </button>
       </div>
