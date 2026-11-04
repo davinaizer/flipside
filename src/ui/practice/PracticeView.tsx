@@ -142,8 +142,8 @@ export function PracticeView({
       </header>
       <SessionProgress done={done} total={total} />
       {/* Both faces always render and the wrapper rotates, so the flip is a CSS transition on reveal only.
-          The key remounts per card: a new card starts unrotated and never animates. Tapping the front reveals. */}
-      <div key={card.cardId} className="flip-scene" onClick={revealed ? undefined : onReveal}>
+          The key remounts per card and per position (done), so a new card or Undo last starts unrotated and never animates, even back onto the same card. Tapping the front reveals. */}
+      <div key={`${card.cardId}-${done}`} className="flip-scene" onClick={revealed ? undefined : onReveal}>
         <article data-testid="practice-card" data-revealed={revealed} className="flip-card">
           <div
             data-face="front"

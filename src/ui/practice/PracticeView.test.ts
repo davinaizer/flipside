@@ -126,3 +126,22 @@ test("a revealed card is only rotated by its own data-revealed flag, so a new ca
   expect(render(false)).toContain('data-revealed="false"');
   expect(render(true)).toContain('data-revealed="true"');
 });
+
+test("reduced motion applies no rotation and no transition, showing the live face in place", () => {
+  const css = readFileSync("src/app/globals.css", "utf8");
+  const block = css.slice(css.indexOf("@media (prefers-reduced-motion: reduce)"));
+  expect(block).toMatch(/\.flip-card\[data-revealed="true"\]/);
+  expect(block).toMatch(/transform:\s*none/);
+  expect(block).toMatch(/transition:\s*none/);
+  expect(block).toMatch(/\.flip-face\[inert\]\s*\{\s*display:\s*none/);
+});
+
+test("Undo last remounts the card scene (key includes done), so it returns to the front without a reverse flip", () => {
+  const keyOf = (done: number) => {
+    const tree = PracticeView({ card, revealed: false, done, total: 3, settings: DEFAULT_SETTINGS, onReveal() {} });
+    const kids = (tree.props as { children: unknown[] }).children.flat() as { key?: string; props?: { className?: string } }[];
+    return kids.find((c) => c?.props?.className === "flip-scene")?.key;
+  };
+  expect(keyOf(1)).toBeDefined();
+  expect(keyOf(1)).not.toBe(keyOf(0));
+});

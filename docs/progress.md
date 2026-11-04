@@ -36,3 +36,4 @@ REVIEW F10 round 2: PASS at 4226c87
 F10 done: PR 28, review PASS, verify and e2e green. MANUAL PENDING: none.
 F11.1: Show answer has an eye icon; the hint now sits below the button, outside the card (PracticeView test).
 F11.2: both card faces render in a CSS 3D flip (perspective, rotateY, backface-visibility); the hidden face is aria-hidden and inert; tap on the front, Show answer and Space reveal; keyed per card so a new card never animates. Reduced motion is F11.3.
+F11.3: reduced motion applies no rotation or transition (inert face hidden); Undo last remounts the card scene so it lands on the front with no reverse flip.

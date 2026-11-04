@@ -429,7 +429,7 @@
           ],
           "area": "src/ui/practice/PracticeView.tsx, globals.css",
           "done_when": "Test: with prefers-reduced-motion no rotation is applied; Undo last returns to the front without a reverse animation.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F11.4",
