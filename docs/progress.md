@@ -46,3 +46,4 @@ F12.1: GET /sessions/{id}/summary now returns deckName and severalDecks (goAgain
 F12.2: added summaryViewModel (deck label, cards, time, grade counts, revisit max three, badge count) with unit tests.
 F12.3: SummaryView rebuilt to the mockup (deck card, count ring, time, grade chips with icons, Cards to revisit panel, Practise those now, Back to Library); e2e button name updated.
 F12.4: e2e AC18 (grades given vs summary figures, Practise those now starts the misses, axe in both themes); added "summary" e2e-seed profiles.
+REVIEW F12 round 1: PASS at dec10ce
