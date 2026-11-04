@@ -51,3 +51,4 @@ F12 done: PR 33, review PASS, verify and e2e green. MANUAL PENDING: none.
 F13.1 read-aloud switch no longer prints On/Off; state is carried by aria-checked and the track; label stays "Read questions aloud" (e2e regex unchanged).
 F13.2: Settings preview now shows topic chip, Question label, question, read-aloud button and the flip hint; Chip and QuestionLabel are shared with PracticeView (practice front also gains the Question label).
 F13.3 Delete deck moved into the Edit deck panel (EditDeckPanel); e2e delete test opens Edit deck first (not run).
+F13.4 ImportFlow form is a single flex column (max-w-3xl); the wrapper div stays, sections 1, 2, 3 in source order; test reads the source (no jsdom).

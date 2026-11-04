@@ -90,3 +90,15 @@ test("?deckId preselects the re-import target, and an unknown id is ignored", ()
   expect(renderToStaticMarkup(createElement(ImportFlow, { decks, initialDeckId: "d1" }))).toContain("Updating Biology");
   expect(renderToStaticMarkup(createElement(ImportFlow, { decks, initialDeckId: "nope" }))).not.toContain("Updating");
 });
+
+test("ImportFlow is one column: no lg grid classes, sections in order 1, 2, 3", async () => {
+  const { readFileSync } = await import("node:fs");
+  const src = readFileSync(new URL("./ImportFlow.tsx", import.meta.url), "utf8");
+  expect(src).not.toMatch(/\blg:|grid-cols/);
+  const at = (s: string) => src.indexOf(s);
+  expect(at('aria-label="Choose file"')).toBeGreaterThan(-1);
+  expect(at('aria-label="Choose file"')).toBeLessThan(at("<ImportPreview"));
+  expect(at("<ImportPreview")).toBeLessThan(at('aria-label="Deck details"'));
+  const preview = readFileSync(new URL("./ImportPreview.tsx", import.meta.url), "utf8");
+  expect(preview).toContain('title="Check the cards"');
+});

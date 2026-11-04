@@ -652,7 +652,7 @@
           ],
           "area": "src/ui/import/ImportFlow.tsx",
           "done_when": "import.test.ts: no lg grid classes; sections render in order Choose file, Check the cards, Deck details at every width.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F13.5",
