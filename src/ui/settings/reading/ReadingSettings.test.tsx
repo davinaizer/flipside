@@ -1,7 +1,10 @@
+import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { expect, test } from "vitest";
 import { DEFAULT_SETTINGS } from "@/shared/settings";
-import { FRONT_HINT } from "@/ui/practice/PracticeView";
+import { FRONT_HINT, iconButton } from "@/ui/practice/PracticeView";
+import { PracticeFront } from "@/ui/reading-card/ReadingCard";
+import { Icon } from "@/ui/icons/Icon";
 import { SettingsProvider } from "../SettingsProvider";
 import { ReadingSettings } from "./ReadingSettings";
 
@@ -32,6 +35,17 @@ test("the preview shows the practice card elements and follows the settings (T8)
     expect(mist).toContain(t);
   }
   expect(mist).toContain("rounded-full border border-card-edge"); // the read-aloud button (iconButton)
+  // Same component, not just the same words: the markup equals a PracticeFront render with the preview's props.
+  const direct = renderToStaticMarkup(
+    createElement(PracticeFront, {
+      "data-testid": "reading-card",
+      settings: DEFAULT_SETTINGS,
+      topic: "Caching",
+      question: "Why use a cache?",
+      readAloud: createElement("span", { "aria-hidden": "true", className: iconButton }, createElement(Icon, { name: "volume" })),
+    }),
+  );
+  expect(mist).toContain(direct);
   expect(mist).toContain("var(--card-mist)");
   expect(html("night")).toContain("var(--card-night)");
 });

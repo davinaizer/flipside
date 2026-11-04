@@ -1,4 +1,4 @@
-import type { CSSProperties, ReactNode } from "react";
+import type { CSSProperties, HTMLAttributes, ReactNode } from "react";
 import {
   LETTER_SPACING_STEPS,
   LINE_SPACING_STEPS,
@@ -37,38 +37,42 @@ export function QuestionLabel() {
   return <p className="mt-4 text-label-md font-semibold uppercase opacity-70">Question</p>;
 }
 
+export const FRONT_HINT = "Say your answer out loud first, then show it.";
+
 /**
- * Front of a practice card, used by the Settings preview (T8): topic chip, Question label, question,
- * the read-aloud button and the footer hint, left-aligned on the card colour.
+ * The front face of a practice card (T8), the one component rendered by PracticeView and the Settings
+ * preview: chip with the read-aloud slot on its right, Question label, question, optional image, then
+ * the flip hint, all inside the card box on the reading-settings colour. Extra props (data-face, inert,
+ * aria-hidden, data-testid) go on the box.
  */
-export function ReadingCard({
+export function PracticeFront({
   settings,
   topic,
   question,
+  questionAs: Question = "p",
+  image,
   readAloud,
-  hint,
+  ...boxProps
 }: {
   settings: ReadingSettings;
   topic: string;
   question: string;
+  questionAs?: "h1" | "p";
+  image?: ReactNode;
   readAloud?: ReactNode;
-  hint: string;
-}) {
+} & Omit<HTMLAttributes<HTMLDivElement>, "style" | "children"> & { inert?: boolean; "data-face"?: string; "data-testid"?: string }) {
   return (
-    <div
-      data-testid="reading-card"
-      className="rounded-3xl p-8 shadow-card text-left"
-      style={readingStyle(settings)}
-    >
+    <div {...boxProps} className="flip-face text-left" style={readingStyle(settings)}>
       <div className="flex items-start justify-between gap-3">
         <Chip topic={topic} />
         {readAloud}
       </div>
       <QuestionLabel />
-      <p className="mt-1 font-semibold" style={{ fontSize: `${QUESTION_SCALE}em` }}>
+      <Question className="mt-1 font-semibold" style={{ fontSize: `${QUESTION_SCALE}em` }}>
         {question}
-      </p>
-      <p className="mt-6 text-body-sm opacity-80">{hint}</p>
+      </Question>
+      {image}
+      <p className="mt-6 text-body-sm opacity-80">{FRONT_HINT}</p>
     </div>
   );
 }

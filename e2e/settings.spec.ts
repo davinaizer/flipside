@@ -137,4 +137,10 @@ test("read aloud is a switch with no On or Off text; the preview shows the pract
   await expect(preview.locator('span[aria-hidden="true"]').first()).toBeVisible(); // decorative read-aloud button
   await expect(preview).toContainText("Say your answer out loud first, then show it.");
   await expect(preview.getByText("Caching", { exact: true })).toBeVisible(); // topic chip
+  // Same component as practice's front face: the shared flip-face box, and the read-aloud button shares the chip's row.
+  await expect(preview).toHaveClass(/flip-face/);
+  const chip = await preview.getByText("Caching", { exact: true }).boundingBox();
+  const speaker = await preview.locator('span[aria-hidden="true"]').first().boundingBox();
+  expect(Math.abs(chip!.y + chip!.height / 2 - (speaker!.y + speaker!.height / 2))).toBeLessThan(chip!.height);
+  expect(speaker!.x).toBeGreaterThan(chip!.x + chip!.width);
 });

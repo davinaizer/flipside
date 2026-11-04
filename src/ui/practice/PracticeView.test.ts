@@ -94,15 +94,22 @@ test("the loading skeleton renders", () => {
   expect(renderToStaticMarkup(createElement(PracticeLoading))).toContain('aria-label="Loading"');
 });
 
-test("front: eye icon on Show answer; hint follows the button, outside the card", () => {
+test("front: eye icon on Show answer; the hint is inside the front face, as in the Settings preview", () => {
   const html = render(false);
-  const cardEnd = html.indexOf("</article>");
-  const button = html.indexOf("Show answer");
-  const hint = html.indexOf(FRONT_HINT);
-  expect(html.slice(html.indexOf("<button"), button)).toContain("<svg");
-  expect(html.slice(html.indexOf("<article"), cardEnd)).not.toContain(FRONT_HINT);
-  expect(hint).toBeGreaterThan(button);
-  expect(hint).toBeGreaterThan(cardEnd);
+  expect(html.slice(html.indexOf("<button"), html.indexOf("Show answer"))).toContain("<svg");
+  expect(face(html, "front")).toContain(FRONT_HINT);
+  expect(html.split(FRONT_HINT)).toHaveLength(2);
+});
+
+test("the front face is the shared PracticeFront component (read-aloud slot on the chip row)", () => {
+  const reader = { speak: () => {}, cancel: () => {} };
+  const html = renderToStaticMarkup(
+    createElement(PracticeView, { card, revealed: false, done: 0, total: 1, settings: DEFAULT_SETTINGS, onReveal: () => {}, reader }),
+  );
+  const front = face(html, "front");
+  expect(front).toContain("Read question aloud");
+  expect(front.indexOf("Cells")).toBeLessThan(front.indexOf("Read question aloud"));
+  expect(front.indexOf("Read question aloud")).toBeLessThan(front.indexOf("Question</p>"));
 });
 
 test("reveal triggers: the card tap is wired like the button, and Space is a shortcut", () => {
