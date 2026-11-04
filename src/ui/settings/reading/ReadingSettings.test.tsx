@@ -52,3 +52,14 @@ test("the preview shows the practice card elements and follows the settings (T8)
   expect(mist).toContain("var(--card-mist)");
   expect(html("night")).toContain("var(--card-night)");
 });
+
+test("the Reading section is its own surface with a heading (T9)", () => {
+  const html = renderToStaticMarkup(
+    <SettingsProvider initial={DEFAULT_SETTINGS}>
+      <ReadingSettings />
+    </SettingsProvider>,
+  );
+  expect(html).toMatch(/<section[^>]*rounded-card[^>]*bg-surface-card/);
+  expect(html).toMatch(/<h2[^>]*>Reading</);
+  expect(html).not.toMatch(/#[0-9a-fA-F]{6}/);
+});

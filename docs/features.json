@@ -1181,7 +1181,7 @@
           ],
           "area": "src/app/(app)/settings/page.tsx, src/ui/settings/reading, src/ui/settings/practice",
           "done_when": "Test: Reading and Practice each render in their own surface container with a heading; no raw hex; layout holds on iPad portrait. verify.sh green.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F18.2",

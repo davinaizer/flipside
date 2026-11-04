@@ -47,7 +47,7 @@ export function ReadingSettings() {
   const reset = () => set(Object.fromEntries(READING_KEYS.map((k) => [k, DEFAULT_SETTINGS[k]])));
 
   return (
-    <section aria-labelledby="reading-h" className="grid gap-8 lg:grid-cols-2">
+    <section aria-labelledby="reading-h" className="grid gap-8 rounded-card border border-card-edge bg-surface-card p-6 shadow-card md:p-8 lg:grid-cols-2">
       <div>
         <h2 id="reading-h" className="text-headline-md font-semibold">
           Reading

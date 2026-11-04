@@ -31,7 +31,7 @@ export function PracticeSettings() {
   const invalid = parseNewCards(text) === null;
 
   return (
-    <section aria-labelledby="practice-h" className="mt-12 max-w-xl">
+    <section aria-labelledby="practice-h" className="mt-8 rounded-card border border-card-edge bg-surface-card p-6 shadow-card md:p-8">
       <h2 id="practice-h" className="text-headline-md font-semibold">
         Practice
       </h2>
