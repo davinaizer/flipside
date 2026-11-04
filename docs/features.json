@@ -593,9 +593,9 @@
         "add_deck_re_import_dark_mode"
       ],
       "notes": "T7: drop the On/Off text from Read questions aloud (keep role=switch and aria-checked). T8: Settings preview renders the practice card component from F11 (topic chip, Question label, read-aloud button, footer hint) with sample text. D8: move Delete deck into the Edit deck panel; the D5 confirmation copy is unchanged. I7: ImportFlow becomes one column with sections 1, 2, 3 in order at every width (currently a two-column grid at lg).",
-      "status": "todo",
-      "branch": null,
-      "pr": null,
+      "status": "done",
+      "branch": "feat/F13-settings-deck-import-fixes",
+      "pr": 34,
       "tasks": [
         {
           "id": "F13.1",
@@ -609,7 +609,7 @@
           ],
           "area": "src/ui/settings/practice/PracticeSettings.tsx",
           "done_when": "PracticeSettings.test.tsx: no 'On' or 'Off' text; role=switch, accessible name and aria-checked still present and toggle correctly.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F13.2",
@@ -623,7 +623,7 @@
           ],
           "area": "src/ui/settings/reading/ReadingSettings.tsx, src/ui/reading-card/ReadingCard.tsx",
           "done_when": "ReadingSettings.test.tsx: preview shows topic chip, Question label, read-aloud button, question and footer hint via the shared card; updates live when settings change.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F13.3",
@@ -638,7 +638,7 @@
           ],
           "area": "src/ui/deck/DeckView.tsx, edit-deck/EditDeck.tsx, delete-deck/DeleteDeck.tsx",
           "done_when": "Test: deck page has no Delete deck control; Edit deck panel contains it; confirmation copy with card and review counts unchanged.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F13.4",
@@ -652,7 +652,7 @@
           ],
           "area": "src/ui/import/ImportFlow.tsx",
           "done_when": "import.test.ts: no lg grid classes; sections render in order Choose file, Check the cards, Deck details at every width.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F13.5",
@@ -669,7 +669,51 @@
           ],
           "area": "e2e/settings.spec.ts, e2e/deck.spec.ts, e2e/import.spec.ts, e2e/a11y.spec.ts",
           "done_when": "pnpm test:e2e AC19, AC20: switch state exposed, preview matches practice card, delete only via Edit deck, import single column on desktop, iPad landscape and portrait; axe clean in both themes.",
-          "status": "todo"
+          "status": "done"
+        },
+        {
+          "id": "F13.6",
+          "title": "Review fix: one shared practice front-face component for practice and the Settings preview",
+          "reqs": [
+            "T8"
+          ],
+          "prd_sections": [
+            "4",
+            "8"
+          ],
+          "area": "src/ui/reading-card/ReadingCard.tsx, src/ui/practice/PracticeView.tsx, src/ui/settings/reading/ReadingSettings.tsx, e2e/settings.spec.ts",
+          "done_when": "REVIEW F13 round 1 gap 1 closed: the practice front face (chip, read-aloud slot, Question label, question, image, hint) is one component rendered by both PracticeView and the Settings preview, with read-aloud button, hint and box styling in the same places (layout per practice_session design); Settings passes a decorative read-aloud button and sample text; ReadingSettings test and settings e2e check it is the same component, not just the same words; F11 flip, reduced motion and Undo behaviour and their tests still pass.",
+          "status": "done"
+        },
+        {
+          "id": "F13.7",
+          "title": "Review fix: import column width matches the design",
+          "reqs": [
+            "I7"
+          ],
+          "prd_sections": [
+            "4",
+            "8"
+          ],
+          "area": "src/ui/import/ImportFlow.tsx",
+          "done_when": "REVIEW F13 round 1 gap 2 closed: the single import column is no narrower than before (max-w-6xl, or the design add_deck_re_import ~1240px), sections 1, 2, 3 stay in order, and the import e2e still passes.",
+          "status": "done"
+        },
+        {
+          "id": "F13.8",
+          "title": "Review fix: Read question aloud on the card front must not reveal the answer",
+          "reqs": [
+            "R9",
+            "R15",
+            "R16"
+          ],
+          "prd_sections": [
+            "4",
+            "8"
+          ],
+          "area": "src/ui/practice/PracticeView.tsx, src/ui/reading-card/ReadingCard.tsx, e2e/practice.spec.ts",
+          "done_when": "REVIEW F13 round 2 gap 1 closed: tapping or clicking Read question aloud on the practice front speaks the question and does not reveal the answer (the click does not reach the flip-scene reveal handler); card tap elsewhere, Show answer and Space still reveal; a test clicks Read question aloud and checks the card stays on the front (unit and e2e).",
+          "status": "done"
         }
       ]
     },

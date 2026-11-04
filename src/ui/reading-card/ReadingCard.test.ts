@@ -4,7 +4,7 @@ import { expect, test } from "vitest";
 import { CARD_COLORS, FONT_IDS } from "@/shared/enums";
 import { TEXT_SIZE_STEPS } from "@/shared/constants";
 import { DEFAULT_SETTINGS } from "@/shared/settings";
-import { ReadingCard, readingStyle } from "./ReadingCard";
+import { PracticeFront, readingStyle } from "./ReadingCard";
 
 test("every T1 option exists", () => {
   expect(FONT_IDS).toEqual(["atkinson", "lexend", "system"]);
@@ -26,7 +26,7 @@ test("the card style follows the settings and sets card text only", () => {
   expect(s.backgroundColor).toBe("var(--card-night)");
   expect(s.color).toBe("var(--on-card-night)");
   const html = renderToStaticMarkup(
-    createElement(ReadingCard, { settings: DEFAULT_SETTINGS, question: "Q?", answer: ["A"] }),
+    createElement(PracticeFront, { settings: DEFAULT_SETTINGS, topic: "T", question: "Q?" }),
   );
   expect(html).toContain("Q?");
   expect(html).toContain("text-left");

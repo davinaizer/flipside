@@ -114,6 +114,7 @@ test("delete confirms, sends DELETE, returns to the Library; Keep deck cancels",
   await page.route(`**/api/v1/decks/${id}`, (r) =>
     r.request().method() === "DELETE" ? r.fulfill({ status: 204 }) : r.continue(),
   );
+  await page.getByRole("button", { name: "Edit deck" }).click();
   await page.getByRole("button", { name: "Delete deck" }).click();
   const dialog = page.getByRole("alertdialog", { name: "Delete deck" });
   await expect(dialog).toContainText(/Delete ".+"\? This hides the deck and its 2 cards/);
@@ -192,4 +193,12 @@ test("a deck that fails to load shows the error with Retry", async ({ page }) =>
   await expect(page.getByRole("heading", { name: /home server/ })).toBeVisible();
   await expect(page.getByRole("button", { name: "Retry" })).toBeVisible();
   await checkBothThemes(page);
+});
+
+test("Delete deck is not on the deck page, only inside Edit deck (D8)", async ({ page }) => {
+  await openSeededDeck(page);
+  await expect(page.getByRole("button", { name: "Delete deck" })).toHaveCount(0);
+  await page.getByRole("button", { name: "Edit deck" }).click();
+  await expect(page.getByRole("form", { name: "Edit deck" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Delete deck" })).toBeVisible();
 });

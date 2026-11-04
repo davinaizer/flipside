@@ -48,3 +48,15 @@ F12.3: SummaryView rebuilt to the mockup (deck card, count ring, time, grade chi
 F12.4: e2e AC18 (grades given vs summary figures, Practise those now starts the misses, axe in both themes); added "summary" e2e-seed profiles.
 REVIEW F12 round 1: PASS at dec10ce
 F12 done: PR 33, review PASS, verify and e2e green. MANUAL PENDING: none.
+F13.1 read-aloud switch no longer prints On/Off; state is carried by aria-checked and the track; label stays "Read questions aloud" (e2e regex unchanged).
+F13.2: Settings preview now shows topic chip, Question label, question, read-aloud button and the flip hint; Chip and QuestionLabel are shared with PracticeView (practice front also gains the Question label).
+F13.3 Delete deck moved into the Edit deck panel (EditDeckPanel); e2e delete test opens Edit deck first (not run).
+F13.4 ImportFlow form is a single flex column (max-w-3xl); the wrapper div stays, sections 1, 2, 3 in source order; test reads the source (no jsdom).
+F13.5 done: e2e for switch state, preview elements, Delete only in Edit deck, import single column (desktop, iPad landscape and portrait, both themes).
+REVIEW F13 round 1: GAPS at 5ca7b3e
+F13.6: practice front is one PracticeFront component (chip, read-aloud slot, Question label, question, image, hint inside the card) used by PracticeView and the Settings preview; ReadingCard removed.
+F13.7 import column widened from max-w-3xl to max-w-6xl; import e2e passes (desktop and iPad).
+REVIEW F13 round 2: GAPS at 160c2ad
+F13.8: Read question aloud stops click propagation so it no longer reveals the answer; unit and e2e tests added.
+REVIEW F13 round 3: PASS at 165c106
+F13 done: PR 34, review PASS (round 3), verify and e2e green. MANUAL PENDING: none.

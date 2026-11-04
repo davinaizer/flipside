@@ -105,6 +105,17 @@ test("front: eye icon on Show answer; hint follows the button, outside the card"
   expect(hint).toBeGreaterThan(cardEnd);
 });
 
+test("the front face is the shared PracticeFront component (read-aloud slot on the chip row)", () => {
+  const reader = { speak: () => {}, cancel: () => {} };
+  const html = renderToStaticMarkup(
+    createElement(PracticeView, { card, revealed: false, done: 0, total: 1, settings: DEFAULT_SETTINGS, onReveal: () => {}, reader }),
+  );
+  const front = face(html, "front");
+  expect(front).toContain("Read question aloud");
+  expect(front.indexOf("Cells")).toBeLessThan(front.indexOf("Read question aloud"));
+  expect(front.indexOf("Read question aloud")).toBeLessThan(front.indexOf("Question</p>"));
+});
+
 test("reveal triggers: the card tap is wired like the button, and Space is a shortcut", () => {
   let calls = 0;
   const tree = PracticeView({ card, revealed: false, done: 0, total: 1, settings: DEFAULT_SETTINGS, onReveal: () => calls++ });
@@ -144,4 +155,28 @@ test("Undo last remounts the card scene (key includes done), so it returns to th
   };
   expect(keyOf(1)).toBeDefined();
   expect(keyOf(1)).not.toBe(keyOf(0));
+});
+
+test("clicking Read question aloud speaks and does not bubble to the flip-scene reveal", () => {
+  const spoken: string[] = [];
+  const reader = { speak: (t: string) => void spoken.push(t), cancel: () => {} };
+  const tree = PracticeView({ card, revealed: false, done: 0, total: 1, settings: DEFAULT_SETTINGS, onReveal: () => {}, reader });
+  const find = (n: unknown): { props: { onClick: (e: unknown) => void } } | null => {
+    if (!n || typeof n !== "object") return null;
+    const el = n as { props?: Record<string, unknown> };
+    if (el.props?.["aria-label"] === "Read question aloud") return el as never;
+    for (const v of Object.values(el.props ?? {})) {
+      for (const c of Array.isArray(v) ? v : [v]) {
+        const r = find(c);
+        if (r) return r;
+      }
+    }
+    return null;
+  };
+  const button = find(tree);
+  expect(button).not.toBeNull();
+  let stopped = false;
+  button!.props.onClick({ stopPropagation: () => (stopped = true) });
+  expect(stopped).toBe(true);
+  expect(spoken).toHaveLength(1);
 });

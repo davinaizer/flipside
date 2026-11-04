@@ -1,4 +1,4 @@
-import type { CSSProperties } from "react";
+import type { CSSProperties, HTMLAttributes, ReactNode } from "react";
 import {
   LETTER_SPACING_STEPS,
   LINE_SPACING_STEPS,
@@ -25,30 +25,58 @@ export function readingStyle(s: ReadingSettings): CSSProperties {
   };
 }
 
-/** Card face shared by the settings preview and Practice: left-aligned text on a plain card colour. */
-export function ReadingCard({
+export function Chip({ topic }: { topic: string }) {
+  return (
+    <span className="inline-block rounded-full bg-secondary-container px-4 py-1 text-sm font-semibold text-on-secondary-container">
+      {topic}
+    </span>
+  );
+}
+
+export function QuestionLabel() {
+  return <p className="mt-4 text-label-md font-semibold uppercase opacity-70">Question</p>;
+}
+
+export const FRONT_HINT = "Say your answer out loud first, then show it.";
+
+/** The flip hint (R15). It sits outside the card, below the Show answer button, in practice and in the Settings preview. */
+export function FrontHint() {
+  return <p className="text-center text-body-sm text-on-surface-variant">{FRONT_HINT}</p>;
+}
+
+/**
+ * The front face of a practice card (T8), the one component rendered by PracticeView and the Settings
+ * preview: chip with the read-aloud slot on its right, Question label, question, optional image, then
+ * on the reading-settings colour. The flip hint is not part of the card (R15): see FrontHint. Extra props (data-face, inert,
+ * aria-hidden, data-testid) go on the box.
+ */
+export function PracticeFront({
   settings,
+  topic,
   question,
-  answer,
+  questionAs: Question = "p",
+  image,
+  readAloud,
+  ...boxProps
 }: {
   settings: ReadingSettings;
+  topic: string;
   question: string;
-  answer: string[];
-}) {
+  questionAs?: "h1" | "p";
+  image?: ReactNode;
+  readAloud?: ReactNode;
+} & Omit<HTMLAttributes<HTMLDivElement>, "style" | "children"> & { inert?: boolean; "data-face"?: string; "data-testid"?: string }) {
   return (
-    <div
-      data-testid="reading-card"
-      className="rounded-3xl p-8 shadow-card text-left"
-      style={readingStyle(settings)}
-    >
-      <p className="font-semibold" style={{ fontSize: `${QUESTION_SCALE}em` }}>
+    <div {...boxProps} className="flip-face text-left" style={readingStyle(settings)}>
+      <div className="flex items-start justify-between gap-3">
+        <Chip topic={topic} />
+        {readAloud}
+      </div>
+      <QuestionLabel />
+      <Question className="mt-1 font-semibold" style={{ fontSize: `${QUESTION_SCALE}em` }}>
         {question}
-      </p>
-      <ul className="mt-4 list-disc pl-6">
-        {answer.map((a) => (
-          <li key={a}>{a}</li>
-        ))}
-      </ul>
+      </Question>
+      {image}
     </div>
   );
 }

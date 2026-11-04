@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { ANSWER_STYLES, CARD_COLORS } from "@/shared/enums";
 import { buttonClass } from "@/ui/button/button-class";
+import { DeleteDeck } from "../delete-deck/DeleteDeck";
 
 export interface EditableDeck {
   id: string;
@@ -11,6 +12,8 @@ export interface EditableDeck {
   groupName: string | null;
   color: string | null; // stored as text; an unknown value falls back to mist
   answerStyle: string;
+  cardCount: number; // for the delete confirmation (D5)
+  reviewCount: number;
 }
 
 // Full class names so Tailwind sees them; tokens live in tokens.css.
@@ -27,8 +30,20 @@ const field = "min-h-11 rounded-xl bg-surface-container-low px-3 outline outline
 
 /** D4: rename, regroup, recolour and change answer style via PATCH /decks/{id}, then refresh the page. */
 export function EditDeck({ deck }: { deck: EditableDeck }) {
-  const router = useRouter();
   const [open, setOpen] = useState(false);
+  if (!open) {
+    return (
+      <button type="button" onClick={() => setOpen(true)} className={buttonClass("secondary")}>
+        Edit deck
+      </button>
+    );
+  }
+  return <EditDeckPanel deck={deck} onClose={() => setOpen(false)} />;
+}
+
+/** The open panel: the edit form, then Delete deck (D8) kept away from the page's everyday actions. Exported for tests. */
+export function EditDeckPanel({ deck, onClose }: { deck: EditableDeck; onClose: () => void }) {
+  const router = useRouter();
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -49,7 +64,7 @@ export function EditDeck({ deck }: { deck: EditableDeck }) {
         }),
       });
       if (!res.ok) throw new Error("save failed");
-      setOpen(false);
+      onClose();
       router.refresh();
     } catch {
       setError("We could not save your changes. Nothing was lost, so please try again.");
@@ -57,15 +72,9 @@ export function EditDeck({ deck }: { deck: EditableDeck }) {
     setSaving(false);
   }
 
-  if (!open) {
-    return (
-      <button type="button" onClick={() => setOpen(true)} className={buttonClass("secondary")}>
-        Edit deck
-      </button>
-    );
-  }
   return (
-    <form onSubmit={onSubmit} aria-label="Edit deck" className="mb-6 flex max-w-xl flex-col gap-4 rounded-card border border-card-edge bg-surface-card shadow-card p-5">
+    <div className="mb-6 flex max-w-xl flex-col gap-4">
+    <form onSubmit={onSubmit} aria-label="Edit deck" className="flex flex-col gap-4 rounded-card border border-card-edge bg-surface-card shadow-card p-5">
       <label className="flex flex-col gap-1">
         Deck name
         <input name="name" required maxLength={100} defaultValue={deck.name} className={field} />
@@ -104,10 +113,12 @@ export function EditDeck({ deck }: { deck: EditableDeck }) {
         <button type="submit" disabled={saving} className={buttonClass("primary")}>
           {saving ? "Saving..." : "Save changes"}
         </button>
-        <button type="button" disabled={saving} onClick={() => setOpen(false)} className={buttonClass("secondary")}>
+        <button type="button" disabled={saving} onClick={onClose} className={buttonClass("secondary")}>
           Cancel
         </button>
       </div>
     </form>
+    <DeleteDeck deck={deck} />
+    </div>
   );
 }

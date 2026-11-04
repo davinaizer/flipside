@@ -1,13 +1,12 @@
 import type { ReactNode } from "react";
 import { bulletLines } from "@/domain/csv-import";
 import { Icon } from "@/ui/icons/Icon";
-import { QUESTION_SCALE } from "@/shared/constants";
 import type { SessionCardPayload } from "@/shared/schemas/session";
 import { textToRead, type Reader } from "./speech";
-import { readingStyle, type ReadingSettings } from "@/ui/reading-card/ReadingCard";
+import { Chip, FRONT_HINT, FrontHint, PracticeFront, readingStyle, type ReadingSettings } from "@/ui/reading-card/ReadingCard";
 import { buttonClass, FOCUS_RING, PRESSED } from "@/ui/button/button-class";
 
-export const FRONT_HINT = "Say your answer out loud first, then show it.";
+export { FRONT_HINT };
 
 /** Card text is always rendered as React text children, so HTML in a card shows literally. */
 function CardImage({ image }: { image: NonNullable<SessionCardPayload["frontImage"]> }) {
@@ -61,14 +60,6 @@ export function SessionProgress({ done, total }: { done: number; total: number }
 export const iconButton =
   `flex size-11 items-center justify-center rounded-full border border-card-edge bg-surface-card text-on-surface-variant shadow-card hover:text-primary active:bg-surface-container-high ${PRESSED} ${FOCUS_RING}`;
 
-function Chip({ topic }: { topic: string }) {
-  return (
-    <span className="inline-block rounded-full bg-secondary-container px-4 py-1 text-sm font-semibold text-on-secondary-container">
-      {topic}
-    </span>
-  );
-}
-
 function Answer({ card }: { card: SessionCardPayload }) {
   const lines = bulletLines(card.back, card.answerStyle);
   return lines ? (
@@ -114,6 +105,23 @@ export function PracticeView({
   /** Leaves the session; the End session pill in the top bar is shown only when this is given. */
   onEnd?: () => void;
 }) {
+  // The question's button sits on the front face (as in the Settings preview); the answer's stays in the header.
+  const readAloud = (forAnswer: boolean) =>
+    reader && forAnswer === revealed ? (
+      <button
+        type="button"
+        aria-label={revealed ? "Read answer aloud" : "Read question aloud"}
+        onClick={(e) => {
+          // The front button sits inside the flip scene, whose click reveals: speaking must not flip the card.
+          e.stopPropagation();
+          reader.speak(textToRead(card, revealed));
+        }}
+        className={iconButton}
+      >
+        <Icon name="volume" />
+      </button>
+    ) : null;
+
   return (
     <div className="mx-auto flex min-h-screen w-full max-w-3xl flex-col gap-6 p-6">
       <header className="grid grid-cols-[1fr_auto_1fr] items-center gap-3">
@@ -127,16 +135,7 @@ export function PracticeView({
         </div>
         <SessionCount deckName={card.deckName} done={done} total={total} />
         <div className="flex items-center justify-end gap-2">
-          {reader && (
-            <button
-              type="button"
-              aria-label={revealed ? "Read answer aloud" : "Read question aloud"}
-              onClick={() => reader.speak(textToRead(card, revealed))}
-              className={iconButton}
-            >
-              <Icon name="volume" />
-            </button>
-          )}
+          {readAloud(true)}
           {headerAction}
         </div>
       </header>
@@ -145,19 +144,17 @@ export function PracticeView({
           The key remounts per card and per position (done), so a new card or Undo last starts unrotated and never animates, even back onto the same card. Tapping the front reveals. */}
       <div key={`${card.cardId}-${done}`} className="flip-scene" onClick={revealed ? undefined : onReveal}>
         <article data-testid="practice-card" data-revealed={revealed} className="flip-card">
-          <div
+          <PracticeFront
             data-face="front"
             aria-hidden={revealed}
             inert={revealed}
-            className="flip-face text-left"
-            style={readingStyle(settings)}
-          >
-            <Chip topic={card.topic} />
-            <h1 className="mt-4 font-semibold" style={{ fontSize: `${QUESTION_SCALE}em` }}>
-              {card.front}
-            </h1>
-            {card.frontImage && <CardImage image={card.frontImage} />}
-          </div>
+            settings={settings}
+            topic={card.topic}
+            question={card.front}
+            questionAs="h1"
+            image={card.frontImage && <CardImage image={card.frontImage} />}
+            readAloud={readAloud(false)}
+          />
           <div
             data-face="back"
             aria-hidden={!revealed}
@@ -181,7 +178,7 @@ export function PracticeView({
             <Icon name="eye" />
             Show answer
           </button>
-          <p className="text-center text-body-sm text-on-surface-variant">{FRONT_HINT}</p>
+          <FrontHint />
         </div>
       )}
       {footer}

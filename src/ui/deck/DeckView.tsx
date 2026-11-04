@@ -3,7 +3,6 @@ import type { SessionRequest } from "@/shared/schemas/session";
 import { DeckTile } from "@/ui/deck-tile/DeckTile";
 import { Icon } from "@/ui/icons/Icon";
 import { MasteryBar } from "@/ui/mastery-bar/MasteryBar";
-import { DeleteDeck } from "./delete-deck/DeleteDeck";
 import { EditDeck, type EditableDeck } from "./edit-deck/EditDeck";
 import { NeedsRewording, type Leech } from "./needs-rewording/NeedsRewording";
 import { anywayPlan, practisePlan } from "./practice-plan";
@@ -18,7 +17,7 @@ export interface DeckTopic {
 }
 
 export interface DeckViewProps {
-  deck: EditableDeck & { cardCount: number; reviewCount: number; newRemaining: number; topics: DeckTopic[] };
+  deck: EditableDeck & { newRemaining: number; topics: DeckTopic[] };
   leeches: Leech[];
   ticked: Set<string>;
   onToggle: (topic: string) => void;
@@ -67,7 +66,6 @@ export function DeckView({ deck, leeches, ticked, onToggle, busy, startError, on
         <Link href={`/import?deckId=${deck.id}`} className={buttonClass("secondary")}>
           Re-import
         </Link>
-        <DeleteDeck deck={deck} />
       </div>
       {startError && (
         <p role="alert" className="mb-4 text-on-surface-variant">
