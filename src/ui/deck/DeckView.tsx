@@ -21,6 +21,8 @@ export interface DeckViewProps {
   leeches: Leech[];
   ticked: Set<string>;
   onToggle: (topic: string) => void;
+  onSelectAll: () => void;
+  onDeselectAll: () => void;
   busy: boolean;
   startError: string | null;
   onStart: (scope: SessionRequest["scope"]) => void;
@@ -28,7 +30,7 @@ export interface DeckViewProps {
 
 
 /** Deck page (D1 to D3): topics with counts and mastery, tick boxes, and the Practise actions. Presentational. */
-export function DeckView({ deck, leeches, ticked, onToggle, busy, startError, onStart }: DeckViewProps) {
+export function DeckView({ deck, leeches, ticked, onToggle, onSelectAll, onDeselectAll, busy, startError, onStart }: DeckViewProps) {
   const plan = practisePlan(deck.id, deck.topics, ticked, deck.newRemaining);
   const anyway = anywayPlan(deck.id, deck.topics, ticked);
   return (
@@ -66,10 +68,22 @@ export function DeckView({ deck, leeches, ticked, onToggle, busy, startError, on
           {startError}
         </p>
       )}
-      <h2 className="text-headline-md font-semibold">Topics</h2>
-      <p className="mb-3 text-on-surface-variant">
-        Tick topics to practise only those. Leave all unticked to practise everything that is due.
-      </p>
+      <div className="mb-3 flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <h2 className="text-headline-md font-semibold">Topics</h2>
+          <p className="text-on-surface-variant">
+            Tick topics to practise only those. Leave all unticked to practise everything that is due.
+          </p>
+        </div>
+        <div className="flex gap-3">
+          <button type="button" onClick={onSelectAll} className={buttonClass("secondary", { size: "compact" })}>
+            Select all
+          </button>
+          <button type="button" onClick={onDeselectAll} className={buttonClass("secondary", { size: "compact" })}>
+            Deselect all
+          </button>
+        </div>
+      </div>
       <ul className="max-w-6xl divide-y divide-card-edge rounded-card border border-card-edge bg-surface-card shadow-card">
         {deck.topics.map((t) => (
           <li key={t.topic} className="flex flex-wrap items-center gap-x-6 gap-y-3 p-4">

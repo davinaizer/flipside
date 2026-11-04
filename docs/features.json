@@ -1110,7 +1110,7 @@
           ],
           "area": "src/ui/deck/DeckView.tsx, src/ui/deck/DeckScreen.tsx",
           "done_when": "Test: Select all ticks every topic and the Practise label shows all topic and due counts; Deselect all clears them and the label returns to the all-due form. verify.sh green.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F17.4",

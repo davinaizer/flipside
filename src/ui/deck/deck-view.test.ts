@@ -23,6 +23,8 @@ const html = (ticked: string[]) =>
       leeches: [],
       ticked: new Set(ticked),
       onToggle() {},
+      onSelectAll() {},
+      onDeselectAll() {},
       busy: false,
       startError: null,
       onStart() {},
@@ -95,4 +97,20 @@ test("Practise is startable with only New cards while the daily cap allows, and 
   expect(practisePlan(D, fresh, new Set(), 2).startable).toBe(2);
   expect(practisePlan(D, fresh, new Set(), 0).startable).toBe(0);
   expect(practisePlan(D, [{ topic: "Cells", dueCount: 0, mastery: { new: 0 } }], new Set(), 10).startable).toBe(0);
+});
+
+test("Select all and Deselect all buttons are on the topics list", () => {
+  const out = html([]);
+  expect(out).toContain("Select all");
+  expect(out).toContain("Deselect all");
+});
+
+test("ticking every topic labels Practise with all topics and due counts; clearing returns the all-due form", () => {
+  const all = practisePlan(D, topics, new Set(topics.map((t) => t.topic)), 10);
+  expect(all.label).toContain("2 topics");
+  expect(all.label).toContain("3 due");
+  expect(html(topics.map((t) => t.topic))).toContain(all.label);
+  const none = practisePlan(D, topics, new Set(), 10);
+  expect(none.label).not.toContain("2 topics");
+  expect(html([])).toContain(none.label);
 });

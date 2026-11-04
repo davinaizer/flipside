@@ -27,6 +27,8 @@ export function DeckScreen({
       if (!next.delete(topic)) next.add(topic);
       return next;
     });
+  const onSelectAll = () => setTicked(new Set(deck.topics.map((t) => t.topic)));
+  const onDeselectAll = () => setTicked(new Set());
   async function onStart(scope: SessionRequest["scope"]) {
     setBusy(true);
     setStartError(null);
@@ -38,6 +40,6 @@ export function DeckScreen({
     }
   }
   return (
-    <DeckView deck={deck} leeches={leeches} ticked={ticked} onToggle={onToggle} busy={busy} startError={startError} onStart={onStart} />
+    <DeckView deck={deck} leeches={leeches} ticked={ticked} onToggle={onToggle} onSelectAll={onSelectAll} onDeselectAll={onDeselectAll} busy={busy} startError={startError} onStart={onStart} />
   );
 }
