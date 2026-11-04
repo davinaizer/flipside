@@ -56,3 +56,4 @@ F13.5 done: e2e for switch state, preview elements, Delete only in Edit deck, im
 REVIEW F13 round 1: GAPS at 5ca7b3e
 F13.6: practice front is one PracticeFront component (chip, read-aloud slot, Question label, question, image, hint inside the card) used by PracticeView and the Settings preview; ReadingCard removed.
 F13.7 import column widened from max-w-3xl to max-w-6xl; import e2e passes (desktop and iPad).
+REVIEW F13 round 2: GAPS at 160c2ad
