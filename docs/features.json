@@ -458,7 +458,7 @@
           ],
           "area": "src/ui/practice/use-session.ts, e2e/performance.spec.ts",
           "done_when": "use-session test: time starts when the front appears, not at flip end; e2e performance spec still shows next card under 200 ms.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F11.6",

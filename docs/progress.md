@@ -38,3 +38,4 @@ F11.1: Show answer has an eye icon; the hint now sits below the button, outside 
 F11.2: both card faces render in a CSS 3D flip (perspective, rotateY, backface-visibility); the hidden face is aria-hidden and inert; tap on the front, Show answer and Space reveal; keyed per card so a new card never animates. Reduced motion is F11.3.
 F11.3: reduced motion applies no rotation or transition (inert face hidden); Undo last remounts the card scene so it lands on the front with no reverse flip.
 F11.4: "How well did you know this?" prompt sits above the grade buttons and labels the button group (aria-labelledby).
+F11.5: no code change needed; the timer starts in showFront (front shown) and the existing use-session test covers it; performance e2e passes (next card 54-127 ms).
