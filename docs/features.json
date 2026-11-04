@@ -683,7 +683,7 @@
           ],
           "area": "src/ui/reading-card/ReadingCard.tsx, src/ui/practice/PracticeView.tsx, src/ui/settings/reading/ReadingSettings.tsx, e2e/settings.spec.ts",
           "done_when": "REVIEW F13 round 1 gap 1 closed: the practice front face (chip, read-aloud slot, Question label, question, image, hint) is one component rendered by both PracticeView and the Settings preview, with read-aloud button, hint and box styling in the same places (layout per practice_session design); Settings passes a decorative read-aloud button and sample text; ReadingSettings test and settings e2e check it is the same component, not just the same words; F11 flip, reduced motion and Undo behaviour and their tests still pass.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F13.7",
