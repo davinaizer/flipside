@@ -1066,7 +1066,7 @@
         "deck_detail"
       ],
       "notes": "Ellipsis menu at the top right of the Library deck card with Edit deck and Re-import; both leave the deck page (Delete deck stays inside Edit deck, D8). Up to date tag moves next to the deck title. Topics list gets Select all and Deselect all.",
-      "status": "todo",
+      "status": "in_progress",
       "tasks": [
         {
           "id": "F17.1",
@@ -1126,7 +1126,8 @@
           "done_when": "pnpm test:e2e desktop and iPad: menu opens Edit deck and Re-import by mouse and keyboard, deck page has neither button, Select all and Deselect all work, axe has no serious or critical issues in both themes.",
           "status": "todo"
         }
-      ]
+      ],
+      "branch": "feat/F17-library-deck-menu"
     },
     {
       "id": "F18",
