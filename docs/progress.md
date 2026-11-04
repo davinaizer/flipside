@@ -99,3 +99,4 @@ F18 done: settings sections and thinner bars, PR 45. MANUAL PENDING: none from t
 F19.1: POST /profiles (createProfileRequestSchema, createProfile service, route); tests/profiles-create-api.test.ts. verify.sh green.
 F19.2: Add User button below the picker list opens the shared ProfileForm; api.createProfile added; component tests in ProfilePicker.test.tsx.
 F19.3: e2e/add-user.spec.ts covers open, cancel, invalid names, create, pick, empty Library, axe in both themes, and 401 without cookie; desktop and iPad pass.
+REVIEW F19 round 1: PASS at 9a947f3
