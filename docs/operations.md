@@ -7,7 +7,7 @@ How to run Flipside on the Mac Mini and use it from the iPad. Agents never insta
 | Job (label) | Starts | Notes |
 | --- | --- | --- |
 | `com.flipside.db` | `podman machine start`, then `scripts/db.sh up` (Postgres 17 container) | Runs once at login. Starting an already running machine is ignored. If it exits with an error (for example the Podman machine was not ready), launchd retries every 30 s until it succeeds. |
-| `com.flipside.app` | `pnpm start` on `0.0.0.0:3000` | Waits (retries every 3 s) until `pg_isready` succeeds in the container, then starts. Restarted if it exits. |
+| `com.flipside.app` | `pnpm start` on `0.0.0.0:3000` | Waits (retries every 3 s) until `pg_isready` succeeds in the container, then loads `.env` (so `ADMIN_PASSWORD` and `DATABASE_URL` reach the app) and starts. Restarted if it exits. |
 | `com.flipside.backup` | `scripts/backup.sh` | Every night at 02:30 into `~/flipside-backups`, 14 days kept. |
 
 These are user LaunchAgents, because the Podman machine belongs to your user. For "reboot with no manual steps", turn on automatic login for that user (System Settings, Users & Groups) so the agents load at boot.
@@ -41,6 +41,13 @@ Uninstall: `launchctl bootout gui/$(id -u)/com.flipside.<job>` and delete the pl
 1. Give the Mac Mini a fixed address in the router (DHCP reservation), or use its name from System Settings, General, Sharing (for example `mac-mini.local`).
 2. In Safari on the iPad open `http://<address>:3000` (plain HTTP, home network only). The server must be the production one (`pnpm start`, which the launchd app job runs). `pnpm dev` does not work from another device: its scripts get a 403, so the picker stays on grey placeholders and taps do nothing.
 3. Share, Add to Home Screen. It is a shortcut to the page; there is no offline mode.
+
+## App password
+
+- Every page and `/api/v1` route needs the app password, set as `ADMIN_PASSWORD` in `.env` (required: the app does not start without it; `.env.example` holds the placeholder `change-me`, so pick your own). The launchd app job sources `.env`, so no plist edit is needed.
+- Rotation: edit `ADMIN_PASSWORD` in `.env`, then `launchctl kickstart -k gui/$(id -u)/com.flipside.app`. The cookie is signed under a key derived from the password, so this signs every device out; each one must sign in again with the new password.
+- The sign-in lasts 30 days per device. Safari and the iPad home-screen shortcut keep separate cookies, so sign in once in each (the shortcut shows `/login` on its first open). Rotation signs out both.
+- Profile > Sign out ends the sign-in on that device only.
 
 ## Backup and restore
 

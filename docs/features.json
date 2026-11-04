@@ -860,7 +860,7 @@
           ],
           "area": "docs/operations.md, ops/",
           "done_when": "docs/operations.md documents ADMIN_PASSWORD, rotation signs everyone out, and the iPad home-screen shortcut signing in separately; launchd app job passes the variable. verify.sh green.",
-          "status": "todo"
+          "status": "done"
         }
       ]
     }
