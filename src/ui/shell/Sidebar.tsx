@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useSyncExternalStore } from "react";
 import { FOCUS_RING, PRESSED } from "@/ui/button/button-class";
 import { Icon, Logo, type IconName } from "@/ui/icons/Icon";
 import { ProfileMenu } from "./ProfileMenu";
+import { readCollapsed, subscribeCollapsed, writeCollapsed } from "./sidebar-state";
 
 const SECTIONS: { href: string; label: string; icon: IconName; match: string[] }[] = [
   { href: "/library", label: "Library", icon: "library", match: ["/library", "/decks", "/import"] },
@@ -14,9 +15,10 @@ const SECTIONS: { href: string; label: string; icon: IconName; match: string[] }
 
 /** Deck pages belong to the Library, so the Library stays highlighted there (README item 16). */
 export function Sidebar({ name, avatar }: { name: string; avatar: string }) {
-  // F16.2 remembers this on the device; for now it starts expanded.
-  const [collapsed, setCollapsed] = useState(false);
-  return <SidebarView name={name} avatar={avatar} collapsed={collapsed} onToggle={() => setCollapsed((c) => !c)} />;
+  // The server snapshot is expanded, so hydration matches; the remembered choice applies right after.
+  const collapsed = useSyncExternalStore(subscribeCollapsed, readCollapsed, () => false);
+  const toggle = () => writeCollapsed(!collapsed);
+  return <SidebarView name={name} avatar={avatar} collapsed={collapsed} onToggle={toggle} />;
 }
 
 /** Collapsed it is an icon rail: nav icons keep their name through aria-label and title (U4). */

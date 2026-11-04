@@ -60,3 +60,44 @@ test("an unknown or foreign deck URL shows not found inside the shell", async ({
   await setTheme(page, "dark");
   await expectNoSeriousA11y(page);
 });
+
+test("sidebar collapses to an icon rail, remembers it across reload, and stays usable", async ({ page }) => {
+  await signIn(page, "Nicole");
+  const aside = page.getByRole("complementary");
+  const toggle = aside.getByRole("button", { name: "Sidebar" });
+  const nav = page.getByRole("navigation", { name: "Main" });
+  await expect(toggle).toHaveAttribute("aria-expanded", "true");
+  const wide = (await aside.boundingBox())!.width;
+
+  await toggle.click();
+  await expect(toggle).toHaveAttribute("aria-expanded", "false");
+  expect((await aside.boundingBox())!.width).toBeLessThan(wide);
+  await expect(aside).not.toContainText("Nicole");
+  for (const theme of ["light", "dark"] as const) {
+    await setTheme(page, theme);
+    await expectNoSeriousA11y(page);
+    await expectTargetsAtLeast44(page);
+  }
+
+  await page.reload();
+  await expect(toggle).toHaveAttribute("aria-expanded", "false");
+
+  // Navigation and the profile menu work collapsed.
+  await nav.getByRole("link", { name: "Progress" }).click();
+  await page.waitForURL("**/progress");
+  await expect(nav.getByRole("link", { name: "Progress" })).toHaveAttribute("aria-current", "page");
+  await aside.getByRole("button", { name: "Nicole" }).click();
+  await expect(page.getByRole("menuitem", { name: "Settings" })).toBeVisible();
+  await expectNoSeriousA11y(page);
+  await page.keyboard.press("Escape");
+
+  await toggle.click();
+  await expect(toggle).toHaveAttribute("aria-expanded", "true");
+  await page.reload();
+  await expect(toggle).toHaveAttribute("aria-expanded", "true");
+  await expect(aside).toContainText("Nicole");
+  for (const theme of ["light", "dark"] as const) {
+    await setTheme(page, theme);
+    await expectNoSeriousA11y(page);
+  }
+});

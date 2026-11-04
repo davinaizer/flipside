@@ -82,3 +82,4 @@ F15.6: profile menu e2e asserts focus returns to the trigger after Escape and th
 REVIEW F15 round 2: PASS at 40ef0d0
 F15 done: sidebar profile menu merged via PR 41. MANUAL PENDING: none from the ledger (iPad menu check added to docs/manual-checks.md).
 - F16.1: collapse toggle and icon rail in Sidebar/ProfileMenu (panelLeft icon); state not yet persisted (F16.2). Tests in Sidebar.test.tsx.
+- F16.2: collapsed state persisted in localStorage (sidebar-state.ts, useSyncExternalStore); e2e collapse, reload, nav, menu and axe in both themes.
