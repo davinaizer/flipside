@@ -519,7 +519,7 @@
           ],
           "area": "src/server/sessions.ts, src/shared/schemas/session.ts",
           "done_when": "sessions-end-summary.test.ts: summary returns deck name ('Several decks' flag when more than one), and topic for each revisit card; only add fields still missing from the current response.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F12.2",

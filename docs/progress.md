@@ -42,3 +42,4 @@ F11.5: no code change needed; the timer starts in showFront (front shown) and th
 F11.6: e2e AC17 (reveal by button, card tap and Space; hover, pressed, focus-visible on Show answer in both themes; hover skipped on touch). Seeded "Practice flip" profiles; fixed the 5-card test to look at the visible face since both faces are now in the DOM. Axe in both themes already covered by existing walks.
 REVIEW F11 round 1: PASS at e1a2d27
 F11 done: PR 32, review PASS, verify and e2e green. MANUAL PENDING: none.
+F12.1: GET /sessions/{id}/summary now returns deckName and severalDecks (goAgain already had topic and deckName); tested with one and two decks.

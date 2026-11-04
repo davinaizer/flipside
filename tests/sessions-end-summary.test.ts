@@ -61,6 +61,7 @@ test("end keeps grades, the last grade completes, and the summary counts first g
   expect(sum1.missIds).toEqual([c[1]!.id, c[3]!.id]);
   expect(sum1.goAgain.map((g) => g.cardId)).toEqual([c[1]!.id, c[3]!.id]);
   expect(sum1.goAgain[0]).toMatchObject({ front: c[1]!.front, topic: c[1]!.topic, deckName: deck.name });
+  expect(sum1).toMatchObject({ deckName: deck.name, severalDecks: false });
   // Ending a completed session changes nothing.
   expect((await endSession(me, s1, at(30), db)).session).toEqual({ id: s1, endedAt: at(7).toISOString(), endedReason: "completed" });
 
@@ -100,6 +101,12 @@ test("end keeps grades, the last grade completes, and the summary counts first g
   const sum4 = await getSummary(me, s4, db);
   expect(sum4.goAgain.length).toBe(3);
   expect(sum4.missIds.length).toBe(5);
+
+  // Several decks: no single name, the flag is set.
+  const deck2 = await f.createDeck(db, me.id);
+  const d2card = await f.createCard(db, deck2.id);
+  const sum6 = await getSummary(me, await session([c[0]!.id, d2card.id]), db);
+  expect(sum6).toMatchObject({ deckName: null, severalDecks: true });
 
   // Routes: profile header, 404 for another profile or unknown id, 400-free bad id is 404.
   const ctx = (id: string) => ({ params: Promise.resolve({ id }) });

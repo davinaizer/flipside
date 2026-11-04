@@ -10,6 +10,8 @@ const base: SessionSummary = {
   counts: { not_yet: 2, nearly: 1, got_it: 3 },
   gradedCount: 6,
   durationMs: 240000,
+  deckName: "Bio",
+  severalDecks: false,
   goAgain: [1, 2, 3].map((n) => ({ cardId: id(n), deckName: "Bio", topic: "Cells", front: `Question ${n}` })),
   missIds: [id(1), id(2)],
 };

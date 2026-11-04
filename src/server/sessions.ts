@@ -299,6 +299,15 @@ export async function getSummary(profile: Profile, id: string, db: Db = getDb())
           .where(and(inArray(cards.id, goAgainIds), eq(decks.ownerProfileId, profile.id)));
   const byId = new Map(goAgainRows.map((c) => [c.id, c]));
 
+  const deckRows =
+    meta.cardIds.length === 0
+      ? []
+      : await db
+          .selectDistinct({ id: decks.id, name: decks.name })
+          .from(cards)
+          .innerJoin(decks, eq(decks.id, cards.deckId))
+          .where(and(inArray(cards.id, meta.cardIds), eq(decks.ownerProfileId, profile.id)));
+
   const end = row.endedAt ?? reviews.at(-1)?.reviewedAt ?? row.startedAt;
   return {
     session: {
@@ -313,6 +322,8 @@ export async function getSummary(profile: Profile, id: string, db: Db = getDb())
     counts,
     gradedCount: first.size,
     durationMs: Math.max(0, end.getTime() - row.startedAt.getTime()),
+    deckName: deckRows.length === 1 ? deckRows[0]!.name : null,
+    severalDecks: deckRows.length > 1,
     goAgain: goAgainIds.flatMap((cardId) => {
       const c = byId.get(cardId);
       return c ? [{ cardId, deckName: c.deckName, topic: c.topic, front: c.front }] : [];
