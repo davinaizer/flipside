@@ -400,7 +400,7 @@
           ],
           "area": "src/ui/practice/PracticeView.tsx, src/ui/icons/Icon.tsx",
           "done_when": "PracticeView test: eye icon on Show answer, hint text rendered after the button and not inside the card element.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F11.2",

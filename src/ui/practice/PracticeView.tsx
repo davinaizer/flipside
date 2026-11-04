@@ -152,18 +152,17 @@ export function PracticeView({
               {card.front}
             </h1>
             {card.frontImage && <CardImage image={card.frontImage} />}
-            <p className="mt-6 opacity-80">{FRONT_HINT}</p>
           </>
         )}
       </article>
       {!revealed && (
-        <button
-          type="button"
-          onClick={onReveal}
-          className={buttonClass("primary", { size: "large", extra: "self-center" })}
-        >
-          Show answer
-        </button>
+        <div className="flex flex-col items-center gap-3">
+          <button type="button" onClick={onReveal} className={buttonClass("primary", { size: "large" })}>
+            <Icon name="eye" />
+            Show answer
+          </button>
+          <p className="text-center text-body-sm text-on-surface-variant">{FRONT_HINT}</p>
+        </div>
       )}
       {footer}
     </div>

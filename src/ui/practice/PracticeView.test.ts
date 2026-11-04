@@ -81,3 +81,14 @@ test("progress shows done, current and remaining with a text count", () => {
 test("the loading skeleton renders", () => {
   expect(renderToStaticMarkup(createElement(PracticeLoading))).toContain('aria-label="Loading"');
 });
+
+test("front: eye icon on Show answer; hint follows the button, outside the card", () => {
+  const html = render(false);
+  const cardEnd = html.indexOf("</article>");
+  const button = html.indexOf("Show answer");
+  const hint = html.indexOf(FRONT_HINT);
+  expect(html.slice(html.indexOf("<button"), button)).toContain("<svg");
+  expect(html.slice(html.indexOf("<article"), cardEnd)).not.toContain(FRONT_HINT);
+  expect(hint).toBeGreaterThan(button);
+  expect(hint).toBeGreaterThan(cardEnd);
+});
