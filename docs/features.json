@@ -973,6 +973,20 @@
           "area": "docs/manual-checks.md, docs/operations.md",
           "done_when": "Both files say Log out in the sidebar profile menu where they said Sign out on the Profile page; a manual check is added for the menu on a real iPad (tap targets, opens and closes with touch). verify.sh green.",
           "status": "done"
+        },
+        {
+          "id": "F15.6",
+          "title": "Assert focus return and outside-click close in the profile menu e2e",
+          "reqs": [
+            "P6",
+            "AG3"
+          ],
+          "prd_sections": [
+            "13"
+          ],
+          "area": "e2e/profile-menu.spec.ts, docs/decisions.md",
+          "done_when": "e2e/profile-menu.spec.ts asserts the trigger is focused after Escape, and that an outside click (e.g. on main) closes the menu and returns focus to the trigger; passes on desktop and iPad. The ASSUMED entry in docs/decisions.md about focus return is corrected to name the spec that now covers it. verify.sh green.",
+          "status": "todo"
         }
       ]
     }

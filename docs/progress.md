@@ -77,3 +77,4 @@ F15.2: sidebar footer is now a ProfileMenu button (Profile, Settings, Switch pro
 F15.3: top bar is the theme toggle only (no props); Sign out button removed from the Profile page; auth and profiles e2e go through the sidebar menu.
 F15.4: e2e/profile-menu.spec.ts covers the menu items, 44 px targets, Escape, navigation and axe open in both themes on desktop and iPad; Log out stays in auth.spec.
 F15.5: manual checks and operations now say Log out in the sidebar profile menu; added an iPad touch check for the menu.
+REVIEW F15 round 1: GAPS at 3dc070a (focus return after Escape and outside-click close not asserted in e2e; fix task F15.6)
