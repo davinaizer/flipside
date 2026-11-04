@@ -383,7 +383,7 @@
         "practice_answer_revealed"
       ],
       "notes": "Eye icon on Show answer; hint moves outside the card, below the button. 3D flip (CSS transform, perspective, backface-visibility; no new dependency) for button, card tap and Space; reduced motion swaps with no rotation; Undo last returns to the front with no reverse animation. 'How well did you know this?' above the grade buttons. Keep the R12 timing unaffected by the animation (time starts when the front appears). Next-card render must stay under 200 ms (section 16): the flip is for the reveal only.",
-      "status": "in_progress",
+      "status": "done",
       "branch": "feat/F11-practice-flip",
       "pr": 32,
       "tasks": [
