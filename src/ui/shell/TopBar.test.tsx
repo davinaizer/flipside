@@ -2,7 +2,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { expect, test, vi } from "vitest";
 
 vi.mock("@/ui/settings/ThemeToggle", () => ({ ThemeToggle: () => <button role="switch" aria-label="Dark theme" /> }));
-vi.mock("next/navigation", () => ({ usePathname: () => "/library" }));
+vi.mock("next/navigation", () => ({ usePathname: () => "/library", useRouter: () => ({ push: () => {} }) }));
 
 import { AVATAR_IDS } from "@/shared/avatars";
 import { Sidebar } from "./Sidebar";

@@ -1,6 +1,11 @@
 import { expect } from "@playwright/test";
 import { expectNoSeriousA11y, expectTargetsAtLeast44, setTheme, test } from "./helpers";
 
+async function openMenu(page: import("@playwright/test").Page) {
+  const trigger = page.getByRole("complementary").getByRole("button", { expanded: false });
+  await trigger.click();
+}
+
 async function signIn(page: import("@playwright/test").Page, name: string) {
   await page.goto("/");
   await page.getByRole("button", { name }).click();
@@ -16,8 +21,15 @@ test("sidebar shows sections, profile and highlights the current one", async ({ 
   await page.waitForURL("**/progress");
   await expect(nav.getByRole("link", { name: "Progress" })).toHaveAttribute("aria-current", "page");
   await expect(nav.getByRole("link", { name: "Library" })).not.toHaveAttribute("aria-current");
-  await nav.getByRole("link", { name: "Settings" }).click();
-  await expect(nav.getByRole("link", { name: "Settings" })).toHaveAttribute("aria-current", "page");
+  await expect(nav.getByRole("link", { name: "Settings" })).toHaveCount(0);
+  await openMenu(page);
+  await page.getByRole("menuitem", { name: "Settings" }).click();
+  await page.waitForURL("**/settings");
+  await openMenu(page);
+  await expect(page.getByRole("menuitem", { name: "Settings" })).toHaveAttribute("aria-current", "page");
+  await page.keyboard.press("Escape");
+  await expect(page.getByRole("menuitem", { name: "Settings" })).toHaveCount(0);
+  await expect(page).toHaveTitle("Flipside"); // soft navigation can leave the title empty for a moment
   for (const theme of ["light", "dark"] as const) {
     await setTheme(page, theme);
     await expectNoSeriousA11y(page);
@@ -28,7 +40,8 @@ test("sidebar shows sections, profile and highlights the current one", async ({ 
 test("Switch profile returns to the picker from any page", async ({ page }) => {
   await signIn(page, "Davi");
   await page.goto("/settings");
-  await page.getByRole("link", { name: "Switch profile" }).click();
+  await openMenu(page);
+  await page.getByRole("menuitem", { name: "Switch profile" }).click();
   await expect(page.getByRole("button", { name: "Nicole" })).toBeVisible();
 });
 
@@ -42,7 +55,8 @@ test("an unknown or foreign deck URL shows not found inside the shell", async ({
   await signIn(page, "Davi");
   await page.goto("/decks/00000000-0000-4000-8000-000000000000");
   await expect(page.getByRole("heading", { name: /find that deck/ })).toBeVisible();
-  await expect(page.getByRole("link", { name: "Switch profile" })).toBeVisible();
+  await openMenu(page);
+  await expect(page.getByRole("menuitem", { name: "Switch profile" })).toBeVisible();
   await setTheme(page, "dark");
   await expectNoSeriousA11y(page);
 });

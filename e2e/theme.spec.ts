@@ -37,7 +37,8 @@ test("theme toggle switches at once, saves to the profile, follows the profile",
     await b.context.close();
 
     // Switching profile applies that profile's theme.
-    await a.page.getByRole("link", { name: "Switch profile" }).click();
+    await a.page.getByRole("complementary").getByRole("button", { expanded: false }).click();
+    await a.page.getByRole("menuitem", { name: "Switch profile" }).click();
     await a.page.getByRole("button", { name: "Davi" }).click();
     await a.page.waitForURL("**/library");
     await expect(html).toHaveAttribute("data-theme", "light");

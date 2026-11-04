@@ -927,7 +927,7 @@
           ],
           "area": "src/ui/shell/ProfileMenu.tsx, src/ui/shell/Sidebar.tsx, src/ui/icons",
           "done_when": "Component test: the sidebar footer shows the avatar and name as one button that opens a menu (aria-haspopup, aria-expanded); closed by default; items in order Profile (/profile), Settings (/settings), Switch profile (/?switch=1), Log out (calls the helper from F15.1); Escape and an outside click close it and return focus to the trigger; arrow keys move between items; targets at least 44 px; semantic tokens only. Settings is removed from the main nav and the menu item carries aria-current on /settings. Existing e2e (app-shell, profiles, theme) updated to open the menu first and still pass. verify.sh green.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F15.3",

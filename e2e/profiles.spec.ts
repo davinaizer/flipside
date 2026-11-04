@@ -35,7 +35,8 @@ for (const [me, other] of [
     expect(res.status()).toBe(404);
 
     await page.goto("/library");
-    await page.getByRole("link", { name: "Switch profile" }).click();
+    await page.getByRole("complementary").getByRole("button", { expanded: false }).click();
+    await page.getByRole("menuitem", { name: "Switch profile" }).click();
     await expect(page.getByRole("button", { name: other })).toBeVisible();
   });
 }

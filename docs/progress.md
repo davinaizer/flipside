@@ -73,3 +73,4 @@ F14.9: signOut navigates to /login in a finally block, swallowing a 401 from log
 REVIEW F14 round 2: PASS at 0104871
 F14 done: password sign-in (PR 35). Merged with full-suite e2e flaky (deck skeleton, performance), same flake on main; user approved. MANUAL PENDING: none
 F15.1: logOut(push) moved to src/ui/profile/sign-out.ts (tests for 401 and fetch throw); ProfileScreen uses it.
+F15.2: sidebar footer is now a ProfileMenu button (Profile, Settings, Switch profile, Log out); Settings left the main nav; e2e open the menu first.
