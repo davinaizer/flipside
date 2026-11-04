@@ -1,5 +1,5 @@
-import { expect, test } from "@playwright/test";
-import { expectNoSeriousA11y, expectTargetsAtLeast44, setTheme } from "./helpers";
+import { expect } from "@playwright/test";
+import { expectNoSeriousA11y, expectTargetsAtLeast44, setTheme, test } from "./helpers";
 
 const COOKIE = "flipside_profile";
 

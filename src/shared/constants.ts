@@ -66,3 +66,9 @@ export const QUESTION_SCALE = 1.5;
 
 /** Display name length limit after trim (P7). */
 export const PROFILE_NAME_MAX = 24;
+
+/** Name of the signed sign-in cookie (AG2). */
+export const AUTH_COOKIE_NAME = "flipside_auth";
+/** How long a sign-in stays valid (AG2). */
+export const AUTH_COOKIE_MAX_AGE_DAYS = 30;
+export const AUTH_COOKIE_MAX_AGE_SECONDS = AUTH_COOKIE_MAX_AGE_DAYS * 24 * 60 * 60;

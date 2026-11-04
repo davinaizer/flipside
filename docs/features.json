@@ -743,9 +743,9 @@
         "profile_picker"
       ],
       "notes": "ADMIN_PASSWORD in env schema (required) and .env.example placeholder. POST /auth/login and /auth/logout, HMAC-signed flipside_auth cookie (node:crypto, timingSafeEqual; key derived from ADMIN_PASSWORD; 30-day constant in src/shared). One access check applied to all pages and /api/v1 except GET /health and POST /auth/login. Login page reuses the profile picker layout and the top-bar theme toggle. Sign out on the Profile page. Every e2e spec signs in through a shared helper; Playwright webServer and launchd app job get ADMIN_PASSWORD; update docs/operations.md. Risk to note in the PR: an iPad home-screen shortcut keeps its own cookies, so it signs in once separately.",
-      "status": "todo",
-      "branch": null,
-      "pr": null,
+      "status": "done",
+      "branch": "feat/F14-password-sign-in",
+      "pr": 35,
       "tasks": [
         {
           "id": "F14.1",
@@ -760,7 +760,7 @@
           ],
           "area": "src/server/env.ts, src/shared/constants.ts, .env.example, playwright.config.ts",
           "done_when": "env.test.ts: start fails without ADMIN_PASSWORD; 30-day cookie lifetime and cookie name are constants in src/shared; .env.example has a placeholder.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F14.2",
@@ -775,7 +775,7 @@
           ],
           "area": "src/server/auth.ts",
           "done_when": "Unit tests: node:crypto HMAC-SHA256, key derived from ADMIN_PASSWORD, timingSafeEqual; rejects tampered, expired and wrong-key tokens; changing the password invalidates old tokens. No new dependency.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F14.3",
@@ -790,7 +790,7 @@
           ],
           "area": "src/app/api/v1/auth/login/route.ts, logout/route.ts, src/shared/schemas",
           "done_when": "API test: correct password sets httpOnly SameSite=Lax flipside_auth cookie; wrong password returns a neutral error with no reason; logout clears the cookie.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F14.4",
@@ -804,7 +804,7 @@
           ],
           "area": "src/proxy.ts (or middleware), src/server/http",
           "done_when": "API test: without a valid cookie pages redirect to /login and every /api/v1 route returns 401 except GET /health and POST /auth/login; valid cookie passes. One check, no per-route copies.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F14.5",
@@ -819,7 +819,7 @@
           ],
           "area": "src/app/login/page.tsx, src/ui/profile/LoginScreen.tsx",
           "done_when": "Component test: password field, neutral error message, theme toggle from F9, picker layout; submits to /auth/login and goes to the picker.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F14.6",
@@ -832,7 +832,7 @@
           ],
           "area": "src/ui/profile/ProfileScreen.tsx",
           "done_when": "Component test: Sign out calls /auth/logout and navigates to /login.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F14.7",
@@ -847,7 +847,7 @@
           ],
           "area": "e2e/helpers/index.ts, all e2e specs, playwright.config.ts",
           "done_when": "pnpm test:e2e: every spec signs in through the shared helper; new spec covers redirect, 401, wrong password, sign out, and axe on /login in both themes.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F14.8",
@@ -860,7 +860,14 @@
           ],
           "area": "docs/operations.md, ops/",
           "done_when": "docs/operations.md documents ADMIN_PASSWORD, rotation signs everyone out, and the iPad home-screen shortcut signing in separately; launchd app job passes the variable. verify.sh green.",
-          "status": "todo"
+          "status": "done"
+        },
+        {
+          "id": "F14.9",
+          "title": "Sign out goes to /login even when logout returns 401",
+          "done_when": "ProfileScreen signOut navigates to /login whatever api.logout returns (try/finally); unit test: fetch stub returns 401 and push is still called with /login. verify.sh green.",
+          "model": null,
+          "status": "done"
         }
       ]
     }

@@ -60,3 +60,15 @@ REVIEW F13 round 2: GAPS at 160c2ad
 F13.8: Read question aloud stops click propagation so it no longer reveals the answer; unit and e2e tests added.
 REVIEW F13 round 3: PASS at 165c106
 F13 done: PR 34, review PASS (round 3), verify and e2e green. MANUAL PENDING: none.
+F14.1 done: ADMIN_PASSWORD required in env schema, AUTH_COOKIE_NAME and 30-day max age in src/shared/constants, .env.example placeholder, vitest and playwright set a test password.
+- F14.2: src/server/auth.ts (checkPassword, signAuthToken, verifyAuthToken) with unit tests.
+F14.3: POST /auth/login (sets signed flipside_auth cookie) and /auth/logout (clears it), with a handler-level API test.
+F14.4: src/proxy.ts calls checkAccess (src/server/http/access.ts), the single cookie check: pages redirect to /login, /api/v1 returns 401, open: GET /health, POST /auth/login, /login page.
+F14.5: /login page on the picker layout (LoginForm + LoginScreen), api.login in the client; tests are static-render plus a fetch stub.
+F14.6: Sign out button on the Profile page calls /auth/logout and goes to /login; removed the sign-out placeholder slot.
+F14.7: e2e helpers export a signed-in `test` (and signInContext for new contexts); every spec uses it; new e2e/auth.spec.ts covers redirect, 401, wrong password, sign out, axe on /login in both themes.
+F14.8: docs/operations.md gains an App password section (ADMIN_PASSWORD, rotation, iPad shortcut signs in separately); the launchd app job sources .env before pnpm start.
+REVIEW F14 round 1: GAPS at e1d44de (Sign out does nothing when logout returns 401; fix task F14.9)
+F14.9: signOut navigates to /login in a finally block, swallowing a 401 from logout; unit test with a 401 stub.
+REVIEW F14 round 2: PASS at 0104871
+F14 done: password sign-in (PR 35). Merged with full-suite e2e flaky (deck skeleton, performance), same flake on main; user approved. MANUAL PENDING: none

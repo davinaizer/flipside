@@ -1,5 +1,5 @@
-import { expect, test, type Page, type TestInfo } from "@playwright/test";
-import { expectNoSeriousA11y, expectTargetsAtLeast44, setTheme } from "./helpers";
+import { expect, type Page, type TestInfo } from "@playwright/test";
+import { expectNoSeriousA11y, expectTargetsAtLeast44, setTheme, test } from "./helpers";
 
 // Each scenario owns profiles that only e2e-seed.ts creates (see PROGRESS_CARDS there for the history).
 // Hand-computed for the seeded history, all reviewed now: first attempts of 4, 6, 8 and 10 s graded

@@ -1,7 +1,9 @@
-import { expect, test, type Browser } from "@playwright/test";
+import { expect, type Browser } from "@playwright/test";
+import { signInContext, test } from "./helpers";
 
 async function signIn(browser: Browser, name: string) {
   const context = await browser.newContext();
+  await signInContext(context);
   const page = await context.newPage();
   await page.goto("/");
   await page.getByRole("button", { name }).click();

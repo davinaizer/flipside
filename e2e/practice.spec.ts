@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { expect, test, type Page, type TestInfo } from "@playwright/test";
-import { expectNoSeriousA11y, expectTargetsAtLeast44, setTheme } from "./helpers";
+import { expect, type Page, type TestInfo } from "@playwright/test";
+import { expectNoSeriousA11y, expectTargetsAtLeast44, setTheme, test } from "./helpers";
 
 const zip = readFileSync(join(process.cwd(), "fixtures/science-w2-deck.zip"));
 const DECK = "Practice science";

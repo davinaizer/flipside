@@ -2,8 +2,8 @@ import { spawn, type ChildProcess } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { expect, test, type Browser, type Page } from "@playwright/test";
-import { expectNoSeriousA11y, expectTargetsAtLeast44, setTheme } from "./helpers";
+import { expect, type Browser, type Page } from "@playwright/test";
+import { expectNoSeriousA11y, expectTargetsAtLeast44, setTheme, signInContext, test } from "./helpers";
 
 // Projects run in parallel, so each owns a profile that only e2e-seed.ts creates for this file.
 const ME = { desktop: "Settings Desktop", ipad: "Settings iPad" } as const;
@@ -11,6 +11,7 @@ const basePort = Number(process.env.E2E_PORT ?? "3100");
 
 async function signIn(browser: Browser, name: string, use: object) {
   const context = await browser.newContext(use);
+  await signInContext(context);
   const page = await context.newPage();
   await page.goto("/");
   await page.getByRole("button", { name }).click();
