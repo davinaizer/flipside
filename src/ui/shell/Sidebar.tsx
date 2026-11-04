@@ -2,14 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Avatar } from "@/ui/avatars";
-import { buttonClass, FOCUS_RING, PRESSED } from "@/ui/button/button-class";
+import { FOCUS_RING, PRESSED } from "@/ui/button/button-class";
 import { Icon, Logo, type IconName } from "@/ui/icons/Icon";
+import { ProfileMenu } from "./ProfileMenu";
 
 const SECTIONS: { href: string; label: string; icon: IconName; match: string[] }[] = [
   { href: "/library", label: "Library", icon: "library", match: ["/library", "/decks", "/import"] },
   { href: "/progress", label: "Progress", icon: "progress", match: ["/progress"] },
-  { href: "/settings", label: "Settings", icon: "settings", match: ["/settings"] },
 ];
 
 /** Deck pages belong to the Library, so the Library stays highlighted there (README item 16). */
@@ -46,16 +45,7 @@ export function Sidebar({ name, avatar }: { name: string; avatar: string }) {
           </ul>
         </nav>
       </div>
-      <div className="flex flex-col gap-3 rounded-card border border-card-edge bg-surface-card p-4 shadow-card">
-        <div className="flex items-center gap-3">
-          <Avatar id={avatar} size={44} />
-          <span className="font-semibold">{name}</span>
-        </div>
-        <Link href="/?switch=1" className={buttonClass("secondary", { size: "compact", extra: "w-full whitespace-nowrap" })}>
-          <Icon name="switchProfile" />
-          Switch profile
-        </Link>
-      </div>
+      <ProfileMenu name={name} avatar={avatar} />
     </aside>
   );
 }

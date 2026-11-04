@@ -5,7 +5,7 @@ import { api } from "@/ui/api/client";
 
 vi.mock("next/navigation", () => ({ useRouter: () => ({ refresh: () => {}, push: () => {} }) }));
 
-import { nameError, ProfileForm, ProfileScreen, signOut } from "./ProfileScreen";
+import { nameError, ProfileForm, ProfileScreen } from "./ProfileScreen";
 
 afterEach(() => vi.unstubAllGlobals());
 
@@ -44,22 +44,6 @@ test("Save calls PATCH /me with the avatar and name", async () => {
   expect(JSON.parse(init.body as string)).toEqual({ name: "Nic", avatar: AVATAR_IDS[0] });
 });
 
-test("the screen renders a Sign out button", () => {
-  expect(renderToStaticMarkup(<ProfileScreen name="Nicole" avatar={second} />)).toContain("Sign out");
-});
-
-test("Sign out calls /auth/logout and navigates to /login", async () => {
-  const fetchMock = vi.fn(async () => Response.json({ ok: true }));
-  vi.stubGlobal("fetch", fetchMock);
-  const push = vi.fn();
-  await signOut(push);
-  expect(fetchMock).toHaveBeenCalledWith("/api/v1/auth/logout", expect.objectContaining({ method: "POST" }));
-  expect(push).toHaveBeenCalledWith("/login");
-});
-
-test("sign out still goes to /login when logout returns 401", async () => {
-  vi.stubGlobal("fetch", vi.fn(async () => Response.json({ error: { code: "UNAUTHORIZED", message: "no" } }, { status: 401 })));
-  const push = vi.fn();
-  await signOut(push);
-  expect(push).toHaveBeenCalledWith("/login");
+test("the screen has no Sign out button (it lives in the sidebar menu)", () => {
+  expect(renderToStaticMarkup(<ProfileScreen name="Nicole" avatar={second} />)).not.toContain("Sign out");
 });

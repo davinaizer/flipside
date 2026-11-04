@@ -35,7 +35,8 @@ for (const [me, other] of [
     expect(res.status()).toBe(404);
 
     await page.goto("/library");
-    await page.getByRole("link", { name: "Switch profile" }).click();
+    await page.getByRole("complementary").getByRole("button", { expanded: false }).click();
+    await page.getByRole("menuitem", { name: "Switch profile" }).click();
     await expect(page.getByRole("button", { name: other })).toBeVisible();
   });
 }
@@ -62,7 +63,7 @@ test("picker and Library pass axe and 44 px checks in both themes", async ({ pag
 // Seeded profiles use AVATAR_IDS[2]; the test picks a different one.
 const NEW = 3;
 
-test("edit profile: avatar and name show in top bar, sidebar and picker, and survive reload", async ({
+test("edit profile: avatar and name show in sidebar and picker, and survive reload", async ({
   page,
 }, info) => {
   const seeded = `Profile ${info.project.name}`;
@@ -70,7 +71,8 @@ test("edit profile: avatar and name show in top bar, sidebar and picker, and sur
   await page.goto("/?switch=1");
   await page.getByRole("button", { name: seeded, exact: true }).click();
   await page.waitForURL("**/library");
-  await page.getByRole("link", { name: `${seeded}, open profile` }).click();
+  await page.getByRole("complementary").getByRole("button", { expanded: false }).click();
+  await page.getByRole("menuitem", { name: "Profile", exact: true }).click();
   await page.waitForURL("**/profile");
 
   // Empty and 25-character names are rejected with a message and nothing is saved.
@@ -91,8 +93,6 @@ test("edit profile: avatar and name show in top bar, sidebar and picker, and sur
   // The avatar is aria-hidden, so it is found by its image source inside each place it shows.
   const picture = `img[src="/avatars/${AVATAR_IDS[NEW]}.webp"]`;
   const check = async () => {
-    const topBar = page.getByRole("link", { name: `${renamed}, open profile` });
-    await expect(topBar.locator(picture)).toBeVisible();
     const sidebar = page.getByRole("complementary");
     await expect(sidebar.locator(picture)).toBeVisible();
     await expect(sidebar).toContainText(renamed);

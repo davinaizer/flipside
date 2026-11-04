@@ -72,3 +72,12 @@ REVIEW F14 round 1: GAPS at e1d44de (Sign out does nothing when logout returns 4
 F14.9: signOut navigates to /login in a finally block, swallowing a 401 from logout; unit test with a 401 stub.
 REVIEW F14 round 2: PASS at 0104871
 F14 done: password sign-in (PR 35). Merged with full-suite e2e flaky (deck skeleton, performance), same flake on main; user approved. MANUAL PENDING: none
+F15.1: logOut(push) moved to src/ui/profile/sign-out.ts (tests for 401 and fetch throw); ProfileScreen uses it.
+F15.2: sidebar footer is now a ProfileMenu button (Profile, Settings, Switch profile, Log out); Settings left the main nav; e2e open the menu first.
+F15.3: top bar is the theme toggle only (no props); Sign out button removed from the Profile page; auth and profiles e2e go through the sidebar menu.
+F15.4: e2e/profile-menu.spec.ts covers the menu items, 44 px targets, Escape, navigation and axe open in both themes on desktop and iPad; Log out stays in auth.spec.
+F15.5: manual checks and operations now say Log out in the sidebar profile menu; added an iPad touch check for the menu.
+REVIEW F15 round 1: GAPS at 3dc070a (focus return after Escape and outside-click close not asserted in e2e; fix task F15.6)
+F15.6: profile menu e2e asserts focus returns to the trigger after Escape and that an outside click closes the menu; outside click no longer pulls focus back to the trigger (it followed the click anyway).
+REVIEW F15 round 2: PASS at 40ef0d0
+F15 done: sidebar profile menu merged via PR 41. MANUAL PENDING: none from the ledger (iPad menu check added to docs/manual-checks.md).

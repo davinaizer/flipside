@@ -33,8 +33,8 @@ test("Sign out ends the session", async ({ browser }) => {
   // The e2e-only profile keeps this test off the seeded profiles other specs use.
   await page.getByRole("button", { name: "Davi" }).click();
   await page.waitForURL("**/library");
-  await page.goto("/profile");
-  await page.getByRole("button", { name: "Sign out" }).click();
+  await page.getByRole("complementary").getByRole("button", { expanded: false }).click();
+  await page.getByRole("menuitem", { name: "Log out" }).click();
   await expect(page).toHaveURL(/\/login$/);
   await page.goto("/library");
   await expect(page).toHaveURL(/\/login$/);

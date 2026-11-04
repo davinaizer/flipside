@@ -45,6 +45,13 @@ const ICONS = {
     </>
   ),
   moon: <path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z" />,
+  user: (
+    <>
+      <circle cx="12" cy="8" r="4" />
+      <path d="M4 21a8 8 0 0 1 16 0" />
+    </>
+  ),
+  logOut: <path d="M10 4H5v16h5M15 8l4 4-4 4M19 12H9" />,
   switchProfile: (
     <>
       <circle cx="9" cy="8" r="3" />

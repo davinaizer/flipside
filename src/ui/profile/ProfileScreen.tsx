@@ -121,22 +121,11 @@ export function ProfileForm({ name: initialName, avatar: initialAvatar, onSave }
   );
 }
 
-/** Clears the auth cookie (POST /auth/logout), then goes to the login page (AG3). */
-export async function signOut(push: (href: string) => void): Promise<void> {
-  try {
-    await api.logout();
-  } catch {
-    // A 401 (expired cookie, rotated password) means we are signed out already: still go to /login.
-  } finally {
-    push("/login");
-  }
-}
-
 export function ProfileScreen({ name, avatar }: { name: string; avatar: string }) {
   const router = useRouter();
   async function onSave(v: { name: string; avatar: string }) {
     await api.updateProfile({ name: v.name, avatar: v.avatar as AvatarId });
-    // Re-renders the layout so the top bar, sidebar and picker show the change at once.
+    // Re-renders the layout so the sidebar and picker show the change at once.
     router.refresh();
   }
   return (
@@ -144,9 +133,6 @@ export function ProfileScreen({ name, avatar }: { name: string; avatar: string }
       <h1 className="text-headline-lg font-semibold">Profile</h1>
       <p className="text-on-surface-variant">Choose your avatar and the name shown around the app.</p>
       <ProfileForm name={name} avatar={avatar} onSave={onSave} />
-      <button type="button" onClick={() => signOut(router.push)} className={`mt-8 ${buttonClass("secondary")}`}>
-        Sign out
-      </button>
     </>
   );
 }

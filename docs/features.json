@@ -895,9 +895,9 @@
       ],
       "design_screens": [],
       "notes": "Remove the top-bar avatar (U3); the top bar keeps only the theme toggle (AC16). Sidebar footer shows avatar and name like Claude Code Desktop; tapping it opens a menu: Profile (/profile), Settings, Switch profile (to the picker), Log out (POST /auth/logout then /login). Settings leaves the sidebar nav. Log out moves from the Profile page to the menu and is removed there (AG3, D27). Menu needs keyboard and screen-reader support (focus ring, Escape closes, 44 px targets), works in both themes with semantic tokens only, and e2e/axe cover it. No new dependency. Practice has no sidebar and is unchanged.",
-      "status": "todo",
-      "branch": null,
-      "pr": null,
+      "status": "done",
+      "branch": "feat/F15-sidebar-profile-menu",
+      "pr": 41,
       "tasks": [
         {
           "id": "F15.1",
@@ -911,7 +911,7 @@
           ],
           "area": "src/ui/profile/sign-out.ts, src/ui/profile/ProfileScreen.tsx, src/ui/api/client.ts",
           "done_when": "Unit test: logOut(push) POSTs /api/v1/auth/logout and then pushes /login, also when logout returns 401 or the fetch throws. ProfileScreen imports it instead of defining its own signOut; its Sign out button still works until F15.3. verify.sh green.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F15.2",
@@ -927,7 +927,7 @@
           ],
           "area": "src/ui/shell/ProfileMenu.tsx, src/ui/shell/Sidebar.tsx, src/ui/icons",
           "done_when": "Component test: the sidebar footer shows the avatar and name as one button that opens a menu (aria-haspopup, aria-expanded); closed by default; items in order Profile (/profile), Settings (/settings), Switch profile (/?switch=1), Log out (calls the helper from F15.1); Escape and an outside click close it and return focus to the trigger; arrow keys move between items; targets at least 44 px; semantic tokens only. Settings is removed from the main nav and the menu item carries aria-current on /settings. Existing e2e (app-shell, profiles, theme) updated to open the menu first and still pass. verify.sh green.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F15.3",
@@ -943,7 +943,7 @@
           ],
           "area": "src/ui/shell/TopBar.tsx, src/app/(app)/layout.tsx, src/ui/profile/ProfileScreen.tsx, e2e/auth.spec.ts",
           "done_when": "TopBar test: renders only the theme toggle, no avatar link, and takes no profile props. ProfileScreen test: no Sign out button. e2e/auth.spec.ts logs out through the sidebar menu and still lands on /login with the cookie cleared; profiles.spec edits the avatar and name and checks them in the sidebar and picker only. verify.sh and pnpm test:e2e green.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F15.4",
@@ -959,7 +959,7 @@
           ],
           "area": "e2e/app-shell.spec.ts or new e2e/profile-menu.spec.ts",
           "done_when": "pnpm test:e2e on desktop and iPad: the menu opens from the footer, lists the four items, Profile opens /profile, Settings opens /settings, Switch profile returns to the picker, Log out ends the session; Escape closes it; axe reports no serious or critical issues with the menu open in light and dark; every item is at least 44 px tall.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F15.5",
@@ -972,7 +972,21 @@
           ],
           "area": "docs/manual-checks.md, docs/operations.md",
           "done_when": "Both files say Log out in the sidebar profile menu where they said Sign out on the Profile page; a manual check is added for the menu on a real iPad (tap targets, opens and closes with touch). verify.sh green.",
-          "status": "todo"
+          "status": "done"
+        },
+        {
+          "id": "F15.6",
+          "title": "Assert focus return and outside-click close in the profile menu e2e",
+          "reqs": [
+            "P6",
+            "AG3"
+          ],
+          "prd_sections": [
+            "13"
+          ],
+          "area": "e2e/profile-menu.spec.ts, docs/decisions.md",
+          "done_when": "e2e/profile-menu.spec.ts asserts the trigger is focused after Escape, and that an outside click (e.g. on main) closes the menu and returns focus to the trigger; passes on desktop and iPad. The ASSUMED entry in docs/decisions.md about focus return is corrected to name the spec that now covers it. verify.sh green.",
+          "status": "done"
         }
       ]
     }
