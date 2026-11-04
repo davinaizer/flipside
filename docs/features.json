@@ -562,7 +562,7 @@
           ],
           "area": "e2e/practice.spec.ts, e2e/a11y.spec.ts",
           "done_when": "pnpm test:e2e AC18: finish a session and check figures against grades given; Practise those now starts a session of the misses; axe clean in both themes.",
-          "status": "todo"
+          "status": "done"
         }
       ]
     },

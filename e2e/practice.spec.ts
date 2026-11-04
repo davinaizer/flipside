@@ -267,3 +267,34 @@ test("reveal by button, card tap and Space; buttons show hover, pressed and focu
     expect((await read(showAnswer)).outline).not.toMatch(/^none/);
   }
 });
+
+test("AC18: the summary figures match the grades given, and Practise those now starts a session of the misses", async ({ page }, info) => {
+  await signInWithDeck(page, "summary", info);
+  await page.goto("/library");
+  await page.getByRole("button", { name: "Start practice" }).click();
+  await page.waitForURL("**/practice/*");
+  await expect(page.getByText("Card 1 of 5")).toBeVisible();
+
+  await grade(page, "Got it"); // card 1
+  await grade(page, "Nearly"); // card 2
+  await grade(page, "Not yet"); // card 3 (re-queued)
+  await page.getByRole("button", { name: "End session" }).click();
+
+  await expect(page.getByRole("heading", { name: "Session summary" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: DECK })).toBeVisible();
+  await expect(page.getByText("Time spent:")).toBeVisible();
+  await expect(page.getByText("1 Got it")).toBeVisible();
+  await expect(page.getByText("1 Nearly")).toBeVisible();
+  await expect(page.getByText("1 Not yet")).toBeVisible();
+  const revisit = page.getByRole("region", { name: "Cards to revisit" });
+  await expect(revisit.getByText("1 for review")).toBeVisible();
+  await expect(revisit.getByText(/^Not yet · /)).toHaveCount(1);
+  // Items the design README leaves out stay out.
+  await expect(page.getByText(/Focus clue|Review all answers/)).toHaveCount(0);
+  await checkBothThemes(page);
+
+  await page.getByRole("button", { name: "Practise those now (1 card)" }).click();
+  await page.waitForURL(/\/practice\/[^/]+$/);
+  await expect(page.getByText("Card 1 of 1")).toBeVisible();
+  await expect(question(page)).toContainText("carbon dioxide");
+});
