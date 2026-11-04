@@ -23,3 +23,11 @@ Domain terms used in code, reviews and architecture discussions. The PRD stays a
 **Candidates**: the cards a session over a scope could hold before the length cut: due cards plus New cards up to what the daily new-card cap still allows (PRD section 5). Library and Deck page counts are candidate counts from the session builder, so they always equal what a session would pick.
 
 **Finished (session)**: the replayed queue has no current card. A finished session is marked `completed`; one the learner leaves first is `ended_early` (R7).
+
+## Statistics
+
+**Live review**: a review that has not been undone. Statistics count live reviews only; the SQL that loads them filters undone rows (docs/statistics-queries.md), and the domain takes what it is given.
+
+**Statistics window**: the current period (this week, Monday to Sunday, or the last four weeks) and the previous period of equal length it is compared with (PRD section 7).
+
+**Progress figures**: everything the Progress screen shows for one range: tiles, changes in words, bars, Focus next and By deck. `computeStats` in `src/domain/stats.ts` computes them all from loaded rows.
