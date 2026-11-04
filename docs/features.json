@@ -861,6 +861,13 @@
           "area": "docs/operations.md, ops/",
           "done_when": "docs/operations.md documents ADMIN_PASSWORD, rotation signs everyone out, and the iPad home-screen shortcut signing in separately; launchd app job passes the variable. verify.sh green.",
           "status": "done"
+        },
+        {
+          "id": "F14.9",
+          "title": "Sign out goes to /login even when logout returns 401",
+          "done_when": "ProfileScreen signOut navigates to /login whatever api.logout returns (try/finally); unit test: fetch stub returns 401 and push is still called with /login. verify.sh green.",
+          "model": null,
+          "status": "todo"
         }
       ]
     }
