@@ -8,6 +8,8 @@ import {
 } from "@/shared/constants";
 import { DEFAULT_SETTINGS, type Settings } from "@/shared/settings";
 import { ReadingCard } from "@/ui/reading-card/ReadingCard";
+import { Icon } from "@/ui/icons/Icon";
+import { FRONT_HINT, iconButton } from "@/ui/practice/PracticeView";
 import { Choice } from "../Choice";
 import { useSettings } from "../SettingsProvider";
 import { buttonClass, FOCUS_RING, PRESSED } from "@/ui/button/button-class";
@@ -112,8 +114,14 @@ export function ReadingSettings() {
         <div className="mt-4">
           <ReadingCard
             settings={settings}
+            topic="Caching"
             question="Why use a cache?"
-            answer={["Faster reads", "Less load on the database"]}
+            hint={FRONT_HINT}
+            readAloud={
+              <span aria-hidden="true" className={iconButton}>
+                <Icon name="volume" />
+              </span>
+            }
           />
         </div>
       </div>

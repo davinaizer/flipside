@@ -4,7 +4,7 @@ import { Icon } from "@/ui/icons/Icon";
 import { QUESTION_SCALE } from "@/shared/constants";
 import type { SessionCardPayload } from "@/shared/schemas/session";
 import { textToRead, type Reader } from "./speech";
-import { readingStyle, type ReadingSettings } from "@/ui/reading-card/ReadingCard";
+import { Chip, QuestionLabel, readingStyle, type ReadingSettings } from "@/ui/reading-card/ReadingCard";
 import { buttonClass, FOCUS_RING, PRESSED } from "@/ui/button/button-class";
 
 export const FRONT_HINT = "Say your answer out loud first, then show it.";
@@ -60,14 +60,6 @@ export function SessionProgress({ done, total }: { done: number; total: number }
 
 export const iconButton =
   `flex size-11 items-center justify-center rounded-full border border-card-edge bg-surface-card text-on-surface-variant shadow-card hover:text-primary active:bg-surface-container-high ${PRESSED} ${FOCUS_RING}`;
-
-function Chip({ topic }: { topic: string }) {
-  return (
-    <span className="inline-block rounded-full bg-secondary-container px-4 py-1 text-sm font-semibold text-on-secondary-container">
-      {topic}
-    </span>
-  );
-}
 
 function Answer({ card }: { card: SessionCardPayload }) {
   const lines = bulletLines(card.back, card.answerStyle);
@@ -153,7 +145,8 @@ export function PracticeView({
             style={readingStyle(settings)}
           >
             <Chip topic={card.topic} />
-            <h1 className="mt-4 font-semibold" style={{ fontSize: `${QUESTION_SCALE}em` }}>
+            <QuestionLabel />
+            <h1 className="mt-1 font-semibold" style={{ fontSize: `${QUESTION_SCALE}em` }}>
               {card.front}
             </h1>
             {card.frontImage && <CardImage image={card.frontImage} />}

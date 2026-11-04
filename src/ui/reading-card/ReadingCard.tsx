@@ -1,4 +1,4 @@
-import type { CSSProperties } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import {
   LETTER_SPACING_STEPS,
   LINE_SPACING_STEPS,
@@ -25,15 +25,34 @@ export function readingStyle(s: ReadingSettings): CSSProperties {
   };
 }
 
-/** Card face shared by the settings preview and Practice: left-aligned text on a plain card colour. */
+export function Chip({ topic }: { topic: string }) {
+  return (
+    <span className="inline-block rounded-full bg-secondary-container px-4 py-1 text-sm font-semibold text-on-secondary-container">
+      {topic}
+    </span>
+  );
+}
+
+export function QuestionLabel() {
+  return <p className="mt-4 text-label-md font-semibold uppercase opacity-70">Question</p>;
+}
+
+/**
+ * Front of a practice card, used by the Settings preview (T8): topic chip, Question label, question,
+ * the read-aloud button and the footer hint, left-aligned on the card colour.
+ */
 export function ReadingCard({
   settings,
+  topic,
   question,
-  answer,
+  readAloud,
+  hint,
 }: {
   settings: ReadingSettings;
+  topic: string;
   question: string;
-  answer: string[];
+  readAloud?: ReactNode;
+  hint: string;
 }) {
   return (
     <div
@@ -41,14 +60,15 @@ export function ReadingCard({
       className="rounded-3xl p-8 shadow-card text-left"
       style={readingStyle(settings)}
     >
-      <p className="font-semibold" style={{ fontSize: `${QUESTION_SCALE}em` }}>
+      <div className="flex items-start justify-between gap-3">
+        <Chip topic={topic} />
+        {readAloud}
+      </div>
+      <QuestionLabel />
+      <p className="mt-1 font-semibold" style={{ fontSize: `${QUESTION_SCALE}em` }}>
         {question}
       </p>
-      <ul className="mt-4 list-disc pl-6">
-        {answer.map((a) => (
-          <li key={a}>{a}</li>
-        ))}
-      </ul>
+      <p className="mt-6 text-body-sm opacity-80">{hint}</p>
     </div>
   );
 }

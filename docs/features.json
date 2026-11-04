@@ -623,7 +623,7 @@
           ],
           "area": "src/ui/settings/reading/ReadingSettings.tsx, src/ui/reading-card/ReadingCard.tsx",
           "done_when": "ReadingSettings.test.tsx: preview shows topic chip, Question label, read-aloud button, question and footer hint via the shared card; updates live when settings change.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F13.3",

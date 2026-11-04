@@ -26,7 +26,7 @@ test("the card style follows the settings and sets card text only", () => {
   expect(s.backgroundColor).toBe("var(--card-night)");
   expect(s.color).toBe("var(--on-card-night)");
   const html = renderToStaticMarkup(
-    createElement(ReadingCard, { settings: DEFAULT_SETTINGS, question: "Q?", answer: ["A"] }),
+    createElement(ReadingCard, { settings: DEFAULT_SETTINGS, topic: "T", question: "Q?", hint: "H" }),
   );
   expect(html).toContain("Q?");
   expect(html).toContain("text-left");
