@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useState } from "react";
 import { FOCUS_RING, PRESSED } from "@/ui/button/button-class";
 import { Icon, Logo, type IconName } from "@/ui/icons/Icon";
 import { ProfileMenu } from "./ProfileMenu";
@@ -13,13 +14,44 @@ const SECTIONS: { href: string; label: string; icon: IconName; match: string[] }
 
 /** Deck pages belong to the Library, so the Library stays highlighted there (README item 16). */
 export function Sidebar({ name, avatar }: { name: string; avatar: string }) {
+  // F16.2 remembers this on the device; for now it starts expanded.
+  const [collapsed, setCollapsed] = useState(false);
+  return <SidebarView name={name} avatar={avatar} collapsed={collapsed} onToggle={() => setCollapsed((c) => !c)} />;
+}
+
+/** Collapsed it is an icon rail: nav icons keep their name through aria-label and title (U4). */
+export function SidebarView({
+  name,
+  avatar,
+  collapsed,
+  onToggle,
+}: {
+  name: string;
+  avatar: string;
+  collapsed: boolean;
+  onToggle: () => void;
+}) {
   const path = usePathname();
   return (
-    <aside className="sticky top-0 flex h-screen w-64 shrink-0 flex-col justify-between bg-surface-container-low p-4">
+    <aside
+      className={`sticky top-0 flex h-screen shrink-0 flex-col justify-between bg-surface-container-low p-4 ${collapsed ? "w-20" : "w-64"}`}
+    >
       <div className="flex flex-col gap-6">
-        <div className="flex items-center gap-3 px-2 pt-2">
-          <Logo />
-          <span className="font-semibold text-headline-sm">Flipside</span>
+        <div className={`flex items-center gap-3 pt-2 ${collapsed ? "flex-col" : "justify-between px-2"}`}>
+          <div className="flex items-center gap-3">
+            <Logo />
+            {!collapsed && <span className="font-semibold text-headline-sm">Flipside</span>}
+          </div>
+          <button
+            type="button"
+            onClick={onToggle}
+            aria-expanded={!collapsed}
+            aria-label="Sidebar"
+            title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+            className={`flex size-11 items-center justify-center rounded-full text-on-surface hover:bg-surface-container-high active:bg-surface-container-highest ${PRESSED} ${FOCUS_RING}`}
+          >
+            <Icon name="panelLeft" />
+          </button>
         </div>
         <nav aria-label="Main">
           <ul className="flex flex-col gap-2">
@@ -30,14 +62,16 @@ export function Sidebar({ name, avatar }: { name: string; avatar: string }) {
                   <Link
                     href={s.href}
                     aria-current={current ? "page" : undefined}
-                    className={`flex min-h-11 items-center gap-3 rounded-full px-4 font-semibold ${PRESSED} ${FOCUS_RING} ${
+                    aria-label={collapsed ? s.label : undefined}
+                    title={collapsed ? s.label : undefined}
+                    className={`flex min-h-11 items-center gap-3 rounded-full font-semibold ${collapsed ? "justify-center" : "px-4"} ${PRESSED} ${FOCUS_RING} ${
                       current
                         ? "bg-primary-container text-on-primary-container active:bg-surface-container-highest"
                         : "text-on-surface hover:bg-surface-container-high active:bg-surface-container-highest"
                     }`}
                   >
                     <Icon name={s.icon} />
-                    {s.label}
+                    {!collapsed && s.label}
                   </Link>
                 </li>
               );
@@ -45,7 +79,7 @@ export function Sidebar({ name, avatar }: { name: string; avatar: string }) {
           </ul>
         </nav>
       </div>
-      <ProfileMenu name={name} avatar={avatar} />
+      <ProfileMenu name={name} avatar={avatar} collapsed={collapsed} />
     </aside>
   );
 }

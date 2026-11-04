@@ -14,6 +14,7 @@ const ICONS = {
       <circle cx="9" cy="17" r="2" />
     </>
   ),
+  panelLeft: <path d="M4 5h16v14H4ZM9 5v14M15 10l-2 2 2 2" />,
   plus: <path d="M12 5v14M5 12h14" />,
   play: <path d="M8 5v14l11-7Z" />,
   search: (

@@ -26,12 +26,12 @@ export function nextItemIndex(key: string, current: number, count: number): numb
 }
 
 /** The menu list, kept apart from the open/close state so it can be rendered open in a test. */
-export function ProfileMenuItems({ path, onLogOut }: { path: string; onLogOut: () => void }) {
+export function ProfileMenuItems({ path, onLogOut, collapsed = false }: { path: string; onLogOut: () => void; collapsed?: boolean }) {
   return (
     <div
       role="menu"
       aria-label="Profile"
-      className="absolute inset-x-0 bottom-full mb-2 flex flex-col gap-1 rounded-card border border-card-edge bg-surface-card p-2 shadow-card"
+      className={`absolute bottom-full mb-2 flex ${collapsed ? "left-0 w-56" : "inset-x-0"} flex-col gap-1 rounded-card border border-card-edge bg-surface-card p-2 shadow-card`}
     >
       {LINKS.map((l) => (
         <Link
@@ -55,7 +55,7 @@ export function ProfileMenuItems({ path, onLogOut }: { path: string; onLogOut: (
 }
 
 /** Sidebar footer: avatar and name as one button that opens the profile menu (P3, P6, AG3). */
-export function ProfileMenu({ name, avatar }: { name: string; avatar: string }) {
+export function ProfileMenu({ name, avatar, collapsed = false }: { name: string; avatar: string; collapsed?: boolean }) {
   const router = useRouter();
   const path = usePathname();
   const [open, setOpen] = useState(false);
@@ -107,12 +107,15 @@ export function ProfileMenu({ name, avatar }: { name: string; avatar: string }) 
         aria-haspopup="menu"
         aria-expanded={open}
         onClick={() => setOpen((o) => !o)}
-        className={`flex min-h-11 w-full items-center gap-3 rounded-card border border-card-edge bg-surface-card p-3 text-left shadow-card ${PRESSED} ${FOCUS_RING}`}
+        // Collapsed there is no visible name, so the button carries it (and a tooltip).
+        aria-label={collapsed ? name : undefined}
+        title={collapsed ? name : undefined}
+        className={`flex min-h-11 w-full items-center gap-3 rounded-card border border-card-edge bg-surface-card text-left shadow-card ${collapsed ? "justify-center p-1" : "p-3"} ${PRESSED} ${FOCUS_RING}`}
       >
         <Avatar id={avatar} size={44} />
-        <span className="font-semibold">{name}</span>
+        {!collapsed && <span className="font-semibold">{name}</span>}
       </button>
-      {open && <ProfileMenuItems path={path} onLogOut={() => logOut(router.push)} />}
+      {open && <ProfileMenuItems path={path} onLogOut={() => logOut(router.push)} collapsed={collapsed} />}
     </div>
   );
 }

@@ -1021,7 +1021,7 @@
           ],
           "area": "src/ui/shell/Sidebar.tsx, src/ui/shell/ProfileMenu.tsx, src/ui/icons",
           "done_when": "Component test: collapsed render shows only the two nav icons (each with aria-label and a tooltip title) and the avatar, no labels or name; expanded render is unchanged. Toggle has an accessible name and aria-expanded; targets at least 44 px. verify.sh green.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F16.2",
