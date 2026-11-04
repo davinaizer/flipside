@@ -1167,7 +1167,7 @@
         "progress"
       ],
       "notes": "Reading and Practice each on their own surface (semantic tokens). Mastery bar goes from h-3 to about h-1.5; check every bar on the Progress page, not only MasteryBar.",
-      "status": "todo",
+      "status": "in_progress",
       "tasks": [
         {
           "id": "F18.1",
@@ -1197,7 +1197,8 @@
           "done_when": "Test: the mastery bar height class is the thin one and the legend is unchanged; any other Progress-page bar uses the same height. e2e and axe on Progress and Library in both themes.",
           "status": "todo"
         }
-      ]
+      ],
+      "branch": "feat/F18-settings-sections-thin-bars"
     },
     {
       "id": "F19",
