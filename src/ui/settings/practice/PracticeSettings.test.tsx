@@ -34,3 +34,14 @@ test("the read aloud switch reflects the setting in aria-checked", () => {
   expect(html).toMatch(/role="switch"[^>]*aria-checked="true"|aria-checked="true"[^>]*role="switch"/);
   expect(html).not.toMatch(/>\s*(On|Off)\s*</);
 });
+
+test("the Practice section is its own surface with a heading (T9)", () => {
+  const html = renderToStaticMarkup(
+    <SettingsProvider initial={DEFAULT_SETTINGS}>
+      <PracticeSettings />
+    </SettingsProvider>,
+  );
+  expect(html).toMatch(/<section[^>]*rounded-card[^>]*bg-surface-card/);
+  expect(html).toMatch(/<h2[^>]*>Practice</);
+  expect(html).not.toMatch(/#[0-9a-fA-F]{6}/);
+});
