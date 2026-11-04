@@ -414,7 +414,7 @@
           ],
           "area": "src/ui/practice/PracticeView.tsx, ReadingCard, src/app/globals.css",
           "done_when": "Test: all three triggers reveal the back; CSS uses perspective, rotateY and backface-visibility (no dependency); front is inert/aria-hidden when flipped; next-card render does not animate.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F11.3",

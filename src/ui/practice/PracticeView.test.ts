@@ -1,8 +1,10 @@
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
+import { readFileSync } from "node:fs";
 import { expect, test } from "vitest";
 import { DEFAULT_SETTINGS } from "@/shared/settings";
 import type { SessionCardPayload } from "@/shared/schemas/session";
+import { shortcutFor } from "./shortcuts";
 import { PracticeLoading } from "./PracticeScreen";
 import { FRONT_HINT, PracticeView, SessionCount, SessionProgress } from "./PracticeView";
 
@@ -19,6 +21,11 @@ const card: SessionCardPayload = {
   backImage: img("back-img"),
   labels: { not_yet: "Again today", nearly: "Tomorrow", got_it: "In 3 days" },
 };
+const face = (html: string, name: "front" | "back") => {
+  const start = html.indexOf(`data-face="${name}"`);
+  const end = html.indexOf('data-face="', start + 1);
+  return html.slice(start, end === -1 ? html.indexOf("</article>") : end);
+};
 const render = (revealed: boolean, c = card) =>
   renderToStaticMarkup(
     createElement(PracticeView, { card: c, revealed, done: 1, total: 4, settings: DEFAULT_SETTINGS, onReveal: () => {} }),
@@ -30,17 +37,22 @@ test("front: chip, question, exact hint, Show answer, front image only", () => {
   expect(html).toContain(FRONT_HINT);
   expect(FRONT_HINT).toBe("Say your answer out loud first, then show it.");
   expect(html).toContain("Show answer");
-  expect(html).toContain("front-img");
-  expect(html).not.toContain("back-img");
-  expect(html).not.toContain("second point");
+  expect(face(html, "front")).toContain("front-img");
+  expect(face(html, "front")).not.toContain("back-img");
+  expect(face(html, "front")).not.toContain("second point");
+  expect(face(html, "back")).toMatch(/^data-face="back" aria-hidden="true" inert/);
+  expect(face(html, "front")).toMatch(/^data-face="front" aria-hidden="false"/);
 });
 
 test("back: small question, bullets, back image only, no Show answer", () => {
   const html = render(true);
-  expect(html).toContain('data-testid="question-small"');
-  expect(html).toContain("<li>");
-  expect(html).toContain("back-img");
-  expect(html).not.toContain("front-img");
+  const back = face(html, "back");
+  expect(back).toContain('data-testid="question-small"');
+  expect(back).toContain("<li>");
+  expect(back).toContain("back-img");
+  expect(face(html, "front")).toMatch(/^data-face="front" aria-hidden="true" inert/);
+  expect(face(html, "back")).toMatch(/^data-face="back" aria-hidden="false"/);
+  expect(face(html, "front")).not.toContain("back-img");
   expect(html).not.toContain("Show answer");
 });
 
@@ -91,4 +103,26 @@ test("front: eye icon on Show answer; hint follows the button, outside the card"
   expect(html.slice(html.indexOf("<article"), cardEnd)).not.toContain(FRONT_HINT);
   expect(hint).toBeGreaterThan(button);
   expect(hint).toBeGreaterThan(cardEnd);
+});
+
+test("reveal triggers: the card tap is wired like the button, and Space is a shortcut", () => {
+  let calls = 0;
+  const tree = PracticeView({ card, revealed: false, done: 0, total: 1, settings: DEFAULT_SETTINGS, onReveal: () => calls++ });
+  const scene = JSON.stringify(tree, (k, v) => (typeof v === "function" ? `fn:${k}` : v));
+  expect(scene).toContain('"flip-scene"');
+  expect(scene).toContain('"onClick":"fn:onClick"'); // the scene and Show answer both carry onClick
+  expect(shortcutFor({ key: " ", target: null }, { revealed: false, dialogOpen: false })).toEqual({ type: "reveal" });
+  expect(calls).toBe(0);
+});
+
+test("the flip uses CSS perspective, rotateY and backface-visibility only", () => {
+  const css = readFileSync("src/app/globals.css", "utf8");
+  expect(css).toMatch(/perspective:/);
+  expect(css).toMatch(/rotateY\(180deg\)/);
+  expect(css).toMatch(/backface-visibility:\s*hidden/);
+});
+
+test("a revealed card is only rotated by its own data-revealed flag, so a new card starts unrotated", () => {
+  expect(render(false)).toContain('data-revealed="false"');
+  expect(render(true)).toContain('data-revealed="true"');
 });

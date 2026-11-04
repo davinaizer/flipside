@@ -61,6 +61,14 @@ export function SessionProgress({ done, total }: { done: number; total: number }
 export const iconButton =
   `flex size-11 items-center justify-center rounded-full border border-card-edge bg-surface-card text-on-surface-variant shadow-card hover:text-primary active:bg-surface-container-high ${PRESSED} ${FOCUS_RING}`;
 
+function Chip({ topic }: { topic: string }) {
+  return (
+    <span className="inline-block rounded-full bg-secondary-container px-4 py-1 text-sm font-semibold text-on-secondary-container">
+      {topic}
+    </span>
+  );
+}
+
 function Answer({ card }: { card: SessionCardPayload }) {
   const lines = bulletLines(card.back, card.answerStyle);
   return lines ? (
@@ -133,28 +141,40 @@ export function PracticeView({
         </div>
       </header>
       <SessionProgress done={done} total={total} />
-      <article data-testid="practice-card" className="rounded-3xl p-8 shadow-card text-left" style={readingStyle(settings)}>
-        <span className="inline-block rounded-full bg-secondary-container px-4 py-1 text-sm font-semibold text-on-secondary-container">
-          {card.topic}
-        </span>
-        {revealed ? (
-          <>
+      {/* Both faces always render and the wrapper rotates, so the flip is a CSS transition on reveal only.
+          The key remounts per card: a new card starts unrotated and never animates. Tapping the front reveals. */}
+      <div key={card.cardId} className="flip-scene" onClick={revealed ? undefined : onReveal}>
+        <article data-testid="practice-card" data-revealed={revealed} className="flip-card">
+          <div
+            data-face="front"
+            aria-hidden={revealed}
+            inert={revealed}
+            className="flip-face text-left"
+            style={readingStyle(settings)}
+          >
+            <Chip topic={card.topic} />
+            <h1 className="mt-4 font-semibold" style={{ fontSize: `${QUESTION_SCALE}em` }}>
+              {card.front}
+            </h1>
+            {card.frontImage && <CardImage image={card.frontImage} />}
+          </div>
+          <div
+            data-face="back"
+            aria-hidden={!revealed}
+            inert={!revealed}
+            className="flip-face flip-back text-left"
+            style={readingStyle(settings)}
+          >
+            <Chip topic={card.topic} />
             <p data-testid="question-small" className="mt-4 font-medium opacity-80">
               {card.front}
             </p>
             <hr className="my-4 border-current opacity-20" />
             <Answer card={card} />
             {card.backImage && <CardImage image={card.backImage} />}
-          </>
-        ) : (
-          <>
-            <h1 className="mt-4 font-semibold" style={{ fontSize: `${QUESTION_SCALE}em` }}>
-              {card.front}
-            </h1>
-            {card.frontImage && <CardImage image={card.frontImage} />}
-          </>
-        )}
-      </article>
+          </div>
+        </article>
+      </div>
       {!revealed && (
         <div className="flex flex-col items-center gap-3">
           <button type="button" onClick={onReveal} className={buttonClass("primary", { size: "large" })}>

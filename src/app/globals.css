@@ -26,3 +26,27 @@ h3 {
     scroll-behavior: auto !important;
   }
 }
+
+/* Practice card flip (R16): both faces share one grid cell, the card rotates on reveal.
+   Reduced motion is handled in F11.3. */
+.flip-scene {
+  perspective: 1200px;
+}
+.flip-card {
+  display: grid;
+  transform-style: preserve-3d;
+  transition: transform 500ms ease;
+}
+.flip-card[data-revealed="true"] {
+  transform: rotateY(180deg);
+}
+.flip-face {
+  grid-area: 1 / 1;
+  backface-visibility: hidden;
+  border-radius: 1.5rem;
+  padding: 2rem;
+  box-shadow: var(--shadow-card);
+}
+.flip-back {
+  transform: rotateY(180deg);
+}
