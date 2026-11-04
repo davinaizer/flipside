@@ -56,7 +56,7 @@ export function LoginForm({
           Sign in
         </button>
       </form>
-      <p className="absolute bottom-4 text-sm text-on-surface-variant">Version {APP_VERSION}</p>
+      <p className="absolute bottom-4 text-sm text-on-surface-variant">{APP_VERSION}</p>
     </main>
   );
 }
