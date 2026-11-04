@@ -743,8 +743,8 @@
         "profile_picker"
       ],
       "notes": "ADMIN_PASSWORD in env schema (required) and .env.example placeholder. POST /auth/login and /auth/logout, HMAC-signed flipside_auth cookie (node:crypto, timingSafeEqual; key derived from ADMIN_PASSWORD; 30-day constant in src/shared). One access check applied to all pages and /api/v1 except GET /health and POST /auth/login. Login page reuses the profile picker layout and the top-bar theme toggle. Sign out on the Profile page. Every e2e spec signs in through a shared helper; Playwright webServer and launchd app job get ADMIN_PASSWORD; update docs/operations.md. Risk to note in the PR: an iPad home-screen shortcut keeps its own cookies, so it signs in once separately.",
-      "status": "todo",
-      "branch": null,
+      "status": "in_progress",
+      "branch": "feat/F14-password-sign-in",
       "pr": null,
       "tasks": [
         {
