@@ -1264,7 +1264,7 @@
           ],
           "area": "e2e/profiles.spec.ts",
           "done_when": "pnpm test:e2e desktop and iPad: create a profile, see it in the picker, select it and land on an empty Library; invalid names rejected; axe has no serious or critical issues with the form open in both themes. The test cleans up its profile.",
-          "status": "todo"
+          "status": "done"
         }
       ],
       "branch": "feat/F19-add-user"
