@@ -870,6 +870,35 @@
           "status": "done"
         }
       ]
+    },
+    {
+      "id": "F15",
+      "name": "Sidebar profile menu",
+      "depends_on": [
+        "F10",
+        "F13",
+        "F14"
+      ],
+      "reqs": [
+        "P3",
+        "P6",
+        "U3",
+        "AG3"
+      ],
+      "acs": [
+        "AC15"
+      ],
+      "manual_acs": [],
+      "prd_sections": [
+        "4",
+        "8"
+      ],
+      "design_screens": [],
+      "notes": "Remove the top-bar avatar (U3); the top bar keeps only the theme toggle (AC16). Sidebar footer shows avatar and name like Claude Code Desktop; tapping it opens a menu: Profile (/profile), Settings, Switch profile (to the picker), Log out (POST /auth/logout then /login). Settings leaves the sidebar nav. Log out moves from the Profile page to the menu and is removed there (AG3, D27). Menu needs keyboard and screen-reader support (focus ring, Escape closes, 44 px targets), works in both themes with semantic tokens only, and e2e/axe cover it. No new dependency. Practice has no sidebar and is unchanged.",
+      "status": "todo",
+      "branch": null,
+      "pr": null,
+      "tasks": []
     }
   ]
 }
