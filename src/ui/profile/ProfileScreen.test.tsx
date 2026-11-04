@@ -56,3 +56,10 @@ test("Sign out calls /auth/logout and navigates to /login", async () => {
   expect(fetchMock).toHaveBeenCalledWith("/api/v1/auth/logout", expect.objectContaining({ method: "POST" }));
   expect(push).toHaveBeenCalledWith("/login");
 });
+
+test("sign out still goes to /login when logout returns 401", async () => {
+  vi.stubGlobal("fetch", vi.fn(async () => Response.json({ error: { code: "UNAUTHORIZED", message: "no" } }, { status: 401 })));
+  const push = vi.fn();
+  await signOut(push);
+  expect(push).toHaveBeenCalledWith("/login");
+});

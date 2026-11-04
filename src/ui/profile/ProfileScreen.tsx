@@ -123,8 +123,13 @@ export function ProfileForm({ name: initialName, avatar: initialAvatar, onSave }
 
 /** Clears the auth cookie (POST /auth/logout), then goes to the login page (AG3). */
 export async function signOut(push: (href: string) => void): Promise<void> {
-  await api.logout();
-  push("/login");
+  try {
+    await api.logout();
+  } catch {
+    // A 401 (expired cookie, rotated password) means we are signed out already: still go to /login.
+  } finally {
+    push("/login");
+  }
 }
 
 export function ProfileScreen({ name, avatar }: { name: string; avatar: string }) {

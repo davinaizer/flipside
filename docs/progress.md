@@ -69,3 +69,4 @@ F14.6: Sign out button on the Profile page calls /auth/logout and goes to /login
 F14.7: e2e helpers export a signed-in `test` (and signInContext for new contexts); every spec uses it; new e2e/auth.spec.ts covers redirect, 401, wrong password, sign out, axe on /login in both themes.
 F14.8: docs/operations.md gains an App password section (ADMIN_PASSWORD, rotation, iPad shortcut signs in separately); the launchd app job sources .env before pnpm start.
 REVIEW F14 round 1: GAPS at e1d44de (Sign out does nothing when logout returns 401; fix task F14.9)
+F14.9: signOut navigates to /login in a finally block, swallowing a 401 from logout; unit test with a 401 stub.

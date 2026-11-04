@@ -867,7 +867,7 @@
           "title": "Sign out goes to /login even when logout returns 401",
           "done_when": "ProfileScreen signOut navigates to /login whatever api.logout returns (try/finally); unit test: fetch stub returns 401 and push is still called with /login. verify.sh green.",
           "model": null,
-          "status": "todo"
+          "status": "done"
         }
       ]
     }
