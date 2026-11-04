@@ -87,12 +87,11 @@ test("the open menu lists Edit deck and Re-import with the deck id", () => {
   expect(out.match(/tabindex="-1"/g)).toHaveLength(2);
 });
 
-test("Up to date tag sits in the title row, before the topic and card counts", () => {
+test("Up to date tag sits in the top-right slot with the menu, not in the title row", () => {
   const html = render(full);
-  const row = html.indexOf("Up to date");
-  expect(row).toBeGreaterThan(html.indexOf("Química"));
-  expect(row).toBeLessThan(html.indexOf("1 topic"));
-  // Same wrapping row as the title link, so it wraps under the title on iPad portrait.
-  const rowStart = html.lastIndexOf("flex-wrap items-center gap-x-3", row);
-  expect(html.slice(rowStart, row)).toContain('href="/decks/1"');
+  const tag = html.indexOf("Up to date");
+  // After the deck counts and before this deck's menu button; not beside the title link.
+  expect(tag).toBeGreaterThan(html.indexOf("1 topic"));
+  expect(tag).toBeLessThan(html.indexOf('aria-label="Deck actions for Química"'));
+  expect(html.slice(html.indexOf("Química"), html.indexOf("1 topic"))).not.toContain("Up to date");
 });

@@ -195,7 +195,7 @@ test("edit panel passes axe and 44 px; Delete deck confirms, sends DELETE; Keep 
   await del;
 });
 
-test("the Up to date tag wraps under a long title on iPad portrait without overflow", async ({ page }) => {
+test("the Up to date tag sits at the top right with a long title on iPad portrait without overflow", async ({ page }) => {
   const long = { ...deck, name: "A very long deck name for revision of many topics in one go", dueCount: 0 };
   await page.route("**/api/v1/library", (r) =>
     r.fulfill({ json: { ...library, groups: [{ name: "Other", decks: [long] }] } }),
@@ -207,6 +207,8 @@ test("the Up to date tag wraps under a long title on iPad portrait without overf
   const t = (await tag.boundingBox())!;
   const title = (await page.getByRole("link", { name: long.name }).boundingBox())!;
   expect(t.x + t.width).toBeLessThanOrEqual(768);
-  expect(t.y >= title.y + title.height - 1 || t.x >= title.x + title.width - 1).toBe(true);
+  const menu = (await page.getByRole("button", { name: `Deck actions for ${long.name}` }).boundingBox())!;
+  expect(t.x).toBeGreaterThanOrEqual(title.x + title.width - 1);
+  expect(t.x + t.width).toBeLessThanOrEqual(menu.x + 1);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
 });

@@ -1138,7 +1138,7 @@
           ],
           "area": "src/ui/library/LibraryView.tsx, src/ui/library/library-view.test.ts, e2e/library.spec.ts, docs/decisions.md",
           "done_when": "The Up to date tag renders in the same top-right slot as the N due badge (a deck shows one or the other, same size and style family), no longer in the title row, and the menu button stays at the top right. Unit test and the F17.2 e2e wrap check updated to match (title row has no tag; tag sits with the due badge; no horizontal scroll on iPad portrait). Log in docs/decisions.md: 'DEVIATION (user-directed): L9/AC23 put the Up to date tag next to the deck title; user asked to put it where the due tag is for consistency. PRD not edited; user to update.' Do not edit PRD text or ACs. verify.sh green, library e2e green.",
-          "status": "todo"
+          "status": "done"
         }
       ],
       "branch": "feat/F17-library-deck-menu",
