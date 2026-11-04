@@ -1,5 +1,5 @@
-import { expect, test } from "@playwright/test";
-import { expectNoSeriousA11y, expectTargetsAtLeast44, setTheme } from "./helpers";
+import { expect } from "@playwright/test";
+import { expectNoSeriousA11y, expectTargetsAtLeast44, setTheme, test } from "./helpers";
 
 async function signIn(page: import("@playwright/test").Page, name: string) {
   await page.goto("/");

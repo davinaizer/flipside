@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { expect, test, type Page } from "@playwright/test";
-import { expectNoSeriousA11y, expectTargetsAtLeast44, setTheme } from "./helpers";
+import { expect, type Page } from "@playwright/test";
+import { expectNoSeriousA11y, expectTargetsAtLeast44, setTheme, signInContext, test } from "./helpers";
 
 // AC12 and AC13: one walk over every screen and state in PRD section 8 (picker, Library, Deck, Import, Practice
 // front/back/summary, Progress, Settings; empty, loading, error and success), axe plus 44 px in both themes, then the
@@ -95,6 +95,7 @@ test("every screen and state passes axe and 44 px in both themes; toggle, reload
   test.setTimeout(120_000);
   // Picker: no cookie yet.
   const fresh = await browser.newContext({ viewport: page.viewportSize() });
+  await signInContext(fresh);
   const picker = await fresh.newPage();
   await picker.goto("/");
   await expect(picker.getByRole("button", { name: "Davi" })).toBeVisible();

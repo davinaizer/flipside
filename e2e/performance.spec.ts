@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { expect, test } from "@playwright/test";
+import { expect } from "@playwright/test";
+import { test } from "./helpers";
 
 const zip = readFileSync(join(process.cwd(), "fixtures/science-w2-deck.zip"));
 

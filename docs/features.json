@@ -847,7 +847,7 @@
           ],
           "area": "e2e/helpers/index.ts, all e2e specs, playwright.config.ts",
           "done_when": "pnpm test:e2e: every spec signs in through the shared helper; new spec covers redirect, 401, wrong password, sign out, and axe on /login in both themes.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F14.8",

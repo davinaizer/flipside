@@ -1,5 +1,5 @@
-import { expect, test, type Page } from "@playwright/test";
-import { expectNoSeriousA11y, expectTargetsAtLeast44, setTheme } from "./helpers";
+import { expect, type Page } from "@playwright/test";
+import { expectNoSeriousA11y, expectTargetsAtLeast44, setTheme, test } from "./helpers";
 import { AVATAR_IDS } from "../src/shared/avatars";
 
 const DECK = { Davi: "Davi Science", Nicole: "Nicole History" } as const;

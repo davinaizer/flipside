@@ -1,5 +1,5 @@
-import { expect, test, type Page } from "@playwright/test";
-import { expectNoSeriousA11y, expectTargetsAtLeast44, setTheme } from "./helpers";
+import { expect, type Page } from "@playwright/test";
+import { expectNoSeriousA11y, expectTargetsAtLeast44, setTheme, test } from "./helpers";
 
 async function openSeededDeck(page: Page) {
   await page.goto("/");
