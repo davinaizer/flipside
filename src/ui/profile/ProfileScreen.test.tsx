@@ -3,9 +3,9 @@ import { afterEach, expect, test, vi } from "vitest";
 import { AVATAR_IDS } from "@/shared/avatars";
 import { api } from "@/ui/api/client";
 
-vi.mock("next/navigation", () => ({ useRouter: () => ({ refresh: () => {} }) }));
+vi.mock("next/navigation", () => ({ useRouter: () => ({ refresh: () => {}, push: () => {} }) }));
 
-import { nameError, ProfileForm } from "./ProfileScreen";
+import { nameError, ProfileForm, ProfileScreen, signOut } from "./ProfileScreen";
 
 afterEach(() => vi.unstubAllGlobals());
 
@@ -20,7 +20,6 @@ test("shows every avatar, the selected one with a tick icon, and the name field"
   expect(html.match(/data-selected/g)).toHaveLength(1);
   expect(html).toContain('value="Nicole"');
   expect(html).toContain("Save");
-  expect(html).toContain('data-slot="sign-out"');
 });
 
 test("name must be 1 to 24 characters after trimming", () => {
@@ -43,4 +42,17 @@ test("Save calls PATCH /me with the avatar and name", async () => {
   expect(url).toBe("/api/v1/me");
   expect(init.method).toBe("PATCH");
   expect(JSON.parse(init.body as string)).toEqual({ name: "Nic", avatar: AVATAR_IDS[0] });
+});
+
+test("the screen renders a Sign out button", () => {
+  expect(renderToStaticMarkup(<ProfileScreen name="Nicole" avatar={second} />)).toContain("Sign out");
+});
+
+test("Sign out calls /auth/logout and navigates to /login", async () => {
+  const fetchMock = vi.fn(async () => Response.json({ ok: true }));
+  vi.stubGlobal("fetch", fetchMock);
+  const push = vi.fn();
+  await signOut(push);
+  expect(fetchMock).toHaveBeenCalledWith("/api/v1/auth/logout", expect.objectContaining({ method: "POST" }));
+  expect(push).toHaveBeenCalledWith("/login");
 });

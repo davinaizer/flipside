@@ -61,6 +61,7 @@ export const api = {
       method: "POST",
       body: JSON.stringify({ password }),
     }),
+  logout: () => call("/auth/logout", z.object({ ok: z.literal(true) }), { method: "POST" }),
   library: (): Promise<Library> => call("/library", librarySchema),
   stats: (range: "week" | "month"): Promise<Stats> => call(`/stats?range=${range}`, statsSchema),
   saveSettings: (settings: Settings): Promise<Settings> =>

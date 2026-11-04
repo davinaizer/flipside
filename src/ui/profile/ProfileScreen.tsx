@@ -117,10 +117,14 @@ export function ProfileForm({ name: initialName, avatar: initialAvatar, onSave }
           </p>
         )}
       </div>
-      {/* Room for Sign out (AG3, a later task). */}
-      <div data-slot="sign-out" />
     </form>
   );
+}
+
+/** Clears the auth cookie (POST /auth/logout), then goes to the login page (AG3). */
+export async function signOut(push: (href: string) => void): Promise<void> {
+  await api.logout();
+  push("/login");
 }
 
 export function ProfileScreen({ name, avatar }: { name: string; avatar: string }) {
@@ -135,6 +139,9 @@ export function ProfileScreen({ name, avatar }: { name: string; avatar: string }
       <h1 className="text-headline-lg font-semibold">Profile</h1>
       <p className="text-on-surface-variant">Choose your avatar and the name shown around the app.</p>
       <ProfileForm name={name} avatar={avatar} onSave={onSave} />
+      <button type="button" onClick={() => signOut(router.push)} className={`mt-8 ${buttonClass("secondary")}`}>
+        Sign out
+      </button>
     </>
   );
 }

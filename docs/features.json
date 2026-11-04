@@ -832,7 +832,7 @@
           ],
           "area": "src/ui/profile/ProfileScreen.tsx",
           "done_when": "Component test: Sign out calls /auth/logout and navigates to /login.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F14.7",

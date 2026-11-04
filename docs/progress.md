@@ -65,3 +65,4 @@ F14.1 done: ADMIN_PASSWORD required in env schema, AUTH_COOKIE_NAME and 30-day m
 F14.3: POST /auth/login (sets signed flipside_auth cookie) and /auth/logout (clears it), with a handler-level API test.
 F14.4: src/proxy.ts calls checkAccess (src/server/http/access.ts), the single cookie check: pages redirect to /login, /api/v1 returns 401, open: GET /health, POST /auth/login, /login page.
 F14.5: /login page on the picker layout (LoginForm + LoginScreen), api.login in the client; tests are static-render plus a fetch stub.
+F14.6: Sign out button on the Profile page calls /auth/logout and goes to /login; removed the sign-out placeholder slot.
