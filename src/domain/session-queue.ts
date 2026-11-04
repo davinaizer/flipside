@@ -110,6 +110,40 @@ export function gradeCurrent(
   };
 }
 
+/** A grade already given in the session, in the order it was given. */
+export interface GivenGrade {
+  cardId: string;
+  grade: Grade;
+}
+
+/**
+ * Replay: rebuilds the queue from the session's live card ids (stored order, cards deleted
+ * since the start left out) and its live grades in the order given. The server and the
+ * client replay the same inputs, so they agree on the current card, re-queues and the
+ * finish. A grade that is not for the current card at its turn is skipped: its card was
+ * deleted, or it was given before the server checked grade order. `applied` lists the
+ * grades that were used, in order, so a caller can keep its own data per history step.
+ */
+export function replayQueue<G extends GivenGrade>(
+  cardIds: readonly string[],
+  grades: readonly G[],
+  options: QueueOptions = {},
+): { queue: QueueState; applied: G[] } {
+  let queue = startQueue(cardIds);
+  const applied: G[] = [];
+  for (const g of grades) {
+    if (currentEntry(queue)?.cardId !== g.cardId) continue;
+    queue = gradeCurrent(queue, g.grade, options);
+    applied.push(g);
+  }
+  return { queue, applied };
+}
+
+/** Whether the card still has an attempt at or after the current position. */
+export function hasAttemptLeft(state: QueueSnapshot, cardId: string): boolean {
+  return state.entries.slice(state.position).some((e) => e.cardId === cardId);
+}
+
 /** Restores the state before the latest grade; unchanged at the session start. */
 export function undo(state: QueueState): QueueState {
   const previous = state.history.at(-1);

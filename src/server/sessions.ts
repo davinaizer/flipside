@@ -35,6 +35,28 @@ type SessionRow = typeof sessions.$inferSelect;
 
 const notFound = () => new ApiError(404, "session_not_found", "That session does not exist.");
 
+/**
+ * Which of the session's cards are still live for the profile: not deleted, in a deck the
+ * profile owns that is not deleted. Needs cards joined to decks. The session shows only
+ * these, and grading replays the queue over the same set, so a card deleted mid-session
+ * drops out on both sides.
+ */
+function liveSessionCards(profileId: string, cardIds: string[]) {
+  return and(inArray(cards.id, cardIds), eq(decks.ownerProfileId, profileId), isNull(decks.deletedAt), isNull(cards.deletedAt));
+}
+
+/** The session's live card ids, in stored order: the card list its queue is replayed over. */
+export async function liveSessionCardIds(db: Pick<Db, "select">, profileId: string, cardIds: string[]): Promise<string[]> {
+  if (cardIds.length === 0) return [];
+  const rows = await db
+    .select({ id: cards.id })
+    .from(cards)
+    .innerJoin(decks, eq(decks.id, cards.deckId))
+    .where(liveSessionCards(profileId, cardIds));
+  const live = new Set(rows.map((r) => r.id));
+  return cardIds.filter((id) => live.has(id));
+}
+
 function toState(r: {
   box: number | null;
   dueDate: string | null;
@@ -132,14 +154,7 @@ async function loadSession(profile: Profile, row: SessionRow, now: Date, db: Db)
           .from(cards)
           .innerJoin(decks, eq(decks.id, cards.deckId))
           .leftJoin(cardState, and(eq(cardState.cardId, cards.id), eq(cardState.profileId, profile.id)))
-          .where(
-            and(
-              inArray(cards.id, meta.cardIds),
-              eq(decks.ownerProfileId, profile.id),
-              isNull(decks.deletedAt),
-              isNull(cards.deletedAt),
-            ),
-          );
+          .where(liveSessionCards(profile.id, meta.cardIds));
 
   const imageIds = cardRows.flatMap((c) => [c.frontImageId, c.backImageId]).filter((i): i is string => i !== null);
   const imageRows =
@@ -177,7 +192,8 @@ async function loadSession(profile: Profile, row: SessionRow, now: Date, db: Db)
     .select({ reviewId: reviewLog.id, cardId: reviewLog.cardId, grade: reviewLog.grade, reviewedAt: reviewLog.reviewedAt })
     .from(reviewLog)
     .where(and(eq(reviewLog.sessionId, row.id), eq(reviewLog.profileId, profile.id), isNull(reviewLog.undoneAt)))
-    .orderBy(asc(reviewLog.reviewedAt), asc(reviewLog.id));
+    // The order grading replays them in (reviews.ts), so client and server build the same queue.
+    .orderBy(asc(reviewLog.reviewedAt), asc(reviewLog.createdAt));
 
   return {
     session: {

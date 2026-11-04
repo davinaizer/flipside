@@ -6,8 +6,10 @@ import {
   canUndo,
   currentEntry,
   gradeCurrent,
+  hasAttemptLeft,
   isFinished,
   queueCounts,
+  replayQueue,
   startQueue,
   undo,
   type QueueState,
@@ -52,6 +54,41 @@ describe("session queue fixtures", () => {
       state = apply(state, step.action);
       expect(describeState(state)).toEqual(step.expect);
     }
+  });
+});
+
+describe("replay", () => {
+  const g = (cardId: string, grade: Grade) => ({ cardId, grade });
+
+  it("rebuilds the same queue as grading live, including re-queues and the cap", () => {
+    const grades = [g("a", "not_yet"), g("b", "got_it"), g("a", "not_yet"), g("a", "not_yet")];
+    let live = startQueue(["a", "b"]);
+    for (const x of grades) live = gradeCurrent(live, x.grade);
+    const { queue, applied } = replayQueue(["a", "b"], grades);
+    expect(queue).toEqual(live);
+    expect(applied).toEqual(grades);
+    expect(isFinished(queue)).toBe(true);
+  });
+
+  it("skips a grade for a card that is not current at its turn, and keeps the rest", () => {
+    const { queue, applied } = replayQueue(["a", "b", "c"], [g("a", "got_it"), g("c", "got_it"), g("b", "nearly")]);
+    expect(applied.map((x) => x.cardId)).toEqual(["a", "b"]);
+    expect(currentEntry(queue)?.cardId).toBe("c");
+  });
+
+  it("a card deleted mid-session drops out: its grades are skipped and the rest can finish", () => {
+    // "b" was graded Not yet, then deleted; replay runs over the live cards only.
+    const { queue } = replayQueue(["a", "c"], [g("a", "got_it"), g("b", "not_yet"), g("c", "got_it")]);
+    expect(isFinished(queue)).toBe(true);
+    expect(queue.entries.map((e) => e.cardId)).toEqual(["a", "c"]);
+  });
+
+  it("knows whether a card still has an attempt ahead", () => {
+    const { queue } = replayQueue(["a", "b"], [g("a", "not_yet")]);
+    expect(hasAttemptLeft(queue, "a")).toBe(true);
+    const done = replayQueue(["a", "b"], [g("a", "got_it")]).queue;
+    expect(hasAttemptLeft(done, "a")).toBe(false);
+    expect(hasAttemptLeft(done, "b")).toBe(true);
   });
 });
 

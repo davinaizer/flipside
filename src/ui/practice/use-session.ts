@@ -7,13 +7,13 @@ import {
   gradeCurrent,
   isFinished,
   queueCounts,
-  startQueue,
+  replayQueue,
   undo as undoQueue,
   type QueueState,
 } from "@/domain/session-queue";
 import type { Grade } from "@/shared/enums";
 import type { SessionCardPayload, SessionResponse } from "@/shared/schemas/session";
-import { api } from "@/ui/api/client";
+import { api, ApiClientError } from "@/ui/api/client";
 import { uuidv7 } from "@/shared/uuid";
 
 type Labels = Record<Grade, string>;
@@ -23,6 +23,8 @@ export interface SessionApi {
   grade(reviewId: string, body: { sessionId: string; cardId: string; grade: Grade; durationMs: number }): Promise<{ requeue: boolean; labels: Labels | null }>;
   undo(reviewId: string): Promise<{ labels: Labels }>;
   end(sessionId: string): Promise<unknown>;
+  /** Loads the session again (an empty PUT resumes it), for when this tab's queue is out of date. */
+  load(sessionId: string): Promise<SessionResponse>;
 }
 
 export interface SessionView {
@@ -47,24 +49,37 @@ interface Pending {
 }
 
 /**
+ * The server refused a grade because this tab's queue no longer matches its own replay: a card
+ * was deleted elsewhere, or another tab graded first. Loading the session again resolves it.
+ */
+function isStaleQueue(e: unknown): boolean {
+  if (!(e instanceof ApiClientError)) return false;
+  return (e.status === 409 && (e.code === "not_current_card" || e.code === "no_attempt_left")) || (e.status === 404 && e.code === "card_not_found");
+}
+
+/**
  * Practice session logic without React: the client queue (domain/session-queue), the review ids
- * that undo needs, and the silent per-card timer (R12). The queue is rebuilt on load by replaying
- * the grades the server returns, so a reload resumes at the same card. Nothing is applied locally
- * until the server accepts the write, so the screen never shows a state the server lacks.
+ * that undo needs, and the silent per-card timer (R12). The queue is rebuilt by replaying the
+ * grades the server returns, as the server does, so a reload resumes at the same card. Nothing
+ * is applied locally until the server accepts the write, so the screen never shows a state the
+ * server lacks; when the server says the queue is out of date, the session is loaded again.
  */
 export function createSessionController(
   data: SessionResponse,
   deps: { api: SessionApi; now: () => number; onLeave: () => void },
 ) {
-  const cards = new Map(data.queue.map((c) => [c.cardId, c]));
-  const labelOverrides = new Map<string, Labels>();
-  let queue: QueueState = startQueue(data.queue.map((c) => c.cardId));
-  const reviewIds: string[] = []; // parallel to queue.history
-  for (const g of data.grades) {
-    if (isFinished(queue) || currentEntry(queue)?.cardId !== g.cardId) continue;
-    queue = gradeCurrent(queue, g.grade);
-    reviewIds.push(g.reviewId);
+  let cards = new Map<string, SessionCardPayload>();
+  let labelOverrides = new Map<string, Labels>();
+  let queue: QueueState;
+  let reviewIds: string[] = []; // parallel to queue.history
+  function adopt(d: SessionResponse) {
+    cards = new Map(d.queue.map((c) => [c.cardId, c]));
+    labelOverrides = new Map();
+    const replay = replayQueue(d.queue.map((c) => c.cardId), d.grades);
+    queue = replay.queue;
+    reviewIds = replay.applied.map((g) => g.reviewId);
   }
+  adopt(data);
   let revealed = false;
   let shownAt = deps.now();
   let busy = false;
@@ -107,8 +122,17 @@ export function createSessionController(
       if (res.requeue && res.labels) labelOverrides.set(p.cardId, res.labels);
       pending = null;
       showFront();
-    } catch {
-      // keep `pending` so retry() sends the same review id
+    } catch (e) {
+      // Keep `pending` so retry() sends the same review id; a stale queue is reloaded instead.
+      if (isStaleQueue(e)) {
+        try {
+          adopt(await deps.api.load(data.session.id));
+          pending = null;
+          showFront();
+        } catch {
+          // still failed; "Try again" resends, and a refusal reloads again
+        }
+      }
     }
     busy = false;
     emit();
@@ -164,6 +188,7 @@ export const sessionApi: SessionApi = {
   grade: (id, body) => api.grade(id, body),
   undo: (id) => api.undoGrade(id),
   end: (id) => api.endSession(id),
+  load: (id) => api.session(id),
 };
 
 const clock = () => performance.now();

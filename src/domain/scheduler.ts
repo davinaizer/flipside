@@ -2,8 +2,8 @@
  * Five-box scheduler (PRD section 5, R4, N4).
  *
  * Pure: given a card's state before a grade (null for a New card), the grade and
- * the profile's learning day, returns the state after the grade and whether the
- * card is re-queued in the session. The session queue enforces the re-queue cap.
+ * the profile's learning day, returns the state after the grade. Re-queueing within
+ * a session is the session queue's decision (domain/session-queue), not the scheduler's.
  */
 import {
   BOX_INTERVALS_DAYS,
@@ -29,7 +29,6 @@ export interface SchedulerState {
 
 export interface GradeResult {
   state: SchedulerState;
-  requeue: boolean;
 }
 
 export interface SchedulerOptions {
@@ -88,6 +87,5 @@ export function applyGrade(
 
   return {
     state: { box, dueDate, reps, lapses, lastGrade: grade, status },
-    requeue: grade === "not_yet",
   };
 }

@@ -3,6 +3,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { expect, test, vi } from "vitest";
 import type { SessionResponse } from "@/shared/schemas/session";
 import { GradeBar } from "./GradeBar";
+import { ApiClientError } from "@/ui/api/client";
 import { createSessionController, type SessionApi } from "./use-session";
 
 const ids = ["a", "b", "c"].map((x) => `00000000-0000-4000-8000-00000000000${x.charCodeAt(0) - 96}`);
@@ -28,6 +29,7 @@ function setup(d = data()) {
     }),
     undo: vi.fn(async () => ({ labels })),
     end: vi.fn(async () => ({})),
+    load: vi.fn(async () => d),
   };
   const onLeave = vi.fn();
   const c = createSessionController(d, { api, now: () => t, onLeave });
@@ -105,4 +107,26 @@ test("reloading replays the grades and resumes at the same card", () => {
   const { c } = setup(data([g(0, "got_it"), g(1, "not_yet")]));
   expect(c.getView().card?.cardId).toBe(ids[2]);
   expect(c.getView()).toMatchObject({ done: 2, total: 4, canUndo: true });
+});
+
+test("a grade refused because the queue is out of date reloads the session and carries on", async () => {
+  const { c, api } = setup();
+  // Elsewhere, the first card was graded and the second deleted; the server now expects the third.
+  const g = { reviewId: "r0", cardId: ids[0]!, grade: "got_it" as const, reviewedAt: "" };
+  vi.mocked(api.load).mockResolvedValueOnce({ ...data([g]), queue: [card(ids[0]!), card(ids[2]!)] });
+  vi.mocked(api.grade).mockRejectedValueOnce(new ApiClientError(409, "not_current_card", "stale"));
+  c.reveal();
+  await c.grade("nearly");
+  expect(api.load).toHaveBeenCalledWith("s");
+  expect(c.getView()).toMatchObject({ failed: false, revealed: false, done: 1, total: 2, canUndo: true });
+  expect(c.getView().card?.cardId).toBe(ids[2]);
+});
+
+test("any other failure keeps the grade for Try again and does not reload", async () => {
+  const { c, api } = setup();
+  vi.mocked(api.grade).mockRejectedValueOnce(new ApiClientError(500, "unknown", "boom"));
+  c.reveal();
+  await c.grade("nearly");
+  expect(api.load).not.toHaveBeenCalled();
+  expect(c.getView()).toMatchObject({ failed: true, done: 0 });
 });
