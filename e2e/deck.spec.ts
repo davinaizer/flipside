@@ -114,6 +114,7 @@ test("delete confirms, sends DELETE, returns to the Library; Keep deck cancels",
   await page.route(`**/api/v1/decks/${id}`, (r) =>
     r.request().method() === "DELETE" ? r.fulfill({ status: 204 }) : r.continue(),
   );
+  await page.getByRole("button", { name: "Edit deck" }).click();
   await page.getByRole("button", { name: "Delete deck" }).click();
   const dialog = page.getByRole("alertdialog", { name: "Delete deck" });
   await expect(dialog).toContainText(/Delete ".+"\? This hides the deck and its 2 cards/);

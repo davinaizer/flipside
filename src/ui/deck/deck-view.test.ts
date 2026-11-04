@@ -3,6 +3,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { expect, test, vi } from "vitest";
 import { deleteSummary } from "./delete-deck/DeleteDeck";
 import { NeedsRewording } from "./needs-rewording/NeedsRewording";
+import { EditDeckPanel } from "./edit-deck/EditDeck";
 import { DeckView } from "./DeckView";
 import { anywayPlan, practisePlan } from "./practice-plan";
 
@@ -58,10 +59,17 @@ test("a ticked topic with nothing due offers a labelled practise-anyway ignoring
   expect(html(["Cells"])).not.toContain("anyway");
 });
 
-test("the deck page offers edit, delete and re-import into the same deck", () => {
+test("the deck page offers edit and re-import but no Delete deck; the Edit deck panel holds it", () => {
   const out = html([]);
   expect(out).toContain("Edit deck");
-  expect(out).toContain("Delete deck");
+  expect(out).not.toContain("Delete deck");
+  const panel = renderToStaticMarkup(
+    createElement(EditDeckPanel, {
+      deck: { id: D, name: "Science", groupName: null, color: null, answerStyle: "paragraph", cardCount: 8, reviewCount: 12 },
+      onClose() {},
+    }),
+  );
+  expect(panel).toContain("Delete deck");
   expect(out).toContain(`href="/import?deckId=${D}"`);
 });
 

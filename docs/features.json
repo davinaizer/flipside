@@ -638,7 +638,7 @@
           ],
           "area": "src/ui/deck/DeckView.tsx, edit-deck/EditDeck.tsx, delete-deck/DeleteDeck.tsx",
           "done_when": "Test: deck page has no Delete deck control; Edit deck panel contains it; confirmation copy with card and review counts unchanged.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F13.4",
