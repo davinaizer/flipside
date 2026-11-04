@@ -804,7 +804,7 @@
           ],
           "area": "src/proxy.ts (or middleware), src/server/http",
           "done_when": "API test: without a valid cookie pages redirect to /login and every /api/v1 route returns 401 except GET /health and POST /auth/login; valid cookie passes. One check, no per-route copies.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F14.5",
