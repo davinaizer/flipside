@@ -1008,7 +1008,7 @@
       ],
       "design_screens": [],
       "notes": "Toggle collapses the sidebar to icons for Library and Progress plus the profile avatar. State in localStorage (ASSUMED, D28); no schema change. Semantic tokens only; profile menu still works collapsed.",
-      "status": "todo",
+      "status": "in_progress",
       "tasks": [
         {
           "id": "F16.1",
@@ -1037,7 +1037,8 @@
           "done_when": "Unit test: state reads and writes localStorage and tolerates it being unavailable. pnpm test:e2e desktop and iPad: toggle collapses and expands, state survives reload, navigation and profile menu work collapsed, axe has no serious or critical issues in both states and both themes.",
           "status": "todo"
         }
-      ]
+      ],
+      "branch": "feat/F16-collapsible-sidebar"
     },
     {
       "id": "F17",
