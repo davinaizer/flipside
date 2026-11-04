@@ -86,3 +86,4 @@ F15 done: sidebar profile menu merged via PR 41. MANUAL PENDING: none from the l
 REVIEW F16 round 1: PASS at b255c10
 F16 done: collapsible sidebar, PR 43. MANUAL PENDING: none from the ledger.
 F17.1: ellipsis DeckMenu (Edit deck, Re-import) on Library cards; deck page lost both buttons; reviewCount added to /library. Static-render tests; e2e deferred to F17.4.
+F17.2 moved the Up to date tag into a wrapping row beside the deck title link; the N due badge stays at the top right. Static-render test added.

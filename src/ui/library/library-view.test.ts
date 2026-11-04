@@ -86,3 +86,13 @@ test("the open menu lists Edit deck and Re-import with the deck id", () => {
   expect(out).toContain("Re-import");
   expect(out.match(/tabindex="-1"/g)).toHaveLength(2);
 });
+
+test("Up to date tag sits in the title row, before the topic and card counts", () => {
+  const html = render(full);
+  const row = html.indexOf("Up to date");
+  expect(row).toBeGreaterThan(html.indexOf("Química"));
+  expect(row).toBeLessThan(html.indexOf("1 topic"));
+  // Same wrapping row as the title link, so it wraps under the title on iPad portrait.
+  const rowStart = html.lastIndexOf("flex-wrap items-center gap-x-3", row);
+  expect(html.slice(rowStart, row)).toContain('href="/decks/1"');
+});

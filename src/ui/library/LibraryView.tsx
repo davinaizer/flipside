@@ -149,14 +149,21 @@ export function LibraryView({
                     <div className="flex items-center gap-3">
                       <DeckTile name={d.name} color={d.color} />
                       <div>
-                        <h3 className="text-headline-sm font-semibold">
-                          <Link
-                            href={`/decks/${d.id}`}
-                            className={`flex min-h-11 items-center hover:underline hover:text-primary active:text-primary-container ${PRESSED} ${FOCUS_RING}`}
-                          >
-                            {d.name}
-                          </Link>
-                        </h3>
+                        <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+                          <h3 className="text-headline-sm font-semibold">
+                            <Link
+                              href={`/decks/${d.id}`}
+                              className={`flex min-h-11 items-center hover:underline hover:text-primary active:text-primary-container ${PRESSED} ${FOCUS_RING}`}
+                            >
+                              {d.name}
+                            </Link>
+                          </h3>
+                          {d.dueCount === 0 && (
+                            <span className="rounded-full bg-surface-container-high px-3 py-1 text-label-md font-semibold text-primary">
+                              Up to date
+                            </span>
+                          )}
+                        </div>
                         <p className="text-body-sm text-on-surface-variant">
                           {d.topicCount} {d.topicCount === 1 ? "topic" : "topics"} · {d.cardCount}{" "}
                           {d.cardCount === 1 ? "card" : "cards"}
@@ -164,13 +171,9 @@ export function LibraryView({
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
-                    {d.dueCount > 0 ? (
+                    {d.dueCount > 0 && (
                       <span className="rounded-full bg-inverse-surface px-3 py-1 text-label-md font-semibold text-inverse-on-surface">
                         {d.dueCount} due
-                      </span>
-                    ) : (
-                      <span className="rounded-full bg-surface-container-high px-3 py-1 text-label-md font-semibold text-primary">
-                        Up to date
                       </span>
                     )}
                     <DeckMenu deckId={d.id} deckName={d.name} onEdit={() => setEditingId(d.id)} />

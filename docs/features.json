@@ -1096,7 +1096,7 @@
           ],
           "area": "src/ui/library/LibraryView.tsx",
           "done_when": "Test: the tag renders in the same row as the deck title link and no longer in the card footer; wraps cleanly on iPad portrait. verify.sh green.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F17.3",
