@@ -593,7 +593,7 @@
         "add_deck_re_import_dark_mode"
       ],
       "notes": "T7: drop the On/Off text from Read questions aloud (keep role=switch and aria-checked). T8: Settings preview renders the practice card component from F11 (topic chip, Question label, read-aloud button, footer hint) with sample text. D8: move Delete deck into the Edit deck panel; the D5 confirmation copy is unchanged. I7: ImportFlow becomes one column with sections 1, 2, 3 in order at every width (currently a two-column grid at lg).",
-      "status": "in_progress",
+      "status": "done",
       "branch": "feat/F13-settings-deck-import-fixes",
       "pr": 34,
       "tasks": [

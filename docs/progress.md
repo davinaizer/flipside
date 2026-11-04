@@ -59,3 +59,4 @@ F13.7 import column widened from max-w-3xl to max-w-6xl; import e2e passes (desk
 REVIEW F13 round 2: GAPS at 160c2ad
 F13.8: Read question aloud stops click propagation so it no longer reveals the answer; unit and e2e tests added.
 REVIEW F13 round 3: PASS at 165c106
+F13 done: PR 34, review PASS (round 3), verify and e2e green. MANUAL PENDING: none.
