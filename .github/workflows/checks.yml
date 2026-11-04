@@ -1,17 +1,14 @@
 # Runs on every pull request into main, where features land.
 # A pull_request run checks out the merge of the PR into its base branch, so a green run
 # means the result of merging passes, not only the branch on its own.
-# Docs-only PRs skip it: a PR runs checks only if it changes a file outside these paths.
-# If these checks ever become required in branch protection, a skipped run leaves the PR
-# waiting; add an always-passing job for docs-only PRs then.
+# Docs-only PRs (only docs/** and *.md changed) skip the heavy jobs. The workflow itself must
+# always run: with a workflow-level paths-ignore the required checks never report and the PR
+# waits forever. A job skipped by `if` still reports under its own name and counts as passing.
 name: checks
 
 on:
   pull_request:
     branches: [main]
-    paths-ignore:
-      - "docs/**"
-      - "**/*.md"
 
 concurrency:
   group: checks-${{ github.event.pull_request.number }}
@@ -21,10 +18,31 @@ permissions:
   contents: read
 
 jobs:
+  changes:
+    name: changes (does the PR touch more than docs?)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    outputs:
+      code: ${{ steps.diff.outputs.code }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - id: diff
+        run: |
+          # The checkout is the merge commit; its first parent is the base branch tip.
+          if git diff --name-only HEAD^1 HEAD | grep -qvE '^docs/|\.md$'; then
+            echo "code=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "code=false" >> "$GITHUB_OUTPUT"
+          fi
+
   verify:
     name: verify (typecheck, lint, unit and integration tests)
     runs-on: ubuntu-24.04
     timeout-minutes: 20
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -42,6 +60,8 @@ jobs:
     name: e2e (Playwright with axe, desktop and iPad)
     runs-on: ubuntu-24.04
     timeout-minutes: 30
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
