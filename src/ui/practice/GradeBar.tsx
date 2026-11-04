@@ -9,6 +9,8 @@ export const GRADE_TONE: Record<Grade, string> = {
   got_it: "bg-box-got-it text-on-box-got-it",
 };
 
+const GRADE_PROMPT = "How well did you know this?";
+
 const GRADE_BUTTONS: { grade: Grade; label: string; icon: IconName }[] = [
   { grade: "not_yet", label: "Not yet", icon: "refresh" },
   { grade: "nearly", label: "Nearly", icon: "trend" },
@@ -39,7 +41,10 @@ export function GradeBar({
           </button>
         </p>
       )}
-      <div className="grid grid-cols-3 gap-3">
+      <p id="grade-prompt" className="text-center text-body-lg font-semibold text-on-surface">
+        {GRADE_PROMPT}
+      </p>
+      <div role="group" aria-labelledby="grade-prompt" className="grid grid-cols-3 gap-3">
         {GRADE_BUTTONS.map(({ grade, label, icon }) => (
           <button
             key={grade}

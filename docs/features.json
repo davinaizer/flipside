@@ -444,7 +444,7 @@
           ],
           "area": "src/ui/practice/GradeBar.tsx",
           "done_when": "Test: 'How well did you know this?' renders directly above the three grade buttons and labels the group for assistive tech.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F11.5",

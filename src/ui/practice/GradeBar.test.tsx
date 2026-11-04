@@ -17,3 +17,8 @@ test("grade buttons and Try again have hover, pressed and focus classes", () => 
     expect(b).toContain(FOCUS_RING);
   }
 });
+
+test("prompt renders directly above the grade buttons and labels the group", () => {
+  const html = renderToStaticMarkup(<GradeBar labels={labels} busy={false} failed={false} onGrade={noop} onRetry={noop} />);
+  expect(html).toMatch(/<p id="grade-prompt"[^>]*>How well did you know this\?<\/p><div role="group" aria-labelledby="grade-prompt"/);
+});
