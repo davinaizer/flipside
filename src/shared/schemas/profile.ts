@@ -21,19 +21,25 @@ export const meSchema = z.object({
   settings: settingsSchema,
 });
 
-/** PATCH /me body (P7): a new avatar, a new name, or both. Name is trimmed, then 1 to 24 characters. */
+const profileFields = {
+  avatar: z.enum(AVATAR_IDS),
+  name: z
+    .string()
+    .trim()
+    .min(1, "Name cannot be empty")
+    .max(PROFILE_NAME_MAX, `Name must be ${PROFILE_NAME_MAX} characters or fewer`),
+};
+
+/** POST /profiles body (P8): both fields required; name is trimmed, then 1 to 24 characters. */
+export const createProfileRequestSchema = z.object(profileFields);
+
+/** PATCH /me body (P7): a new avatar, a new name, or both. */
 export const updateProfileRequestSchema = z
-  .object({
-    avatar: z.enum(AVATAR_IDS),
-    name: z
-      .string()
-      .trim()
-      .min(1, "Name cannot be empty")
-      .max(PROFILE_NAME_MAX, `Name must be ${PROFILE_NAME_MAX} characters or fewer`),
-  })
+  .object(profileFields)
   .partial()
   .refine((v) => v.avatar !== undefined || v.name !== undefined, "Nothing to change");
 
 export type ProfileSummary = z.infer<typeof profileSummarySchema>;
 export type Me = z.infer<typeof meSchema>;
+export type CreateProfileRequest = z.infer<typeof createProfileRequestSchema>;
 export type UpdateProfileRequest = z.infer<typeof updateProfileRequestSchema>;

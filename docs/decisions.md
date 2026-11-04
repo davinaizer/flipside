@@ -129,3 +129,4 @@ ASSUMED: F17.4 the Escape/focus, Select all and Up to date wrap checks are e2e o
 DEVIATION (user-directed): L9/AC23 put the Up to date tag next to the deck title; user asked to put it where the due tag is for consistency. PRD not edited; user to update.
 ASSUMED: F18.1 surface style reuses the existing card tokens (bg-surface-card, border-card-edge, shadow-card); the Practice section lost its max-w-xl so both surfaces share the page width; iPad layout checked by markup only.
 ASSUMED: F18.2 thin height is h-1.5 (6 px); the Progress page has no horizontal bar besides the vertical practice chart, so only MasteryBar changed; F18.1 Settings e2e passes on desktop and iPad unchanged.
+ASSUMED: F19.1 POST /profiles answers 201 with the profile (id, name, avatar, accent, timezone, dayStartHour) and 400 validation_failed for bad input (spec says 400, unlike PATCH /me 422); needs no profile cookie; 401 is the proxy gate, tested at checkAccess level.

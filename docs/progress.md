@@ -96,3 +96,4 @@ F18.1: Reading and Practice each render as their own surface card (rounded-card,
 F18.2: mastery bar is now h-1.5 (BAR_HEIGHT in MasteryBar.tsx); legend unchanged. Progress and Library e2e, axe, Settings e2e green on desktop and iPad.
 REVIEW F18 round 1: PASS at 94e48fa
 F18 done: settings sections and thinner bars, PR 45. MANUAL PENDING: none from the ledger.
+F19.1: POST /profiles (createProfileRequestSchema, createProfile service, route); tests/profiles-create-api.test.ts. verify.sh green.

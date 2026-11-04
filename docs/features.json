@@ -1237,7 +1237,7 @@
           ],
           "area": "src/shared/schemas/profile.ts, src/server/profile.ts, src/app/api/v1/profiles/route.ts",
           "done_when": "API test: a valid name and avatar creates a profile with default timezone and day start and returns it; empty, whitespace-only or over-24-character names return 400; an unknown avatar returns 400; 401 without the auth cookie. verify.sh green.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F19.2",
