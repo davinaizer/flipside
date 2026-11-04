@@ -1195,7 +1195,7 @@
           ],
           "area": "src/ui/mastery-bar/MasteryBar.tsx, src/ui/progress",
           "done_when": "Test: the mastery bar height class is the thin one and the legend is unchanged; any other Progress-page bar uses the same height. e2e and axe on Progress and Library in both themes.",
-          "status": "todo"
+          "status": "done"
         }
       ],
       "branch": "feat/F18-settings-sections-thin-bars"

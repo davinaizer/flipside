@@ -9,6 +9,9 @@ const SEGMENTS = [
   { key: "gotIt", label: "Got it", bar: "bg-bar-got-it" },
 ] as const;
 
+/** Thin bar (S6). The legend swatches keep their own size. */
+export const BAR_HEIGHT = "h-1.5";
+
 /**
  * Mastery bar with a legend. Counts are printed in the legend so colour is never the only
  * signal (PRD section 8); the bar itself is decorative.
@@ -17,7 +20,7 @@ export function MasteryBar({ mastery }: { mastery: Mastery }) {
   const total = SEGMENTS.reduce((n, s) => n + mastery[s.key], 0);
   return (
     <div className="flex flex-col gap-2">
-      <div aria-hidden="true" className="flex h-3 w-full gap-0.5 overflow-hidden rounded-full outline outline-1 outline-outline-variant">
+      <div aria-hidden="true" className={`flex ${BAR_HEIGHT} w-full gap-0.5 overflow-hidden rounded-full outline outline-1 outline-outline-variant`}>
         {SEGMENTS.map((s) =>
           mastery[s.key] > 0 ? (
             <div key={s.key} className={s.bar} style={{ width: `${(mastery[s.key] / total) * 100}%` }} />
