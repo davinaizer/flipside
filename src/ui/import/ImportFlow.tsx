@@ -83,7 +83,7 @@ export function ImportFlow({ decks, initialDeckId }: { decks: DeckChoice[]; init
 
   return (
     <form
-      className="flex max-w-3xl flex-col gap-6"
+      className="flex max-w-6xl flex-col gap-6"
       onSubmit={(e) => {
         e.preventDefault();
         if (preview) void add(e.currentTarget, preview);

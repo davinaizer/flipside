@@ -697,7 +697,7 @@
           ],
           "area": "src/ui/import/ImportFlow.tsx",
           "done_when": "REVIEW F13 round 1 gap 2 closed: the single import column is no narrower than before (max-w-6xl, or the design add_deck_re_import ~1240px), sections 1, 2, 3 stay in order, and the import e2e still passes.",
-          "status": "todo"
+          "status": "done"
         }
       ]
     },
