@@ -59,18 +59,19 @@ test("a ticked topic with nothing due offers a labelled practise-anyway ignoring
   expect(html(["Cells"])).not.toContain("anyway");
 });
 
-test("the deck page offers edit and re-import but no Delete deck; the Edit deck panel holds it", () => {
+test("the deck page has no Edit deck or Re-import (they moved to the Library menu); the Edit deck panel holds Delete deck", () => {
   const out = html([]);
-  expect(out).toContain("Edit deck");
+  expect(out).not.toContain("Edit deck");
+  expect(out).not.toContain("Re-import");
   expect(out).not.toContain("Delete deck");
   const panel = renderToStaticMarkup(
     createElement(EditDeckPanel, {
       deck: { id: D, name: "Science", groupName: null, color: null, answerStyle: "paragraph", cardCount: 8, reviewCount: 12 },
       onClose() {},
+      onChanged() {},
     }),
   );
   expect(panel).toContain("Delete deck");
-  expect(out).toContain(`href="/import?deckId=${D}"`);
 });
 
 test("delete confirmation states how many cards and review records go", () => {

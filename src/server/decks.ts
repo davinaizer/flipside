@@ -49,7 +49,7 @@ export async function newCardsRemaining(profile: Profile, today: string, db: Db)
  */
 export async function getLibrary(profile: Profile, now: Date = new Date(), db: Db = getDb()): Promise<Library> {
   const today = learningDay(now, profile.timezone, profile.dayStartHour);
-  const [newRemaining, deckRows, cardRows] = await Promise.all([
+  const [newRemaining, deckRows, cardRows, reviewRows] = await Promise.all([
     newCardsRemaining(profile, today, db),
     db
       .select(deckColumns)
@@ -67,7 +67,15 @@ export async function getLibrary(profile: Profile, now: Date = new Date(), db: D
       .where(
         and(eq(decks.ownerProfileId, profile.id), isNull(decks.deletedAt), isNull(cards.deletedAt)),
       ),
+    // Review records per deck, for the delete confirmation inside Edit deck (D5); same rule as getDeck.
+    db
+      .select({ deckId: cards.deckId, n: sql<number>`count(*)::int` })
+      .from(reviewLog)
+      .innerJoin(cards, eq(cards.id, reviewLog.cardId))
+      .where(and(eq(reviewLog.profileId, profile.id), isNull(reviewLog.undoneAt)))
+      .groupBy(cards.deckId),
   ]);
+  const reviewsByDeck = new Map(reviewRows.map((r) => [r.deckId, r.n]));
 
   const byDeck = new Map<string, typeof cardRows>();
   for (const c of cardRows) byDeck.set(c.deckId, [...(byDeck.get(c.deckId) ?? []), c]);
@@ -95,6 +103,7 @@ export async function getLibrary(profile: Profile, now: Date = new Date(), db: D
         topicCount: topics.length,
         topics,
         cardCount: deckCards.length,
+        reviewCount: reviewsByDeck.get(d.id) ?? 0,
         dueCount: dueByDeck.get(d.id) ?? 0,
         mastery: { new: m.new, notYet: m.notYet, nearly: m.nearly, gotIt: m.gotIt },
       },

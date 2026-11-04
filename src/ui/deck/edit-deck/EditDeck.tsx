@@ -1,6 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { ANSWER_STYLES, CARD_COLORS } from "@/shared/enums";
 import { buttonClass } from "@/ui/button/button-class";
@@ -28,22 +27,8 @@ const SWATCH = {
 
 const field = "min-h-11 rounded-xl bg-surface-container-low px-3 outline outline-1 outline-outline";
 
-/** D4: rename, regroup, recolour and change answer style via PATCH /decks/{id}, then refresh the page. */
-export function EditDeck({ deck }: { deck: EditableDeck }) {
-  const [open, setOpen] = useState(false);
-  if (!open) {
-    return (
-      <button type="button" onClick={() => setOpen(true)} className={buttonClass("secondary")}>
-        Edit deck
-      </button>
-    );
-  }
-  return <EditDeckPanel deck={deck} onClose={() => setOpen(false)} />;
-}
-
-/** The open panel: the edit form, then Delete deck (D8) kept away from the page's everyday actions. Exported for tests. */
-export function EditDeckPanel({ deck, onClose }: { deck: EditableDeck; onClose: () => void }) {
-  const router = useRouter();
+/** D4: the edit form (PATCH /decks/{id}), then Delete deck (D8) kept away from the page's everyday actions. Exported for tests. */
+export function EditDeckPanel({ deck, onClose, onChanged }: { deck: EditableDeck; onClose: () => void; onChanged: () => void }) {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -65,7 +50,7 @@ export function EditDeckPanel({ deck, onClose }: { deck: EditableDeck; onClose: 
       });
       if (!res.ok) throw new Error("save failed");
       onClose();
-      router.refresh();
+      onChanged();
     } catch {
       setError("We could not save your changes. Nothing was lost, so please try again.");
     }
@@ -118,7 +103,7 @@ export function EditDeckPanel({ deck, onClose }: { deck: EditableDeck; onClose: 
         </button>
       </div>
     </form>
-    <DeleteDeck deck={deck} />
+    <DeleteDeck deck={deck} onDeleted={onChanged} />
     </div>
   );
 }

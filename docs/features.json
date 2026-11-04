@@ -1082,7 +1082,7 @@
           ],
           "area": "src/ui/library/LibraryView.tsx, src/ui/deck/edit-deck, src/ui/deck/DeckView.tsx, src/ui/icons",
           "done_when": "Component test: each deck card has a menu button (accessible name, 44 px) listing Edit deck (opens the existing edit panel from the Library) and Re-import (links to /import?deckId=); Escape closes and returns focus; DeckView renders neither button. Library cards stay a single tab stop for the deck link. verify.sh green.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F17.2",

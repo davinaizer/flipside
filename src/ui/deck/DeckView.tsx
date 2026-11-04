@@ -3,7 +3,7 @@ import type { SessionRequest } from "@/shared/schemas/session";
 import { DeckTile } from "@/ui/deck-tile/DeckTile";
 import { Icon } from "@/ui/icons/Icon";
 import { MasteryBar } from "@/ui/mastery-bar/MasteryBar";
-import { EditDeck, type EditableDeck } from "./edit-deck/EditDeck";
+import type { EditableDeck } from "./edit-deck/EditDeck";
 import { NeedsRewording, type Leech } from "./needs-rewording/NeedsRewording";
 import { anywayPlan, practisePlan } from "./practice-plan";
 import { buttonClass } from "@/ui/button/button-class";
@@ -37,7 +37,7 @@ export function DeckView({ deck, leeches, ticked, onToggle, busy, startError, on
         <Icon name="back" />
         Back to Library
       </Link>
-      <div className="mb-4 flex flex-wrap items-center justify-between gap-4">
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-4">
           <DeckTile name={deck.name} color={deck.color} size={64} />
           <div>
@@ -60,12 +60,6 @@ export function DeckView({ deck, leeches, ticked, onToggle, busy, startError, on
             {plan.label}
           </button>
         </div>
-      </div>
-      <div className="mb-6 flex flex-wrap items-start gap-3">
-        <EditDeck deck={deck} />
-        <Link href={`/import?deckId=${deck.id}`} className={buttonClass("secondary")}>
-          Re-import
-        </Link>
       </div>
       {startError && (
         <p role="alert" className="mb-4 text-on-surface-variant">

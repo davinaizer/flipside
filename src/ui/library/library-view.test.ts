@@ -2,6 +2,7 @@ import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { expect, test } from "vitest";
 import type { Library } from "@/shared/schemas/library";
+import { DeckMenuItems } from "./DeckMenu";
 import { LibraryView } from "./LibraryView";
 
 const mastery = { new: 0, notYet: 0, nearly: 0, gotIt: 0 };
@@ -14,6 +15,7 @@ const deck = (id: string, name: string, topics: string[]) => ({
   topicCount: topics.length,
   topics,
   cardCount: 3,
+  reviewCount: 0,
   dueCount: 0,
   mastery,
 });
@@ -34,6 +36,7 @@ const render = (library: Library, query = "") =>
       onStart: () => {},
       query,
       onQueryChange: () => {},
+      onDeckChanged: () => {},
     }),
   );
 
@@ -63,4 +66,23 @@ test("no decks shows one Add deck, the template and a plain line", () => {
   expect(html).toContain("Download CSV template");
   expect(html).toContain("topic, front and back columns");
   expect(html).not.toContain("Search");
+});
+
+test("each deck card has a 44 px menu button named for the deck, closed by default", () => {
+  const out = render(full);
+  expect(out).toContain('aria-label="Deck actions for Química"');
+  expect(out).toContain('aria-label="Deck actions for History"');
+  expect(out.match(/aria-haspopup="menu"/g)).toHaveLength(2);
+  expect(out).toContain("size-11");
+  expect(out).not.toContain('role="menu"');
+  // The card link stays the only link to the deck; the menu items are not tab stops.
+  expect(out.match(/href="\/decks\//g)).toHaveLength(2);
+});
+
+test("the open menu lists Edit deck and Re-import with the deck id", () => {
+  const out = renderToStaticMarkup(createElement(DeckMenuItems, { deckId: "abc", onEdit: () => {} }));
+  expect(out).toContain("Edit deck");
+  expect(out).toContain('href="/import?deckId=abc"');
+  expect(out).toContain("Re-import");
+  expect(out.match(/tabindex="-1"/g)).toHaveLength(2);
 });
