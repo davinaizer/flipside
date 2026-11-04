@@ -989,6 +989,264 @@
           "status": "done"
         }
       ]
+    },
+    {
+      "id": "F16",
+      "name": "Collapsible sidebar",
+      "depends_on": [
+        "F15"
+      ],
+      "reqs": [
+        "U4"
+      ],
+      "acs": [
+        "AC22"
+      ],
+      "manual_acs": [],
+      "prd_sections": [
+        "8"
+      ],
+      "design_screens": [],
+      "notes": "Toggle collapses the sidebar to icons for Library and Progress plus the profile avatar. State in localStorage (ASSUMED, D28); no schema change. Semantic tokens only; profile menu still works collapsed.",
+      "status": "todo",
+      "tasks": [
+        {
+          "id": "F16.1",
+          "title": "Collapse toggle and icon rail in the sidebar",
+          "reqs": [
+            "U4"
+          ],
+          "prd_sections": [
+            "8"
+          ],
+          "area": "src/ui/shell/Sidebar.tsx, src/ui/shell/ProfileMenu.tsx, src/ui/icons",
+          "done_when": "Component test: collapsed render shows only the two nav icons (each with aria-label and a tooltip title) and the avatar, no labels or name; expanded render is unchanged. Toggle has an accessible name and aria-expanded; targets at least 44 px. verify.sh green.",
+          "status": "todo"
+        },
+        {
+          "id": "F16.2",
+          "title": "Remember the collapsed state and cover it with e2e and axe",
+          "reqs": [
+            "U4"
+          ],
+          "prd_sections": [
+            "8",
+            "13"
+          ],
+          "area": "src/ui/shell, e2e/app-shell.spec.ts",
+          "done_when": "Unit test: state reads and writes localStorage and tolerates it being unavailable. pnpm test:e2e desktop and iPad: toggle collapses and expands, state survives reload, navigation and profile menu work collapsed, axe has no serious or critical issues in both states and both themes.",
+          "status": "todo"
+        }
+      ]
+    },
+    {
+      "id": "F17",
+      "name": "Library deck menu and topic selection",
+      "depends_on": [
+        "F13",
+        "F16"
+      ],
+      "reqs": [
+        "L9",
+        "D9"
+      ],
+      "acs": [
+        "AC23",
+        "AC24"
+      ],
+      "manual_acs": [],
+      "prd_sections": [
+        "4",
+        "8"
+      ],
+      "design_screens": [
+        "library",
+        "deck_detail"
+      ],
+      "notes": "Ellipsis menu at the top right of the Library deck card with Edit deck and Re-import; both leave the deck page (Delete deck stays inside Edit deck, D8). Up to date tag moves next to the deck title. Topics list gets Select all and Deselect all.",
+      "status": "todo",
+      "tasks": [
+        {
+          "id": "F17.1",
+          "title": "Ellipsis menu on the Library deck card",
+          "reqs": [
+            "L9",
+            "D4",
+            "D7"
+          ],
+          "prd_sections": [
+            "4",
+            "8"
+          ],
+          "area": "src/ui/library/LibraryView.tsx, src/ui/deck/edit-deck, src/ui/deck/DeckView.tsx, src/ui/icons",
+          "done_when": "Component test: each deck card has a menu button (accessible name, 44 px) listing Edit deck (opens the existing edit panel from the Library) and Re-import (links to /import?deckId=); Escape closes and returns focus; DeckView renders neither button. Library cards stay a single tab stop for the deck link. verify.sh green.",
+          "status": "todo"
+        },
+        {
+          "id": "F17.2",
+          "title": "Move the Up to date tag next to the deck title",
+          "reqs": [
+            "L9"
+          ],
+          "prd_sections": [
+            "4",
+            "8"
+          ],
+          "area": "src/ui/library/LibraryView.tsx",
+          "done_when": "Test: the tag renders in the same row as the deck title link and no longer in the card footer; wraps cleanly on iPad portrait. verify.sh green.",
+          "status": "todo"
+        },
+        {
+          "id": "F17.3",
+          "title": "Select all and Deselect all on the topics list",
+          "reqs": [
+            "D9",
+            "D2"
+          ],
+          "prd_sections": [
+            "4"
+          ],
+          "area": "src/ui/deck/DeckView.tsx, src/ui/deck/DeckScreen.tsx",
+          "done_when": "Test: Select all ticks every topic and the Practise label shows all topic and due counts; Deselect all clears them and the label returns to the all-due form. verify.sh green.",
+          "status": "todo"
+        },
+        {
+          "id": "F17.4",
+          "title": "E2E and axe for the deck menu, tag placement and topic selection",
+          "reqs": [
+            "L9",
+            "D9"
+          ],
+          "prd_sections": [
+            "13"
+          ],
+          "area": "e2e/library.spec.ts, e2e/deck.spec.ts",
+          "done_when": "pnpm test:e2e desktop and iPad: menu opens Edit deck and Re-import by mouse and keyboard, deck page has neither button, Select all and Deselect all work, axe has no serious or critical issues in both themes.",
+          "status": "todo"
+        }
+      ]
+    },
+    {
+      "id": "F18",
+      "name": "Settings sections and thinner bars",
+      "depends_on": [
+        "F13"
+      ],
+      "reqs": [
+        "T9",
+        "S6"
+      ],
+      "acs": [
+        "AC25"
+      ],
+      "manual_acs": [],
+      "prd_sections": [
+        "4",
+        "8"
+      ],
+      "design_screens": [
+        "settings",
+        "progress"
+      ],
+      "notes": "Reading and Practice each on their own surface (semantic tokens). Mastery bar goes from h-3 to about h-1.5; check every bar on the Progress page, not only MasteryBar.",
+      "status": "todo",
+      "tasks": [
+        {
+          "id": "F18.1",
+          "title": "Put Reading and Practice on separate surfaces in Settings",
+          "reqs": [
+            "T9"
+          ],
+          "prd_sections": [
+            "4",
+            "8"
+          ],
+          "area": "src/app/(app)/settings/page.tsx, src/ui/settings/reading, src/ui/settings/practice",
+          "done_when": "Test: Reading and Practice each render in their own surface container with a heading; no raw hex; layout holds on iPad portrait. verify.sh green.",
+          "status": "todo"
+        },
+        {
+          "id": "F18.2",
+          "title": "Thinner progress bars",
+          "reqs": [
+            "S6"
+          ],
+          "prd_sections": [
+            "4",
+            "8"
+          ],
+          "area": "src/ui/mastery-bar/MasteryBar.tsx, src/ui/progress",
+          "done_when": "Test: the mastery bar height class is the thin one and the legend is unchanged; any other Progress-page bar uses the same height. e2e and axe on Progress and Library in both themes.",
+          "status": "todo"
+        }
+      ]
+    },
+    {
+      "id": "F19",
+      "name": "Add user from the picker",
+      "depends_on": [
+        "F14",
+        "F15"
+      ],
+      "reqs": [
+        "P5",
+        "P8"
+      ],
+      "acs": [
+        "AC26"
+      ],
+      "manual_acs": [],
+      "prd_sections": [
+        "2",
+        "4",
+        "11"
+      ],
+      "design_screens": [],
+      "notes": "PRD amended in v0.5 (P5, P8, D28). Reuse the Profile page's avatar chooser and the 1 to 24 character name rule (P7). Defaults: timezone Europe/London, day start 07:00. Endpoint sits behind the app password gate.",
+      "status": "todo",
+      "tasks": [
+        {
+          "id": "F19.1",
+          "title": "POST /profiles: schema, service and route",
+          "reqs": [
+            "P8"
+          ],
+          "prd_sections": [
+            "4",
+            "11"
+          ],
+          "area": "src/shared/schemas/profile.ts, src/server/profile.ts, src/app/api/v1/profiles/route.ts",
+          "done_when": "API test: a valid name and avatar creates a profile with default timezone and day start and returns it; empty, whitespace-only or over-24-character names return 400; an unknown avatar returns 400; 401 without the auth cookie. verify.sh green.",
+          "status": "todo"
+        },
+        {
+          "id": "F19.2",
+          "title": "Add User button and form on the picker",
+          "reqs": [
+            "P8"
+          ],
+          "prd_sections": [
+            "4",
+            "8"
+          ],
+          "area": "src/ui/profile/ProfilePicker.tsx, src/ui/api/client.ts",
+          "done_when": "Component test: Add User sits below the profile list; it opens a name and avatar form with the same validation messages as the Profile page; saving calls api.createProfile and shows the new profile; cancel closes the form. verify.sh green.",
+          "status": "todo"
+        },
+        {
+          "id": "F19.3",
+          "title": "E2E and axe for Add User",
+          "reqs": [
+            "P8"
+          ],
+          "prd_sections": [
+            "13"
+          ],
+          "area": "e2e/profiles.spec.ts",
+          "done_when": "pnpm test:e2e desktop and iPad: create a profile, see it in the picker, select it and land on an empty Library; invalid names rejected; axe has no serious or critical issues with the form open in both themes. The test cleans up its profile.",
+          "status": "todo"
+        }
+      ]
     }
   ]
 }
