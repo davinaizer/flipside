@@ -383,9 +383,9 @@
         "practice_answer_revealed"
       ],
       "notes": "Eye icon on Show answer; hint moves outside the card, below the button. 3D flip (CSS transform, perspective, backface-visibility; no new dependency) for button, card tap and Space; reduced motion swaps with no rotation; Undo last returns to the front with no reverse animation. 'How well did you know this?' above the grade buttons. Keep the R12 timing unaffected by the animation (time starts when the front appears). Next-card render must stay under 200 ms (section 16): the flip is for the reveal only.",
-      "status": "todo",
-      "branch": null,
-      "pr": null,
+      "status": "done",
+      "branch": "feat/F11-practice-flip",
+      "pr": 32,
       "tasks": [
         {
           "id": "F11.1",
@@ -400,7 +400,7 @@
           ],
           "area": "src/ui/practice/PracticeView.tsx, src/ui/icons/Icon.tsx",
           "done_when": "PracticeView test: eye icon on Show answer, hint text rendered after the button and not inside the card element.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F11.2",
@@ -414,7 +414,7 @@
           ],
           "area": "src/ui/practice/PracticeView.tsx, ReadingCard, src/app/globals.css",
           "done_when": "Test: all three triggers reveal the back; CSS uses perspective, rotateY and backface-visibility (no dependency); front is inert/aria-hidden when flipped; next-card render does not animate.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F11.3",
@@ -429,7 +429,7 @@
           ],
           "area": "src/ui/practice/PracticeView.tsx, globals.css",
           "done_when": "Test: with prefers-reduced-motion no rotation is applied; Undo last returns to the front without a reverse animation.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F11.4",
@@ -444,7 +444,7 @@
           ],
           "area": "src/ui/practice/GradeBar.tsx",
           "done_when": "Test: 'How well did you know this?' renders directly above the three grade buttons and labels the group for assistive tech.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F11.5",
@@ -458,7 +458,7 @@
           ],
           "area": "src/ui/practice/use-session.ts, e2e/performance.spec.ts",
           "done_when": "use-session test: time starts when the front appears, not at flip end; e2e performance spec still shows next card under 200 ms.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F11.6",
@@ -474,7 +474,7 @@
           ],
           "area": "e2e/practice.spec.ts, e2e/a11y.spec.ts",
           "done_when": "pnpm test:e2e AC17: reveal by button, tap and Space; hover, pressed and focus visible on buttons; axe clean in both themes.",
-          "status": "todo"
+          "status": "done"
         }
       ]
     },

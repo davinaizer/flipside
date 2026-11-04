@@ -34,3 +34,11 @@ REVIEW F10 round 1: GAPS at bd94793
 F10.6: profile e2e now uses its own seeded profile per project and asserts glyph and name in top bar, sidebar and picker, before and after reload.
 REVIEW F10 round 2: PASS at 4226c87
 F10 done: PR 28, review PASS, verify and e2e green. MANUAL PENDING: none.
+F11.1: Show answer has an eye icon; the hint now sits below the button, outside the card (PracticeView test).
+F11.2: both card faces render in a CSS 3D flip (perspective, rotateY, backface-visibility); the hidden face is aria-hidden and inert; tap on the front, Show answer and Space reveal; keyed per card so a new card never animates. Reduced motion is F11.3.
+F11.3: reduced motion applies no rotation or transition (inert face hidden); Undo last remounts the card scene so it lands on the front with no reverse flip.
+F11.4: "How well did you know this?" prompt sits above the grade buttons and labels the button group (aria-labelledby).
+F11.5: no code change needed; the timer starts in showFront (front shown) and the existing use-session test covers it; performance e2e passes (next card 54-127 ms).
+F11.6: e2e AC17 (reveal by button, card tap and Space; hover, pressed, focus-visible on Show answer in both themes; hover skipped on touch). Seeded "Practice flip" profiles; fixed the 5-card test to look at the visible face since both faces are now in the DOM. Axe in both themes already covered by existing walks.
+REVIEW F11 round 1: PASS at e1a2d27
+F11 done: PR 32, review PASS, verify and e2e green. MANUAL PENDING: none.
