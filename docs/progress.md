@@ -95,3 +95,4 @@ F17 done: library deck menu and topic selection, PR 44. MANUAL PENDING: none fro
 F18.1: Reading and Practice each render as their own surface card (rounded-card, bg-surface-card, border, shadow) with an h2; tests are static markup. Not checked visually on iPad portrait or in e2e.
 F18.2: mastery bar is now h-1.5 (BAR_HEIGHT in MasteryBar.tsx); legend unchanged. Progress and Library e2e, axe, Settings e2e green on desktop and iPad.
 REVIEW F18 round 1: PASS at 94e48fa
+F18 done: settings sections and thinner bars, PR 45. MANUAL PENDING: none from the ledger.

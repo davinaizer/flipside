@@ -1167,7 +1167,7 @@
         "progress"
       ],
       "notes": "Reading and Practice each on their own surface (semantic tokens). Mastery bar goes from h-3 to about h-1.5; check every bar on the Progress page, not only MasteryBar.",
-      "status": "in_progress",
+      "status": "done",
       "tasks": [
         {
           "id": "F18.1",
@@ -1198,7 +1198,8 @@
           "status": "done"
         }
       ],
-      "branch": "feat/F18-settings-sections-thin-bars"
+      "branch": "feat/F18-settings-sections-thin-bars",
+      "pr": 45
     },
     {
       "id": "F19",
