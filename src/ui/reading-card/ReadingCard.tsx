@@ -39,10 +39,15 @@ export function QuestionLabel() {
 
 export const FRONT_HINT = "Say your answer out loud first, then show it.";
 
+/** The flip hint (R15). It sits outside the card, below the Show answer button, in practice and in the Settings preview. */
+export function FrontHint() {
+  return <p className="text-center text-body-sm text-on-surface-variant">{FRONT_HINT}</p>;
+}
+
 /**
  * The front face of a practice card (T8), the one component rendered by PracticeView and the Settings
  * preview: chip with the read-aloud slot on its right, Question label, question, optional image, then
- * the flip hint, all inside the card box on the reading-settings colour. Extra props (data-face, inert,
+ * on the reading-settings colour. The flip hint is not part of the card (R15): see FrontHint. Extra props (data-face, inert,
  * aria-hidden, data-testid) go on the box.
  */
 export function PracticeFront({
@@ -72,7 +77,6 @@ export function PracticeFront({
         {question}
       </Question>
       {image}
-      <p className="mt-6 text-body-sm opacity-80">{FRONT_HINT}</p>
     </div>
   );
 }

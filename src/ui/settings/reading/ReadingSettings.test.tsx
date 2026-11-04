@@ -31,7 +31,7 @@ test("the preview shows the practice card elements and follows the settings (T8)
       </SettingsProvider>,
     );
   const mist = html("mist");
-  for (const t of ["Caching", "Question", "Why use a cache?", FRONT_HINT]) {
+  for (const t of ["Caching", "Question", "Why use a cache?"]) {
     expect(mist).toContain(t);
   }
   expect(mist).toContain("rounded-full border border-card-edge"); // the read-aloud button (iconButton)
@@ -46,6 +46,9 @@ test("the preview shows the practice card elements and follows the settings (T8)
     }),
   );
   expect(mist).toContain(direct);
+  expect(direct).not.toContain(FRONT_HINT); // R15: the hint is outside the card, below it, as in practice
+  expect(mist).toContain(FRONT_HINT);
+  expect(mist.indexOf(FRONT_HINT)).toBeGreaterThan(mist.indexOf(direct) + direct.length - 1);
   expect(mist).toContain("var(--card-mist)");
   expect(html("night")).toContain("var(--card-night)");
 });

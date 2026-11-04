@@ -131,11 +131,14 @@ test("read aloud is a switch with no On or Off text; the preview shows the pract
   await expect(toggle).not.toContainText(/\b(On|Off)\b/);
   // Not clicked: the first test owns this profile's settings, so this one only reads.
 
-  // T8: chip, Question label, question, read-aloud button and the flip hint, all inside the card.
+  // T8: chip, Question label, question, read-aloud button inside the card, the flip hint (R15) below it.
   const preview = card(page);
   await expect(preview.getByText("Question", { exact: true })).toBeVisible();
   await expect(preview.locator('span[aria-hidden="true"]').first()).toBeVisible(); // decorative read-aloud button
-  await expect(preview).toContainText("Say your answer out loud first, then show it.");
+  await expect(preview).not.toContainText("Say your answer out loud first");
+  const hint = await page.getByText("Say your answer out loud first, then show it.").boundingBox();
+  const box = await preview.boundingBox();
+  expect(hint!.y).toBeGreaterThanOrEqual(box!.y + box!.height);
   await expect(preview.getByText("Caching", { exact: true })).toBeVisible(); // topic chip
   // Same component as practice's front face: the shared flip-face box, and the read-aloud button shares the chip's row.
   await expect(preview).toHaveClass(/flip-face/);

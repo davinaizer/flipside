@@ -3,7 +3,7 @@ import { bulletLines } from "@/domain/csv-import";
 import { Icon } from "@/ui/icons/Icon";
 import type { SessionCardPayload } from "@/shared/schemas/session";
 import { textToRead, type Reader } from "./speech";
-import { Chip, FRONT_HINT, PracticeFront, readingStyle, type ReadingSettings } from "@/ui/reading-card/ReadingCard";
+import { Chip, FRONT_HINT, FrontHint, PracticeFront, readingStyle, type ReadingSettings } from "@/ui/reading-card/ReadingCard";
 import { buttonClass, FOCUS_RING, PRESSED } from "@/ui/button/button-class";
 
 export { FRONT_HINT };
@@ -174,6 +174,7 @@ export function PracticeView({
             <Icon name="eye" />
             Show answer
           </button>
+          <FrontHint />
         </div>
       )}
       {footer}

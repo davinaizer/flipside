@@ -7,7 +7,7 @@ import {
   TEXT_SIZE_STEPS,
 } from "@/shared/constants";
 import { DEFAULT_SETTINGS, type Settings } from "@/shared/settings";
-import { PracticeFront } from "@/ui/reading-card/ReadingCard";
+import { FrontHint, PracticeFront } from "@/ui/reading-card/ReadingCard";
 import { Icon } from "@/ui/icons/Icon";
 import { iconButton } from "@/ui/practice/PracticeView";
 import { Choice } from "../Choice";
@@ -123,6 +123,9 @@ export function ReadingSettings() {
               </span>
             }
           />
+          <div className="mt-4">
+            <FrontHint />
+          </div>
         </div>
       </div>
     </section>
