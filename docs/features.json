@@ -503,7 +503,7 @@
         "session_summary_dark_mode"
       ],
       "notes": "Rebuild SummaryView to the mockup layout: deck card (deck name, or 'Several decks'), ring with cards practised, session time, breakdown chips per grade (icon, label, count), Cards to revisit panel (grade chip, topic, question, count badge), Practise those now (count) and Back to Library. Extend GET /sessions/{id}/summary only if a field is missing (deck name, topic per card). Omit per README items 3, 7 and 20.",
-      "status": "in_progress",
+      "status": "done",
       "branch": "feat/F12-session-summary",
       "pr": 33,
       "tasks": [
