@@ -1008,7 +1008,7 @@
       ],
       "design_screens": [],
       "notes": "Toggle collapses the sidebar to icons for Library and Progress plus the profile avatar. State in localStorage (ASSUMED, D28); no schema change. Semantic tokens only; profile menu still works collapsed.",
-      "status": "in_progress",
+      "status": "done",
       "tasks": [
         {
           "id": "F16.1",
@@ -1038,7 +1038,8 @@
           "status": "done"
         }
       ],
-      "branch": "feat/F16-collapsible-sidebar"
+      "branch": "feat/F16-collapsible-sidebar",
+      "pr": 43
     },
     {
       "id": "F17",

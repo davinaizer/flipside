@@ -84,3 +84,4 @@ F15 done: sidebar profile menu merged via PR 41. MANUAL PENDING: none from the l
 - F16.1: collapse toggle and icon rail in Sidebar/ProfileMenu (panelLeft icon); state not yet persisted (F16.2). Tests in Sidebar.test.tsx.
 - F16.2: collapsed state persisted in localStorage (sidebar-state.ts, useSyncExternalStore); e2e collapse, reload, nav, menu and axe in both themes.
 REVIEW F16 round 1: PASS at b255c10
+F16 done: collapsible sidebar, PR 43. MANUAL PENDING: none from the ledger.
