@@ -669,7 +669,7 @@
           ],
           "area": "e2e/settings.spec.ts, e2e/deck.spec.ts, e2e/import.spec.ts, e2e/a11y.spec.ts",
           "done_when": "pnpm test:e2e AC19, AC20: switch state exposed, preview matches practice card, delete only via Edit deck, import single column on desktop, iPad landscape and portrait; axe clean in both themes.",
-          "status": "todo"
+          "status": "done"
         }
       ]
     },

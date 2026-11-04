@@ -83,3 +83,22 @@ test("a broken CSV shows its row errors and a blocked file explains itself", asy
   await expect(page.getByRole("heading", { name: "This file cannot be imported" })).toBeVisible();
   await checkBothThemes(page);
 });
+
+test("import is one column, sections 1 Choose file, 2 Preview, 3 Deck details, at every width (I7)", async ({ page }, info) => {
+  await openImport(page, info.project.name === "desktop" ? "Davi" : "Nicole");
+  await pick(page, "science-w2-deck.zip", zipBytes, "application/zip");
+  await expect(page.getByRole("region", { name: "Deck details" })).toBeVisible();
+  const sizes = info.project.name === "ipad" ? [null, { width: 820, height: 1180 }] : [null];
+  for (const size of sizes) {
+    if (size) await page.setViewportSize(size);
+    const boxes = [];
+    for (const name of ["Choose file", "Preview", "Deck details"]) {
+      boxes.push((await page.getByRole("region", { name, exact: true }).boundingBox())!);
+    }
+    for (let i = 1; i < boxes.length; i++) {
+      expect(boxes[i].y).toBeGreaterThanOrEqual(boxes[i - 1].y + boxes[i - 1].height - 1); // stacked, in order
+      expect(Math.abs(boxes[i].x - boxes[0].x)).toBeLessThan(2); // one column
+    }
+    await checkBothThemes(page);
+  }
+});

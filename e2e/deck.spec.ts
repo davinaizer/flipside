@@ -194,3 +194,11 @@ test("a deck that fails to load shows the error with Retry", async ({ page }) =>
   await expect(page.getByRole("button", { name: "Retry" })).toBeVisible();
   await checkBothThemes(page);
 });
+
+test("Delete deck is not on the deck page, only inside Edit deck (D8)", async ({ page }) => {
+  await openSeededDeck(page);
+  await expect(page.getByRole("button", { name: "Delete deck" })).toHaveCount(0);
+  await page.getByRole("button", { name: "Edit deck" }).click();
+  await expect(page.getByRole("form", { name: "Edit deck" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Delete deck" })).toBeVisible();
+});

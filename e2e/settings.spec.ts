@@ -120,3 +120,21 @@ test("Settings passes axe and 44 px targets in both themes", async ({ page }, in
     expect(await expectTargetsAtLeast44(page)).toBeGreaterThan(10);
   }
 });
+
+test("read aloud is a switch with no On or Off text; the preview shows the practice card elements", async ({ page }, info) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: ME[info.project.name as keyof typeof ME] }).click();
+  await page.waitForURL("**/library");
+  await page.goto("/settings");
+  const toggle = page.getByRole("switch", { name: /Read questions aloud/ });
+  await expect(toggle).toHaveAttribute("aria-checked", /^(true|false)$/); // state exposed; the value depends on the other test
+  await expect(toggle).not.toContainText(/\b(On|Off)\b/);
+  // Not clicked: the first test owns this profile's settings, so this one only reads.
+
+  // T8: chip, Question label, question, read-aloud button and the flip hint, all inside the card.
+  const preview = card(page);
+  await expect(preview.getByText("Question", { exact: true })).toBeVisible();
+  await expect(preview.locator('span[aria-hidden="true"]').first()).toBeVisible(); // decorative read-aloud button
+  await expect(preview).toContainText("Say your answer out loud first, then show it.");
+  await expect(preview.getByText("Caching", { exact: true })).toBeVisible(); // topic chip
+});
