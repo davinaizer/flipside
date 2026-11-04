@@ -89,3 +89,4 @@ F17.1: ellipsis DeckMenu (Edit deck, Re-import) on Library cards; deck page lost
 F17.2 moved the Up to date tag into a wrapping row beside the deck title link; the N due badge stays at the top right. Static-render test added.
 F17.3: Select all / Deselect all buttons on the Topics list (DeckScreen sets the ticked set); static-render and plan-label tests.
 - F17.4: e2e moved Edit deck, Re-import and Delete to the Library deck menu; added keyboard/Escape, Select all/Deselect all, Up to date wrap on iPad portrait; full e2e green.
+REVIEW F17 round 1: PASS at eefc102
