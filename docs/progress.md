@@ -72,3 +72,4 @@ REVIEW F14 round 1: GAPS at e1d44de (Sign out does nothing when logout returns 4
 F14.9: signOut navigates to /login in a finally block, swallowing a 401 from logout; unit test with a 401 stub.
 REVIEW F14 round 2: PASS at 0104871
 F14 done: password sign-in (PR 35). Merged with full-suite e2e flaky (deck skeleton, performance), same flake on main; user approved. MANUAL PENDING: none
+F15.1: logOut(push) moved to src/ui/profile/sign-out.ts (tests for 401 and fetch throw); ProfileScreen uses it.

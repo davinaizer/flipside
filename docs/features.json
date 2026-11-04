@@ -911,7 +911,7 @@
           ],
           "area": "src/ui/profile/sign-out.ts, src/ui/profile/ProfileScreen.tsx, src/ui/api/client.ts",
           "done_when": "Unit test: logOut(push) POSTs /api/v1/auth/logout and then pushes /login, also when logout returns 401 or the fetch throws. ProfileScreen imports it instead of defining its own signOut; its Sign out button still works until F15.3. verify.sh green.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F15.2",
