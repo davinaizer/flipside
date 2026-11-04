@@ -22,9 +22,21 @@ type Props = {
   avatar: string;
   /** Saves the change (PATCH /me). Rejects with an Error whose message is shown. */
   onSave: (v: { name: string; avatar: string }) => Promise<void>;
+  /** When set, a Cancel button is shown (the Add User form on the picker). */
+  onCancel?: () => void;
+  submitLabel?: string;
+  /** Prefix for element ids, so two forms on one page never share an id. */
+  idPrefix?: string;
 };
 
-export function ProfileForm({ name: initialName, avatar: initialAvatar, onSave }: Props) {
+export function ProfileForm({
+  name: initialName,
+  avatar: initialAvatar,
+  onSave,
+  onCancel,
+  submitLabel = "Save",
+  idPrefix = "profile",
+}: Props) {
   const [name, setName] = useState(initialName);
   const [avatar, setAvatar] = useState(initialAvatar);
   const [touched, setTouched] = useState(false);
@@ -50,20 +62,20 @@ export function ProfileForm({ name: initialName, avatar: initialAvatar, onSave }
   return (
     <form onSubmit={submit} noValidate className="mt-8 flex max-w-full flex-col gap-8">
       <div className="flex flex-col gap-2 max-w-xs">
-        <label htmlFor="profile-name" className="text-headline-sm font-semibold">
+        <label htmlFor={`${idPrefix}-name`} className="text-headline-sm font-semibold">
           Name
         </label>
         <input
-          id="profile-name"
+          id={`${idPrefix}-name`}
           value={name}
           onChange={(e) => setName(e.target.value)}
           onBlur={() => setTouched(true)}
           aria-invalid={error ? true : undefined}
-          aria-describedby={error ? "profile-name-error" : undefined}
+          aria-describedby={error ? `${idPrefix}-name-error` : undefined}
           className={`min-h-11 rounded-xl bg-surface-container-low px-3 outline outline-1 outline-outline ${FOCUS_RING}`}
         />
         {error && (
-          <p id="profile-name-error" role="alert" className="text-error">
+          <p id={`${idPrefix}-name-error`}role="alert" className="text-error">
             {error}
           </p>
         )}
@@ -104,8 +116,13 @@ export function ProfileForm({ name: initialName, avatar: initialAvatar, onSave }
 
       <div className="flex items-center gap-4">
         <button type="submit" disabled={status === "saving"} className={buttonClass("primary")}>
-          Save
+          {submitLabel}
         </button>
+        {onCancel && (
+          <button type="button" onClick={onCancel} className={buttonClass("secondary")}>
+            Cancel
+          </button>
+        )}
         {status === "saved" && (
           <p role="status" className="text-on-surface-variant">
             Saved

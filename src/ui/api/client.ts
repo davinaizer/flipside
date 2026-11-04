@@ -13,6 +13,8 @@ import {
   meSchema,
   profileListSchema,
   type Me,
+  profileSummarySchema,
+  type CreateProfileRequest,
   type UpdateProfileRequest,
   type ProfileSummary,
 } from "@/shared/schemas/profile";
@@ -51,6 +53,8 @@ async function call<T>(path: string, schema: z.ZodType<T>, init?: RequestInit): 
 export const api = {
   listProfiles: (): Promise<ProfileSummary[]> =>
     call("/profiles", profileListSchema).then((r) => r.profiles),
+  createProfile: (body: CreateProfileRequest): Promise<ProfileSummary> =>
+    call("/profiles", profileSummarySchema, { method: "POST", body: JSON.stringify(body) }),
   selectProfile: (profileId: string) =>
     call("/session/profile", z.object({ id: z.string() }), {
       method: "POST",

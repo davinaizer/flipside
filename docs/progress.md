@@ -97,3 +97,4 @@ F18.2: mastery bar is now h-1.5 (BAR_HEIGHT in MasteryBar.tsx); legend unchanged
 REVIEW F18 round 1: PASS at 94e48fa
 F18 done: settings sections and thinner bars, PR 45. MANUAL PENDING: none from the ledger.
 F19.1: POST /profiles (createProfileRequestSchema, createProfile service, route); tests/profiles-create-api.test.ts. verify.sh green.
+F19.2: Add User button below the picker list opens the shared ProfileForm; api.createProfile added; component tests in ProfilePicker.test.tsx.

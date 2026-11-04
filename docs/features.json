@@ -1251,7 +1251,7 @@
           ],
           "area": "src/ui/profile/ProfilePicker.tsx, src/ui/api/client.ts",
           "done_when": "Component test: Add User sits below the profile list; it opens a name and avatar form with the same validation messages as the Profile page; saving calls api.createProfile and shows the new profile; cancel closes the form. verify.sh green.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F19.3",
