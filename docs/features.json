@@ -775,7 +775,7 @@
           ],
           "area": "src/server/auth.ts",
           "done_when": "Unit tests: node:crypto HMAC-SHA256, key derived from ADMIN_PASSWORD, timingSafeEqual; rejects tampered, expired and wrong-key tokens; changing the password invalidates old tokens. No new dependency.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F14.3",

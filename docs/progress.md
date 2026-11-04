@@ -61,3 +61,4 @@ F13.8: Read question aloud stops click propagation so it no longer reveals the a
 REVIEW F13 round 3: PASS at 165c106
 F13 done: PR 34, review PASS (round 3), verify and e2e green. MANUAL PENDING: none.
 F14.1 done: ADMIN_PASSWORD required in env schema, AUTH_COOKIE_NAME and 30-day max age in src/shared/constants, .env.example placeholder, vitest and playwright set a test password.
+- F14.2: src/server/auth.ts (checkPassword, signAuthToken, verifyAuthToken) with unit tests.
