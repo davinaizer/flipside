@@ -114,3 +114,4 @@ ASSUMED: F13.6 (after user decision) FrontHint is a separate component rendered 
 DECIDED (user, F13 review round 2): fix the read-aloud tap that flips the card as fix task F13.8, then run a third review round.
 ASSUMED: F14.1 vitest.config sets ADMIN_PASSWORD=test-password and playwright.config defaults it to e2e-password (inherited by the e2e servers) so existing tests still start; placeholder in .env.example is change-me.
 ASSUMED: F14.2 token is '<expiresAtMs>.<hex HMAC-SHA256>' with key sha256('flipside-auth-v1:'+password); expiry is inside the signed payload; functions take password and clock as arguments.
+ASSUMED: F14.3 login answers 401 invalid_password for a wrong, empty or malformed body (one neutral message); logout is open and always clears the cookie; the route test stubs DATABASE_URL because getEnv validates all vars.
