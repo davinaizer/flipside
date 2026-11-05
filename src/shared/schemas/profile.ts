@@ -21,14 +21,14 @@ export const meSchema = z.object({
   settings: settingsSchema,
 });
 
-const profileFields = {
-  avatar: z.enum(AVATAR_IDS),
-  name: z
-    .string()
-    .trim()
-    .min(1, "Name cannot be empty")
-    .max(PROFILE_NAME_MAX, `Name must be ${PROFILE_NAME_MAX} characters or fewer`),
-};
+/** The one name rule (P8): trimmed, 1 to 24 characters. The Profile forms reuse it. */
+export const profileNameSchema = z
+  .string()
+  .trim()
+  .min(1, "Name cannot be empty")
+  .max(PROFILE_NAME_MAX, `Name must be ${PROFILE_NAME_MAX} characters or fewer`);
+
+const profileFields = { avatar: z.enum(AVATAR_IDS), name: profileNameSchema };
 
 /** POST /profiles body (P8): both fields required; name is trimmed, then 1 to 24 characters. */
 export const createProfileRequestSchema = z.object(profileFields);

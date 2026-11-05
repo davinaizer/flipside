@@ -138,3 +138,4 @@ ASSUMED: F20.2 auth/login and session/profile keep their own safeParse and null 
 ASSUMED: F20.3 handle() wraps routes that need a profile; handleOpen() is the same try/catch without the profile lookup for POST /profiles and POST /session/profile; GET /profiles stays unwrapped (no ApiError path).
 ASSUMED: F20.5 kept ZipIssue and CsvIssue as the precise domain types (narrow code unions); they are assignable to ImportIssue structurally, so only the fromCsv/fromZip copies were deleted.
 ASSUMED: F20.6 no jsdom, so the failed-delete test runs the exported deleteDeck helper with api.deleteDeck stubbed (asserts the existing message); the component only shows what it returns.
+ASSUMED: F20.7 ProfileScreen keeps a string avatar prop and narrows it with AVATAR_IDS.find (first id if unknown) instead of a cast; nameError returns the first schema issue message.

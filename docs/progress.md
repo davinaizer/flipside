@@ -107,3 +107,4 @@ F20.3: added handle/handleOpen in src/server/http/handle.ts and moved every rout
 F20.4: profileById is the one lookup behind getCurrentProfile, resolveHome and profileFromCookie (no fabricated Request); requireProfileById removed, the session route throws the 404 itself.
 F20.5: deleted fromCsv/fromZip in import-file.ts; issues pass through uncopied.
 F20.6: api.deleteDeck added to the client (204 read as null); DeleteDeck calls it through an exported deleteDeck helper that returns the error message, no raw fetch or throw-to-catch.
+F20.7: profileNameSchema exported from the shared profile schema and used by nameError; ProfileForm avatar typed AvatarId, both casts gone.
