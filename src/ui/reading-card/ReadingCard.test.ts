@@ -14,12 +14,20 @@ test("every T1 option exists", () => {
 
 test("body text is never under 16 px, at any size step", () => {
   for (let textSize = 1; textSize <= 4; textSize++) {
-    expect(parseInt(String(readingStyle({ ...DEFAULT_SETTINGS, textSize }).fontSize))).toBeGreaterThanOrEqual(16);
+    expect(
+      parseInt(String(readingStyle({ ...DEFAULT_SETTINGS, textSize }).fontSize)),
+    ).toBeGreaterThanOrEqual(16);
   }
 });
 
 test("the card style follows the settings and sets card text only", () => {
-  const s = readingStyle({ ...DEFAULT_SETTINGS, font: "system", letterSpacing: 3, lineSpacing: 3, cardColor: "night" });
+  const s = readingStyle({
+    ...DEFAULT_SETTINGS,
+    font: "system",
+    letterSpacing: 3,
+    lineSpacing: 3,
+    cardColor: "night",
+  });
   expect(s.fontFamily).toContain("system-ui");
   expect(s.letterSpacing).toBe("0.1em");
   expect(s.lineHeight).toBe(2);

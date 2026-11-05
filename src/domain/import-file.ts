@@ -9,7 +9,9 @@ const isZip = (b: Uint8Array) => b.length > 3 && b[0] === 0x50 && b[1] === 0x4b;
 const blockedBy = (issues: ImportIssue[]) => ({ ok: false as const, issues });
 
 /** A CSV inside a zip: any .csv entry, ignoring macOS resource-fork folders. */
-function findCsv(files: Map<string, Uint8Array>): { name: string; bytes: Uint8Array } | ImportIssue {
+function findCsv(
+  files: Map<string, Uint8Array>,
+): { name: string; bytes: Uint8Array } | ImportIssue {
   const csvs = [...files].filter(([n]) => /\.csv$/i.test(n) && !n.startsWith("__MACOSX/"));
   if (csvs.length === 1) return { name: csvs[0][0], bytes: csvs[0][1] };
   return {
@@ -66,14 +68,18 @@ export async function parseImportFile(bytes: Uint8Array): Promise<ParsedImport> 
   try {
     text = new TextDecoder("utf-8", { fatal: true }).decode(csvBytes);
   } catch {
-    return blockedBy([{ severity: "block", code: "not_utf8", message: "The CSV is not UTF-8 text" }]);
+    return blockedBy([
+      { severity: "block", code: "not_utf8", message: "The CSV is not UTF-8 text" },
+    ]);
   }
   const csv = parseCsv(text);
   issues.push(...csv.issues.map(fromCsv));
   if (csv.blocked) return blockedBy(issues.filter((i) => i.severity === "block"));
 
   let images: ResolvedImages["images"] = new Map();
-  const names = csv.cards.flatMap((c) => [c.frontImage, c.backImage]).filter((n): n is string => !!n);
+  const names = csv.cards
+    .flatMap((c) => [c.frontImage, c.backImage])
+    .filter((n): n is string => !!n);
   if (kind === "zip") {
     const resolved = await resolveImages(names, files);
     issues.push(...resolved.issues.flatMap((i) => withRows(fromZip(i), csv.cards)));
@@ -105,9 +111,18 @@ export function buildPreview(parsed: Extract<ParsedImport, { ok: true }>): Impor
     validCount: csv.cards.length,
     skippedCount: csv.rowCount - csv.cards.length,
     imageCount,
-    firstCards: csv.cards.slice(0, PREVIEW_CARDS).map(({ row, id, idDerived, topic, front, back, frontImage, backImage }) => ({
-      row, id, idDerived, topic, front, back, frontImage, backImage,
-    })),
+    firstCards: csv.cards
+      .slice(0, PREVIEW_CARDS)
+      .map(({ row, id, idDerived, topic, front, back, frontImage, backImage }) => ({
+        row,
+        id,
+        idDerived,
+        topic,
+        front,
+        back,
+        frontImage,
+        backImage,
+      })),
     warnings: issues.filter((i) => i.severity === "warning"),
     errors: issues.filter((i) => i.severity !== "warning"),
   };

@@ -97,7 +97,11 @@ export function candidateCounts(cards: readonly SessionCard[], today: LocalDate)
  * plus New cards up to what the daily cap still allows. Same rule as buildSession, for
  * screens that only have counts (enabling Start practice).
  */
-export function sessionCandidateCount(due: number, newInScope: number, newRemaining: number): number {
+export function sessionCandidateCount(
+  due: number,
+  newInScope: number,
+  newRemaining: number,
+): number {
   return due + Math.min(newInScope, Math.max(0, Math.floor(newRemaining)));
 }
 

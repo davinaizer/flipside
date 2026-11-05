@@ -6,7 +6,10 @@ import { unzipSync, zipSync, strToU8 } from "fflate";
 import { freshDatabase } from "./helpers/db";
 
 const PNG = Uint8Array.from(
-  Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4nGP4z8DwHwAFAAH/q842iQAAAABJRU5ErkJggg==", "base64"),
+  Buffer.from(
+    "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4nGP4z8DwHwAFAAH/q842iQAAAABJRU5ErkJggg==",
+    "base64",
+  ),
 );
 
 test("export is a zip of CSV plus images, 404 for another profile, and re-imports unchanged (I6)", async () => {
@@ -28,14 +31,27 @@ test("export is a zip of CSV plus images, 404 for another profile, and re-import
     const form = new FormData();
     form.set("file", new File([bytes as BlobPart], "deck.zip"));
     for (const [k, v] of Object.entries(fields)) form.set(k, v);
-    return imports.POST(new Request("http://x/api/v1/imports", { method: "POST", body: form, headers: { "x-profile-id": a.id } }));
+    return imports.POST(
+      new Request("http://x/api/v1/imports", {
+        method: "POST",
+        body: form,
+        headers: { "x-profile-id": a.id },
+      }),
+    );
   };
-  const csv = 'id,topic,front,back,front_image\nc1,T1,"Q, one","A1\nA2",pic.png\nc2,T2,Q2,"say ""hi""",\n';
-  const first = await post(zipSync({ "d.csv": strToU8(csv), "pic.png": PNG }), { name: "Science Deck", color: "sage", answerStyle: "bullets" });
+  const csv =
+    'id,topic,front,back,front_image\nc1,T1,"Q, one","A1\nA2",pic.png\nc2,T2,Q2,"say ""hi""",\n';
+  const first = await post(zipSync({ "d.csv": strToU8(csv), "pic.png": PNG }), {
+    name: "Science Deck",
+    color: "sage",
+    answerStyle: "bullets",
+  });
   const { deckId } = await first.json();
 
   const get = (id: string, profile: string) =>
-    exporter.GET(new Request("http://x", { headers: { "x-profile-id": profile } }), { params: Promise.resolve({ id }) });
+    exporter.GET(new Request("http://x", { headers: { "x-profile-id": profile } }), {
+      params: Promise.resolve({ id }),
+    });
 
   expect((await get(deckId, b.id)).status).toBe(404);
   expect((await get("nope", a.id)).status).toBe(404);
@@ -53,7 +69,14 @@ test("export is a zip of CSV plus images, 404 for another profile, and re-import
 
   const again = await post(bytes, { deckId });
   expect(again.status).toBe(201);
-  expect(await again.json()).toMatchObject({ deckId, added: 0, updated: 0, unchanged: 2, skipped: 0, missing: [] });
+  expect(await again.json()).toMatchObject({
+    deckId,
+    added: 0,
+    updated: 0,
+    unchanged: 2,
+    skipped: 0,
+    missing: [],
+  });
 
   const t = template.GET();
   expect(t.headers.get("content-type")).toContain("text/csv");

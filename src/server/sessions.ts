@@ -19,8 +19,7 @@ import {
   type SessionResponse,
   type SessionSummary,
 } from "@/shared/schemas/session";
-
-const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+import { isUuid } from "@/shared/uuid";
 
 /**
  * What sessions.meta holds (no schema change): the length asked for and the ordered card
@@ -42,11 +41,20 @@ const notFound = () => new ApiError(404, "session_not_found", "That session does
  * drops out on both sides.
  */
 function liveSessionCards(profileId: string, cardIds: string[]) {
-  return and(inArray(cards.id, cardIds), eq(decks.ownerProfileId, profileId), isNull(decks.deletedAt), isNull(cards.deletedAt));
+  return and(
+    inArray(cards.id, cardIds),
+    eq(decks.ownerProfileId, profileId),
+    isNull(decks.deletedAt),
+    isNull(cards.deletedAt),
+  );
 }
 
 /** The session's live card ids, in stored order: the card list its queue is replayed over. */
-export async function liveSessionCardIds(db: Pick<Db, "select">, profileId: string, cardIds: string[]): Promise<string[]> {
+export async function liveSessionCardIds(
+  db: Pick<Db, "select">,
+  profileId: string,
+  cardIds: string[],
+): Promise<string[]> {
   if (cardIds.length === 0) return [];
   const rows = await db
     .select({ id: cards.id })
@@ -58,7 +66,11 @@ export async function liveSessionCardIds(db: Pick<Db, "select">, profileId: stri
 }
 
 /** The API scope as the domain builder takes it; deck and topic scopes must name an owned deck (404 otherwise). */
-async function toDomainScope(profile: Profile, scope: SessionRequest["scope"], db: Db): Promise<SessionScope> {
+async function toDomainScope(
+  profile: Profile,
+  scope: SessionRequest["scope"],
+  db: Db,
+): Promise<SessionScope> {
   switch (scope.kind) {
     case "all":
     case "weak":
@@ -78,7 +90,13 @@ async function toDomainScope(profile: Profile, scope: SessionRequest["scope"], d
 }
 
 /** Builds the ordered card ids for a new session over the profile's live decks and cards. */
-async function buildQueue(profile: Profile, request: SessionRequest, now: Date, db: Db, random: () => number) {
+async function buildQueue(
+  profile: Profile,
+  request: SessionRequest,
+  now: Date,
+  db: Db,
+  random: () => number,
+) {
   const today = learningDay(now, profile.timezone, profile.dayStartHour);
   const scope = await toDomainScope(profile, request.scope, db);
   const [newRemaining, rows] = await Promise.all([
@@ -88,12 +106,19 @@ async function buildQueue(profile: Profile, request: SessionRequest, now: Date, 
       .from(cards)
       .innerJoin(decks, eq(decks.id, cards.deckId))
       .leftJoin(cardState, and(eq(cardState.cardId, cards.id), eq(cardState.profileId, profile.id)))
-      .where(and(eq(decks.ownerProfileId, profile.id), isNull(decks.deletedAt), isNull(cards.deletedAt)))
+      .where(
+        and(eq(decks.ownerProfileId, profile.id), isNull(decks.deletedAt), isNull(cards.deletedAt)),
+      )
       // New cards keep this order (oldest deck first, then deck position).
       .orderBy(asc(decks.createdAt), asc(decks.id), asc(cards.position), asc(cards.id)),
   ]);
   return buildSession({
-    cards: rows.map((r) => ({ id: r.id, deckId: r.deckId, topic: r.topic, state: toSchedulerState(r) })),
+    cards: rows.map((r) => ({
+      id: r.id,
+      deckId: r.deckId,
+      topic: r.topic,
+      state: toSchedulerState(r),
+    })),
     scope,
     length: request.length,
     today,
@@ -103,7 +128,12 @@ async function buildQueue(profile: Profile, request: SessionRequest, now: Date, 
 }
 
 /** The response for a stored session: its queue with fresh text, images and labels, and the grades so far. */
-async function loadSession(profile: Profile, row: SessionRow, now: Date, db: Db): Promise<SessionResponse> {
+async function loadSession(
+  profile: Profile,
+  row: SessionRow,
+  now: Date,
+  db: Db,
+): Promise<SessionResponse> {
   const meta = sessionMetaSchema.parse(row.meta);
   const today = learningDay(now, profile.timezone, profile.dayStartHour);
 
@@ -125,10 +155,15 @@ async function loadSession(profile: Profile, row: SessionRow, now: Date, db: Db)
           })
           .from(cards)
           .innerJoin(decks, eq(decks.id, cards.deckId))
-          .leftJoin(cardState, and(eq(cardState.cardId, cards.id), eq(cardState.profileId, profile.id)))
+          .leftJoin(
+            cardState,
+            and(eq(cardState.cardId, cards.id), eq(cardState.profileId, profile.id)),
+          )
           .where(liveSessionCards(profile.id, meta.cardIds));
 
-  const imageIds = cardRows.flatMap((c) => [c.frontImageId, c.backImageId]).filter((i): i is string => i !== null);
+  const imageIds = cardRows
+    .flatMap((c) => [c.frontImageId, c.backImageId])
+    .filter((i): i is string => i !== null);
   const imageRows =
     imageIds.length === 0
       ? []
@@ -161,9 +196,20 @@ async function loadSession(profile: Profile, row: SessionRow, now: Date, db: Db)
   });
 
   const grades = await db
-    .select({ reviewId: reviewLog.id, cardId: reviewLog.cardId, grade: reviewLog.grade, reviewedAt: reviewLog.reviewedAt })
+    .select({
+      reviewId: reviewLog.id,
+      cardId: reviewLog.cardId,
+      grade: reviewLog.grade,
+      reviewedAt: reviewLog.reviewedAt,
+    })
     .from(reviewLog)
-    .where(and(eq(reviewLog.sessionId, row.id), eq(reviewLog.profileId, profile.id), isNull(reviewLog.undoneAt)))
+    .where(
+      and(
+        eq(reviewLog.sessionId, row.id),
+        eq(reviewLog.profileId, profile.id),
+        isNull(reviewLog.undoneAt),
+      ),
+    )
     // The order grading replays them in (reviews.ts), so client and server build the same queue.
     .orderBy(asc(reviewLog.reviewedAt), asc(reviewLog.createdAt));
 
@@ -178,7 +224,11 @@ async function loadSession(profile: Profile, row: SessionRow, now: Date, db: Db)
       endedReason: row.endedReason as SessionResponse["session"]["endedReason"],
     },
     queue,
-    grades: grades.map((g) => ({ ...g, grade: g.grade as Grade, reviewedAt: g.reviewedAt.toISOString() })),
+    grades: grades.map((g) => ({
+      ...g,
+      grade: g.grade as Grade,
+      reviewedAt: g.reviewedAt.toISOString(),
+    })),
   };
 }
 
@@ -201,7 +251,7 @@ export async function putSession(
   db: Db = getDb(),
   random: () => number = Math.random,
 ): Promise<SessionResponse> {
-  if (!UUID.test(id)) throw new ApiError(400, "invalid_id", "The session id must be a UUID.");
+  if (!isUuid(id)) throw new ApiError(400, "invalid_id", "The session id must be a UUID.");
   const sessionId = id.toLowerCase();
 
   const existing = await findSessionRow(sessionId, db);
@@ -240,7 +290,7 @@ export async function putSession(
 
 /** Loads a session of this profile or throws 404 (another profile's session looks missing). */
 async function ownSession(profile: Profile, id: string, db: Db): Promise<SessionRow> {
-  if (!UUID.test(id)) throw notFound();
+  if (!isUuid(id)) throw notFound();
   const row = await findSessionRow(id.toLowerCase(), db);
   if (!row || row.profileId !== profile.id) throw notFound();
   return row;
@@ -250,7 +300,12 @@ async function ownSession(profile: Profile, id: string, db: Db): Promise<Session
  * POST /sessions/{id}/end (R7). Marks the session ended early; grades already given stay.
  * An already ended session (early or completed) is returned as stored, so a retry is safe.
  */
-export async function endSession(profile: Profile, id: string, now: Date = new Date(), db: Db = getDb()): Promise<SessionEndResponse> {
+export async function endSession(
+  profile: Profile,
+  id: string,
+  now: Date = new Date(),
+  db: Db = getDb(),
+): Promise<SessionEndResponse> {
   const row = await ownSession(profile, id, db);
   let ended = row;
   if (!row.endedAt) {
@@ -263,7 +318,11 @@ export async function endSession(profile: Profile, id: string, now: Date = new D
     ended = updated ?? (await findSessionRow(row.id, db))!;
   }
   return {
-    session: { id: ended.id, endedAt: ended.endedAt!.toISOString(), endedReason: ended.endedReason as SessionEndResponse["session"]["endedReason"] },
+    session: {
+      id: ended.id,
+      endedAt: ended.endedAt!.toISOString(),
+      endedReason: ended.endedReason as SessionEndResponse["session"]["endedReason"],
+    },
   };
 }
 
@@ -272,13 +331,23 @@ export async function endSession(profile: Profile, id: string, now: Date = new D
  * (non-undone) grade in the session; re-queued attempts do not change the counts. Session
  * time runs from start to the end, or to the last grade while the session is still open.
  */
-export async function getSummary(profile: Profile, id: string, db: Db = getDb()): Promise<SessionSummary> {
+export async function getSummary(
+  profile: Profile,
+  id: string,
+  db: Db = getDb(),
+): Promise<SessionSummary> {
   const row = await ownSession(profile, id, db);
   const meta = sessionMetaSchema.parse(row.meta);
   const reviews = await db
     .select({ cardId: reviewLog.cardId, grade: reviewLog.grade, reviewedAt: reviewLog.reviewedAt })
     .from(reviewLog)
-    .where(and(eq(reviewLog.sessionId, row.id), eq(reviewLog.profileId, profile.id), isNull(reviewLog.undoneAt)))
+    .where(
+      and(
+        eq(reviewLog.sessionId, row.id),
+        eq(reviewLog.profileId, profile.id),
+        isNull(reviewLog.undoneAt),
+      ),
+    )
     .orderBy(asc(reviewLog.reviewedAt), asc(reviewLog.createdAt));
 
   const first = new Map<string, Grade>();

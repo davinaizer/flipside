@@ -7,10 +7,16 @@ import { freshDatabase } from "./helpers/db";
 
 // 1x1 PNG, and a second one with different bytes (extra trailing chunk is ignored by the sniffer).
 const PNG = Uint8Array.from(
-  Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4nGP4z8DwHwAFAAH/q842iQAAAABJRU5ErkJggg==", "base64"),
+  Buffer.from(
+    "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4nGP4z8DwHwAFAAH/q842iQAAAABJRU5ErkJggg==",
+    "base64",
+  ),
 );
 const PNG2 = Uint8Array.from(
-  Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4nGNgYPj/HwADAgH/9lq5wgAAAABJRU5ErkJggg==", "base64"),
+  Buffer.from(
+    "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4nGNgYPj/HwADAgH/9lq5wgAAAABJRU5ErkJggg==",
+    "base64",
+  ),
 );
 
 test("commit saves a new deck, cards, images and an import run in one transaction", async () => {
@@ -32,7 +38,13 @@ test("commit saves a new deck, cards, images and an import run in one transactio
     const form = new FormData();
     form.set("file", new File([bytes as BlobPart], "deck.zip"));
     for (const [k, v] of Object.entries(fields)) form.set(k, v);
-    return route.POST(new Request("http://x/api/v1/imports", { method: "POST", body: form, headers: { "x-profile-id": profile } }));
+    return route.POST(
+      new Request("http://x/api/v1/imports", {
+        method: "POST",
+        body: form,
+        headers: { "x-profile-id": profile },
+      }),
+    );
   };
   const counts = async () => ({
     decks: (await db.select().from(schema.decks)).length,
@@ -42,12 +54,17 @@ test("commit saves a new deck, cards, images and an import run in one transactio
   });
   const details = { name: "Science", group: "Year 7", color: "sage", answerStyle: "bullets" };
   const csv =
-    'id,topic,front,back,front_image,back_image\n' +
+    "id,topic,front,back,front_image,back_image\n" +
     'c1,T1,Q1,"line one\nline two",one.png,same.png\n' +
     "c2,T1,Q2,A2,copy.png,\n" +
     "c3,T2,,A3,,\n" +
     "c4,T2,Q4,A4,,nope.png\n";
-  const zip = zipSync({ "d.csv": strToU8(csv), "images/one.png": PNG, "images/same.png": PNG2, "images/copy.png": PNG });
+  const zip = zipSync({
+    "d.csv": strToU8(csv),
+    "images/one.png": PNG,
+    "images/same.png": PNG2,
+    "images/copy.png": PNG,
+  });
 
   // Server revalidates: bad details and a blocked file save nothing.
   expect((await post(zip, { ...details, name: " " })).status).toBe(400);
@@ -61,17 +78,38 @@ test("commit saves a new deck, cards, images and an import run in one transactio
   const out = await res.json();
   expect(out).toMatchObject({ added: 3, updated: 0, skipped: 1, imageCount: 2 });
   const [deck] = await db.select().from(schema.decks);
-  expect(deck).toMatchObject({ id: out.deckId, ownerProfileId: a.id, name: "Science", groupName: "Year 7", color: "sage", answerStyle: "bullets" });
+  expect(deck).toMatchObject({
+    id: out.deckId,
+    ownerProfileId: a.id,
+    name: "Science",
+    groupName: "Year 7",
+    color: "sage",
+    answerStyle: "bullets",
+  });
   const rows = (await db.select().from(schema.cards)).sort((x, y) => x.position - y.position);
-  expect(rows.map((c) => [c.externalId, c.position])).toEqual([["c1", 0], ["c2", 1], ["c4", 2]]);
+  expect(rows.map((c) => [c.externalId, c.position])).toEqual([
+    ["c1", 0],
+    ["c2", 1],
+    ["c4", 2],
+  ]);
   expect(rows[0].back).toBe("line one\nline two");
   // Same bytes under two names: one image row and one file.
   expect(await counts()).toEqual({ decks: 1, cards: 3, images: 2, runs: 1 });
   expect(rows[0].frontImageId).toBe(rows[1].frontImageId);
   expect(rows[2].backImageId).toBeNull();
-  expect((await readdir(store, { recursive: true })).filter((n) => n.endsWith(".png"))).toHaveLength(2);
+  expect(
+    (await readdir(store, { recursive: true })).filter((n) => n.endsWith(".png")),
+  ).toHaveLength(2);
   const [run] = await db.select().from(schema.importRuns);
-  expect(run).toMatchObject({ profileId: a.id, deckId: deck.id, filename: "deck.zip", rowsTotal: 4, rowsAdded: 3, rowsUpdated: 0, rowsSkipped: 1 });
+  expect(run).toMatchObject({
+    profileId: a.id,
+    deckId: deck.id,
+    filename: "deck.zip",
+    rowsTotal: 4,
+    rowsAdded: 3,
+    rowsUpdated: 0,
+    rowsSkipped: 1,
+  });
   expect((run.warnings as { code: string }[]).map((w) => w.code)).toContain("missing_image");
 
   // Another profile gets its own image rows for the same picture.
@@ -85,13 +123,18 @@ test("commit saves a new deck, cards, images and an import run in one transactio
     expect(aImages.has(c.frontImageId ?? "")).toBe(false);
     expect(aImages.has(c.backImageId ?? "")).toBe(false);
   }
-  expect((await readdir(store, { recursive: true })).filter((n) => n.endsWith(".png"))).toHaveLength(2);
+  expect(
+    (await readdir(store, { recursive: true })).filter((n) => n.endsWith(".png")),
+  ).toHaveLength(2);
 
   // A failure mid-way (second file write) leaves no rows.
   const before = await counts();
   const { getImageStore } = await import("@/server/images/store");
   const spy = vi.spyOn(getImageStore(), "put").mockRejectedValueOnce(new Error("disk full"));
-  const other = zipSync({ "d.csv": strToU8("id,topic,front,back,front_image\nz1,T,Q,A,x.png\n"), "x.png": Uint8Array.from([...PNG, 0]) });
+  const other = zipSync({
+    "d.csv": strToU8("id,topic,front,back,front_image\nz1,T,Q,A,x.png\n"),
+    "x.png": Uint8Array.from([...PNG, 0]),
+  });
   await expect(post(other, details)).rejects.toThrow("disk full");
   spy.mockRestore();
   expect(await counts()).toEqual(before);

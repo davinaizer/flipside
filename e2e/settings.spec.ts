@@ -3,7 +3,13 @@ import { readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { expect, type Browser, type Page } from "@playwright/test";
-import { expectNoSeriousA11y, expectTargetsAtLeast44, setTheme, signInContext, test } from "./helpers";
+import {
+  expectNoSeriousA11y,
+  expectTargetsAtLeast44,
+  setTheme,
+  signInContext,
+  test,
+} from "./helpers";
 
 // Projects run in parallel, so each owns a profile that only e2e-seed.ts creates for this file.
 const ME = { desktop: "Settings Desktop", ipad: "Settings iPad" } as const;
@@ -40,7 +46,9 @@ async function startServer(port: number): Promise<ChildProcess> {
   throw new Error("second app server did not start");
 }
 
-test("reading settings change the preview at once; settings and theme persist per profile, across contexts and a server restart", async ({ browser }, info) => {
+test("reading settings change the preview at once; settings and theme persist per profile, across contexts and a server restart", async ({
+  browser,
+}, info) => {
   const name = ME[info.project.name as keyof typeof ME];
   const use = info.project.use;
   const a = await signIn(browser, name, use);
@@ -55,25 +63,39 @@ test("reading settings change the preview at once; settings and theme persist pe
     await expect(card(page)).toHaveCSS("font-family", /lexend/i);
     const before = await card(page).evaluate((el) => getComputedStyle(el).backgroundColor);
     await page.getByRole("button", { name: "Night" }).click();
-    await expect.poll(() => card(page).evaluate((el) => getComputedStyle(el).backgroundColor)).not.toBe(before);
+    await expect
+      .poll(() => card(page).evaluate((el) => getComputedStyle(el).backgroundColor))
+      .not.toBe(before);
 
     // Practice settings save and survive a reload.
     await page.getByRole("button", { name: "5", exact: true }).click();
     const newCards = page.getByLabel("New cards per day");
-    const saved = page.waitForResponse((r) => r.url().endsWith("/api/v1/settings") && r.request().method() === "PUT");
+    const saved = page.waitForResponse(
+      (r) => r.url().endsWith("/api/v1/settings") && r.request().method() === "PUT",
+    );
     await newCards.fill("7");
     expect((await saved).status()).toBe(200);
     await page.getByRole("switch", { name: /Read questions aloud/ }).click();
     await page.getByRole("switch", { name: /Dark theme/ }).click();
     await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
-    await expect.poll(async () => (await (await page.request.get("/api/v1/settings")).json()).settings.readAloud).toBe(true);
+    await expect
+      .poll(
+        async () => (await (await page.request.get("/api/v1/settings")).json()).settings.readAloud,
+      )
+      .toBe(true);
 
     const check = async (p: Page) => {
       await expect(p.locator("html")).toHaveAttribute("data-theme", "dark");
       await expect(card(p)).toHaveCSS("font-size", "26px");
       await expect(p.getByLabel("New cards per day")).toHaveValue("7");
-      await expect(p.getByRole("button", { name: "5", exact: true })).toHaveAttribute("aria-pressed", "true");
-      await expect(p.getByRole("switch", { name: /Read questions aloud/ })).toHaveAttribute("aria-checked", "true");
+      await expect(p.getByRole("button", { name: "5", exact: true })).toHaveAttribute(
+        "aria-pressed",
+        "true",
+      );
+      await expect(p.getByRole("switch", { name: /Read questions aloud/ })).toHaveAttribute(
+        "aria-checked",
+        "true",
+      );
     };
     await page.reload();
     await check(page);
@@ -96,7 +118,9 @@ test("reading settings change the preview at once; settings and theme persist pe
       await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
       for (const to of ["light", "dark"]) {
         // Wait for the save so the next page load sees it.
-        const put = page.waitForResponse((r) => r.url().endsWith("/api/v1/settings") && r.request().method() === "PUT");
+        const put = page.waitForResponse(
+          (r) => r.url().endsWith("/api/v1/settings") && r.request().method() === "PUT",
+        );
         await page.getByRole("switch", { name: /Dark theme/ }).click();
         await expect(page.locator("html")).toHaveAttribute("data-theme", to);
         await put;
@@ -122,7 +146,9 @@ test("Settings passes axe and 44 px targets in both themes", async ({ page }, in
   }
 });
 
-test("read aloud is a switch with no On or Off text; the preview shows the practice card elements", async ({ page }, info) => {
+test("read aloud is a switch with no On or Off text; the preview shows the practice card elements", async ({
+  page,
+}, info) => {
   await page.goto("/");
   await page.getByRole("button", { name: ME[info.project.name as keyof typeof ME] }).click();
   await page.waitForURL("**/library");
@@ -145,6 +171,8 @@ test("read aloud is a switch with no On or Off text; the preview shows the pract
   await expect(preview).toHaveClass(/flip-face/);
   const chip = await preview.getByText("Caching", { exact: true }).boundingBox();
   const speaker = await preview.locator('span[aria-hidden="true"]').first().boundingBox();
-  expect(Math.abs(chip!.y + chip!.height / 2 - (speaker!.y + speaker!.height / 2))).toBeLessThan(chip!.height);
+  expect(Math.abs(chip!.y + chip!.height / 2 - (speaker!.y + speaker!.height / 2))).toBeLessThan(
+    chip!.height,
+  );
   expect(speaker!.x).toBeGreaterThan(chip!.x + chip!.width);
 });

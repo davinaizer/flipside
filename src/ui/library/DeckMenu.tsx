@@ -6,16 +6,32 @@ import { FOCUS_RING, PRESSED } from "@/ui/button/button-class";
 import { Icon } from "@/ui/icons/Icon";
 import { nextItemIndex } from "@/ui/shell/ProfileMenu";
 
-const ITEM = "flex min-h-11 w-full items-center rounded-full px-4 text-left font-semibold text-on-surface hover:bg-surface-container-high active:bg-surface-container-highest";
+const ITEM =
+  "flex min-h-11 w-full items-center rounded-full px-4 text-left font-semibold text-on-surface hover:bg-surface-container-high active:bg-surface-container-highest";
 
 /** The open list, kept apart from the open state so a test can render it open. */
 export function DeckMenuItems({ deckId, onEdit }: { deckId: string; onEdit: () => void }) {
   return (
-    <div role="menu" aria-label="Deck actions" className="absolute right-0 top-full z-10 mt-1 flex w-48 flex-col gap-1 rounded-card border border-card-edge bg-surface-card p-2 shadow-card">
-      <button type="button" role="menuitem" tabIndex={-1} onClick={onEdit} className={`${ITEM} active:bg-surface-container-highest ${PRESSED} ${FOCUS_RING}`}>
+    <div
+      role="menu"
+      aria-label="Deck actions"
+      className="absolute right-0 top-full z-10 mt-1 flex w-48 flex-col gap-1 rounded-card border border-card-edge bg-surface-card p-2 shadow-card"
+    >
+      <button
+        type="button"
+        role="menuitem"
+        tabIndex={-1}
+        onClick={onEdit}
+        className={`${ITEM} active:bg-surface-container-highest ${PRESSED} ${FOCUS_RING}`}
+      >
         Edit deck
       </button>
-      <Link href={`/import?deckId=${deckId}`} role="menuitem" tabIndex={-1} className={`${ITEM} active:bg-surface-container-highest ${PRESSED} ${FOCUS_RING}`}>
+      <Link
+        href={`/import?deckId=${deckId}`}
+        role="menuitem"
+        tabIndex={-1}
+        className={`${ITEM} active:bg-surface-container-highest ${PRESSED} ${FOCUS_RING}`}
+      >
         Re-import
       </Link>
     </div>
@@ -23,11 +39,20 @@ export function DeckMenuItems({ deckId, onEdit }: { deckId: string; onEdit: () =
 }
 
 /** Ellipsis menu at the top right of a Library deck card (L9): Edit deck and Re-import. */
-export function DeckMenu({ deckId, deckName, onEdit }: { deckId: string; deckName: string; onEdit: () => void }) {
+export function DeckMenu({
+  deckId,
+  deckName,
+  onEdit,
+}: {
+  deckId: string;
+  deckName: string;
+  onEdit: () => void;
+}) {
   const [open, setOpen] = useState(false);
   const root = useRef<HTMLDivElement>(null);
   const trigger = useRef<HTMLButtonElement>(null);
-  const items = () => Array.from(root.current?.querySelectorAll<HTMLElement>('[role="menuitem"]') ?? []);
+  const items = () =>
+    Array.from(root.current?.querySelectorAll<HTMLElement>('[role="menuitem"]') ?? []);
 
   useEffect(() => {
     if (!open) return;
@@ -48,7 +73,11 @@ export function DeckMenu({ deckId, deckName, onEdit }: { deckId: string; deckNam
       return;
     }
     const list = items();
-    const i = nextItemIndex(e.key, list.indexOf(document.activeElement as HTMLElement), list.length);
+    const i = nextItemIndex(
+      e.key,
+      list.indexOf(document.activeElement as HTMLElement),
+      list.length,
+    );
     if (i !== null) {
       e.preventDefault();
       list[i]?.focus();

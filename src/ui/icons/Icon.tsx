@@ -5,7 +5,9 @@ import type { ReactNode } from "react";
  * section 8). Icons are decorative: the label next to them is the accessible name.
  */
 const ICONS = {
-  library: <path d="M4 19.5V5a2 2 0 0 1 2-2h13v14H6a2 2 0 0 0-2 2.5Zm0 0A2.5 2.5 0 0 0 6.5 22H19v-5M9 7h6" />,
+  library: (
+    <path d="M4 19.5V5a2 2 0 0 1 2-2h13v14H6a2 2 0 0 0-2 2.5Zm0 0A2.5 2.5 0 0 0 6.5 22H19v-5M9 7h6" />
+  ),
   progress: <path d="M3 17l6-6 4 4 8-8M15 7h6v6" />,
   settings: (
     <>
@@ -47,7 +49,9 @@ const ICONS = {
   undo: <path d="M9 14L4 9l5-5M4 9h10a6 6 0 0 1 0 12h-3" />,
   refresh: <path d="M4 12a8 8 0 1 0 3-6.2M4 4v4h4" />,
   trend: <path d="M3 17l6-6 4 4 8-8M15 7h6v6" />,
-  wifiOff: <path d="M3 3l18 18M2 9a15 15 0 0 1 5-3M22 9a15 15 0 0 0-8-3.8M5 13a10 10 0 0 1 4-2.4M19 13a10 10 0 0 0-3-2M9 17a5 5 0 0 1 6 0" />,
+  wifiOff: (
+    <path d="M3 3l18 18M2 9a15 15 0 0 1 5-3M22 9a15 15 0 0 0-8-3.8M5 13a10 10 0 0 1 4-2.4M19 13a10 10 0 0 0-3-2M9 17a5 5 0 0 1 6 0" />
+  ),
   sun: (
     <>
       <circle cx="12" cy="12" r="4" />
@@ -75,7 +79,9 @@ const ICONS = {
     </>
   ),
   calendar: <path d="M4 6h16v14H4ZM4 10h16M8 3v4M16 3v4" />,
-  cards: <path d="M7 4h8a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2ZM19 7.5l1 9.5" />,
+  cards: (
+    <path d="M7 4h8a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2ZM19 7.5l1 9.5" />
+  ),
   eye: (
     <>
       <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z" />
@@ -84,7 +90,9 @@ const ICONS = {
   ),
   download: <path d="M12 4v11M7 11l5 5 5-5M5 20h14" />,
   save: <path d="M5 4h11l3 3v13H5ZM8 4v5h7V4M8 20v-6h8v6" />,
-  cloudCheck: <path d="M7 18a4.5 4.5 0 0 1-.5-9A6 6 0 0 1 18 9.5 4 4 0 0 1 17 18ZM9 13l2.5 2.5L15.5 11" />,
+  cloudCheck: (
+    <path d="M7 18a4.5 4.5 0 0 1-.5-9A6 6 0 0 1 18 9.5 4 4 0 0 1 17 18ZM9 13l2.5 2.5L15.5 11" />
+  ),
 } satisfies Record<string, ReactNode>;
 
 export type IconName = keyof typeof ICONS;

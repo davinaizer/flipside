@@ -89,10 +89,15 @@ describe("mastery fixtures", () => {
   });
 
   it("focus next: lowest mastery, at least three cards, ties to more lapses, with deck names", () => {
-    expect(stats.focusNext).toEqual(fixtures.focusNext.map((t) => ({ ...t, deckName: name.get(t.deckId) })));
+    expect(stats.focusNext).toEqual(
+      fixtures.focusNext.map((t) => ({ ...t, deckName: name.get(t.deckId) })),
+    );
   });
 
   it("no review ever means hasReviews is false", () => {
-    expect(computeStats(input("week", "2026-11-05", { reviews: [], lastReviewByDeck: new Map() })).hasReviews).toBe(false);
+    expect(
+      computeStats(input("week", "2026-11-05", { reviews: [], lastReviewByDeck: new Map() }))
+        .hasReviews,
+    ).toBe(false);
   });
 });

@@ -73,7 +73,11 @@ export function LoginScreen() {
       await api.login(password);
       router.push("/");
     } catch (e) {
-      setError(e instanceof ApiClientError && e.status === 401 ? NEUTRAL_ERROR : "Something went wrong. Please try again.");
+      setError(
+        e instanceof ApiClientError && e.status === 401
+          ? NEUTRAL_ERROR
+          : "Something went wrong. Please try again.",
+      );
       setBusy(false);
     }
   }

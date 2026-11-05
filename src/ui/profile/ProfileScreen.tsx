@@ -75,7 +75,7 @@ export function ProfileForm({
           className={`min-h-11 rounded-xl bg-surface-container-low px-3 outline outline-1 outline-outline ${FOCUS_RING}`}
         />
         {error && (
-          <p id={`${idPrefix}-name-error`}role="alert" className="text-error">
+          <p id={`${idPrefix}-name-error`} role="alert" className="text-error">
             {error}
           </p>
         )}
@@ -148,7 +148,9 @@ export function ProfileScreen({ name, avatar }: { name: string; avatar: string }
   return (
     <>
       <h1 className="text-headline-lg font-semibold">Profile</h1>
-      <p className="text-on-surface-variant">Choose your avatar and the name shown around the app.</p>
+      <p className="text-on-surface-variant">
+        Choose your avatar and the name shown around the app.
+      </p>
       <ProfileForm name={name} avatar={avatar} onSave={onSave} />
     </>
   );

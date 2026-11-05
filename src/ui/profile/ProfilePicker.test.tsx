@@ -13,7 +13,9 @@ afterEach(() => vi.unstubAllGlobals());
 test("Add User sits below the profile list and the form starts closed", () => {
   const html = renderToStaticMarkup(
     <ProfilePickerReady
-      profiles={[{ id: "3f0c1b7e-0000-4000-8000-000000000001", name: "Nic", avatar: AVATAR_IDS[0] }]}
+      profiles={[
+        { id: "3f0c1b7e-0000-4000-8000-000000000001", name: "Nic", avatar: AVATAR_IDS[0] },
+      ]}
       onPick={() => {}}
       onCreated={() => {}}
     />,
@@ -24,7 +26,14 @@ test("Add User sits below the profile list and the form starts closed", () => {
 
 test("the form has name and avatar, Cancel, and the Profile page validation messages", () => {
   const html = renderToStaticMarkup(
-    <ProfileForm name="" avatar={AVATAR_IDS[0]} idPrefix="new-profile" submitLabel="Add" onSave={async () => {}} onCancel={() => {}} />,
+    <ProfileForm
+      name=""
+      avatar={AVATAR_IDS[0]}
+      idPrefix="new-profile"
+      submitLabel="Add"
+      onSave={async () => {}}
+      onCancel={() => {}}
+    />,
   );
   expect(html).toContain('id="new-profile-name"');
   for (const id of AVATAR_IDS) expect(html).toContain(`value="${id}"`);
@@ -34,7 +43,14 @@ test("the form has name and avatar, Cancel, and the Profile page validation mess
 });
 
 test("api.createProfile POSTs name and avatar and returns the new profile", async () => {
-  const created = { id: "3f0c1b7e-0000-4000-8000-000000000002", name: "Zed", avatar: AVATAR_IDS[1], accent: "x", timezone: "UTC", dayStartHour: 4 };
+  const created = {
+    id: "3f0c1b7e-0000-4000-8000-000000000002",
+    name: "Zed",
+    avatar: AVATAR_IDS[1],
+    accent: "x",
+    timezone: "UTC",
+    dayStartHour: 4,
+  };
   const fetchMock = vi.fn(async () => new Response(JSON.stringify(created), { status: 201 }));
   vi.stubGlobal("fetch", fetchMock);
   const p = await api.createProfile({ name: "Zed", avatar: AVATAR_IDS[1] });

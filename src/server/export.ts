@@ -38,7 +38,12 @@ export async function exportDeck(
     .where(and(eq(cards.deckId, deck.id), isNull(cards.deletedAt)))
     .orderBy(asc(cards.position));
   const imageRows = await db
-    .select({ id: images.id, sha256: images.sha256, mime: images.mime, storageKey: images.storageKey })
+    .select({
+      id: images.id,
+      sha256: images.sha256,
+      mime: images.mime,
+      storageKey: images.storageKey,
+    })
     .from(images)
     .where(eq(images.ownerProfileId, profileId));
   const byId = new Map(imageRows.map((i) => [i.id, i]));
@@ -48,13 +53,21 @@ export async function exportDeck(
     const image = imageId ? byId.get(imageId) : undefined;
     if (!image) return "";
     const name = `${image.sha256}.${EXTENSIONS[image.mime as ImageMime] ?? "bin"}`;
-    if (!files[`images/${name}`]) files[`images/${name}`] = await readAll(await store.get(image.storageKey));
+    if (!files[`images/${name}`])
+      files[`images/${name}`] = await readAll(await store.get(image.storageKey));
     return name;
   };
 
   const data: string[][] = [];
   for (const c of rows) {
-    data.push([c.externalId, c.topic, c.front, c.back, await nameOf(c.frontImageId), await nameOf(c.backImageId)]);
+    data.push([
+      c.externalId,
+      c.topic,
+      c.front,
+      c.back,
+      await nameOf(c.frontImageId),
+      await nameOf(c.backImageId),
+    ]);
   }
   const csv = Papa.unparse({ fields: [...CSV_COLUMNS], data }, { newline: "\r\n" });
   files["deck.csv"] = strToU8(csv);

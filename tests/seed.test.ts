@@ -40,7 +40,9 @@ test("seed twice leaves exactly Davi and Nicole; a third profile needs no code c
   await db.update(profiles).set({ avatar: "fox" }).where(eq(profiles.name, "Davi"));
   await db.update(profiles).set({ avatar: AVATAR_IDS[5] }).where(eq(profiles.name, "Nicole"));
   await seedProfiles(db);
-  const byName = Object.fromEntries((await db.select().from(profiles)).map((r) => [r.name, r.avatar]));
+  const byName = Object.fromEntries(
+    (await db.select().from(profiles)).map((r) => [r.name, r.avatar]),
+  );
   expect(byName.Davi).toBe(AVATAR_IDS[0]);
   expect(byName.Nicole).toBe(AVATAR_IDS[5]);
 });

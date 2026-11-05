@@ -14,7 +14,13 @@ export function deleteSummary(name: string, cardCount: number, reviewCount: numb
 export const CONFIRM_DELETE_CLASS = `min-h-11 rounded-full bg-error px-8 font-semibold text-on-error hover:bg-error-container hover:text-on-error-container active:bg-error-container active:text-on-error-container ${PRESSED} ${FOCUS_RING} disabled:opacity-60`;
 
 /** D5: confirm, then DELETE /decks/{id}; the caller reloads the Library. */
-export function DeleteDeck({ deck, onDeleted }: { deck: { id: string; name: string; cardCount: number; reviewCount: number }; onDeleted: () => void }) {
+export function DeleteDeck({
+  deck,
+  onDeleted,
+}: {
+  deck: { id: string; name: string; cardCount: number; reviewCount: number };
+  onDeleted: () => void;
+}) {
   const [asking, setAsking] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -41,14 +47,27 @@ export function DeleteDeck({ deck, onDeleted }: { deck: { id: string; name: stri
     );
   }
   return (
-    <div role="alertdialog" aria-label="Delete deck" className="mb-6 max-w-xl rounded-card border border-card-edge bg-surface-card shadow-card p-5">
+    <div
+      role="alertdialog"
+      aria-label="Delete deck"
+      className="mb-6 max-w-xl rounded-card border border-card-edge bg-surface-card shadow-card p-5"
+    >
       <p className="mb-4">{deleteSummary(deck.name, deck.cardCount, deck.reviewCount)}</p>
-      {error && <p role="alert" className="mb-4 text-error">{error}</p>}
+      {error && (
+        <p role="alert" className="mb-4 text-error">
+          {error}
+        </p>
+      )}
       <div className="flex gap-3">
         <button type="button" disabled={busy} onClick={onDelete} className={CONFIRM_DELETE_CLASS}>
           {busy ? "Deleting..." : "Delete deck"}
         </button>
-        <button type="button" disabled={busy} onClick={() => setAsking(false)} className={buttonClass("secondary")}>
+        <button
+          type="button"
+          disabled={busy}
+          onClick={() => setAsking(false)}
+          className={buttonClass("secondary")}
+        >
           Keep deck
         </button>
       </div>

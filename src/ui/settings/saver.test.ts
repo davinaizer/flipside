@@ -55,7 +55,11 @@ test("a failed save rolls back only when no newer change was made", async () => 
   await b;
   expect(states).toEqual([1, 15]); // no rollback to the default over the newer 15
 
-  const lone = createSettingsSaver(DEFAULT_SETTINGS, () => Promise.reject(new Error("x")), (s) => states.push(s.newCardsPerDay));
+  const lone = createSettingsSaver(
+    DEFAULT_SETTINGS,
+    () => Promise.reject(new Error("x")),
+    (s) => states.push(s.newCardsPerDay),
+  );
   states.length = 0;
   await expect(lone({ newCardsPerDay: 7 })).rejects.toThrow("x");
   expect(states).toEqual([7, DEFAULT_SETTINGS.newCardsPerDay]);
@@ -63,7 +67,11 @@ test("a failed save rolls back only when no newer change was made", async () => 
 
 test("two queued saves that both fail end on the initial settings", async () => {
   const states: number[] = [];
-  const update = createSettingsSaver(DEFAULT_SETTINGS, () => Promise.reject(new Error("x")), (s) => states.push(s.newCardsPerDay));
+  const update = createSettingsSaver(
+    DEFAULT_SETTINGS,
+    () => Promise.reject(new Error("x")),
+    (s) => states.push(s.newCardsPerDay),
+  );
   const a = update({ newCardsPerDay: 1 });
   const b = update({ newCardsPerDay: 15 });
   await expect(a).rejects.toThrow("x");

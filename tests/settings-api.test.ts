@@ -35,8 +35,14 @@ test("settings: defaults merge, validation, per-profile isolation, persistence",
   expect((await put.json()).settings.font).toBe("lexend");
 
   // A new client (no state beyond the profile id) sees the saved value; the other profile is untouched.
-  expect((await (await route.GET(as(a.id))).json()).settings).toMatchObject({ font: "lexend", textSize: 4 });
-  expect((await (await route.GET(as(b.id))).json()).settings).toMatchObject({ font: "atkinson", theme: "light" });
+  expect((await (await route.GET(as(a.id))).json()).settings).toMatchObject({
+    font: "lexend",
+    textSize: 4,
+  });
+  expect((await (await route.GET(as(b.id))).json()).settings).toMatchObject({
+    font: "atkinson",
+    theme: "light",
+  });
 
   for (const bad of [
     { font: "comic-sans" },
@@ -49,7 +55,13 @@ test("settings: defaults merge, validation, per-profile isolation, persistence",
     expect(res.status).toBe(400);
     expect((await res.json()).error.code).toBe("invalid_request");
   }
-  expect((await route.PUT(new Request("http://x/", { method: "PUT", headers: { "x-profile-id": a.id }, body: "{" }))).status).toBe(400);
+  expect(
+    (
+      await route.PUT(
+        new Request("http://x/", { method: "PUT", headers: { "x-profile-id": a.id }, body: "{" }),
+      )
+    ).status,
+  ).toBe(400);
   expect((await (await route.GET(as(a.id))).json()).settings.font).toBe("lexend");
 
   expect((await route.GET(new Request("http://x/"))).status).toBe(401);

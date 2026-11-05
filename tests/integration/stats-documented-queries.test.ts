@@ -33,7 +33,14 @@ test("the documented statistics queries reproduce GET /stats on the seeded histo
   const route = await import("@/app/api/v1/stats/route");
 
   const q = await documentedQueries();
-  expect(Object.keys(q).sort()).toEqual(["bars", "by_deck", "focus_next", "has_reviews", "tiles", "windows"]);
+  expect(Object.keys(q).sort()).toEqual([
+    "bars",
+    "by_deck",
+    "focus_next",
+    "has_reviews",
+    "tiles",
+    "windows",
+  ]);
   const sql = db.$client;
   const run = (name: string, params: (string | number)[]) => sql.unsafe(q[name]!, params);
 
@@ -46,7 +53,9 @@ test("the documented statistics queries reproduce GET /stats on the seeded histo
     const p = [profile.id, profile.timezone, profile.dayStartHour] as const;
     for (const range of ["week", "month"] as const) {
       const res = await route.GET(
-        new Request(`http://local/api/v1/stats?range=${range}`, { headers: { "x-profile-id": profile.id } }),
+        new Request(`http://local/api/v1/stats?range=${range}`, {
+          headers: { "x-profile-id": profile.id },
+        }),
       );
       expect(res.status).toBe(200);
       const api = statsSchema.parse(await res.json());
@@ -83,9 +92,9 @@ test("the documented statistics queries reproduce GET /stats on the seeded histo
         range === "week" ? 1 : 7,
         api.today,
       ]);
-      expect(bars.map((b) => ({ start: b.start, cardsReviewed: b.cards_reviewed, current: b.current }))).toEqual(
-        api.bars,
-      );
+      expect(
+        bars.map((b) => ({ start: b.start, cardsReviewed: b.cards_reviewed, current: b.current })),
+      ).toEqual(api.bars);
 
       const focus = await run("focus_next", [profile.id]);
       expect(
@@ -99,7 +108,11 @@ test("the documented statistics queries reproduce GET /stats on the seeded histo
         })),
       ).toEqual(api.focusNext);
 
-      const byDeck = await run("by_deck", [...p, api.windows.current.start, api.windows.current.end]);
+      const byDeck = await run("by_deck", [
+        ...p,
+        api.windows.current.start,
+        api.windows.current.end,
+      ]);
       expect(
         byDeck.map((d) => ({
           deckId: d.deck_id,
@@ -119,6 +132,17 @@ test("the documented statistics queries reproduce GET /stats on the seeded histo
   }
 
   // Guard against a vacuous match: the seeded history gives the hand-computed AC8 figures.
-  const week = await run("tiles", [me.id, me.timezone, me.dayStartHour, "2026-11-02", "2026-11-08"]);
-  expect(week[0]).toMatchObject({ cards_reviewed: 6, got_it_rate: 0.5, median_seconds: 16, days_practised: 3 });
+  const week = await run("tiles", [
+    me.id,
+    me.timezone,
+    me.dayStartHour,
+    "2026-11-02",
+    "2026-11-08",
+  ]);
+  expect(week[0]).toMatchObject({
+    cards_reviewed: 6,
+    got_it_rate: 0.5,
+    median_seconds: 16,
+    days_practised: 3,
+  });
 }, 30_000);

@@ -6,14 +6,32 @@ import { GradeBar } from "./GradeBar";
 import { ApiClientError } from "@/ui/api/client";
 import { createSessionController, type SessionApi } from "./use-session";
 
-const ids = ["a", "b", "c"].map((x) => `00000000-0000-4000-8000-00000000000${x.charCodeAt(0) - 96}`);
+const ids = ["a", "b", "c"].map(
+  (x) => `00000000-0000-4000-8000-00000000000${x.charCodeAt(0) - 96}`,
+);
 const labels = { not_yet: "Again today", nearly: "Tomorrow", got_it: "In 3 days" };
 const card = (cardId: string) => ({
-  cardId, deckId: "d", deckName: "Bio", answerStyle: "bullets" as const, topic: "T",
-  front: `Q ${cardId.slice(-1)}`, back: "A", frontImage: null, backImage: null, labels,
+  cardId,
+  deckId: "d",
+  deckName: "Bio",
+  answerStyle: "bullets" as const,
+  topic: "T",
+  front: `Q ${cardId.slice(-1)}`,
+  back: "A",
+  frontImage: null,
+  backImage: null,
+  labels,
 });
 const data = (grades: SessionResponse["grades"] = []): SessionResponse => ({
-  session: { id: "s", scope: { kind: "all" }, length: 5, plannedCount: 3, startedAt: "", endedAt: null, endedReason: null },
+  session: {
+    id: "s",
+    scope: { kind: "all" },
+    length: 5,
+    plannedCount: 3,
+    startedAt: "",
+    endedAt: null,
+    endedReason: null,
+  },
   queue: ids.map(card),
   grades,
 });
@@ -37,8 +55,17 @@ function setup(d = data()) {
 }
 
 test("three buttons with icon, label and server sublabel", () => {
-  const html = renderToStaticMarkup(createElement(GradeBar, { labels, busy: false, failed: false, onGrade: () => {}, onRetry: () => {} }));
-  for (const s of ["Not yet", "Nearly", "Got it", "Again today", "Tomorrow", "In 3 days"]) expect(html).toContain(s);
+  const html = renderToStaticMarkup(
+    createElement(GradeBar, {
+      labels,
+      busy: false,
+      failed: false,
+      onGrade: () => {},
+      onRetry: () => {},
+    }),
+  );
+  for (const s of ["Not yet", "Nearly", "Got it", "Again today", "Tomorrow", "In 3 days"])
+    expect(html).toContain(s);
   expect(html.match(/<svg/g)).toHaveLength(3);
 });
 
@@ -103,7 +130,12 @@ test("a failed grade retries with the same review id and duration", async () => 
 });
 
 test("reloading replays the grades and resumes at the same card", () => {
-  const g = (i: number, grade: "got_it" | "not_yet") => ({ reviewId: `r${i}`, cardId: ids[i]!, grade, reviewedAt: "" });
+  const g = (i: number, grade: "got_it" | "not_yet") => ({
+    reviewId: `r${i}`,
+    cardId: ids[i]!,
+    grade,
+    reviewedAt: "",
+  });
   const { c } = setup(data([g(0, "got_it"), g(1, "not_yet")]));
   expect(c.getView().card?.cardId).toBe(ids[2]);
   expect(c.getView()).toMatchObject({ done: 2, total: 4, canUndo: true });
@@ -113,12 +145,21 @@ test("a grade refused because the queue is out of date reloads the session and c
   const { c, api } = setup();
   // Elsewhere, the first card was graded and the second deleted; the server now expects the third.
   const g = { reviewId: "r0", cardId: ids[0]!, grade: "got_it" as const, reviewedAt: "" };
-  vi.mocked(api.load).mockResolvedValueOnce({ ...data([g]), queue: [card(ids[0]!), card(ids[2]!)] });
+  vi.mocked(api.load).mockResolvedValueOnce({
+    ...data([g]),
+    queue: [card(ids[0]!), card(ids[2]!)],
+  });
   vi.mocked(api.grade).mockRejectedValueOnce(new ApiClientError(409, "not_current_card", "stale"));
   c.reveal();
   await c.grade("nearly");
   expect(api.load).toHaveBeenCalledWith("s");
-  expect(c.getView()).toMatchObject({ failed: false, revealed: false, done: 1, total: 2, canUndo: true });
+  expect(c.getView()).toMatchObject({
+    failed: false,
+    revealed: false,
+    done: 1,
+    total: 2,
+    canUndo: true,
+  });
   expect(c.getView().card?.cardId).toBe(ids[2]);
 });
 

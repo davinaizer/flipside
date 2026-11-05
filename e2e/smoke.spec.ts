@@ -1,5 +1,11 @@
 import { expect } from "@playwright/test";
-import { expectNoSeriousA11y, expectTargetsAtLeast44, guardThirdParty, setTheme, test } from "./helpers";
+import {
+  expectNoSeriousA11y,
+  expectTargetsAtLeast44,
+  guardThirdParty,
+  setTheme,
+  test,
+} from "./helpers";
 
 test("home renders, is accessible in both themes, and stays local", async ({ page }) => {
   const external = await guardThirdParty(page);

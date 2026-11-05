@@ -19,7 +19,13 @@ const Ctx = createContext<Value | null>(null);
  * step afterwards (toggle, or a different profile's settings after switching).
  * Mount with key={profileId} so a switch starts from that profile's settings.
  */
-export function SettingsProvider({ initial, children }: { initial: Settings; children: ReactNode }) {
+export function SettingsProvider({
+  initial,
+  children,
+}: {
+  initial: Settings;
+  children: ReactNode;
+}) {
   const [settings, setSettings] = useState(initial);
 
   useEffect(() => {

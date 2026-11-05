@@ -8,12 +8,19 @@ const zip = readFileSync(join(process.cwd(), "fixtures/science-w2-deck.zip"));
 // PRD section 16 targets on a production build (e2e-server runs next build and next start), against localhost.
 // Timings include Playwright's own round trip, so they are slightly pessimistic. Each run logs its figures
 // ("PERF ...") for docs/progress.md. The 2,000-row import is tests/integration/import-performance.test.ts.
-test("first card within 1 s of Start, next card under 200 ms after a grade", async ({ page }, info) => {
+test("first card within 1 s of Start, next card under 200 ms after a grade", async ({
+  page,
+}, info) => {
   await page.goto("/");
   await page.getByRole("button", { name: `Perf ${info.project.name}`, exact: true }).click();
   await page.waitForURL("**/library");
   const res = await page.request.post("/api/v1/imports", {
-    multipart: { file: { name: "science-w2-deck.zip", mimeType: "application/zip", buffer: zip }, name: "Perf science", color: "mist", answerStyle: "bullets" },
+    multipart: {
+      file: { name: "science-w2-deck.zip", mimeType: "application/zip", buffer: zip },
+      name: "Perf science",
+      color: "mist",
+      answerStyle: "bullets",
+    },
   });
   expect(res.status()).toBe(201);
 
@@ -39,7 +46,9 @@ test("first card within 1 s of Start, next card under 200 ms after a grade", asy
     nextMs.push(Date.now() - t1);
   }
 
-  console.log(`PERF ${info.project.name}: first card ${firstCardMs} ms, next card ${nextMs.join("/")} ms`);
+  console.log(
+    `PERF ${info.project.name}: first card ${firstCardMs} ms, next card ${nextMs.join("/")} ms`,
+  );
   expect(firstCardMs).toBeLessThan(1000);
   expect(Math.max(...nextMs)).toBeLessThan(200);
 });

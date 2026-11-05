@@ -2,7 +2,9 @@
 import { expect, test } from "@playwright/test";
 import { E2E_PASSWORD, expectNoSeriousA11y, setTheme, signInContext } from "./helpers";
 
-test("without signing in pages redirect to /login and the API answers 401, except health and login", async ({ page }) => {
+test("without signing in pages redirect to /login and the API answers 401, except health and login", async ({
+  page,
+}) => {
   await page.goto("/library");
   await expect(page).toHaveURL(/\/login$/);
   await expect(page.getByRole("heading", { name: "Enter the app password" })).toBeVisible();
@@ -11,7 +13,9 @@ test("without signing in pages redirect to /login and the API answers 401, excep
 
   expect((await page.request.get("/api/v1/decks")).status()).toBe(401);
   expect((await page.request.get("/api/v1/health")).status()).toBe(200);
-  expect((await page.request.post("/api/v1/auth/login", { data: { password: "nope" } })).status()).toBe(401);
+  expect(
+    (await page.request.post("/api/v1/auth/login", { data: { password: "nope" } })).status(),
+  ).toBe(401);
 });
 
 test("a wrong password shows a neutral error; the right one opens the app", async ({ page }) => {

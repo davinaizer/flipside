@@ -12,8 +12,7 @@ import { masteryBuckets } from "@/domain/stats";
 import { ANSWER_STYLES, CARD_COLORS } from "@/shared/enums";
 import type { DeckSummary, Library } from "@/shared/schemas/library";
 import { settingsSchema } from "@/shared/settings";
-
-const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+import { isUuid } from "@/shared/uuid";
 
 const deckColumns = {
   id: decks.id,
@@ -47,7 +46,11 @@ export async function newCardsRemaining(profile: Profile, today: string, db: Db)
  * the profile's learning day. Cards are read once and counted with the domain rules, so
  * "weak" and the mastery buckets have a single definition. Scoped by the owner id.
  */
-export async function getLibrary(profile: Profile, now: Date = new Date(), db: Db = getDb()): Promise<Library> {
+export async function getLibrary(
+  profile: Profile,
+  now: Date = new Date(),
+  db: Db = getDb(),
+): Promise<Library> {
   const today = learningDay(now, profile.timezone, profile.dayStartHour);
   const [newRemaining, deckRows, cardRows, reviewRows] = await Promise.all([
     newCardsRemaining(profile, today, db),
@@ -60,10 +63,7 @@ export async function getLibrary(profile: Profile, now: Date = new Date(), db: D
       .select({ id: cards.id, deckId: cards.deckId, topic: cards.topic, ...stateColumns })
       .from(cards)
       .innerJoin(decks, eq(decks.id, cards.deckId))
-      .leftJoin(
-        cardState,
-        and(eq(cardState.cardId, cards.id), eq(cardState.profileId, profile.id)),
-      )
+      .leftJoin(cardState, and(eq(cardState.cardId, cards.id), eq(cardState.profileId, profile.id)))
       .where(
         and(eq(decks.ownerProfileId, profile.id), isNull(decks.deletedAt), isNull(cards.deletedAt)),
       ),
@@ -79,7 +79,12 @@ export async function getLibrary(profile: Profile, now: Date = new Date(), db: D
 
   const byDeck = new Map<string, typeof cardRows>();
   for (const c of cardRows) byDeck.set(c.deckId, [...(byDeck.get(c.deckId) ?? []), c]);
-  const sessionCards = cardRows.map((c) => ({ id: c.id, deckId: c.deckId, topic: c.topic, state: toSchedulerState(c) }));
+  const sessionCards = cardRows.map((c) => ({
+    id: c.id,
+    deckId: c.deckId,
+    topic: c.topic,
+    state: toSchedulerState(c),
+  }));
   const weakCount = sessionCards.filter(isWeak).length;
   let dueCount = 0;
   let newCount = 0;
@@ -120,9 +125,7 @@ export async function getLibrary(profile: Profile, now: Date = new Date(), db: D
     },
     groups: [...groups.entries()]
       // Other is a catch-all, so it sorts after the named groups.
-      .sort(([a], [b]) =>
-        a === OTHER_GROUP ? 1 : b === OTHER_GROUP ? -1 : a.localeCompare(b),
-      )
+      .sort(([a], [b]) => (a === OTHER_GROUP ? 1 : b === OTHER_GROUP ? -1 : a.localeCompare(b)))
       .map(([name, groupDecks]) => ({ name, decks: groupDecks })),
   };
 }
@@ -130,7 +133,7 @@ export async function getLibrary(profile: Profile, now: Date = new Date(), db: D
 /** The deck row if this profile owns it and it is not deleted; otherwise 404 (same for unknown and other profiles' ids). */
 export async function findDeck(profileId: string, deckId: string, db: Db = getDb()) {
   const notFound = () => new ApiError(404, "deck_not_found", "That deck does not exist.");
-  if (!UUID.test(deckId)) throw notFound();
+  if (!isUuid(deckId)) throw notFound();
   const [deck] = await db
     .select(deckColumns)
     .from(decks)
@@ -150,7 +153,12 @@ export async function findDeck(profileId: string, deckId: string, db: Db = getDb
  * mastered percentage, plus the card and review record counts the delete confirmation
  * states (D5). Review records count the profile's non-undone reviews of the deck's cards.
  */
-export async function getDeck(profile: Profile, deckId: string, now: Date = new Date(), db: Db = getDb()) {
+export async function getDeck(
+  profile: Profile,
+  deckId: string,
+  now: Date = new Date(),
+  db: Db = getDb(),
+) {
   const deck = await findDeck(profile.id, deckId, db);
   const today = learningDay(now, profile.timezone, profile.dayStartHour);
   const [newRemaining, rows, [{ n: reviewCount }]] = await Promise.all([
@@ -158,10 +166,7 @@ export async function getDeck(profile: Profile, deckId: string, now: Date = new 
     db
       .select({ id: cards.id, topic: cards.topic, ...stateColumns })
       .from(cards)
-      .leftJoin(
-        cardState,
-        and(eq(cardState.cardId, cards.id), eq(cardState.profileId, profile.id)),
-      )
+      .leftJoin(cardState, and(eq(cardState.cardId, cards.id), eq(cardState.profileId, profile.id)))
       .where(and(eq(cards.deckId, deck.id), isNull(cards.deletedAt)))
       .orderBy(asc(cards.topic)),
     db
@@ -212,7 +217,12 @@ export const deckPatchSchema = z
   .refine((v) => Object.keys(v).length > 0, "Nothing to change.");
 
 /** Rename, regroup, recolour or change answer style. An empty group name clears the group. */
-export async function updateDeck(profileId: string, deckId: string, body: unknown, db: Db = getDb()) {
+export async function updateDeck(
+  profileId: string,
+  deckId: string,
+  body: unknown,
+  db: Db = getDb(),
+) {
   const deck = await findDeck(profileId, deckId, db);
   const parsed = deckPatchSchema.safeParse(body);
   if (!parsed.success) {
@@ -238,7 +248,10 @@ export async function deleteDeck(profileId: string, deckId: string, db: Db = get
   const deck = await findDeck(profileId, deckId, db);
   const at = new Date();
   await db.transaction(async (tx) => {
-    await tx.update(cards).set({ deletedAt: at, updatedAt: at }).where(and(eq(cards.deckId, deck.id), isNull(cards.deletedAt)));
+    await tx
+      .update(cards)
+      .set({ deletedAt: at, updatedAt: at })
+      .where(and(eq(cards.deckId, deck.id), isNull(cards.deletedAt)));
     await tx.update(decks).set({ deletedAt: at, updatedAt: at }).where(eq(decks.id, deck.id));
   });
 }

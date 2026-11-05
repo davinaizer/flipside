@@ -21,9 +21,19 @@ export function SettingsPopover({ onClose }: { onClose: () => void }) {
   }, [onClose]);
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-surface-container-high p-4">
-      <div role="dialog" aria-modal="true" aria-label="Reading settings" className="w-full max-w-4xl rounded-3xl border border-outline-variant bg-surface p-6 shadow-card text-on-surface">
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label="Reading settings"
+        className="w-full max-w-4xl rounded-3xl border border-outline-variant bg-surface p-6 shadow-card text-on-surface"
+      >
         <ReadingSettings />
-        <button ref={closeRef} type="button" onClick={onClose} className={buttonClass("primary", { extra: "mt-6" })}>
+        <button
+          ref={closeRef}
+          type="button"
+          onClick={onClose}
+          className={buttonClass("primary", { extra: "mt-6" })}
+        >
           Done
         </button>
       </div>
@@ -33,7 +43,13 @@ export function SettingsPopover({ onClose }: { onClose: () => void }) {
 
 export function SettingsShortcut({ onOpen }: { onOpen: () => void }) {
   return (
-    <button type="button" onClick={onOpen} aria-haspopup="dialog" aria-label="Reading settings" className={iconButton}>
+    <button
+      type="button"
+      onClick={onOpen}
+      aria-haspopup="dialog"
+      aria-label="Reading settings"
+      className={iconButton}
+    >
       <Icon name="settings" />
     </button>
   );

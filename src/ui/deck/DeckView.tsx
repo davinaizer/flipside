@@ -28,14 +28,26 @@ export interface DeckViewProps {
   onStart: (scope: SessionRequest["scope"]) => void;
 }
 
-
 /** Deck page (D1 to D3): topics with counts and mastery, tick boxes, and the Practise actions. Presentational. */
-export function DeckView({ deck, leeches, ticked, onToggle, onSelectAll, onDeselectAll, busy, startError, onStart }: DeckViewProps) {
+export function DeckView({
+  deck,
+  leeches,
+  ticked,
+  onToggle,
+  onSelectAll,
+  onDeselectAll,
+  busy,
+  startError,
+  onStart,
+}: DeckViewProps) {
   const plan = practisePlan(deck.id, deck.topics, ticked, deck.newRemaining);
   const anyway = anywayPlan(deck.id, deck.topics, ticked);
   return (
     <>
-      <Link href="/library" className={buttonClass("secondary", { size: "compact", extra: "mb-4 w-fit" })}>
+      <Link
+        href="/library"
+        className={buttonClass("secondary", { size: "compact", extra: "mb-4 w-fit" })}
+      >
         <Icon name="back" />
         Back to Library
       </Link>
@@ -46,18 +58,28 @@ export function DeckView({ deck, leeches, ticked, onToggle, onSelectAll, onDesel
             <h1 className="text-headline-lg font-semibold">{deck.name}</h1>
             <p className="text-on-surface-variant">
               {deck.groupName ? `${deck.groupName} · ` : ""}
-              {deck.topics.length} {deck.topics.length === 1 ? "topic" : "topics"} · {deck.cardCount}{" "}
-              {deck.cardCount === 1 ? "card" : "cards"}
+              {deck.topics.length} {deck.topics.length === 1 ? "topic" : "topics"} ·{" "}
+              {deck.cardCount} {deck.cardCount === 1 ? "card" : "cards"}
             </p>
           </div>
         </div>
         <div className="flex flex-wrap gap-3">
           {anyway && (
-            <button type="button" disabled={busy} onClick={() => onStart(anyway.scope)} className={buttonClass("secondary")}>
+            <button
+              type="button"
+              disabled={busy}
+              onClick={() => onStart(anyway.scope)}
+              className={buttonClass("secondary")}
+            >
               {anyway.label}
             </button>
           )}
-          <button type="button" disabled={busy || plan.startable === 0} onClick={() => onStart(plan.scope)} className={buttonClass("primary")}>
+          <button
+            type="button"
+            disabled={busy || plan.startable === 0}
+            onClick={() => onStart(plan.scope)}
+            className={buttonClass("primary")}
+          >
             <Icon name="play" size={18} />
             {plan.label}
           </button>
@@ -72,14 +94,23 @@ export function DeckView({ deck, leeches, ticked, onToggle, onSelectAll, onDesel
         <div>
           <h2 className="text-headline-md font-semibold">Topics</h2>
           <p className="text-on-surface-variant">
-            Tick topics to practise only those. Leave all unticked to practise everything that is due.
+            Tick topics to practise only those. Leave all unticked to practise everything that is
+            due.
           </p>
         </div>
         <div className="flex gap-3">
-          <button type="button" onClick={onSelectAll} className={buttonClass("secondary", { size: "compact" })}>
+          <button
+            type="button"
+            onClick={onSelectAll}
+            className={buttonClass("secondary", { size: "compact" })}
+          >
             Select all
           </button>
-          <button type="button" onClick={onDeselectAll} className={buttonClass("secondary", { size: "compact" })}>
+          <button
+            type="button"
+            onClick={onDeselectAll}
+            className={buttonClass("secondary", { size: "compact" })}
+          >
             Deselect all
           </button>
         </div>
@@ -100,7 +131,10 @@ export function DeckView({ deck, leeches, ticked, onToggle, onSelectAll, onDesel
                     aria-hidden="true"
                     className="size-7 rounded-md border-2 border-outline bg-surface-card peer-hover:border-primary peer-active:bg-surface-container-high peer-checked:border-primary peer-checked:bg-primary peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-primary"
                   />
-                  <span aria-hidden="true" className="pointer-events-none absolute hidden text-on-primary peer-checked:block">
+                  <span
+                    aria-hidden="true"
+                    className="pointer-events-none absolute hidden text-on-primary peer-checked:block"
+                  >
                     <Icon name="check" size={18} />
                   </span>
                 </span>
@@ -113,7 +147,9 @@ export function DeckView({ deck, leeches, ticked, onToggle, onSelectAll, onDesel
             </div>
             <span
               className={`rounded-full px-3 py-1 text-label-md font-semibold ${
-                t.dueCount > 0 ? "bg-inverse-surface text-inverse-on-surface" : "bg-surface-container-high text-on-surface-variant"
+                t.dueCount > 0
+                  ? "bg-inverse-surface text-inverse-on-surface"
+                  : "bg-surface-container-high text-on-surface-variant"
               }`}
             >
               {t.dueCount > 0 ? `${t.dueCount} due` : "None due"}

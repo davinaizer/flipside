@@ -7,7 +7,10 @@ const zip = readFileSync(join(process.cwd(), "fixtures/science-w2-deck.zip"));
 
 // The whole MVP path on a production build (e2e-server runs next build and next start):
 // pick a profile, import the school deck, practise, undo, finish, see statistics.
-test("pick profile, import the school deck, practise, undo, finish, see statistics; nothing leaves the local host", async ({ page, baseURL }, info) => {
+test("pick profile, import the school deck, practise, undo, finish, see statistics; nothing leaves the local host", async ({
+  page,
+  baseURL,
+}, info) => {
   const localHost = new URL(baseURL!).host;
   const outside: string[] = [];
   page.on("request", (r) => {
@@ -21,7 +24,9 @@ test("pick profile, import the school deck, practise, undo, finish, see statisti
 
   await page.goto("/import");
   await page.waitForLoadState("networkidle"); // choosing before hydration would drop the change event
-  await page.locator('input[type="file"]').setInputFiles({ name: "science-w2-deck.zip", mimeType: "application/zip", buffer: zip });
+  await page
+    .locator('input[type="file"]')
+    .setInputFiles({ name: "science-w2-deck.zip", mimeType: "application/zip", buffer: zip });
   await expect(page.getByRole("region", { name: "Preview" })).toContainText("16 cards ready");
   await page.getByLabel("Deck name").fill("Journey science");
   await page.getByRole("button", { name: /^Add \d+ cards?$/ }).click();
@@ -49,7 +54,9 @@ test("pick profile, import the school deck, practise, undo, finish, see statisti
   await expect(page.getByRole("heading", { name: "Session summary" })).toBeVisible();
 
   await page.goto("/progress");
-  await expect(page.getByRole("listitem").filter({ hasText: "Cards reviewed" }).first()).toContainText("5");
+  await expect(
+    page.getByRole("listitem").filter({ hasText: "Cards reviewed" }).first(),
+  ).toContainText("5");
   await expect(page.getByRole("region", { name: "By deck" })).toContainText("Journey science");
 
   expect(outside).toEqual([]);

@@ -2,7 +2,15 @@ import type { ReactNode } from "react";
 import { FOCUS_RING, PRESSED } from "@/ui/button/button-class";
 
 /** One option in a settings group: a pill that shows as pressed when chosen. */
-export function Choice({ on, onClick, children }: { on: boolean; onClick: () => void; children: ReactNode }) {
+export function Choice({
+  on,
+  onClick,
+  children,
+}: {
+  on: boolean;
+  onClick: () => void;
+  children: ReactNode;
+}) {
   return (
     <button
       type="button"
@@ -26,7 +34,9 @@ export function SwitchTrack({ on }: { on: boolean }) {
       aria-hidden="true"
       className={`flex h-6 w-11 shrink-0 items-center rounded-full p-0.5 ${on ? "bg-primary" : "bg-outline-variant"}`}
     >
-      <span className={`size-5 rounded-full bg-surface-card transition-transform ${on ? "translate-x-5" : ""}`} />
+      <span
+        className={`size-5 rounded-full bg-surface-card transition-transform ${on ? "translate-x-5" : ""}`}
+      />
     </span>
   );
 }

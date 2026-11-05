@@ -6,17 +6,32 @@ import { formatDuration, SummaryView, summaryViewModel } from "./SummaryView";
 
 const id = (n: number) => `00000000-0000-4000-8000-00000000000${n}`;
 const base: SessionSummary = {
-  session: { id: id(0), scope: { kind: "all" }, length: 5, plannedCount: 5, startedAt: "", endedAt: "", endedReason: "completed" },
+  session: {
+    id: id(0),
+    scope: { kind: "all" },
+    length: 5,
+    plannedCount: 5,
+    startedAt: "",
+    endedAt: "",
+    endedReason: "completed",
+  },
   counts: { not_yet: 2, nearly: 1, got_it: 3 },
   gradedCount: 6,
   durationMs: 240000,
   deckName: "Bio",
   severalDecks: false,
-  goAgain: [1, 2, 3].map((n) => ({ cardId: id(n), deckName: "Bio", topic: "Cells", front: `Question ${n}` })),
+  goAgain: [1, 2, 3].map((n) => ({
+    cardId: id(n),
+    deckName: "Bio",
+    topic: "Cells",
+    front: `Question ${n}`,
+  })),
   missIds: [id(1), id(2)],
 };
 const render = (s: SessionSummary, failed = false) =>
-  renderToStaticMarkup(createElement(SummaryView, { summary: s, starting: false, failed, onPractiseMisses: () => {} }));
+  renderToStaticMarkup(
+    createElement(SummaryView, { summary: s, starting: false, failed, onPractiseMisses: () => {} }),
+  );
 
 test("shows deck card, ring, time, grade chips, revisit panel and actions", () => {
   const html = render(base);
@@ -40,13 +55,27 @@ test("shows deck card, ring, time, grade chips, revisit panel and actions", () =
 
 test("omits the README items 3, 7 and 20 extras", () => {
   const html = render(base);
-  for (const banned of ["Focus clue", "Box 1", "Review all answers", "Flipside Focus", "Calm Horizon", "CALM HORIZON", "Retention", "Cram"]) {
+  for (const banned of [
+    "Focus clue",
+    "Box 1",
+    "Review all answers",
+    "Flipside Focus",
+    "Calm Horizon",
+    "CALM HORIZON",
+    "Retention",
+    "Cram",
+  ]) {
     expect(html).not.toContain(banned);
   }
 });
 
 test("hides the revisit panel and Practise those now with no misses", () => {
-  const html = render({ ...base, counts: { not_yet: 0, nearly: 1, got_it: 3 }, goAgain: [], missIds: [] });
+  const html = render({
+    ...base,
+    counts: { not_yet: 0, nearly: 1, got_it: 3 },
+    goAgain: [],
+    missIds: [],
+  });
   expect(html).not.toContain("Practise those now");
   expect(html).not.toContain("Cards to revisit");
   expect(html).toContain("Back to Library");
@@ -72,13 +101,24 @@ test("view model matches the session figures", () => {
     ["not_yet", "Not yet", 2],
   ]);
   expect(vm.revisit).toHaveLength(3);
-  expect(vm.revisit[0]).toEqual({ cardId: id(1), grade: "not_yet", topic: "Cells", question: "Question 1" });
+  expect(vm.revisit[0]).toEqual({
+    cardId: id(1),
+    grade: "not_yet",
+    topic: "Cells",
+    question: "Question 1",
+  });
   expect(vm.revisitCount).toBe(2);
 });
 
 test("view model says Several decks and caps revisit at three", () => {
   const extra = { cardId: id(4), deckName: "Bio", topic: "Cells", front: "Q4" };
-  const vm = summaryViewModel({ ...base, deckName: null, severalDecks: true, goAgain: [...base.goAgain, extra] as never, missIds: [1, 2, 3, 4].map(id) });
+  const vm = summaryViewModel({
+    ...base,
+    deckName: null,
+    severalDecks: true,
+    goAgain: [...base.goAgain, extra] as never,
+    missIds: [1, 2, 3, 4].map(id),
+  });
   expect(vm.deckLabel).toBe("Several decks");
   expect(vm.revisit).toHaveLength(3);
   expect(vm.revisitCount).toBe(4);

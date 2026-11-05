@@ -80,7 +80,10 @@ function inWindow(day: LocalDate, w: DayWindow): boolean {
 }
 
 function dated(reviews: readonly StatsReview[], ctx: DayContext): DatedReview[] {
-  return reviews.map((r) => ({ ...r, day: learningDay(r.reviewedAt, ctx.timeZone, ctx.dayStartHour) }));
+  return reviews.map((r) => ({
+    ...r,
+    day: learningDay(r.reviewedAt, ctx.timeZone, ctx.dayStartHour),
+  }));
 }
 
 function median(values: readonly number[]): number | null {
@@ -311,7 +314,11 @@ export function computeStats(input: StatsInput): Stats {
         cards: m.total,
         mastered: m.gotIt,
         mastery: m.mastery,
-        medianSeconds: windowMetrics(reviews.filter((r) => r.deckId === d.id), windows.current, ctx).medianSeconds,
+        medianSeconds: windowMetrics(
+          reviews.filter((r) => r.deckId === d.id),
+          windows.current,
+          ctx,
+        ).medianSeconds,
         lastPractisedAt: input.lastReviewByDeck.get(d.id) ?? null,
       };
     }),

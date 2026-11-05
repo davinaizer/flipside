@@ -65,7 +65,11 @@ export function PracticeFront({
   questionAs?: "h1" | "p";
   image?: ReactNode;
   readAloud?: ReactNode;
-} & Omit<HTMLAttributes<HTMLDivElement>, "style" | "children"> & { inert?: boolean; "data-face"?: string; "data-testid"?: string }) {
+} & Omit<HTMLAttributes<HTMLDivElement>, "style" | "children"> & {
+    inert?: boolean;
+    "data-face"?: string;
+    "data-testid"?: string;
+  }) {
   return (
     <div {...boxProps} className="flip-face text-left" style={readingStyle(settings)}>
       <div className="flex items-start justify-between gap-3">

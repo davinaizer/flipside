@@ -96,7 +96,9 @@ test("edit profile: avatar and name show in sidebar and picker, and survive relo
     const sidebar = page.getByRole("complementary");
     await expect(sidebar.locator(picture)).toBeVisible();
     await expect(sidebar).toContainText(renamed);
-    expect((await (await page.request.get("/api/v1/me")).json()).profile.avatar).toBe(AVATAR_IDS[NEW]);
+    expect((await (await page.request.get("/api/v1/me")).json()).profile.avatar).toBe(
+      AVATAR_IDS[NEW],
+    );
   };
   await check();
   await page.reload();

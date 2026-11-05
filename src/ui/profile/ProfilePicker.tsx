@@ -13,9 +13,7 @@ import type { ProfileSummary } from "@/shared/schemas/profile";
 import { buttonClass, TAPPABLE_CARD } from "@/ui/button/button-class";
 
 type State =
-  | { kind: "loading" }
-  | { kind: "error" }
-  | { kind: "ready"; profiles: ProfileSummary[] };
+  { kind: "loading" } | { kind: "error" } | { kind: "ready"; profiles: ProfileSummary[] };
 
 export function ProfilePicker() {
   const router = useRouter();
@@ -67,11 +65,7 @@ export function ProfilePicker() {
             We can&apos;t reach the home server. Your cards and progress are safe. Check that you
             are on the home Wi-Fi, then try again.
           </p>
-          <button
-            type="button"
-            onClick={retry}
-            className={buttonClass("primary")}
-          >
+          <button type="button" onClick={retry} className={buttonClass("primary")}>
             Retry
           </button>
         </div>
@@ -107,20 +101,20 @@ export function ProfilePickerReady({
 }) {
   return (
     <>
-        <ul className="flex flex-wrap justify-center gap-8">
-          {profiles.map((p) => (
-            <li key={p.id}>
-              <button
-                type="button"
-                onClick={() => onPick(p.id)}
-                className={`flex min-h-11 min-w-52 flex-col items-center gap-4 overflow-hidden rounded-card border-t-4 border-t-primary-container border-x border-b border-x-card-edge border-b-card-edge bg-surface-card px-8 pb-8 pt-8 text-on-surface shadow-card outline-offset-4 ${TAPPABLE_CARD}`}
-              >
-                <Avatar id={p.avatar} size={112} />
-                <span className="text-headline-md font-semibold">{p.name}</span>
-              </button>
-            </li>
-          ))}
-        </ul>
+      <ul className="flex flex-wrap justify-center gap-8">
+        {profiles.map((p) => (
+          <li key={p.id}>
+            <button
+              type="button"
+              onClick={() => onPick(p.id)}
+              className={`flex min-h-11 min-w-52 flex-col items-center gap-4 overflow-hidden rounded-card border-t-4 border-t-primary-container border-x border-b border-x-card-edge border-b-card-edge bg-surface-card px-8 pb-8 pt-8 text-on-surface shadow-card outline-offset-4 ${TAPPABLE_CARD}`}
+            >
+              <Avatar id={p.avatar} size={112} />
+              <span className="text-headline-md font-semibold">{p.name}</span>
+            </button>
+          </li>
+        ))}
+      </ul>
       <AddUser onCreated={onCreated} />
     </>
   );

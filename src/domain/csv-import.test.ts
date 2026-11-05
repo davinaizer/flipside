@@ -20,16 +20,54 @@ interface Expected {
 
 const broken: Expected[] = [
   { file: "empty-file", severity: "block", code: "empty_file", blocked: true, cards: 0 },
-  { file: "missing-topic-column", severity: "block", code: "missing_column", blocked: true, cards: 0 },
-  { file: "missing-front-column", severity: "block", code: "missing_column", blocked: true, cards: 0 },
-  { file: "missing-back-column", severity: "block", code: "missing_column", blocked: true, cards: 0 },
+  {
+    file: "missing-topic-column",
+    severity: "block",
+    code: "missing_column",
+    blocked: true,
+    cards: 0,
+  },
+  {
+    file: "missing-front-column",
+    severity: "block",
+    code: "missing_column",
+    blocked: true,
+    cards: 0,
+  },
+  {
+    file: "missing-back-column",
+    severity: "block",
+    code: "missing_column",
+    blocked: true,
+    cards: 0,
+  },
   { file: "empty-topic", severity: "error", code: "empty_field", row: 3, blocked: false, cards: 1 },
   { file: "empty-front", severity: "error", code: "empty_field", row: 3, blocked: false, cards: 1 },
   { file: "empty-back", severity: "error", code: "empty_field", row: 3, blocked: false, cards: 1 },
-  { file: "duplicate-id", severity: "error", code: "duplicate_id", row: 3, blocked: false, cards: 1 },
+  {
+    file: "duplicate-id",
+    severity: "error",
+    code: "duplicate_id",
+    row: 3,
+    blocked: false,
+    cards: 1,
+  },
   { file: "unknown-column", severity: "warning", code: "unknown_column", blocked: false, cards: 1 },
-  { file: "missing-id-column", severity: "warning", code: "missing_id_column", blocked: false, cards: 1 },
-  { file: "empty-id-cell", severity: "warning", code: "missing_id", row: 3, blocked: false, cards: 2 },
+  {
+    file: "missing-id-column",
+    severity: "warning",
+    code: "missing_id_column",
+    blocked: false,
+    cards: 1,
+  },
+  {
+    file: "empty-id-cell",
+    severity: "warning",
+    code: "missing_id",
+    row: 3,
+    blocked: false,
+    cards: 2,
+  },
 ];
 
 describe("CSV validation, one broken file per rule", () => {

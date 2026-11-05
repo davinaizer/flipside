@@ -28,7 +28,15 @@ const SWATCH = {
 const field = "min-h-11 rounded-xl bg-surface-container-low px-3 outline outline-1 outline-outline";
 
 /** D4: the edit form (PATCH /decks/{id}), then Delete deck (D8) kept away from the page's everyday actions. Exported for tests. */
-export function EditDeckPanel({ deck, onClose, onChanged }: { deck: EditableDeck; onClose: () => void; onChanged: () => void }) {
+export function EditDeckPanel({
+  deck,
+  onClose,
+  onChanged,
+}: {
+  deck: EditableDeck;
+  onClose: () => void;
+  onChanged: () => void;
+}) {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -59,51 +67,83 @@ export function EditDeckPanel({ deck, onClose, onChanged }: { deck: EditableDeck
 
   return (
     <div className="mb-6 flex max-w-xl flex-col gap-4">
-    <form onSubmit={onSubmit} aria-label="Edit deck" className="flex flex-col gap-4 rounded-card border border-card-edge bg-surface-card shadow-card p-5">
-      <label className="flex flex-col gap-1">
-        Deck name
-        <input name="name" required maxLength={100} defaultValue={deck.name} className={field} />
-      </label>
-      <label className="flex flex-col gap-1">
-        Group (optional)
-        <input name="groupName" maxLength={100} defaultValue={deck.groupName ?? ""} className={field} />
-      </label>
-      <fieldset className="flex flex-col gap-2">
-        <legend className="mb-1">Card colour</legend>
-        <div className="flex flex-wrap gap-2">
-          {CARD_COLORS.map((c) => (
-            <label key={c} className="relative cursor-pointer">
-              <input type="radio" name="color" value={c} defaultChecked={c === (deck.color ?? "mist")} className="peer sr-only" />
-              <span className={`block size-11 rounded-full outline outline-1 outline-outline ${SWATCH[c]} peer-checked:outline-4 peer-checked:outline-primary peer-hover:outline-primary peer-active:outline-primary peer-active:scale-95 motion-reduce:peer-active:scale-100 peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-primary`} />
-              <span className="sr-only">{c[0].toUpperCase() + c.slice(1)}</span>
-            </label>
-          ))}
+      <form
+        onSubmit={onSubmit}
+        aria-label="Edit deck"
+        className="flex flex-col gap-4 rounded-card border border-card-edge bg-surface-card shadow-card p-5"
+      >
+        <label className="flex flex-col gap-1">
+          Deck name
+          <input name="name" required maxLength={100} defaultValue={deck.name} className={field} />
+        </label>
+        <label className="flex flex-col gap-1">
+          Group (optional)
+          <input
+            name="groupName"
+            maxLength={100}
+            defaultValue={deck.groupName ?? ""}
+            className={field}
+          />
+        </label>
+        <fieldset className="flex flex-col gap-2">
+          <legend className="mb-1">Card colour</legend>
+          <div className="flex flex-wrap gap-2">
+            {CARD_COLORS.map((c) => (
+              <label key={c} className="relative cursor-pointer">
+                <input
+                  type="radio"
+                  name="color"
+                  value={c}
+                  defaultChecked={c === (deck.color ?? "mist")}
+                  className="peer sr-only"
+                />
+                <span
+                  className={`block size-11 rounded-full outline outline-1 outline-outline ${SWATCH[c]} peer-checked:outline-4 peer-checked:outline-primary peer-hover:outline-primary peer-active:outline-primary peer-active:scale-95 motion-reduce:peer-active:scale-100 peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-primary`}
+                />
+                <span className="sr-only">{c[0].toUpperCase() + c.slice(1)}</span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+        <fieldset className="flex flex-col gap-2">
+          <legend className="mb-1">Show answers as</legend>
+          <div className="flex gap-1 rounded-full bg-surface-container-low p-1">
+            {ANSWER_STYLES.map((a) => (
+              <label key={a} className="relative flex-1 cursor-pointer">
+                <input
+                  type="radio"
+                  name="answerStyle"
+                  value={a}
+                  defaultChecked={a === deck.answerStyle}
+                  className="peer sr-only"
+                />
+                <span className="flex min-h-11 items-center justify-center rounded-full px-3 hover:bg-surface-container-high active:bg-surface-container-highest peer-active:scale-[0.98] motion-reduce:peer-active:scale-100 peer-checked:bg-primary peer-checked:text-on-primary peer-checked:hover:bg-primary-container peer-checked:hover:text-on-primary-container peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-primary">
+                  {a === "bullets" ? "Bullet list" : "Paragraph"}
+                </span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+        {error && (
+          <p role="alert" className="text-error">
+            {error}
+          </p>
+        )}
+        <div className="flex gap-3">
+          <button type="submit" disabled={saving} className={buttonClass("primary")}>
+            {saving ? "Saving..." : "Save changes"}
+          </button>
+          <button
+            type="button"
+            disabled={saving}
+            onClick={onClose}
+            className={buttonClass("secondary")}
+          >
+            Cancel
+          </button>
         </div>
-      </fieldset>
-      <fieldset className="flex flex-col gap-2">
-        <legend className="mb-1">Show answers as</legend>
-        <div className="flex gap-1 rounded-full bg-surface-container-low p-1">
-          {ANSWER_STYLES.map((a) => (
-            <label key={a} className="relative flex-1 cursor-pointer">
-              <input type="radio" name="answerStyle" value={a} defaultChecked={a === deck.answerStyle} className="peer sr-only" />
-              <span className="flex min-h-11 items-center justify-center rounded-full px-3 hover:bg-surface-container-high active:bg-surface-container-highest peer-active:scale-[0.98] motion-reduce:peer-active:scale-100 peer-checked:bg-primary peer-checked:text-on-primary peer-checked:hover:bg-primary-container peer-checked:hover:text-on-primary-container peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-primary">
-                {a === "bullets" ? "Bullet list" : "Paragraph"}
-              </span>
-            </label>
-          ))}
-        </div>
-      </fieldset>
-      {error && <p role="alert" className="text-error">{error}</p>}
-      <div className="flex gap-3">
-        <button type="submit" disabled={saving} className={buttonClass("primary")}>
-          {saving ? "Saving..." : "Save changes"}
-        </button>
-        <button type="button" disabled={saving} onClick={onClose} className={buttonClass("secondary")}>
-          Cancel
-        </button>
-      </div>
-    </form>
-    <DeleteDeck deck={deck} onDeleted={onChanged} />
+      </form>
+      <DeleteDeck deck={deck} onDeleted={onChanged} />
     </div>
   );
 }

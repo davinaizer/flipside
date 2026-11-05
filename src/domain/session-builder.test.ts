@@ -109,7 +109,8 @@ describe("buildSession invariants", () => {
           expect(new Set(cardIds).size).toBe(cardIds.length);
           // order: active by box then due date, new last
           const firstNew = picked.findIndex((c) => c.state === null);
-          if (firstNew >= 0) expect(picked.slice(firstNew).every((c) => c.state === null)).toBe(true);
+          if (firstNew >= 0)
+            expect(picked.slice(firstNew).every((c) => c.state === null)).toBe(true);
           const active = picked.filter((c) => c.state !== null).map((c) => c.state!);
           for (let i = 1; i < active.length; i++) {
             const a = active[i - 1]!;
@@ -162,10 +163,16 @@ describe("isWeak", () => {
 describe("candidate counts", () => {
   const counts = candidateCounts(cards, fixtures.today);
   const sum = (keep: (k: (typeof counts)[number]) => boolean) =>
-    counts.filter(keep).reduce((t, k) => ({ due: t.due + k.due, new: t.new + k.new }), { due: 0, new: 0 });
+    counts
+      .filter(keep)
+      .reduce((t, k) => ({ due: t.due + k.due, new: t.new + k.new }), { due: 0, new: 0 });
 
   it("lists every deck and topic, with suspended cards never due", () => {
-    expect(counts.map((k) => `${k.deckId}|${k.topic}`).sort()).toEqual(["A|cells", "A|plants", "B|atoms"]);
+    expect(counts.map((k) => `${k.deckId}|${k.topic}`).sort()).toEqual([
+      "A|cells",
+      "A|plants",
+      "B|atoms",
+    ]);
     const suspended = cards.filter((c) => c.state?.status === "suspended").length;
     expect(suspended).toBeGreaterThan(0);
     expect(sum(() => true).due + sum(() => true).new).toBeLessThanOrEqual(cards.length - suspended);
@@ -175,13 +182,34 @@ describe("candidate counts", () => {
   const scopes: [string, SessionScope, (k: (typeof counts)[number]) => boolean][] = [
     ["all decks", { kind: "all" }, () => true],
     ["one deck", { kind: "deck", deckId: "A" }, (k) => k.deckId === "A"],
-    ["topics", { kind: "topics", topics: [{ deckId: "A", topic: "cells" }, { deckId: "B", topic: "atoms" }] }, (k) => k.topic !== "plants"],
+    [
+      "topics",
+      {
+        kind: "topics",
+        topics: [
+          { deckId: "A", topic: "cells" },
+          { deckId: "B", topic: "atoms" },
+        ],
+      },
+      (k) => k.topic !== "plants",
+    ],
   ];
-  it.each(scopes.flatMap(([name, scope, keep]) => [0, 3, 50].map((newRemaining) => ({ name, scope, keep, newRemaining }))))(
+  it.each(
+    scopes.flatMap(([name, scope, keep]) =>
+      [0, 3, 50].map((newRemaining) => ({ name, scope, keep, newRemaining })),
+    ),
+  )(
     "agree with buildSession for $name, $newRemaining new allowed",
     ({ scope, keep, newRemaining }) => {
       const { due, new: fresh } = sum(keep);
-      const built = buildSession({ cards, scope, length: "all", today: fixtures.today, newRemaining, random: seeded(1) });
+      const built = buildSession({
+        cards,
+        scope,
+        length: "all",
+        today: fixtures.today,
+        newRemaining,
+        random: seeded(1),
+      });
       expect(sessionCandidateCount(due, fresh, newRemaining)).toBe(built.candidateCount);
     },
   );

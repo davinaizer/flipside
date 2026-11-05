@@ -6,7 +6,9 @@ import { PracticeView } from "./PracticeView";
 import { SettingsPopover, SettingsShortcut } from "./SettingsPopover";
 
 test("the shortcut opens a dialog, and the popover holds the reading options", () => {
-  expect(renderToStaticMarkup(<SettingsShortcut onOpen={() => {}} />)).toContain("Reading settings");
+  expect(renderToStaticMarkup(<SettingsShortcut onOpen={() => {}} />)).toContain(
+    "Reading settings",
+  );
   const html = renderToStaticMarkup(
     <SettingsProvider initial={DEFAULT_SETTINGS}>
       <SettingsPopover onClose={() => {}} />
@@ -20,7 +22,18 @@ test("the shortcut opens a dialog, and the popover holds the reading options", (
 test("PracticeView places the header action in the top bar", () => {
   const html = renderToStaticMarkup(
     <PracticeView
-      card={{ cardId: "c", deckId: "d", deckName: "D", answerStyle: "paragraph", topic: "T", front: "Q", back: "A", frontImage: null, backImage: null, labels: { not_yet: "", nearly: "", got_it: "" } }}
+      card={{
+        cardId: "c",
+        deckId: "d",
+        deckName: "D",
+        answerStyle: "paragraph",
+        topic: "T",
+        front: "Q",
+        back: "A",
+        frontImage: null,
+        backImage: null,
+        labels: { not_yet: "", nearly: "", got_it: "" },
+      }}
       revealed={false}
       done={0}
       total={1}

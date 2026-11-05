@@ -1,9 +1,18 @@
 import { expect, test } from "vitest";
-import { readCollapsed, subscribeCollapsed, SIDEBAR_STORAGE_KEY, writeCollapsed } from "./sidebar-state";
+import {
+  readCollapsed,
+  subscribeCollapsed,
+  SIDEBAR_STORAGE_KEY,
+  writeCollapsed,
+} from "./sidebar-state";
 
 function fakeStore() {
   const m = new Map<string, string>();
-  return { getItem: (k: string) => m.get(k) ?? null, setItem: (k: string, v: string) => void m.set(k, v), m };
+  return {
+    getItem: (k: string) => m.get(k) ?? null,
+    setItem: (k: string, v: string) => void m.set(k, v),
+    m,
+  };
 }
 
 test("defaults to expanded and round-trips the collapsed state", () => {

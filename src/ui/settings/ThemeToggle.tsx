@@ -11,7 +11,12 @@ import { useSettings } from "./SettingsProvider";
 export function ThemeToggle() {
   const { settings, update } = useSettings();
   const dark = settings.theme === "dark";
-  return <ThemeSwitch dark={dark} onToggle={() => update({ theme: dark ? "light" : "dark" }).catch(() => {})} />;
+  return (
+    <ThemeSwitch
+      dark={dark}
+      onToggle={() => update({ theme: dark ? "light" : "dark" }).catch(() => {})}
+    />
+  );
 }
 
 /** The switch alone, for screens with no signed-in profile to save to (profile picker, later login). */
@@ -30,8 +35,12 @@ export function ThemeSwitch({ dark, onToggle }: { dark: boolean; onToggle: () =>
           aria-hidden="true"
           className={`absolute left-1 size-6 rounded-full bg-primary transition-transform ${dark ? "translate-x-8" : ""}`}
         />
-        <span className={`relative ${dark ? "" : "text-on-primary"}`}><Icon name="sun" size={16} /></span>
-        <span className={`relative ${dark ? "text-on-primary" : ""}`}><Icon name="moon" size={16} /></span>
+        <span className={`relative ${dark ? "" : "text-on-primary"}`}>
+          <Icon name="sun" size={16} />
+        </span>
+        <span className={`relative ${dark ? "text-on-primary" : ""}`}>
+          <Icon name="moon" size={16} />
+        </span>
       </span>
     </button>
   );

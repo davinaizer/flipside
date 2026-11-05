@@ -33,7 +33,12 @@ const psql = (sql: string) => {
 };
 const imageBytes = () =>
   Object.fromEntries(
-    readdirSync(images).map((f) => [f, createHash("sha256").update(readFileSync(join(images, f))).digest("hex")]),
+    readdirSync(images).map((f) => [
+      f,
+      createHash("sha256")
+        .update(readFileSync(join(images, f)))
+        .digest("hex"),
+    ]),
   );
 
 beforeAll(() => {
@@ -64,10 +69,19 @@ it("restores card_state, review_log, stats and image bytes after the data is des
   writeFileSync(join(images, `${sha}.png`), bytes);
   const [img] = await db
     .insert(imagesTable)
-    .values({ ownerProfileId: me.id, sha256: sha, mime: "image/png", bytes: bytes.length, storageKey: `${sha}.png` })
+    .values({
+      ownerProfileId: me.id,
+      sha256: sha,
+      mime: "image/png",
+      bytes: bytes.length,
+      storageKey: `${sha}.png`,
+    })
     .returning();
   const { eq } = await import("drizzle-orm");
-  await db.update(cards).set({ frontImageId: img!.id }).where(eq(cards.id, Object.values(cardIds)[0]!));
+  await db
+    .update(cards)
+    .set({ frontImageId: img!.id })
+    .where(eq(cards.id, Object.values(cardIds)[0]!));
 
   vi.useFakeTimers({ toFake: ["Date"] });
   vi.setSystemTime(new Date(history.now));
@@ -91,7 +105,10 @@ it("restores card_state, review_log, stats and image bytes after the data is des
   vi.useRealTimers();
   const backup = sh("backup");
   expect(backup.status, backup.stderr).toBe(0);
-  const folder = join(out, readdirSync(out).find((d) => d.startsWith("flipside-"))!);
+  const folder = join(
+    out,
+    readdirSync(out).find((d) => d.startsWith("flipside-"))!,
+  );
 
   // Refuses while data is present, and leaves it alone.
   const refused = sh("restore", folder);

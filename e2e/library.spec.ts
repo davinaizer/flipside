@@ -38,7 +38,9 @@ test("Today panel, grouped decks and mastery legend show in both themes", async 
   }
 });
 
-test("Start practice and Weak cards each PUT a session and open /practice/{id}", async ({ page }) => {
+test("Start practice and Weak cards each PUT a session and open /practice/{id}", async ({
+  page,
+}) => {
   await page.route("**/api/v1/library", (r) => r.fulfill({ json: library }));
   await signIn(page);
   for (const [button, scope] of [
@@ -46,7 +48,9 @@ test("Start practice and Weak cards each PUT a session and open /practice/{id}",
     ["Weak cards (3)", "weak"],
   ] as const) {
     await page.goto("/library");
-    const put = page.waitForRequest((r) => r.method() === "PUT" && r.url().includes("/api/v1/sessions/"));
+    const put = page.waitForRequest(
+      (r) => r.method() === "PUT" && r.url().includes("/api/v1/sessions/"),
+    );
     await page.route("**/api/v1/sessions/*", (r) => r.fulfill({ status: 200, json: {} }));
     await page.getByRole("button", { name: button }).click();
     const req = await put;
@@ -66,9 +70,13 @@ async function checkBothThemes(page: Page) {
   }
 }
 
-test("a failed load shows Retry, which loads again; axe and 44 px pass on the error", async ({ page }) => {
+test("a failed load shows Retry, which loads again; axe and 44 px pass on the error", async ({
+  page,
+}) => {
   let calls = 0;
-  await page.route("**/api/v1/library", (r) => (calls++ === 0 ? r.abort() : r.fulfill({ json: library })));
+  await page.route("**/api/v1/library", (r) =>
+    calls++ === 0 ? r.abort() : r.fulfill({ json: library }),
+  );
   await signIn(page);
   await expect(page.getByRole("heading", { name: /home server/ })).toBeVisible();
   await checkBothThemes(page);
@@ -93,7 +101,10 @@ test("loading shows a skeleton that passes axe", async ({ page }) => {
 test("empty Library offers one Add deck action and passes axe", async ({ page }) => {
   await page.route("**/api/v1/library", (r) =>
     r.fulfill({
-      json: { today: { dueCount: 0, startableCount: 0, decksWithDue: 0, sessionLength: 10, weakCount: 0 }, groups: [] },
+      json: {
+        today: { dueCount: 0, startableCount: 0, decksWithDue: 0, sessionLength: 10, weakCount: 0 },
+        groups: [],
+      },
     }),
   );
   await signIn(page);
@@ -102,13 +113,23 @@ test("empty Library offers one Add deck action and passes axe", async ({ page })
   await checkBothThemes(page);
 });
 
-test("search filters by deck name, shows a neutral no-match line, and passes axe", async ({ page }) => {
-  const other = { ...deck, id: "22222222-2222-4222-8222-222222222222", name: "History", topics: ["Romans"] };
+test("search filters by deck name, shows a neutral no-match line, and passes axe", async ({
+  page,
+}) => {
+  const other = {
+    ...deck,
+    id: "22222222-2222-4222-8222-222222222222",
+    name: "History",
+    topics: ["Romans"],
+  };
   await page.route("**/api/v1/library", (r) =>
     r.fulfill({ json: { ...library, groups: [{ name: "Other", decks: [deck, other] }] } }),
   );
   await signIn(page);
-  const search = page.getByRole("searchbox").or(page.getByPlaceholder("Search decks and topics")).first();
+  const search = page
+    .getByRole("searchbox")
+    .or(page.getByPlaceholder("Search decks and topics"))
+    .first();
   await search.fill("roman");
   await expect(page.getByRole("link", { name: /History/ })).toBeVisible();
   await expect(page.getByRole("link", { name: /Science/ })).toHaveCount(0);
@@ -119,11 +140,16 @@ test("search filters by deck name, shows a neutral no-match line, and passes axe
 
 // F17.4: the deck menu on the Library cards (real seeded data, so Edit deck can be saved).
 const seeded = /Davi (Science|Biology)/;
-const menuFor = (page: Page) => page.getByRole("button", { name: /^Deck actions for Davi (Science|Biology)$/ });
+const menuFor = (page: Page) =>
+  page.getByRole("button", { name: /^Deck actions for Davi (Science|Biology)$/ });
 
-test("menu opens by mouse and offers Edit deck and Re-import; Re-import goes to the import screen", async ({ page }) => {
+test("menu opens by mouse and offers Edit deck and Re-import; Re-import goes to the import screen", async ({
+  page,
+}) => {
   await signIn(page);
-  const id = (await page.getByRole("link", { name: seeded }).getAttribute("href"))!.split("/").pop();
+  const id = (await page.getByRole("link", { name: seeded }).getAttribute("href"))!
+    .split("/")
+    .pop();
   await menuFor(page).click();
   await expect(page.getByRole("menuitem", { name: "Edit deck" })).toBeVisible();
   await checkBothThemes(page);
@@ -131,7 +157,9 @@ test("menu opens by mouse and offers Edit deck and Re-import; Re-import goes to 
   await page.waitForURL(`**/import?deckId=${id}`);
 });
 
-test("menu works by keyboard; Escape closes it and returns focus to the trigger", async ({ page }) => {
+test("menu works by keyboard; Escape closes it and returns focus to the trigger", async ({
+  page,
+}) => {
   await signIn(page);
   await menuFor(page).focus();
   await page.keyboard.press("Enter");
@@ -146,7 +174,9 @@ test("menu works by keyboard; Escape closes it and returns focus to the trigger"
   await expect(page.getByRole("form", { name: "Edit deck" })).toBeVisible();
 });
 
-test("Edit deck saves name, group, colour and answer style, and the card updates", async ({ page }) => {
+test("Edit deck saves name, group, colour and answer style, and the card updates", async ({
+  page,
+}) => {
   await signIn(page);
   const edit = async (name: string, group: string, colour: string, style: string) => {
     await menuFor(page).click();
@@ -172,9 +202,13 @@ test("Edit deck saves name, group, colour and answer style, and the card updates
   await expect(page.getByRole("link", { name: "Davi Science" })).toBeVisible();
 });
 
-test("edit panel passes axe and 44 px; Delete deck confirms, sends DELETE; Keep deck cancels", async ({ page }) => {
+test("edit panel passes axe and 44 px; Delete deck confirms, sends DELETE; Keep deck cancels", async ({
+  page,
+}) => {
   await signIn(page);
-  const id = (await page.getByRole("link", { name: seeded }).getAttribute("href"))!.split("/").pop();
+  const id = (await page.getByRole("link", { name: seeded }).getAttribute("href"))!
+    .split("/")
+    .pop();
   // Mocked so the shared seeded deck survives the other tests.
   await page.route(`**/api/v1/decks/${id}`, (r) =>
     r.request().method() === "DELETE" ? r.fulfill({ status: 204 }) : r.continue(),
@@ -195,8 +229,14 @@ test("edit panel passes axe and 44 px; Delete deck confirms, sends DELETE; Keep 
   await del;
 });
 
-test("the Up to date tag sits at the top right with a long title on iPad portrait without overflow", async ({ page }) => {
-  const long = { ...deck, name: "A very long deck name for revision of many topics in one go", dueCount: 0 };
+test("the Up to date tag sits at the top right with a long title on iPad portrait without overflow", async ({
+  page,
+}) => {
+  const long = {
+    ...deck,
+    name: "A very long deck name for revision of many topics in one go",
+    dueCount: 0,
+  };
   await page.route("**/api/v1/library", (r) =>
     r.fulfill({ json: { ...library, groups: [{ name: "Other", decks: [long] }] } }),
   );
@@ -207,8 +247,12 @@ test("the Up to date tag sits at the top right with a long title on iPad portrai
   const t = (await tag.boundingBox())!;
   const title = (await page.getByRole("link", { name: long.name }).boundingBox())!;
   expect(t.x + t.width).toBeLessThanOrEqual(768);
-  const menu = (await page.getByRole("button", { name: `Deck actions for ${long.name}` }).boundingBox())!;
+  const menu = (await page
+    .getByRole("button", { name: `Deck actions for ${long.name}` })
+    .boundingBox())!;
   expect(t.x).toBeGreaterThanOrEqual(title.x + title.width - 1);
   expect(t.x + t.width).toBeLessThanOrEqual(menu.x + 1);
-  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(
+    true,
+  );
 });

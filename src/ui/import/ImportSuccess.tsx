@@ -8,13 +8,20 @@ export function ImportSuccess({ deckName, result }: { deckName: string; result: 
   // Missing ids already have their own list; the API also returns them as warnings for import_runs.
   const warnings = result.warnings.filter((w) => w.code !== "card_not_in_file");
   return (
-    <div role="status" className="flex max-w-lg flex-col gap-4 rounded-card border border-card-edge bg-surface-card p-8 shadow-card">
-      <span aria-hidden="true" className="flex size-14 items-center justify-center rounded-full bg-tertiary text-on-tertiary">
+    <div
+      role="status"
+      className="flex max-w-lg flex-col gap-4 rounded-card border border-card-edge bg-surface-card p-8 shadow-card"
+    >
+      <span
+        aria-hidden="true"
+        className="flex size-14 items-center justify-center rounded-full bg-tertiary text-on-tertiary"
+      >
         <Icon name="check" size={28} />
       </span>
       <h2 className="text-headline-lg font-semibold">Saved to {deckName}</h2>
       <p className="text-lg">
-        {result.added} {result.added === 1 ? "card" : "cards"} added, {result.updated} updated, {result.unchanged} unchanged.
+        {result.added} {result.added === 1 ? "card" : "cards"} added, {result.updated} updated,{" "}
+        {result.unchanged} unchanged.
       </p>
       {result.missing.length > 0 && (
         <section>
@@ -36,17 +43,11 @@ export function ImportSuccess({ deckName, result }: { deckName: string; result: 
         </section>
       )}
       <div className="flex gap-3">
-        <Link
-          href={`/decks/${result.deckId}`}
-          className={buttonClass("primary")}
-        >
+        <Link href={`/decks/${result.deckId}`} className={buttonClass("primary")}>
           <Icon name="play" size={18} />
           Open deck
         </Link>
-        <Link
-          href="/library"
-          className={buttonClass("secondary")}
-        >
+        <Link href="/library" className={buttonClass("secondary")}>
           Back to Library
         </Link>
       </div>

@@ -2,11 +2,7 @@ import { mkdir, rm, stat, writeFile } from "node:fs/promises";
 import { createReadStream } from "node:fs";
 import { dirname, isAbsolute, relative, resolve } from "node:path";
 import { Readable } from "node:stream";
-import {
-  ImageNotFoundError,
-  InvalidImageKeyError,
-  type ImageStore,
-} from "./store";
+import { ImageNotFoundError, InvalidImageKeyError, type ImageStore } from "./store";
 
 export function createDiskImageStore(root: string): ImageStore {
   const base = resolve(root);
@@ -15,13 +11,7 @@ export function createDiskImageStore(root: string): ImageStore {
   function pathFor(key: string): string {
     const full = resolve(base, key);
     const rel = relative(base, full);
-    if (
-      !key ||
-      key.includes("\0") ||
-      !rel ||
-      rel.startsWith("..") ||
-      isAbsolute(rel)
-    ) {
+    if (!key || key.includes("\0") || !rel || rel.startsWith("..") || isAbsolute(rel)) {
       throw new InvalidImageKeyError(key);
     }
     return full;
@@ -48,9 +38,7 @@ export function createDiskImageStore(root: string): ImageStore {
     async get(key) {
       const path = pathFor(key);
       if (!(await exists(key))) throw new ImageNotFoundError(key);
-      return Readable.toWeb(
-        createReadStream(path),
-      ) as unknown as ReadableStream<Uint8Array>;
+      return Readable.toWeb(createReadStream(path)) as unknown as ReadableStream<Uint8Array>;
     },
     async delete(key) {
       await rm(pathFor(key), { force: true });
@@ -62,4 +50,3 @@ function isMissing(e: unknown): boolean {
   const code = (e as NodeJS.ErrnoException).code;
   return code === "ENOENT" || code === "ENOTDIR";
 }
-

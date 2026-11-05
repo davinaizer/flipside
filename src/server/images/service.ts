@@ -4,8 +4,7 @@ import { getDb } from "@/server/db/client";
 import { images } from "@/server/db/schema";
 import { ApiError } from "@/server/http/errors";
 import { getImageStore, ImageNotFoundError, type ImageStore } from "./store";
-
-const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+import { isUuid } from "@/shared/uuid";
 
 export type ServedImage = {
   mime: string;
@@ -36,7 +35,7 @@ export async function getImage(
   store: ImageStore = getImageStore(),
 ): Promise<ServedImage> {
   const notFound = () => new ApiError(404, "image_not_found", "That image does not exist.");
-  if (!UUID.test(imageId)) throw notFound();
+  if (!isUuid(imageId)) throw notFound();
   const [row] = await db
     .select({ sha256: images.sha256, mime: images.mime, storageKey: images.storageKey })
     .from(images)

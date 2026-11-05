@@ -11,8 +11,7 @@ export async function GET(request: Request): Promise<Response> {
     const profile = await getCurrentProfile(request);
     const param = new URL(request.url).searchParams.get("range") ?? undefined;
     const range = statsRangeSchema.safeParse(param);
-    if (!range.success)
-      return errorResponse(400, "invalid_range", "Range must be week or month.");
+    if (!range.success) return errorResponse(400, "invalid_range", "Range must be week or month.");
     return Response.json(await getStats(profile, range.data));
   } catch (e) {
     return toErrorResponse(e);

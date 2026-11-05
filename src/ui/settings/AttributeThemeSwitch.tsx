@@ -9,8 +9,17 @@ import { ThemeSwitch } from "./ThemeToggle";
  */
 export function AttributeThemeSwitch() {
   // The server renders the theme (the last profile's, or light); follow the attribute so the switch always shows it.
-  const dark = useSyncExternalStore(watchTheme, () => document.documentElement.getAttribute("data-theme") === "dark", () => false);
-  return <ThemeSwitch dark={dark} onToggle={() => document.documentElement.setAttribute("data-theme", dark ? "light" : "dark")} />;
+  const dark = useSyncExternalStore(
+    watchTheme,
+    () => document.documentElement.getAttribute("data-theme") === "dark",
+    () => false,
+  );
+  return (
+    <ThemeSwitch
+      dark={dark}
+      onToggle={() => document.documentElement.setAttribute("data-theme", dark ? "light" : "dark")}
+    />
+  );
 }
 
 function watchTheme(notify: () => void) {

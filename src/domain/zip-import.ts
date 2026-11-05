@@ -1,8 +1,5 @@
 import { unzipSync } from "fflate";
-import {
-  IMPORT_MAX_ZIP_ENTRIES,
-  IMPORT_MAX_ZIP_UNCOMPRESSED_BYTES,
-} from "../shared/constants";
+import { IMPORT_MAX_ZIP_ENTRIES, IMPORT_MAX_ZIP_UNCOMPRESSED_BYTES } from "../shared/constants";
 import { checkImage, type ImageInfo, type ImageRejection } from "./image-check";
 
 export interface ZipIssue {
@@ -83,10 +80,16 @@ export interface ZipContents {
 
 /** Validates a zip's directory and unpacks it; blocked results carry no files. */
 export function openZip(zip: Uint8Array): ZipContents {
-  const blocked = (issues: ZipIssue[]): ZipContents => ({ blocked: true, issues, files: new Map() });
+  const blocked = (issues: ZipIssue[]): ZipContents => ({
+    blocked: true,
+    issues,
+    files: new Map(),
+  });
   const entries = readZipDirectory(zip);
   if (!entries) {
-    return blocked([{ severity: "block", code: "unreadable_zip", message: "The zip file could not be read" }]);
+    return blocked([
+      { severity: "block", code: "unreadable_zip", message: "The zip file could not be read" },
+    ]);
   }
   const issues: ZipIssue[] = [];
   if (entries.length > IMPORT_MAX_ZIP_ENTRIES) {
@@ -100,10 +103,20 @@ export function openZip(zip: Uint8Array): ZipContents {
   for (const e of entries) {
     total += e.uncompressedSize;
     if (unsafePath(e.name)) {
-      issues.push({ severity: "block", code: "unsafe_path", entry: e.name, message: `Unsafe path in zip: ${e.name}` });
+      issues.push({
+        severity: "block",
+        code: "unsafe_path",
+        entry: e.name,
+        message: `Unsafe path in zip: ${e.name}`,
+      });
     }
     if (e.isSymlink) {
-      issues.push({ severity: "block", code: "symlink", entry: e.name, message: `Symlink in zip: ${e.name}` });
+      issues.push({
+        severity: "block",
+        code: "symlink",
+        entry: e.name,
+        message: `Symlink in zip: ${e.name}`,
+      });
     }
   }
   if (total > IMPORT_MAX_ZIP_UNCOMPRESSED_BYTES) {
@@ -119,13 +132,17 @@ export function openZip(zip: Uint8Array): ZipContents {
   try {
     unpacked = unzipSync(zip, { filter: (f) => !f.name.endsWith("/") });
   } catch {
-    return blocked([{ severity: "block", code: "unreadable_zip", message: "The zip file could not be read" }]);
+    return blocked([
+      { severity: "block", code: "unreadable_zip", message: "The zip file could not be read" },
+    ]);
   }
   // Declared sizes can lie; check what was actually inflated.
   let actual = 0;
   for (const data of Object.values(unpacked)) actual += data.length;
   if (actual > IMPORT_MAX_ZIP_UNCOMPRESSED_BYTES) {
-    return blocked([{ severity: "block", code: "too_large", message: "The zip is over 200 MB uncompressed" }]);
+    return blocked([
+      { severity: "block", code: "too_large", message: "The zip is over 200 MB uncompressed" },
+    ]);
   }
   return { blocked: false, issues: [], files: new Map(Object.entries(unpacked)) };
 }
@@ -153,7 +170,12 @@ export async function resolveImages(
   for (const image of new Set(names)) {
     const matches = byBase.get(baseName(image).toLowerCase()) ?? [];
     if (matches.length === 0) {
-      issues.push({ severity: "warning", code: "missing_image", image, message: `Image not in the zip: ${image}` });
+      issues.push({
+        severity: "warning",
+        code: "missing_image",
+        image,
+        message: `Image not in the zip: ${image}`,
+      });
       continue;
     }
     if (matches.length > 1) {

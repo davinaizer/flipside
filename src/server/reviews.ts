@@ -9,7 +9,14 @@ import { liveSessionCardIds, sessionMetaSchema } from "@/server/sessions";
 import { dayStartUtc, learningDay } from "@/domain/day";
 import { gradeLabels } from "@/domain/grade-labels";
 import { applyGrade, type Box, type SchedulerState } from "@/domain/scheduler";
-import { currentEntry, gradeCurrent, hasAttemptLeft, isFinished, replayQueue, wouldRequeue } from "@/domain/session-queue";
+import {
+  currentEntry,
+  gradeCurrent,
+  hasAttemptLeft,
+  isFinished,
+  replayQueue,
+  wouldRequeue,
+} from "@/domain/session-queue";
 import type { CardStatus, Grade } from "@/shared/enums";
 import {
   reviewRequestSchema,
@@ -24,7 +31,9 @@ type ReviewRow = typeof reviewLog.$inferSelect;
  * review_log.prev_state: the whole card_state row before the grade, so undo (F6.3) can
  * restore it exactly; null means the card was New (no row), and undo removes the row.
  */
-export const prevStateSchema = reviewStateSchema.extend({ lastReviewedAt: z.string().nullable() }).nullable();
+export const prevStateSchema = reviewStateSchema
+  .extend({ lastReviewedAt: z.string().nullable() })
+  .nullable();
 export type PrevState = z.infer<typeof prevStateSchema>;
 
 /** review_log.meta for a review: the result returned, so a retry answers identically. */
@@ -64,7 +73,8 @@ export async function putReview(
   now: Date = new Date(),
   db: Db = getDb(),
 ): Promise<ReviewResponse> {
-  if (!z.string().uuid().safeParse(id).success) throw new ApiError(400, "invalid_id", "The review id must be a UUID.");
+  if (!z.string().uuid().safeParse(id).success)
+    throw new ApiError(400, "invalid_id", "The review id must be a UUID.");
   const reviewId = id.toLowerCase();
   const parsed = reviewRequestSchema.safeParse(body);
   if (!parsed.success) {
@@ -79,7 +89,11 @@ export async function putReview(
 
   return db.transaction(async (tx) => {
     // Locking the session serialises grades within it, including concurrent retries of one id.
-    const [session] = await tx.select().from(sessions).where(eq(sessions.id, sessionId)).for("update");
+    const [session] = await tx
+      .select()
+      .from(sessions)
+      .where(eq(sessions.id, sessionId))
+      .for("update");
 
     const [existing] = await tx.select().from(reviewLog).where(eq(reviewLog.id, reviewId));
     if (existing) {
@@ -109,10 +123,17 @@ export async function putReview(
       .from(reviewLog)
       .where(and(eq(reviewLog.sessionId, sessionId), isNull(reviewLog.undoneAt)))
       .orderBy(asc(reviewLog.reviewedAt), asc(reviewLog.createdAt));
-    const { queue } = replayQueue(liveIds, given.map((g) => ({ cardId: g.cardId, grade: g.grade as Grade })));
+    const { queue } = replayQueue(
+      liveIds,
+      given.map((g) => ({ cardId: g.cardId, grade: g.grade as Grade })),
+    );
     if (currentEntry(queue)?.cardId !== cardId) {
       throw hasAttemptLeft(queue, cardId)
-        ? new ApiError(409, "not_current_card", "That card is not the current card in this session.")
+        ? new ApiError(
+            409,
+            "not_current_card",
+            "That card is not the current card in this session.",
+          )
         : new ApiError(409, "no_attempt_left", "That card has no attempt left in this session.");
     }
 
@@ -179,7 +200,10 @@ export async function putReview(
     // R7: the session is completed by the grade that finishes its queue. An ended session keeps
     // its first end, and undoing a grade later does not reopen a completed session.
     if (!session.endedAt && isFinished(gradeCurrent(queue, grade))) {
-      await tx.update(sessions).set({ endedAt: now, endedReason: "completed" }).where(eq(sessions.id, sessionId));
+      await tx
+        .update(sessions)
+        .set({ endedAt: now, endedReason: "completed" })
+        .where(eq(sessions.id, sessionId));
     }
     return toResponse(profile, row!);
   });
@@ -188,7 +212,14 @@ export async function putReview(
 /** The response for an undone review: the restored state and labels for regrading it, from the day of the undo. */
 function toUndoResponse(profile: Profile, row: ReviewRow): UndoResponse {
   const prev = prevStateSchema.parse(row.prevState);
-  const state = prev && { box: prev.box, dueDate: prev.dueDate, reps: prev.reps, lapses: prev.lapses, lastGrade: prev.lastGrade, status: prev.status };
+  const state = prev && {
+    box: prev.box,
+    dueDate: prev.dueDate,
+    reps: prev.reps,
+    lapses: prev.lapses,
+    lastGrade: prev.lastGrade,
+    status: prev.status,
+  };
   const today = learningDay(row.undoneAt!, profile.timezone, profile.dayStartHour);
   return {
     review: {
@@ -212,20 +243,35 @@ function toUndoResponse(profile: Profile, row: ReviewRow): UndoResponse {
  * undone, which lets undo step back through the whole session one grade at a time. A
  * repeat answers the stored result.
  */
-export async function undoReview(profile: Profile, id: string, now: Date = new Date(), db: Db = getDb()): Promise<UndoResponse> {
-  if (!z.string().uuid().safeParse(id).success) throw new ApiError(400, "invalid_id", "The review id must be a UUID.");
+export async function undoReview(
+  profile: Profile,
+  id: string,
+  now: Date = new Date(),
+  db: Db = getDb(),
+): Promise<UndoResponse> {
+  if (!z.string().uuid().safeParse(id).success)
+    throw new ApiError(400, "invalid_id", "The review id must be a UUID.");
   const reviewId = id.toLowerCase();
 
   return db.transaction(async (tx) => {
-    const [found] = await tx.select({ profileId: reviewLog.profileId, sessionId: reviewLog.sessionId }).from(reviewLog).where(eq(reviewLog.id, reviewId));
+    const [found] = await tx
+      .select({ profileId: reviewLog.profileId, sessionId: reviewLog.sessionId })
+      .from(reviewLog)
+      .where(eq(reviewLog.id, reviewId));
     if (!found || found.profileId !== profile.id) throw notFound("review");
     // Same lock as putReview, so an undo and a grade in one session never interleave.
-    if (found.sessionId) await tx.select({ id: sessions.id }).from(sessions).where(eq(sessions.id, found.sessionId)).for("update");
+    if (found.sessionId)
+      await tx
+        .select({ id: sessions.id })
+        .from(sessions)
+        .where(eq(sessions.id, found.sessionId))
+        .for("update");
 
     const [row] = await tx.select().from(reviewLog).where(eq(reviewLog.id, reviewId));
     if (row!.undoneAt) return toUndoResponse(profile, row!);
 
-    const notLatest = () => new ApiError(409, "not_latest_review", "Only the latest grade in a session can be undone.");
+    const notLatest = () =>
+      new ApiError(409, "not_latest_review", "Only the latest grade in a session can be undone.");
     const [latest] = await tx
       .select({ id: reviewLog.id })
       .from(reviewLog)
@@ -272,7 +318,11 @@ export async function undoReview(profile: Profile, id: string, now: Date = new D
         .onConflictDoUpdate({ target: [cardState.profileId, cardState.cardId], set: restored });
     }
 
-    const [undone] = await tx.update(reviewLog).set({ undoneAt: now, updatedAt: now }).where(eq(reviewLog.id, reviewId)).returning();
+    const [undone] = await tx
+      .update(reviewLog)
+      .set({ undoneAt: now, updatedAt: now })
+      .where(eq(reviewLog.id, reviewId))
+      .returning();
     return toUndoResponse(profile, undone!);
   });
 }

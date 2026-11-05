@@ -12,7 +12,12 @@ export interface TopicRow {
 const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? "" : "s"}`;
 
 /** What the main Practise button does for the current ticks (D2). */
-export function practisePlan(deckId: string, topics: TopicRow[], ticked: Set<string>, newRemaining: number) {
+export function practisePlan(
+  deckId: string,
+  topics: TopicRow[],
+  ticked: Set<string>,
+  newRemaining: number,
+) {
   const chosen = topics.filter((t) => ticked.has(t.topic));
   if (chosen.length === 0) {
     const due = topics.reduce((n, t) => n + t.dueCount, 0);
@@ -30,7 +35,11 @@ export function practisePlan(deckId: string, topics: TopicRow[], ticked: Set<str
     due,
     startable: sessionCandidateCount(due, fresh, newRemaining),
     label: `Practise ${plural(chosen.length, "topic")} (${due} due)`,
-    scope: { kind: "topics", deckId, topics: chosen.map((t) => t.topic) } as SessionRequest["scope"],
+    scope: {
+      kind: "topics",
+      deckId,
+      topics: chosen.map((t) => t.topic),
+    } as SessionRequest["scope"],
   };
 }
 

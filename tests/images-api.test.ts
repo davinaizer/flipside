@@ -24,11 +24,23 @@ test("images are served to their owner with cache headers and 304", async () => 
   await getImageStore().put(key, bytes, "image/png");
   const [img] = await db
     .insert(images)
-    .values({ ownerProfileId: a.id, sha256: sha, mime: "image/png", bytes: bytes.length, storageKey: key })
+    .values({
+      ownerProfileId: a.id,
+      sha256: sha,
+      mime: "image/png",
+      bytes: bytes.length,
+      storageKey: key,
+    })
     .returning();
   const [lost] = await db
     .insert(images)
-    .values({ ownerProfileId: a.id, sha256: "b".repeat(64), mime: "image/png", bytes: 1, storageKey: "images/missing.png" })
+    .values({
+      ownerProfileId: a.id,
+      sha256: "b".repeat(64),
+      mime: "image/png",
+      bytes: 1,
+      storageKey: "images/missing.png",
+    })
     .returning();
 
   const route = await import("@/app/api/v1/images/[id]/route");
@@ -58,7 +70,7 @@ test("images are served to their owner with cache headers and 304", async () => 
   expect((await route.GET(req(a.id), ctx("nope"))).status).toBe(404);
   expect((await route.GET(req(a.id), ctx(lost.id))).status).toBe(404);
   // A matching ETag does not leak to another profile.
-  expect(
-    (await route.GET(req(b.id, { "if-none-match": `"${sha}"` }), ctx(img.id))).status,
-  ).toBe(404);
+  expect((await route.GET(req(b.id, { "if-none-match": `"${sha}"` }), ctx(img.id))).status).toBe(
+    404,
+  );
 });

@@ -54,7 +54,14 @@ export interface ProgressViewProps {
 }
 
 /** Progress screen (S1, S5): range switch and the four tiles. Tiles, chart, Focus next (S3) and By deck (S4). No streaks or badges (PRD section 7). */
-export function ProgressView({ stats, range, onRangeChange, practising = false, practiseError = null, onPractise = () => {} }: ProgressViewProps) {
+export function ProgressView({
+  stats,
+  range,
+  onRangeChange,
+  practising = false,
+  practiseError = null,
+  onPractise = () => {},
+}: ProgressViewProps) {
   const { current, changes } = stats;
   const rate = current.gotItRate === null ? "–" : `${Math.round(current.gotItRate * 100)}%`;
   const time = current.medianSeconds === null ? "–" : `${Math.round(current.medianSeconds)} s`;
@@ -63,9 +70,15 @@ export function ProgressView({ stats, range, onRangeChange, practising = false, 
       <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
         <div>
           <h1 className="text-headline-lg font-semibold">Progress</h1>
-          <p className="text-on-surface-variant">How much you practised and how well you know it.</p>
+          <p className="text-on-surface-variant">
+            How much you practised and how well you know it.
+          </p>
         </div>
-        <div role="group" aria-label="Range" className="flex gap-1 rounded-full bg-surface-container p-1">
+        <div
+          role="group"
+          aria-label="Range"
+          className="flex gap-1 rounded-full bg-surface-container p-1"
+        >
           {RANGES.map((r) => (
             <button
               key={r.key}
@@ -86,9 +99,27 @@ export function ProgressView({ stats, range, onRangeChange, practising = false, 
       {stats.hasReviews ? (
         <div className="grid max-w-6xl gap-6">
           <ul className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-            <Tile label="Cards reviewed" value={String(current.cardsReviewed)} change={changes.cardsReviewed} icon="cards" tone="lavender" />
-            <Tile label="Got it rate" value={rate} change={changes.gotItRate} icon="checkCircle" tone="mist" />
-            <Tile label="Time per card" value={time} change={changes.timePerCard} icon="clock" tone="sage" />
+            <Tile
+              label="Cards reviewed"
+              value={String(current.cardsReviewed)}
+              change={changes.cardsReviewed}
+              icon="cards"
+              tone="lavender"
+            />
+            <Tile
+              label="Got it rate"
+              value={rate}
+              change={changes.gotItRate}
+              icon="checkCircle"
+              tone="mist"
+            />
+            <Tile
+              label="Time per card"
+              value={time}
+              change={changes.timePerCard}
+              icon="clock"
+              tone="sage"
+            />
             <Tile
               label="Days practised"
               value={`${current.daysPractised} of ${current.daysInWindow}`}
@@ -99,7 +130,12 @@ export function ProgressView({ stats, range, onRangeChange, practising = false, 
           </ul>
           <div className="grid items-start gap-6 lg:grid-cols-[3fr_2fr]">
             <PracticeChart bars={stats.bars} range={range} />
-            <FocusNext topics={stats.focusNext} busy={practising} error={practiseError} onPractise={onPractise} />
+            <FocusNext
+              topics={stats.focusNext}
+              busy={practising}
+              error={practiseError}
+              onPractise={onPractise}
+            />
           </div>
           <ByDeckTable decks={stats.byDeck} />
         </div>
