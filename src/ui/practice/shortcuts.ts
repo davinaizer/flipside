@@ -20,7 +20,14 @@ function ownsKey(target: EventTarget | null, key: string): boolean {
  * inside inputs, with a modifier held, or on key repeat.
  */
 export function shortcutFor(
-  e: { key: string; target: EventTarget | null; repeat?: boolean; ctrlKey?: boolean; metaKey?: boolean; altKey?: boolean },
+  e: {
+    key: string;
+    target: EventTarget | null;
+    repeat?: boolean;
+    ctrlKey?: boolean;
+    metaKey?: boolean;
+    altKey?: boolean;
+  },
   state: { revealed: boolean; dialogOpen: boolean },
 ): ShortcutAction | null {
   if (state.dialogOpen || e.repeat || e.ctrlKey || e.metaKey || e.altKey) return null;

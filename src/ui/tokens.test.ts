@@ -35,7 +35,6 @@ function ratio(a: string, b: string): number {
   return (x + 0.05) / (y + 0.05);
 }
 
-
 type Doc = {
   colors: Record<string, string>;
   typography: Record<string, Record<string, string>>;
@@ -61,7 +60,7 @@ function readDoc(file: string): Doc {
       if (section === "typography") {
         item = key;
         doc.typography[item] = {};
-      } else (doc[section as "colors" | "rounded" | "spacing"])[key] = value.replace(/'/g, "");
+      } else doc[section as "colors" | "rounded" | "spacing"][key] = value.replace(/'/g, "");
       continue;
     }
     const prop = line.match(/^ {4}(\w+):\s*(.*)$/);
@@ -118,7 +117,7 @@ describe("tokens", () => {
   });
 
   it("switches by data-theme, default light", () => {
-    expect(css).toContain(":root,\n[data-theme=\"light\"]");
+    expect(css).toContain(':root,\n[data-theme="light"]');
     expect(css).toContain('[data-theme="dark"]');
     const layout = readFileSync(join(__dirname, "../app/layout.tsx"), "utf8");
     expect(layout).toContain('"light"');
@@ -140,7 +139,8 @@ describe("tokens", () => {
     const doc = readFileSync(join(__dirname, "../../docs/design/DESIGN-DARK.md"), "utf8");
     expect(doc).toContain(d!);
     for (const file of walk(join(__dirname, ".."))) {
-      if (!/\.tsx?$/.test(file) || file.endsWith(".test.ts") || file.endsWith(".test.tsx")) continue;
+      if (!/\.tsx?$/.test(file) || file.endsWith(".test.ts") || file.endsWith(".test.tsx"))
+        continue;
       expect(readFileSync(file, "utf8"), file).not.toMatch(/shadow-\[/);
     }
   });
@@ -201,7 +201,8 @@ describe("tokens", () => {
 
     it("give secondary and tertiary the same meaning in both themes", () => {
       for (const doc of [lightDoc, darkDoc]) {
-        for (const k of ["secondary", "secondary-container"]) expect(warm(doc.colors[k])).toBe(true);
+        for (const k of ["secondary", "secondary-container"])
+          expect(warm(doc.colors[k])).toBe(true);
         for (const k of ["tertiary", "tertiary-container"]) expect(green(doc.colors[k])).toBe(true);
       }
     });
@@ -220,7 +221,8 @@ describe("tokens", () => {
       const missing: string[] = [];
       for (const [name, t] of Object.entries(lightDoc.typography)) {
         if (!css.includes(`--text-${name}: ${t.fontSize};`)) missing.push(`text-${name}`);
-        if (!css.includes(`--text-${name}--line-height: ${t.lineHeight};`)) missing.push(`text-${name} line height`);
+        if (!css.includes(`--text-${name}--line-height: ${t.lineHeight};`))
+          missing.push(`text-${name} line height`);
       }
       for (const [name, v] of Object.entries(lightDoc.spacing)) {
         if (!css.includes(`--spacing-${name}: ${v};`)) missing.push(`spacing-${name}`);
@@ -240,7 +242,11 @@ describe("tokens", () => {
       for (const f of readdirSync(dir)) {
         const p = join(dir, f);
         if (statSync(p).isDirectory()) walk(p);
-        else if (/\.(tsx?|css|mjs)$/.test(f) && !p.endsWith("tokens.css") && !p.endsWith("tokens.test.ts")) {
+        else if (
+          /\.(tsx?|css|mjs)$/.test(f) &&
+          !p.endsWith("tokens.css") &&
+          !p.endsWith("tokens.test.ts")
+        ) {
           if (/#[0-9a-fA-F]{3,8}\b/.test(readFileSync(p, "utf8"))) hits.push(p);
         }
       }
@@ -260,7 +266,9 @@ describe("tokens", () => {
           const src = readFileSync(p, "utf8");
           for (const m of src.matchAll(/<button\b[\s\S]*?<\/button>/g)) {
             const tag = m[0];
-            const ok = /buttonClass|TAPPABLE_CARD|iconButton|CONFIRM_DELETE_CLASS/.test(tag) || (/PRESSED/.test(tag) && /FOCUS_RING/.test(tag));
+            const ok =
+              /buttonClass|TAPPABLE_CARD|iconButton|CONFIRM_DELETE_CLASS/.test(tag) ||
+              (/PRESSED/.test(tag) && /FOCUS_RING/.test(tag));
             if (!ok) offenders.push(`${p}: ${tag.split("\n")[0]}`);
           }
         }
@@ -281,7 +289,8 @@ describe("tokens", () => {
           const src = readFileSync(p, "utf8");
           for (const m of src.matchAll(/<label\b[^>]*cursor-pointer[\s\S]*?<\/label>/g)) {
             const tag = m[0];
-            if (!/buttonClass/.test(tag) && !/peer-active:/.test(tag)) offenders.push(`${p}: ${tag.split("\n")[0]}`);
+            if (!/buttonClass/.test(tag) && !/peer-active:/.test(tag))
+              offenders.push(`${p}: ${tag.split("\n")[0]}`);
           }
         }
       }
@@ -301,7 +310,11 @@ describe("tokens", () => {
           const src = readFileSync(p, "utf8");
           for (const m of src.matchAll(/<Link\b[\s\S]*?>/g)) {
             const tag = m[0];
-            const ok = /buttonClass|TAPPABLE_CARD/.test(tag) || (/PRESSED/.test(tag) && /FOCUS_RING/.test(tag) && /active:text-|active:bg-/.test(tag));
+            const ok =
+              /buttonClass|TAPPABLE_CARD/.test(tag) ||
+              (/PRESSED/.test(tag) &&
+                /FOCUS_RING/.test(tag) &&
+                /active:text-|active:bg-/.test(tag));
             if (!ok) offenders.push(`${p}: ${tag.split("\n")[0]}`);
           }
         }

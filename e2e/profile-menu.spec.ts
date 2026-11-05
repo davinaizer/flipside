@@ -9,7 +9,9 @@ async function openMenu(page: Page) {
   await page.getByRole("complementary").getByRole("button", { expanded: false }).click();
 }
 
-test("the menu lists four items, each at least 44 px tall, and Escape closes it", async ({ page }) => {
+test("the menu lists four items, each at least 44 px tall, and Escape closes it", async ({
+  page,
+}) => {
   await openMenu(page);
   const items = page.getByRole("menuitem");
   await expect(items).toHaveText([/Profile/, /Settings/, /Switch profile/, /Log out/]);
@@ -29,7 +31,9 @@ test("the menu lists four items, each at least 44 px tall, and Escape closes it"
   await expect(trigger).not.toBeFocused();
 });
 
-test("Profile and Settings open their pages, Switch profile returns to the picker", async ({ page }) => {
+test("Profile and Settings open their pages, Switch profile returns to the picker", async ({
+  page,
+}) => {
   await openMenu(page);
   await page.getByRole("menuitem", { name: "Profile", exact: true }).click();
   await page.waitForURL("**/profile");

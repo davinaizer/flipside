@@ -31,7 +31,10 @@ export function PracticeSettings() {
   const invalid = parseNewCards(text) === null;
 
   return (
-    <section aria-labelledby="practice-h" className="mt-8 rounded-card border border-card-edge bg-surface-card p-6 shadow-card md:p-8">
+    <section
+      aria-labelledby="practice-h"
+      className="mt-8 rounded-card border border-card-edge bg-surface-card p-6 shadow-card md:p-8"
+    >
       <h2 id="practice-h" className="text-headline-md font-semibold">
         Practice
       </h2>
@@ -39,7 +42,11 @@ export function PracticeSettings() {
         <legend className="mb-2 font-semibold">Cards per session</legend>
         <div className="flex flex-wrap gap-2">
           {LENGTHS.map((l) => (
-            <Choice key={l.label} on={settings.cardsPerSession === l.value} onClick={() => set({ cardsPerSession: l.value })}>
+            <Choice
+              key={l.label}
+              on={settings.cardsPerSession === l.value}
+              onClick={() => set({ cardsPerSession: l.value })}
+            >
               {l.label}
             </Choice>
           ))}
@@ -84,7 +91,11 @@ export function PracticeSettings() {
         <legend className="mb-2 font-semibold">Reading speed</legend>
         <div className="flex flex-wrap gap-2">
           {READING_SPEEDS.map((s) => (
-            <Choice key={s} on={settings.readingSpeed === s} onClick={() => set({ readingSpeed: s })}>
+            <Choice
+              key={s}
+              on={settings.readingSpeed === s}
+              onClick={() => set({ readingSpeed: s })}
+            >
               {SPEED_LABEL[s]}
             </Choice>
           ))}

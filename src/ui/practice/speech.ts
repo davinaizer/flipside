@@ -10,7 +10,11 @@ type Utter = (text: string) => SpeechSynthesisUtterance;
 export type Reader = { speak: (text: string) => void; cancel: () => void };
 
 /** Speaks one text at a time: a new text or cancel() cuts the previous one off. */
-export function createReader(synth: Synth, speed: ReadingSpeed, utter: Utter = (t) => new SpeechSynthesisUtterance(t)): Reader {
+export function createReader(
+  synth: Synth,
+  speed: ReadingSpeed,
+  utter: Utter = (t) => new SpeechSynthesisUtterance(t),
+): Reader {
   return {
     speak(text) {
       synth.cancel();
@@ -24,7 +28,9 @@ export function createReader(synth: Synth, speed: ReadingSpeed, utter: Utter = (
 
 /** Null when the browser has no speech synthesis, so callers hide the button without an error. */
 export function browserSynth(): Synth | null {
-  return typeof window !== "undefined" && "speechSynthesis" in window && typeof SpeechSynthesisUtterance !== "undefined"
+  return typeof window !== "undefined" &&
+    "speechSynthesis" in window &&
+    typeof SpeechSynthesisUtterance !== "undefined"
     ? window.speechSynthesis
     : null;
 }
@@ -38,7 +44,12 @@ export function textToRead(card: { front: string; back: string }, revealed: bool
  * Auto-read speaks the question when a new card appears (not when it is revealed).
  * Leaving the card or the screen cancels speech.
  */
-export function useReadAloud(cardId: string | undefined, front: string | undefined, autoRead: boolean, speed: ReadingSpeed) {
+export function useReadAloud(
+  cardId: string | undefined,
+  front: string | undefined,
+  autoRead: boolean,
+  speed: ReadingSpeed,
+) {
   const reader = useMemo(() => {
     const synth = browserSynth();
     return synth ? createReader(synth, speed) : null;

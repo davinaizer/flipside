@@ -10,7 +10,11 @@ test("import:cli imports through the service and prints the report; unknown prof
   const dir = await mkdtemp(join(tmpdir(), "flipside-cli-"));
   const env = { ...process.env, DATABASE_URL: url, IMAGE_STORE_PATH: join(dir, "images") };
   const run = (...args: string[]) =>
-    spawnSync("node", ["--import", "./scripts/register-alias.mjs", "scripts/import-cli.ts", ...args], { env, encoding: "utf8" });
+    spawnSync(
+      "node",
+      ["--import", "./scripts/register-alias.mjs", "scripts/import-cli.ts", ...args],
+      { env, encoding: "utf8" },
+    );
 
   vi.stubEnv("DATABASE_URL", url);
   const { runMigrations } = await import("@/server/db/migrate");

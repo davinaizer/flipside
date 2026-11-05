@@ -1,8 +1,13 @@
 import { renderToStaticMarkup } from "react-dom/server";
 import { expect, test, vi } from "vitest";
 
-vi.mock("@/ui/settings/ThemeToggle", () => ({ ThemeToggle: () => <button role="switch" aria-label="Dark theme" /> }));
-vi.mock("next/navigation", () => ({ usePathname: () => "/library", useRouter: () => ({ push: () => {} }) }));
+vi.mock("@/ui/settings/ThemeToggle", () => ({
+  ThemeToggle: () => <button role="switch" aria-label="Dark theme" />,
+}));
+vi.mock("next/navigation", () => ({
+  usePathname: () => "/library",
+  useRouter: () => ({ push: () => {} }),
+}));
 
 import { AVATAR_IDS } from "@/shared/avatars";
 import { Sidebar } from "./Sidebar";
@@ -22,7 +27,9 @@ test("top bar has the sidebar toggle on the left and the theme switch on the rig
 });
 
 test("sidebar no longer renders the toggle", () => {
-  expect(renderToStaticMarkup(<Sidebar name="Ada" avatar={avatar} />)).not.toContain('role="switch"');
+  expect(renderToStaticMarkup(<Sidebar name="Ada" avatar={avatar} />)).not.toContain(
+    'role="switch"',
+  );
 });
 
 test("sidebar shows the profile name and avatar passed from the layout", () => {

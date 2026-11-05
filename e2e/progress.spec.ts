@@ -9,12 +9,15 @@ type Json = Record<string, any>; // eslint-disable-line @typescript-eslint/no-ex
 
 async function signIn(page: Page, scenario: string, info: TestInfo) {
   await page.goto("/");
-  await page.getByRole("button", { name: `Progress ${scenario} ${info.project.name}`, exact: true }).click();
+  await page
+    .getByRole("button", { name: `Progress ${scenario} ${info.project.name}`, exact: true })
+    .click();
   await page.waitForURL("**/library");
   await page.goto("/progress");
 }
 
-const tile = (page: Page, label: string) => page.getByRole("listitem").filter({ hasText: label }).first();
+const tile = (page: Page, label: string) =>
+  page.getByRole("listitem").filter({ hasText: label }).first();
 
 async function checkBothThemes(page: Page) {
   for (const theme of ["light", "dark"] as const) {
@@ -24,7 +27,9 @@ async function checkBothThemes(page: Page) {
   }
 }
 
-test("the seeded history shows its hand-computed figures and Focus next opens a session; axe and 44 px pass in both themes", async ({ page }, info) => {
+test("the seeded history shows its hand-computed figures and Focus next opens a session; axe and 44 px pass in both themes", async ({
+  page,
+}, info) => {
   await signIn(page, "main", info);
   await expect(tile(page, "Cards reviewed")).toContainText("4");
   await expect(tile(page, "Got it rate")).toContainText("50%");
@@ -37,7 +42,9 @@ test("the seeded history shows its hand-computed figures and Focus next opens a 
   await expect(focus.getByRole("listitem").first()).toContainText("Mastery 33%");
   await expect(focus.getByRole("listitem").nth(1)).toContainText("Mastery 100%");
 
-  const row = page.getByRole("region", { name: "By deck" }).getByRole("row", { name: /Progress science/ });
+  const row = page
+    .getByRole("region", { name: "By deck" })
+    .getByRole("row", { name: /Progress science/ });
   await expect(row.getByRole("cell").nth(0)).toHaveText("6");
   await expect(row.getByRole("cell").nth(1)).toHaveText("67% (4)");
   await expect(row.getByRole("cell").nth(2)).toHaveText("7 s");
@@ -60,7 +67,9 @@ test("undo removes a review's contribution from the statistics (AC6)", async ({ 
   await expect(tile(page, "Cards reviewed")).toContainText("4");
 
   // Grade the one New card through the API, then undo it.
-  const put = await page.request.put(`/api/v1/sessions/${crypto.randomUUID()}`, { data: { scope: { kind: "all" }, length: 5 } });
+  const put = await page.request.put(`/api/v1/sessions/${crypto.randomUUID()}`, {
+    data: { scope: { kind: "all" }, length: 5 },
+  });
   expect(put.status()).toBe(200);
   const { session, queue } = (await put.json()) as Json;
   expect(queue).toHaveLength(1);
@@ -80,7 +89,9 @@ test("undo removes a review's contribution from the statistics (AC6)", async ({ 
   await expect(tile(page, "Time per card")).toContainText("7 s");
 });
 
-test("a new profile sees the empty state, which passes axe and 44 px in both themes", async ({ page }, info) => {
+test("a new profile sees the empty state, which passes axe and 44 px in both themes", async ({
+  page,
+}, info) => {
   await signIn(page, "empty", info);
   await expect(page.getByRole("heading", { name: "Nothing to show yet" })).toBeVisible();
   await expect(page.getByText("Cards reviewed")).toHaveCount(0);

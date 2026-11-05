@@ -21,9 +21,12 @@ test("dry run previews CSV and zip input and saves nothing", async () => {
 
   /** Row count of every public table plus the number of files in the image folder. */
   const snapshot = async () => {
-    const tables = await sql<{ t: string }[]>`select tablename as t from pg_tables where schemaname = 'public' order by 1`;
+    const tables = await sql<
+      { t: string }[]
+    >`select tablename as t from pg_tables where schemaname = 'public' order by 1`;
     const counts: Record<string, number> = {};
-    for (const { t } of tables) counts[t] = (await sql.unsafe(`select count(*)::int as n from "${t}"`))[0].n;
+    for (const { t } of tables)
+      counts[t] = (await sql.unsafe(`select count(*)::int as n from "${t}"`))[0].n;
     return { counts, files: await readdir(store, { recursive: true }) };
   };
   const before = await snapshot();
@@ -32,7 +35,13 @@ test("dry run previews CSV and zip input and saves nothing", async () => {
   const post = (bytes: Uint8Array, query = "?dryRun=true", profile = p.id) => {
     const form = new FormData();
     form.set("file", new File([bytes as BlobPart], "deck.bin"));
-    return route.POST(new Request(`http://x/api/v1/imports${query}`, { method: "POST", body: form, headers: { "x-profile-id": profile } }));
+    return route.POST(
+      new Request(`http://x/api/v1/imports${query}`, {
+        method: "POST",
+        body: form,
+        headers: { "x-profile-id": profile },
+      }),
+    );
   };
 
   // CSV with a missing id column value, an empty field, a duplicate and an unknown column.
@@ -58,7 +67,9 @@ test("dry run previews CSV and zip input and saves nothing", async () => {
   expect(body.warnings.some((w: { code: string }) => w.code === "unknown_column")).toBe(true);
 
   // The school deck as a zip: images are counted and checked.
-  const zipBytes = new Uint8Array(await readFile(join(process.cwd(), "fixtures/science-w2-deck.zip")));
+  const zipBytes = new Uint8Array(
+    await readFile(join(process.cwd(), "fixtures/science-w2-deck.zip")),
+  );
   const zres = await post(zipBytes);
   expect(zres.status).toBe(200);
   const z = await zres.json();
@@ -86,15 +97,24 @@ test("dry run previews CSV and zip input and saves nothing", async () => {
     const e = (await r.json()).error;
     expect(e.code).toBe("import_blocked");
     expect(typeof e.message).toBe("string");
-    expect(e.details.map((d: { code: string }) => d.code), name).toContain(code);
+    expect(
+      e.details.map((d: { code: string }) => d.code),
+      name,
+    ).toContain(code);
   }
 
   // Request problems.
   const noFile = await route.POST(
-    new Request("http://x/?dryRun=true", { method: "POST", body: new FormData(), headers: { "x-profile-id": p.id } }),
+    new Request("http://x/?dryRun=true", {
+      method: "POST",
+      body: new FormData(),
+      headers: { "x-profile-id": p.id },
+    }),
   );
   expect(noFile.status).toBe(400);
-  expect((await post(strToU8(csv), "?dryRun=true", "00000000-0000-4000-8000-000000000000")).status).toBe(401);
+  expect(
+    (await post(strToU8(csv), "?dryRun=true", "00000000-0000-4000-8000-000000000000")).status,
+  ).toBe(401);
   // A commit without deck details is a bad request (full commit tests: imports-commit.test.ts).
   expect((await post(strToU8(csv), "")).status).toBe(400);
 

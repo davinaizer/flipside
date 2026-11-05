@@ -3,11 +3,21 @@ import { ApiError } from "@/server/http/errors";
 import { getDb, type Db } from "@/server/db/client";
 import { cards, decks, images as imagesTable, importRuns } from "@/server/db/schema";
 import { getImageStore } from "@/server/images/store";
-import { importDeckDetailsSchema, type ImportIssue, type ImportPreview, type ImportResult } from "@/shared/schemas/import";
+import {
+  importDeckDetailsSchema,
+  type ImportIssue,
+  type ImportPreview,
+  type ImportResult,
+} from "@/shared/schemas/import";
 import { and, eq, isNull } from "drizzle-orm";
 
 const blocked = (issues: ImportIssue[]) =>
-  new ApiError(422, "import_blocked", "This file cannot be imported. " + issues[0].message + ".", issues);
+  new ApiError(
+    422,
+    "import_blocked",
+    "This file cannot be imported. " + issues[0].message + ".",
+    issues,
+  );
 
 /** Shared parse (domain) turned into the API's 422 when the file cannot be imported at all. */
 async function parseImport(bytes: Uint8Array) {
@@ -49,12 +59,20 @@ export async function commitImport(
   } else {
     const parsed = importDeckDetailsSchema.safeParse(upload.details);
     if (!parsed.success) {
-      throw new ApiError(400, "invalid_request", "Check the deck details.", parsed.error.issues.map((i) => ({ ...i })));
+      throw new ApiError(
+        400,
+        "invalid_request",
+        "Check the deck details.",
+        parsed.error.issues.map((i) => ({ ...i })),
+      );
     }
     details = parsed.data;
   }
   const { csv, issues, images } = await parseImport(upload.bytes);
-  if (csv.cards.length === 0) throw blocked([{ severity: "block", code: "no_cards", message: "The file has no valid cards" }]);
+  if (csv.cards.length === 0)
+    throw blocked([
+      { severity: "block", code: "no_cards", message: "The file has no valid cards" },
+    ]);
   const store = getImageStore();
 
   return db.transaction(async (tx) => {
@@ -144,7 +162,10 @@ export async function commitImport(
       if (same) {
         unchanged++;
       } else {
-        await tx.update(cards).set({ ...next, updatedAt: new Date() }).where(eq(cards.id, match.id));
+        await tx
+          .update(cards)
+          .set({ ...next, updatedAt: new Date() })
+          .where(eq(cards.id, match.id));
         updated++;
       }
     }
@@ -189,13 +210,23 @@ export async function commitImport(
 }
 
 /** The profile's non-deleted deck id; another profile's, deleted, unknown or malformed ids are 404. */
-async function ownedDeck(db: Pick<Db, "select">, profileId: string, deckId: string): Promise<string> {
+async function ownedDeck(
+  db: Pick<Db, "select">,
+  profileId: string,
+  deckId: string,
+): Promise<string> {
   const notFound = new ApiError(404, "deck_not_found", "That deck does not exist.");
   if (!UUID.test(deckId)) throw notFound;
   const [deck] = await db
     .select({ id: decks.id })
     .from(decks)
-    .where(and(eq(decks.id, deckId.toLowerCase()), eq(decks.ownerProfileId, profileId), isNull(decks.deletedAt)));
+    .where(
+      and(
+        eq(decks.id, deckId.toLowerCase()),
+        eq(decks.ownerProfileId, profileId),
+        isNull(decks.deletedAt),
+      ),
+    );
   if (!deck) throw notFound;
   return deck.id;
 }

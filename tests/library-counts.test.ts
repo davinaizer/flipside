@@ -52,7 +52,13 @@ test("library counts use the local day, domain weak rule and exclude deleted and
   const lib = librarySchema.parse(await getLibrary(me, now, db));
   expect(lib.groups.map((g) => g.name)).toEqual(["Art", "Science", "Other"]);
   // Due on 1 Feb: box1 (Feb 1), box1 (Feb 2 is tomorrow: no), box3, leech, Sketch = 4.
-  expect(lib.today).toEqual({ dueCount: 4, startableCount: 6, decksWithDue: 2, sessionLength: 10, weakCount: 3 });
+  expect(lib.today).toEqual({
+    dueCount: 4,
+    startableCount: 6,
+    decksWithDue: 2,
+    sessionLength: 10,
+    weakCount: 3,
+  });
 
   const z = lib.groups[1]!.decks[0]!;
   expect(z.name).toBe("Zeta");
@@ -85,13 +91,20 @@ test("a deck of only New cards is startable until the daily new-card cap is used
   expect(empty.today.startableCount).toBe(0);
 
   const deck = await f.createDeck(db, me.id, { name: "Fresh" });
-  const made = [await f.createCard(db, deck.id), await f.createCard(db, deck.id), await f.createCard(db, deck.id)];
+  const made = [
+    await f.createCard(db, deck.id),
+    await f.createCard(db, deck.id),
+    await f.createCard(db, deck.id),
+  ];
   expect((await getLibrary(me, now, db)).today.startableCount).toBe(2);
   expect((await getDeck(me, deck.id, now, db)).deck.newRemaining).toBe(2);
 
   // Two cards introduced today (after the 07:00 start) use the cap; an undone one would not.
   for (const c of made.slice(0, 2)) {
-    await f.createReviewLog(db, me.id, c.id, { introducedNew: true, reviewedAt: new Date("2026-02-02T09:00:00Z") });
+    await f.createReviewLog(db, me.id, c.id, {
+      introducedNew: true,
+      reviewedAt: new Date("2026-02-02T09:00:00Z"),
+    });
   }
   expect((await getLibrary(me, now, db)).today.startableCount).toBe(0);
   expect((await getDeck(me, deck.id, now, db)).deck.newRemaining).toBe(0);

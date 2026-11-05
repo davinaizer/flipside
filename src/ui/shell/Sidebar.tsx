@@ -25,14 +25,24 @@ export function Sidebar({ name, avatar }: { name: string; avatar: string }) {
  * The toggle lives in the top bar. The width animates; labels are clipped (overflow-hidden, no wrap)
  * while it moves. The aside itself must not clip, because the profile menu opens wider than the rail.
  */
-export function SidebarView({ name, avatar, collapsed }: { name: string; avatar: string; collapsed: boolean }) {
+export function SidebarView({
+  name,
+  avatar,
+  collapsed,
+}: {
+  name: string;
+  avatar: string;
+  collapsed: boolean;
+}) {
   const path = usePathname();
   return (
     <aside
       className={`sticky top-0 flex h-screen shrink-0 flex-col justify-between bg-surface-container-low p-4 transition-[width] duration-200 ease-out motion-reduce:transition-none ${collapsed ? "w-20" : "w-64"}`}
     >
       <div className="flex flex-col gap-6">
-        <div className={`flex items-center gap-3 overflow-hidden whitespace-nowrap pt-2 ${collapsed ? "justify-center" : "px-2"}`}>
+        <div
+          className={`flex items-center gap-3 overflow-hidden whitespace-nowrap pt-2 ${collapsed ? "justify-center" : "px-2"}`}
+        >
           <Logo />
           {!collapsed && <span className="font-semibold text-headline-sm">Flipside</span>}
         </div>

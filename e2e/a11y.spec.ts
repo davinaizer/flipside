@@ -1,7 +1,13 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { expect, type Page } from "@playwright/test";
-import { expectNoSeriousA11y, expectTargetsAtLeast44, setTheme, signInContext, test } from "./helpers";
+import {
+  expectNoSeriousA11y,
+  expectTargetsAtLeast44,
+  setTheme,
+  signInContext,
+  test,
+} from "./helpers";
 
 // AC12 and AC13: one walk over every screen and state in PRD section 8 (picker, Library, Deck, Import, Practice
 // front/back/summary, Progress, Settings; empty, loading, error and success), axe plus 44 px in both themes, then the
@@ -19,7 +25,13 @@ async function check(page: Page) {
 
 const darkSwitch = (page: Page) => page.getByRole("switch", { name: /Dark theme/ });
 
-const todayZero = { dueCount: 0, startableCount: 0, decksWithDue: 0, sessionLength: 10, weakCount: 0 };
+const todayZero = {
+  dueCount: 0,
+  startableCount: 0,
+  decksWithDue: 0,
+  sessionLength: 10,
+  weakCount: 0,
+};
 
 /** Mocked Library and Progress states (loading, error, empty); the real success states are walked by the caller. */
 async function mockedStates(page: Page) {
@@ -38,7 +50,10 @@ async function mockedStates(page: Page) {
   await check(page);
   await page.unroute("**/api/v1/library");
 
-  for (const [path, url] of [["/library", "**/api/v1/library"], ["/progress", "**/api/v1/stats*"]] as const) {
+  for (const [path, url] of [
+    ["/library", "**/api/v1/library"],
+    ["/progress", "**/api/v1/stats*"],
+  ] as const) {
     await page.route(url, (r) => r.abort()); // error
     await page.goto(path);
     await expect(page.getByRole("heading", { name: /home server/ })).toBeVisible();
@@ -53,7 +68,10 @@ async function successScreens(page: Page) {
   await expect(page.getByRole("heading", { name: "Today" })).toBeVisible();
   await check(page);
 
-  await page.getByRole("link", { name: /Science/ }).first().click();
+  await page
+    .getByRole("link", { name: /Science/ })
+    .first()
+    .click();
   await page.waitForURL("**/decks/*");
   await expect(page.getByRole("heading", { name: /Science/ })).toBeVisible();
   await check(page);
@@ -62,7 +80,9 @@ async function successScreens(page: Page) {
   await check(page);
 
   await page.goto("/progress");
-  await expect(page.getByRole("listitem").filter({ hasText: "Cards reviewed" }).first()).toBeVisible();
+  await expect(
+    page.getByRole("listitem").filter({ hasText: "Cards reviewed" }).first(),
+  ).toBeVisible();
   await check(page);
   await page.goto("/settings");
   await expect(page.getByRole("heading", { name: "Settings" }).first()).toBeVisible();
@@ -90,7 +110,10 @@ async function practiceScreens(page: Page) {
   await check(page);
 }
 
-test("every screen and state passes axe and 44 px in both themes; toggle, reload, reduced motion; iPad portrait", async ({ page, browser }, info) => {
+test("every screen and state passes axe and 44 px in both themes; toggle, reload, reduced motion; iPad portrait", async ({
+  page,
+  browser,
+}, info) => {
   // One walk over every screen in two themes: about 25 s on a laptop, so the 30 s default is too tight for CI.
   test.setTimeout(120_000);
   // Picker: no cookie yet.
@@ -115,7 +138,9 @@ test("every screen and state passes axe and 44 px in both themes; toggle, reload
   await page.goto("/import");
   await page.waitForLoadState("networkidle"); // choosing before hydration would drop the change event
   await check(page);
-  await page.locator('input[type="file"]').setInputFiles({ name: "science-w2-deck.zip", mimeType: "application/zip", buffer: zip });
+  await page
+    .locator('input[type="file"]')
+    .setInputFiles({ name: "science-w2-deck.zip", mimeType: "application/zip", buffer: zip });
   await expect(page.getByRole("region", { name: "Preview" })).toContainText("16 cards ready");
   await check(page);
 
@@ -126,7 +151,9 @@ test("every screen and state passes axe and 44 px in both themes; toggle, reload
 
   await page.goto("/import");
   await page.waitForLoadState("networkidle");
-  await page.locator('input[type="file"]').setInputFiles({ name: "science-w2-deck.zip", mimeType: "application/zip", buffer: zip });
+  await page
+    .locator('input[type="file"]')
+    .setInputFiles({ name: "science-w2-deck.zip", mimeType: "application/zip", buffer: zip });
   await expect(page.getByRole("region", { name: "Preview" })).toContainText("16 cards ready");
   await page.getByLabel("Deck name").fill("A11y Science");
   await page.getByRole("button", { name: /^Add \d+ cards?$/ }).click();
@@ -143,7 +170,10 @@ test("every screen and state passes axe and 44 px in both themes; toggle, reload
     const html = page.locator("html");
     const toggle = page.getByRole("switch", { name: /Dark theme/ });
     await expect(html).toHaveAttribute("data-theme", "light");
-    const saved = () => page.waitForResponse((r) => r.url().endsWith("/api/v1/settings") && r.request().method() === "PUT");
+    const saved = () =>
+      page.waitForResponse(
+        (r) => r.url().endsWith("/api/v1/settings") && r.request().method() === "PUT",
+      );
     let put = saved();
     await toggle.click();
     await expect(html).toHaveAttribute("data-theme", "dark"); // at once, before the save returns

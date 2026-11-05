@@ -20,17 +20,27 @@ export function MasteryBar({ mastery }: { mastery: Mastery }) {
   const total = SEGMENTS.reduce((n, s) => n + mastery[s.key], 0);
   return (
     <div className="flex flex-col gap-2">
-      <div aria-hidden="true" className={`flex ${BAR_HEIGHT} w-full gap-0.5 overflow-hidden rounded-full outline outline-1 outline-outline-variant`}>
+      <div
+        aria-hidden="true"
+        className={`flex ${BAR_HEIGHT} w-full gap-0.5 overflow-hidden rounded-full outline outline-1 outline-outline-variant`}
+      >
         {SEGMENTS.map((s) =>
           mastery[s.key] > 0 ? (
-            <div key={s.key} className={s.bar} style={{ width: `${(mastery[s.key] / total) * 100}%` }} />
+            <div
+              key={s.key}
+              className={s.bar}
+              style={{ width: `${(mastery[s.key] / total) * 100}%` }}
+            />
           ) : null,
         )}
       </div>
       <ul className="flex flex-wrap gap-x-3 gap-y-1 text-sm text-on-surface-variant">
         {SEGMENTS.map((s) => (
           <li key={s.key} className="flex items-center gap-1.5">
-            <span aria-hidden="true" className={`h-3 w-3 rounded-full outline outline-1 outline-outline ${s.bar}`} />
+            <span
+              aria-hidden="true"
+              className={`h-3 w-3 rounded-full outline outline-1 outline-outline ${s.bar}`}
+            />
             {s.label} {mastery[s.key]}
           </li>
         ))}

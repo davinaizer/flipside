@@ -2,7 +2,13 @@ import { z } from "zod";
 import { librarySchema, type Library } from "@/shared/schemas/library";
 import { statsSchema, type Stats } from "@/shared/schemas/stats";
 import { importResultSchema, type ImportResult } from "@/shared/schemas/import";
-import { sessionEndResponseSchema, sessionResponseSchema, sessionSummarySchema, type SessionResponse, type SessionSummary } from "@/shared/schemas/session";
+import {
+  sessionEndResponseSchema,
+  sessionResponseSchema,
+  sessionSummarySchema,
+  type SessionResponse,
+  type SessionSummary,
+} from "@/shared/schemas/session";
 import {
   reviewResponseSchema,
   undoResponseSchema,
@@ -36,7 +42,10 @@ async function call<T>(path: string, schema: z.ZodType<T>, init?: RequestInit): 
   const res = await fetch(`${API}${path}`, {
     ...init,
     // A FormData body needs the browser to set its own multipart Content-Type.
-    headers: init?.body instanceof FormData ? init.headers : { "Content-Type": "application/json", ...init?.headers },
+    headers:
+      init?.body instanceof FormData
+        ? init.headers
+        : { "Content-Type": "application/json", ...init?.headers },
   });
   const json: unknown = await res.json().catch(() => null);
   if (!res.ok) {
@@ -77,10 +86,16 @@ export const api = {
   session: (id: string): Promise<SessionResponse> =>
     call(`/sessions/${id}`, sessionResponseSchema, { method: "PUT" }),
   grade: (reviewId: string, body: ReviewRequest) =>
-    call(`/reviews/${reviewId}`, reviewResponseSchema, { method: "PUT", body: JSON.stringify(body) }),
-  undoGrade: (reviewId: string) => call(`/reviews/${reviewId}`, undoResponseSchema, { method: "DELETE" }),
-  endSession: (id: string) => call(`/sessions/${id}/end`, sessionEndResponseSchema, { method: "POST" }),
-  summary: (id: string): Promise<SessionSummary> => call(`/sessions/${id}/summary`, sessionSummarySchema),
+    call(`/reviews/${reviewId}`, reviewResponseSchema, {
+      method: "PUT",
+      body: JSON.stringify(body),
+    }),
+  undoGrade: (reviewId: string) =>
+    call(`/reviews/${reviewId}`, undoResponseSchema, { method: "DELETE" }),
+  endSession: (id: string) =>
+    call(`/sessions/${id}/end`, sessionEndResponseSchema, { method: "POST" }),
+  summary: (id: string): Promise<SessionSummary> =>
+    call(`/sessions/${id}/summary`, sessionSummarySchema),
   me: (): Promise<Me> => call("/me", meSchema),
   updateProfile: (body: UpdateProfileRequest): Promise<Me> =>
     call("/me", meSchema, { method: "PATCH", body: JSON.stringify(body) }),

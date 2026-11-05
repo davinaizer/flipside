@@ -6,7 +6,13 @@ import { ErrorState } from "@/ui/states/ErrorState";
 import { PageSkeleton } from "@/ui/states/Skeleton";
 import { ProgressView, type Range } from "./ProgressView";
 
-const metrics = { cardsReviewed: 120, gotItRate: 0.64, medianSeconds: 12.4, daysPractised: 5, daysInWindow: 7 };
+const metrics = {
+  cardsReviewed: 120,
+  gotItRate: 0.64,
+  medianSeconds: 12.4,
+  daysPractised: 5,
+  daysInWindow: 7,
+};
 const stats = (range: Range, over: Partial<Stats> = {}) =>
   ({
     range,
@@ -40,7 +46,9 @@ test("four tiles show values and plain-word changes", () => {
 });
 
 test("the range switch marks the chosen range and the figures follow the data", () => {
-  const month = stats("month", { current: { ...metrics, cardsReviewed: 410, daysPractised: 19, daysInWindow: 28 } });
+  const month = stats("month", {
+    current: { ...metrics, cardsReviewed: 410, daysPractised: 19, daysInWindow: 28 },
+  });
   const html = render(month);
   expect(html).toMatch(/aria-pressed="true"[^>]*>This month/);
   expect(html).toMatch(/aria-pressed="false"[^>]*>This week/);
@@ -61,13 +69,25 @@ test("loading and error states render", () => {
 });
 
 const deckRow = (name: string, over = {}) => ({
-  deckId: name, name, color: null, cards: 40, mastered: 9, mastery: 0.2, medianSeconds: 14.2,
-  lastPractisedAt: "2026-10-30T10:00:00Z", ...over,
+  deckId: name,
+  name,
+  color: null,
+  cards: 40,
+  mastered: 9,
+  mastery: 0.2,
+  medianSeconds: 14.2,
+  lastPractisedAt: "2026-10-30T10:00:00Z",
+  ...over,
 });
 
 test("Focus next says mastery and each topic has a Practise button", () => {
   const topics = ["A", "B", "C"].map((t, i) => ({
-    deckId: "d1", deckName: "Química", topic: t, cards: 5, mastery: 0.1 * (i + 1), lapses: 0,
+    deckId: "d1",
+    deckName: "Química",
+    topic: t,
+    cards: 5,
+    mastery: 0.1 * (i + 1),
+    lapses: 0,
   }));
   const html = render(stats("week", { focusNext: topics }));
   expect(html).toContain("Focus next");
@@ -76,7 +96,9 @@ test("Focus next says mastery and each topic has a Practise button", () => {
 });
 
 test("By deck keeps the order given, shows the Mastered share with count and a sort subtitle", () => {
-  const html = render(stats("week", { byDeck: [deckRow("Low"), deckRow("High", { mastered: 30 })] }));
+  const html = render(
+    stats("week", { byDeck: [deckRow("Low"), deckRow("High", { mastered: 30 })] }),
+  );
   for (const h of ["Cards", "Mastered", "Median time", "Last practised"]) expect(html).toContain(h);
   expect(html.indexOf("Low")).toBeLessThan(html.indexOf("High"));
   expect(html).toContain("20%");

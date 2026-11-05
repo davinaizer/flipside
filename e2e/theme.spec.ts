@@ -12,7 +12,9 @@ async function signIn(browser: Browser, name: string) {
 }
 
 // One test: it changes a shared seeded profile's theme and restores it at the end.
-test("theme toggle switches at once, saves to the profile, follows the profile", async ({ browser }, info) => {
+test("theme toggle switches at once, saves to the profile, follows the profile", async ({
+  browser,
+}, info) => {
   // The seeded profiles are shared, so only one project may change a theme at a time.
   test.skip(info.project.name !== "desktop", "runs once, on desktop");
   const a = await signIn(browser, "Nicole");
@@ -20,7 +22,9 @@ test("theme toggle switches at once, saves to the profile, follows the profile",
   const toggle = a.page.getByRole("switch", { name: /Dark theme/ });
   try {
     await expect(html).toHaveAttribute("data-theme", "light");
-    const saved = a.page.waitForResponse((r) => r.url().endsWith("/api/v1/settings") && r.request().method() === "PUT");
+    const saved = a.page.waitForResponse(
+      (r) => r.url().endsWith("/api/v1/settings") && r.request().method() === "PUT",
+    );
     await toggle.click();
     await expect(html).toHaveAttribute("data-theme", "dark"); // no reload
     expect((await saved).status()).toBe(200);

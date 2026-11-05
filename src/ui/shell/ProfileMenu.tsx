@@ -8,7 +8,8 @@ import { FOCUS_RING, PRESSED } from "@/ui/button/button-class";
 import { Icon, type IconName } from "@/ui/icons/Icon";
 import { logOut } from "@/ui/profile/sign-out";
 
-const ITEM = "flex min-h-11 w-full items-center gap-3 rounded-full px-4 text-left font-semibold text-on-surface hover:bg-surface-container-high active:bg-surface-container-highest";
+const ITEM =
+  "flex min-h-11 w-full items-center gap-3 rounded-full px-4 text-left font-semibold text-on-surface hover:bg-surface-container-high active:bg-surface-container-highest";
 
 const LINKS: { href: string; label: string; icon: IconName }[] = [
   { href: "/profile", label: "Profile", icon: "user" },
@@ -26,7 +27,15 @@ export function nextItemIndex(key: string, current: number, count: number): numb
 }
 
 /** The menu list, kept apart from the open/close state so it can be rendered open in a test. */
-export function ProfileMenuItems({ path, onLogOut, collapsed = false }: { path: string; onLogOut: () => void; collapsed?: boolean }) {
+export function ProfileMenuItems({
+  path,
+  onLogOut,
+  collapsed = false,
+}: {
+  path: string;
+  onLogOut: () => void;
+  collapsed?: boolean;
+}) {
   return (
     <div
       role="menu"
@@ -46,7 +55,13 @@ export function ProfileMenuItems({ path, onLogOut, collapsed = false }: { path: 
           {l.label}
         </Link>
       ))}
-      <button type="button" role="menuitem" tabIndex={-1} onClick={onLogOut} className={`${ITEM} ${PRESSED} ${FOCUS_RING}`}>
+      <button
+        type="button"
+        role="menuitem"
+        tabIndex={-1}
+        onClick={onLogOut}
+        className={`${ITEM} ${PRESSED} ${FOCUS_RING}`}
+      >
         <Icon name="logOut" />
         Log out
       </button>
@@ -55,14 +70,23 @@ export function ProfileMenuItems({ path, onLogOut, collapsed = false }: { path: 
 }
 
 /** Sidebar footer: avatar and name as one button that opens the profile menu (P3, P6, AG3). */
-export function ProfileMenu({ name, avatar, collapsed = false }: { name: string; avatar: string; collapsed?: boolean }) {
+export function ProfileMenu({
+  name,
+  avatar,
+  collapsed = false,
+}: {
+  name: string;
+  avatar: string;
+  collapsed?: boolean;
+}) {
   const router = useRouter();
   const path = usePathname();
   const [open, setOpen] = useState(false);
   const root = useRef<HTMLDivElement>(null);
   const trigger = useRef<HTMLButtonElement>(null);
 
-  const items = () => Array.from(root.current?.querySelectorAll<HTMLElement>('[role="menuitem"]') ?? []);
+  const items = () =>
+    Array.from(root.current?.querySelectorAll<HTMLElement>('[role="menuitem"]') ?? []);
   const close = (returnFocus: boolean) => {
     setOpen(false);
     if (returnFocus) trigger.current?.focus();
@@ -86,7 +110,11 @@ export function ProfileMenu({ name, avatar, collapsed = false }: { name: string;
       return;
     }
     const list = items();
-    const i = nextItemIndex(e.key, list.indexOf(document.activeElement as HTMLElement), list.length);
+    const i = nextItemIndex(
+      e.key,
+      list.indexOf(document.activeElement as HTMLElement),
+      list.length,
+    );
     if (i !== null) {
       e.preventDefault();
       list[i]?.focus();
@@ -115,7 +143,9 @@ export function ProfileMenu({ name, avatar, collapsed = false }: { name: string;
         <Avatar id={avatar} size={44} />
         {!collapsed && <span className="font-semibold">{name}</span>}
       </button>
-      {open && <ProfileMenuItems path={path} onLogOut={() => logOut(router.push)} collapsed={collapsed} />}
+      {open && (
+        <ProfileMenuItems path={path} onLogOut={() => logOut(router.push)} collapsed={collapsed} />
+      )}
     </div>
   );
 }

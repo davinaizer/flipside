@@ -1,11 +1,7 @@
 "use client";
 
 import { CARD_COLORS, FONT_IDS, type FontId } from "@/shared/enums";
-import {
-  LETTER_SPACING_STEPS,
-  LINE_SPACING_STEPS,
-  TEXT_SIZE_STEPS,
-} from "@/shared/constants";
+import { LETTER_SPACING_STEPS, LINE_SPACING_STEPS, TEXT_SIZE_STEPS } from "@/shared/constants";
 import { DEFAULT_SETTINGS, type Settings } from "@/shared/settings";
 import { FrontHint, PracticeFront } from "@/ui/reading-card/ReadingCard";
 import { Icon } from "@/ui/icons/Icon";
@@ -47,7 +43,10 @@ export function ReadingSettings() {
   const reset = () => set(Object.fromEntries(READING_KEYS.map((k) => [k, DEFAULT_SETTINGS[k]])));
 
   return (
-    <section aria-labelledby="reading-h" className="grid gap-8 rounded-card border border-card-edge bg-surface-card p-6 shadow-card md:p-8 lg:grid-cols-2">
+    <section
+      aria-labelledby="reading-h"
+      className="grid gap-8 rounded-card border border-card-edge bg-surface-card p-6 shadow-card md:p-8 lg:grid-cols-2"
+    >
       <div>
         <h2 id="reading-h" className="text-headline-md font-semibold">
           Reading
@@ -61,21 +60,33 @@ export function ReadingSettings() {
         </Group>
         <Group label="Text size">
           {TEXT_SIZE_STEPS.map((s, i) => (
-            <Choice key={s.label} on={settings.textSize === i + 1} onClick={() => set({ textSize: i + 1 })}>
+            <Choice
+              key={s.label}
+              on={settings.textSize === i + 1}
+              onClick={() => set({ textSize: i + 1 })}
+            >
               {s.label}
             </Choice>
           ))}
         </Group>
         <Group label="Letter spacing">
           {LETTER_SPACING_STEPS.map((s, i) => (
-            <Choice key={s.label} on={settings.letterSpacing === i + 1} onClick={() => set({ letterSpacing: i + 1 })}>
+            <Choice
+              key={s.label}
+              on={settings.letterSpacing === i + 1}
+              onClick={() => set({ letterSpacing: i + 1 })}
+            >
               {s.label}
             </Choice>
           ))}
         </Group>
         <Group label="Line spacing">
           {LINE_SPACING_STEPS.map((s, i) => (
-            <Choice key={s.label} on={settings.lineSpacing === i + 1} onClick={() => set({ lineSpacing: i + 1 })}>
+            <Choice
+              key={s.label}
+              on={settings.lineSpacing === i + 1}
+              onClick={() => set({ lineSpacing: i + 1 })}
+            >
               {s.label}
             </Choice>
           ))}
@@ -95,7 +106,9 @@ export function ReadingSettings() {
                   settings.cardColor === c ? "outline-4 outline-primary" : ""
                 }`}
               />
-              <span className={`text-label-md ${settings.cardColor === c ? "font-semibold text-primary" : "text-on-surface-variant"}`}>
+              <span
+                className={`text-label-md ${settings.cardColor === c ? "font-semibold text-primary" : "text-on-surface-variant"}`}
+              >
                 {COLOR_LABEL(c)}
               </span>
             </button>

@@ -12,9 +12,13 @@ afterEach(() => vi.unstubAllGlobals());
 const second = AVATAR_IDS[1];
 
 test("shows every avatar, the selected one with a tick icon, and the name field", () => {
-  const html = renderToStaticMarkup(<ProfileForm name="Nicole" avatar={second} onSave={async () => {}} />);
+  const html = renderToStaticMarkup(
+    <ProfileForm name="Nicole" avatar={second} onSave={async () => {}} />,
+  );
   for (const id of AVATAR_IDS) expect(html).toContain(`value="${id}"`);
-  expect(html).toMatch(new RegExp(`<input[^>]*checked[^>]*value="${second}"|<input[^>]*value="${second}"[^>]*checked`));
+  expect(html).toMatch(
+    new RegExp(`<input[^>]*checked[^>]*value="${second}"|<input[^>]*value="${second}"[^>]*checked`),
+  );
   expect(html).toContain('aria-label="Avatar 2"');
   expect(html).toContain(`/avatars/${second}.webp`);
   expect(html.match(/data-selected/g)).toHaveLength(1);
@@ -32,7 +36,14 @@ test("name must be 1 to 24 characters after trimming", () => {
 
 test("Save calls PATCH /me with the avatar and name", async () => {
   const me = {
-    profile: { id: "3f0c1b7e-0000-4000-8000-000000000001", name: "Nic", avatar: AVATAR_IDS[0], accent: "x", timezone: "UTC", dayStartHour: 4 },
+    profile: {
+      id: "3f0c1b7e-0000-4000-8000-000000000001",
+      name: "Nic",
+      avatar: AVATAR_IDS[0],
+      accent: "x",
+      timezone: "UTC",
+      dayStartHour: 4,
+    },
     settings: (await import("@/shared/settings")).DEFAULT_SETTINGS,
   };
   const fetchMock = vi.fn(async () => new Response(JSON.stringify(me), { status: 200 }));
@@ -45,5 +56,7 @@ test("Save calls PATCH /me with the avatar and name", async () => {
 });
 
 test("the screen has no Sign out button (it lives in the sidebar menu)", () => {
-  expect(renderToStaticMarkup(<ProfileScreen name="Nicole" avatar={second} />)).not.toContain("Sign out");
+  expect(renderToStaticMarkup(<ProfileScreen name="Nicole" avatar={second} />)).not.toContain(
+    "Sign out",
+  );
 });

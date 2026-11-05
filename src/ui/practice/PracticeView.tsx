@@ -3,7 +3,14 @@ import { bulletLines } from "@/domain/csv-import";
 import { Icon } from "@/ui/icons/Icon";
 import type { SessionCardPayload } from "@/shared/schemas/session";
 import { textToRead, type Reader } from "./speech";
-import { Chip, FRONT_HINT, FrontHint, PracticeFront, readingStyle, type ReadingSettings } from "@/ui/reading-card/ReadingCard";
+import {
+  Chip,
+  FRONT_HINT,
+  FrontHint,
+  PracticeFront,
+  readingStyle,
+  type ReadingSettings,
+} from "@/ui/reading-card/ReadingCard";
 import { buttonClass, FOCUS_RING, PRESSED } from "@/ui/button/button-class";
 
 export { FRONT_HINT };
@@ -23,7 +30,15 @@ function CardImage({ image }: { image: NonNullable<SessionCardPayload["frontImag
 }
 
 /** Deck name and "Card N of M": the text count that backs up the bar, so colour is never the only signal. */
-export function SessionCount({ deckName, done, total }: { deckName?: string; done: number; total: number }) {
+export function SessionCount({
+  deckName,
+  done,
+  total,
+}: {
+  deckName?: string;
+  done: number;
+  total: number;
+}) {
   const current = Math.min(done + 1, total);
   return (
     <p className="flex min-h-11 items-center gap-2 rounded-full border border-card-edge bg-surface-card px-5 shadow-card">
@@ -50,15 +65,18 @@ export function SessionProgress({ done, total }: { done: number; total: number }
       {Array.from({ length: total }, (_, i) => {
         const state = i < done ? "done" : i === done ? "current" : "remaining";
         const colour =
-          state === "done" ? "bg-primary-container" : state === "current" ? "bg-primary" : "bg-surface-container-high";
+          state === "done"
+            ? "bg-primary-container"
+            : state === "current"
+              ? "bg-primary"
+              : "bg-surface-container-high";
         return <div key={i} data-segment={state} className={`h-2 flex-1 rounded-full ${colour}`} />;
       })}
     </div>
   );
 }
 
-export const iconButton =
-  `flex size-11 items-center justify-center rounded-full border border-card-edge bg-surface-card text-on-surface-variant shadow-card hover:text-primary active:bg-surface-container-high ${PRESSED} ${FOCUS_RING}`;
+export const iconButton = `flex size-11 items-center justify-center rounded-full border border-card-edge bg-surface-card text-on-surface-variant shadow-card hover:text-primary active:bg-surface-container-high ${PRESSED} ${FOCUS_RING}`;
 
 function Answer({ card }: { card: SessionCardPayload }) {
   const lines = bulletLines(card.back, card.answerStyle);
@@ -127,7 +145,11 @@ export function PracticeView({
       <header className="grid grid-cols-[1fr_auto_1fr] items-center gap-3">
         <div>
           {onEnd && (
-            <button type="button" onClick={onEnd} className={buttonClass("secondary", { size: "compact" })}>
+            <button
+              type="button"
+              onClick={onEnd}
+              className={buttonClass("secondary", { size: "compact" })}
+            >
               <Icon name="x" />
               End session
             </button>
@@ -142,7 +164,11 @@ export function PracticeView({
       <SessionProgress done={done} total={total} />
       {/* Both faces always render and the wrapper rotates, so the flip is a CSS transition on reveal only.
           The key remounts per card and per position (done), so a new card or Undo last starts unrotated and never animates, even back onto the same card. Tapping the front reveals. */}
-      <div key={`${card.cardId}-${done}`} className="flip-scene" onClick={revealed ? undefined : onReveal}>
+      <div
+        key={`${card.cardId}-${done}`}
+        className="flip-scene"
+        onClick={revealed ? undefined : onReveal}
+      >
         <article data-testid="practice-card" data-revealed={revealed} className="flip-card">
           <PracticeFront
             data-face="front"
@@ -174,7 +200,11 @@ export function PracticeView({
       </div>
       {!revealed && (
         <div className="flex flex-col items-center gap-3">
-          <button type="button" onClick={onReveal} className={buttonClass("primary", { size: "large" })}>
+          <button
+            type="button"
+            onClick={onReveal}
+            className={buttonClass("primary", { size: "large" })}
+          >
             <Icon name="eye" />
             Show answer
           </button>

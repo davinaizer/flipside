@@ -33,9 +33,13 @@ test("PATCH /me updates the current profile only, 422 on bad input, duplicate av
   const got = await ok.json();
   expect(got.profile).toMatchObject({ name: "Ada L", avatar: AVATAR_IDS[2] });
 
-  const again = await me.GET(new Request("http://x/", { headers: { cookie: `flipside_profile=${a.id}` } }));
+  const again = await me.GET(
+    new Request("http://x/", { headers: { cookie: `flipside_profile=${a.id}` } }),
+  );
   expect((await again.json()).profile).toMatchObject({ name: "Ada L", avatar: AVATAR_IDS[2] });
-  const other = await me.GET(new Request("http://x/", { headers: { cookie: `flipside_profile=${b.id}` } }));
+  const other = await me.GET(
+    new Request("http://x/", { headers: { cookie: `flipside_profile=${b.id}` } }),
+  );
   expect((await other.json()).profile).toMatchObject({ name: "Bo", avatar: AVATAR_IDS[1] });
 
   const dup = await patchA({ avatar: AVATAR_IDS[1] });
@@ -48,7 +52,11 @@ test("PATCH /me updates the current profile only, 422 on bad input, duplicate av
     expect((await res.json()).error.message.length).toBeGreaterThan(0);
   }
   const nonJson = await me.PATCH(
-    new Request("http://x/", { method: "PATCH", headers: { cookie: `flipside_profile=${a.id}` }, body: "no" }),
+    new Request("http://x/", {
+      method: "PATCH",
+      headers: { cookie: `flipside_profile=${a.id}` },
+      body: "no",
+    }),
   );
   expect(nonJson.status).toBe(400);
   const noAuth = await me.PATCH(new Request("http://x/", { method: "PATCH", body: "{}" }));

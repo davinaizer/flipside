@@ -2,10 +2,14 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { expect, test } from "vitest";
 import { SidebarToggleView } from "./SidebarToggle";
 
-const render = (collapsed: boolean) => renderToStaticMarkup(<SidebarToggleView collapsed={collapsed} onToggle={() => {}} />);
+const render = (collapsed: boolean) =>
+  renderToStaticMarkup(<SidebarToggleView collapsed={collapsed} onToggle={() => {}} />);
 
 test("toggle has an accessible name, aria-expanded and a 44 px target in both states", () => {
-  for (const [collapsed, expanded, title] of [[true, "false", "Expand sidebar"], [false, "true", "Collapse sidebar"]] as const) {
+  for (const [collapsed, expanded, title] of [
+    [true, "false", "Expand sidebar"],
+    [false, "true", "Collapse sidebar"],
+  ] as const) {
     const btn = render(collapsed).match(/<button[^>]*>/)?.[0] ?? "";
     expect(btn).toContain('aria-label="Sidebar"');
     expect(btn).toContain(`aria-expanded="${expanded}"`);

@@ -20,7 +20,10 @@ type Labels = Record<Grade, string>;
 
 /** The slice of the API the controller needs, so tests can fake it. */
 export interface SessionApi {
-  grade(reviewId: string, body: { sessionId: string; cardId: string; grade: Grade; durationMs: number }): Promise<{ requeue: boolean; labels: Labels | null }>;
+  grade(
+    reviewId: string,
+    body: { sessionId: string; cardId: string; grade: Grade; durationMs: number },
+  ): Promise<{ requeue: boolean; labels: Labels | null }>;
   undo(reviewId: string): Promise<{ labels: Labels }>;
   end(sessionId: string): Promise<unknown>;
   /** Loads the session again (an empty PUT resumes it), for when this tab's queue is out of date. */
@@ -54,7 +57,10 @@ interface Pending {
  */
 function isStaleQueue(e: unknown): boolean {
   if (!(e instanceof ApiClientError)) return false;
-  return (e.status === 409 && (e.code === "not_current_card" || e.code === "no_attempt_left")) || (e.status === 404 && e.code === "card_not_found");
+  return (
+    (e.status === 409 && (e.code === "not_current_card" || e.code === "no_attempt_left")) ||
+    (e.status === 404 && e.code === "card_not_found")
+  );
 }
 
 /**
@@ -75,7 +81,10 @@ export function createSessionController(
   function adopt(d: SessionResponse) {
     cards = new Map(d.queue.map((c) => [c.cardId, c]));
     labelOverrides = new Map();
-    const replay = replayQueue(d.queue.map((c) => c.cardId), d.grades);
+    const replay = replayQueue(
+      d.queue.map((c) => c.cardId),
+      d.grades,
+    );
     queue = replay.queue;
     reviewIds = replay.applied.map((g) => g.reviewId);
   }
@@ -116,7 +125,12 @@ export function createSessionController(
     busy = true;
     emit();
     try {
-      const res = await deps.api.grade(p.reviewId, { sessionId: data.session.id, cardId: p.cardId, grade: p.grade, durationMs: p.durationMs });
+      const res = await deps.api.grade(p.reviewId, {
+        sessionId: data.session.id,
+        cardId: p.cardId,
+        grade: p.grade,
+        durationMs: p.durationMs,
+      });
       queue = gradeCurrent(queue, p.grade);
       reviewIds.push(p.reviewId);
       if (res.requeue && res.labels) labelOverrides.set(p.cardId, res.labels);
@@ -152,7 +166,12 @@ export function createSessionController(
     grade(grade: Grade) {
       const entry = currentEntry(queue);
       if (busy || pending || !entry || !revealed) return Promise.resolve();
-      pending = { reviewId: uuidv7(), cardId: entry.cardId, grade, durationMs: Math.max(0, Math.round(deps.now() - shownAt)) };
+      pending = {
+        reviewId: uuidv7(),
+        cardId: entry.cardId,
+        grade,
+        durationMs: Math.max(0, Math.round(deps.now() - shownAt)),
+      };
       return send(pending);
     },
     retry() {
@@ -195,7 +214,9 @@ const clock = () => performance.now();
 
 export function useSession(data: SessionResponse, onLeave: () => void) {
   // The controller owns the session from first load; a new load of the same session is a new mount.
-  const [controller] = useState(() => createSessionController(data, { api: sessionApi, now: clock, onLeave }));
+  const [controller] = useState(() =>
+    createSessionController(data, { api: sessionApi, now: clock, onLeave }),
+  );
   const view = useSyncExternalStore(controller.subscribe, controller.getView, controller.getView);
   return { view, controller };
 }

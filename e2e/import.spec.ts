@@ -37,7 +37,9 @@ async function pick(page: Page, name: string, buffer: Buffer, mimeType: string) 
   await page.locator('input[type="file"]').setInputFiles({ name, mimeType, buffer });
 }
 
-test("import the school zip, re-import it unchanged, then an edited back", async ({ page }, info) => {
+test("import the school zip, re-import it unchanged, then an edited back", async ({
+  page,
+}, info) => {
   const deck = `Science week 2 ${info.project.name}`;
   await openImport(page, info.project.name === "desktop" ? "Davi" : "Nicole");
   await checkBothThemes(page); // choose step
@@ -70,7 +72,9 @@ test("import the school zip, re-import it unchanged, then an edited back", async
   await expect(page.getByRole("status")).toContainText("0 cards added, 1 updated");
 });
 
-test("a broken CSV shows its row errors and a blocked file explains itself", async ({ page }, info) => {
+test("a broken CSV shows its row errors and a blocked file explains itself", async ({
+  page,
+}, info) => {
   await openImport(page, info.project.name === "desktop" ? "Davi" : "Nicole");
   const csv = Buffer.from("id,topic,front,back\na,T,Q,A\nb,T,   ,A2\n");
   await pick(page, "broken.csv", csv, "text/csv");
@@ -84,7 +88,9 @@ test("a broken CSV shows its row errors and a blocked file explains itself", asy
   await checkBothThemes(page);
 });
 
-test("import is one column, sections 1 Choose file, 2 Preview, 3 Deck details, at every width (I7)", async ({ page }, info) => {
+test("import is one column, sections 1 Choose file, 2 Preview, 3 Deck details, at every width (I7)", async ({
+  page,
+}, info) => {
   await openImport(page, info.project.name === "desktop" ? "Davi" : "Nicole");
   await pick(page, "science-w2-deck.zip", zipBytes, "application/zip");
   await expect(page.getByRole("region", { name: "Deck details" })).toBeVisible();

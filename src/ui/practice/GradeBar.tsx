@@ -36,7 +36,11 @@ export function GradeBar({
       {failed && (
         <p role="alert" className="text-center text-error">
           Your answer was not saved.{" "}
-          <button type="button" onClick={onRetry} className={`min-h-11 rounded-full px-2 font-semibold underline hover:bg-surface-container-high active:bg-surface-container-highest ${PRESSED} ${FOCUS_RING}`}>
+          <button
+            type="button"
+            onClick={onRetry}
+            className={`min-h-11 rounded-full px-2 font-semibold underline hover:bg-surface-container-high active:bg-surface-container-highest ${PRESSED} ${FOCUS_RING}`}
+          >
             Try again
           </button>
         </p>

@@ -58,7 +58,12 @@ export async function getStats(
       .where(and(eq(decks.ownerProfileId, profile.id), isNull(decks.deletedAt)))
       .orderBy(asc(decks.name)),
     db
-      .select({ deckId: cards.deckId, topic: cards.topic, box: cardState.box, lapses: cardState.lapses })
+      .select({
+        deckId: cards.deckId,
+        topic: cards.topic,
+        box: cardState.box,
+        lapses: cardState.lapses,
+      })
       .from(cards)
       .innerJoin(decks, eq(decks.id, cards.deckId))
       .leftJoin(cardState, and(eq(cardState.cardId, cards.id), eq(cardState.profileId, profile.id)))
@@ -79,8 +84,17 @@ export async function getStats(
       durationMs: r.durationMs,
       isFirstAttemptToday: r.isFirstAttemptToday,
     })),
-    lastReviewByDeck: new Map(lastRows.flatMap((r) => (r.last ? [[r.deckId, new Date(r.last).toISOString()] as const] : []))),
+    lastReviewByDeck: new Map(
+      lastRows.flatMap((r) =>
+        r.last ? [[r.deckId, new Date(r.last).toISOString()] as const] : [],
+      ),
+    ),
     decks: deckRows,
-    cards: cardRows.map((c) => ({ deckId: c.deckId, topic: c.topic, box: c.box, lapses: c.lapses ?? 0 })),
+    cards: cardRows.map((c) => ({
+      deckId: c.deckId,
+      topic: c.topic,
+      box: c.box,
+      lapses: c.lapses ?? 0,
+    })),
   });
 }

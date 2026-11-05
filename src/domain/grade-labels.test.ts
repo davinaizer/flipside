@@ -29,8 +29,7 @@ describe("label agrees with applyGrade", () => {
           const { dueDate } = applyGrade(prev, grade, fixtures.today, { lapseRule }).state;
           expect(labels[grade]).toBe(labelForDueDate(fixtures.today, dueDate));
           const days = daysBetween(fixtures.today, dueDate);
-          const expected =
-            days === 0 ? "Again today" : days === 1 ? "Tomorrow" : `In ${days} days`;
+          const expected = days === 0 ? "Again today" : days === 1 ? "Tomorrow" : `In ${days} days`;
           expect(labels[grade]).toBe(expected);
         }
       }

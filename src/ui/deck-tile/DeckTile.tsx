@@ -14,7 +14,15 @@ export function deckInitials(name: string): string {
 }
 
 /** The deck's colour with its initials. Decorative: the deck name always sits next to it. */
-export function DeckTile({ name, color, size = 44 }: { name: string; color: string | null; size?: number }) {
+export function DeckTile({
+  name,
+  color,
+  size = 44,
+}: {
+  name: string;
+  color: string | null;
+  size?: number;
+}) {
   return (
     <span
       aria-hidden="true"

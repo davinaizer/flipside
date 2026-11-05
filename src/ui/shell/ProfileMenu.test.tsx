@@ -1,7 +1,10 @@
 import { renderToStaticMarkup } from "react-dom/server";
 import { expect, test, vi } from "vitest";
 
-vi.mock("next/navigation", () => ({ usePathname: () => "/settings", useRouter: () => ({ push: () => {} }) }));
+vi.mock("next/navigation", () => ({
+  usePathname: () => "/settings",
+  useRouter: () => ({ push: () => {} }),
+}));
 
 import { AVATAR_IDS } from "@/shared/avatars";
 import { nextItemIndex, ProfileMenu, ProfileMenuItems } from "./ProfileMenu";
@@ -18,11 +21,19 @@ test("closed by default: one button with avatar and name, popup and expanded set
 
 test("items in order with their targets, Settings current on /settings", () => {
   const html = renderToStaticMarkup(<ProfileMenuItems path="/settings" onLogOut={() => {}} />);
-  const labels = [...html.matchAll(/<(a|button)\b[^>]*role="menuitem"[\s\S]*?<\/\1>/g)].map((m) => m[0].replace(/<[^>]+>/g, ""));
+  const labels = [...html.matchAll(/<(a|button)\b[^>]*role="menuitem"[\s\S]*?<\/\1>/g)].map((m) =>
+    m[0].replace(/<[^>]+>/g, ""),
+  );
   expect(labels).toEqual(["Profile", "Settings", "Switch profile", "Log out"]);
-  expect([...html.matchAll(/href="([^"]+)"/g)].map((m) => m[1])).toEqual(["/profile", "/settings", "/?switch=1"]);
+  expect([...html.matchAll(/href="([^"]+)"/g)].map((m) => m[1])).toEqual([
+    "/profile",
+    "/settings",
+    "/?switch=1",
+  ]);
   expect(html.match(/aria-current="page"/g)).toHaveLength(1);
-  expect(html).toMatch(/href="\/settings"[^>]*aria-current="page"|aria-current="page"[^>]*href="\/settings"/);
+  expect(html).toMatch(
+    /href="\/settings"[^>]*aria-current="page"|aria-current="page"[^>]*href="\/settings"/,
+  );
   expect(html.match(/min-h-11/g)).toHaveLength(4);
   expect(html).not.toMatch(/#[0-9a-f]{3,6}\b/i);
 });

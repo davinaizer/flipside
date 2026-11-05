@@ -37,10 +37,17 @@ export function ProgressScreen() {
     setPractising(true);
     setPractiseError(null);
     try {
-      const scope = { kind: "topics" as const, deckId: t.deckId, topics: [t.topic], ignoreDue: true };
+      const scope = {
+        kind: "topics" as const,
+        deckId: t.deckId,
+        topics: [t.topic],
+        ignoreDue: true,
+      };
       router.push(`/practice/${await startSession({ scope, length: settings.cardsPerSession })}`);
     } catch {
-      setPractiseError("We could not start practice just now. Your cards are safe, so please try again.");
+      setPractiseError(
+        "We could not start practice just now. Your cards are safe, so please try again.",
+      );
       setPractising(false);
     }
   }
@@ -55,5 +62,14 @@ export function ProgressScreen() {
       />
     );
   }
-  return <ProgressView stats={state.stats} range={range} onRangeChange={change} practising={practising} practiseError={practiseError} onPractise={practise} />;
+  return (
+    <ProgressView
+      stats={state.stats}
+      range={range}
+      onRangeChange={change}
+      practising={practising}
+      practiseError={practiseError}
+      onPractise={practise}
+    />
+  );
 }

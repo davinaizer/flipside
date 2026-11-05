@@ -21,14 +21,20 @@ test("importing the school zip creates 16 cards, 4 topics and 7 correct images",
   const imageRoute = await import("@/app/api/v1/images/[id]/route");
   const { parseCsv } = await import("@/domain/csv-import");
 
-  const zipBytes = new Uint8Array(await readFile(join(process.cwd(), "fixtures/science-w2-deck.zip")));
+  const zipBytes = new Uint8Array(
+    await readFile(join(process.cwd(), "fixtures/science-w2-deck.zip")),
+  );
   const form = new FormData();
   form.set("file", new File([zipBytes as BlobPart], "science-w2-deck.zip"));
   form.set("name", "Science week 2");
   form.set("color", "sage");
   form.set("answerStyle", "bullets");
   const res = await imports.POST(
-    new Request("http://x/api/v1/imports", { method: "POST", body: form, headers: { "x-profile-id": owner.id } }),
+    new Request("http://x/api/v1/imports", {
+      method: "POST",
+      body: form,
+      headers: { "x-profile-id": owner.id },
+    }),
   );
   expect(res.status).toBe(201);
   const out = await res.json();
@@ -43,7 +49,9 @@ test("importing the school zip creates 16 cards, 4 topics and 7 correct images",
 
   const files = unzipSync(zipBytes);
   const byBase = (name: string) => {
-    const key = Object.keys(files).find((k) => k.split("/").pop()!.toLowerCase() === name.toLowerCase());
+    const key = Object.keys(files).find(
+      (k) => k.split("/").pop()!.toLowerCase() === name.toLowerCase(),
+    );
     if (!key) throw new Error(`zip has no ${name}`);
     return files[key];
   };
@@ -53,16 +61,22 @@ test("importing the school zip creates 16 cards, 4 topics and 7 correct images",
 
   const serve = async (imageId: string | null, expected: Uint8Array) => {
     expect(imageId).not.toBeNull();
-    const r = await imageRoute.GET(new Request("http://x/", { headers: { "x-profile-id": owner.id } }), {
-      params: Promise.resolve({ id: imageId! }),
-    });
+    const r = await imageRoute.GET(
+      new Request("http://x/", { headers: { "x-profile-id": owner.id } }),
+      {
+        params: Promise.resolve({ id: imageId! }),
+      },
+    );
     expect(r.status).toBe(200);
     expect(Buffer.from(await r.arrayBuffer()).equals(Buffer.from(expected))).toBe(true);
   };
   let checked = 0;
   for (const row of rows) {
     const card = cards.find((c) => c.externalId === row.id)!;
-    for (const [name, imageId] of [[row.frontImage, card.frontImageId], [row.backImage, card.backImageId]] as const) {
+    for (const [name, imageId] of [
+      [row.frontImage, card.frontImageId],
+      [row.backImage, card.backImageId],
+    ] as const) {
       if (name) {
         await serve(imageId, byBase(name));
         checked++;

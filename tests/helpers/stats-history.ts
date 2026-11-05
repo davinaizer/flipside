@@ -2,7 +2,13 @@ import { eq } from "drizzle-orm";
 import history from "../../fixtures/stats-history.json";
 import type { Db } from "@/server/db/client";
 import { cards, decks } from "@/server/db/schema";
-import { createCard, createCardState, createDeck, createProfile, createReviewLog } from "../factories";
+import {
+  createCard,
+  createCardState,
+  createDeck,
+  createProfile,
+  createReviewLog,
+} from "../factories";
 
 export { history };
 
@@ -31,7 +37,8 @@ export async function seedStatsHistory(db: Db) {
     const row = await createCard(db, deckIds[c.deck]!, { topic: c.topic, externalId: c.key });
     cardIds[c.key] = row.id;
     cardOwner[c.key] = ownerId;
-    if (c.box !== null) await createCardState(db, ownerId, row.id, { box: c.box, lapses: c.lapses });
+    if (c.box !== null)
+      await createCardState(db, ownerId, row.id, { box: c.box, lapses: c.lapses });
     if ("deleted" in c && c.deleted)
       await db.update(cards).set({ deletedAt: new Date() }).where(eq(cards.id, row.id));
   }

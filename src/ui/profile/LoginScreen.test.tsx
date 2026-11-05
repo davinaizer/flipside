@@ -7,7 +7,9 @@ import { LoginForm } from "./LoginScreen";
 
 test("shows a password field, the theme toggle and the picker layout, with no error at first", () => {
   const html = renderToStaticMarkup(<LoginForm onSubmit={() => {}} error={null} />);
-  expect(html).toMatch(/<input[^>]*type="password"[^>]*name="password"|<input[^>]*name="password"[^>]*type="password"/);
+  expect(html).toMatch(
+    /<input[^>]*type="password"[^>]*name="password"|<input[^>]*name="password"[^>]*type="password"/,
+  );
   expect(html).toContain("Flipside");
   expect(html).toContain("min-h-screen");
   expect(html).toMatch(/role="switch"|type="checkbox"/);

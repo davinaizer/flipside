@@ -28,7 +28,14 @@ const face = (html: string, name: "front" | "back") => {
 };
 const render = (revealed: boolean, c = card) =>
   renderToStaticMarkup(
-    createElement(PracticeView, { card: c, revealed, done: 1, total: 4, settings: DEFAULT_SETTINGS, onReveal: () => {} }),
+    createElement(PracticeView, {
+      card: c,
+      revealed,
+      done: 1,
+      total: 4,
+      settings: DEFAULT_SETTINGS,
+      onReveal: () => {},
+    }),
   );
 
 test("front: chip, question, exact hint, Show answer, front image only", () => {
@@ -72,7 +79,11 @@ test("HTML in card text renders as literal text", () => {
 test("reading settings style the card text", () => {
   const html = renderToStaticMarkup(
     createElement(PracticeView, {
-      card, revealed: false, done: 0, total: 1, onReveal: () => {},
+      card,
+      revealed: false,
+      done: 0,
+      total: 1,
+      onReveal: () => {},
       settings: { ...DEFAULT_SETTINGS, textSize: 4, cardColor: "night" },
     }),
   );
@@ -85,7 +96,9 @@ test("progress shows done, current and remaining with a text count", () => {
   expect(html.match(/data-segment="done"/g)).toHaveLength(2);
   expect(html.match(/data-segment="current"/g)).toHaveLength(1);
   expect(html.match(/data-segment="remaining"/g)).toHaveLength(2);
-  const count = renderToStaticMarkup(createElement(SessionCount, { deckName: "Science", done: 2, total: 5 }));
+  const count = renderToStaticMarkup(
+    createElement(SessionCount, { deckName: "Science", done: 2, total: 5 }),
+  );
   expect(count).toContain("Card 3 of 5");
   expect(count).toContain("Science");
 });
@@ -108,7 +121,15 @@ test("front: eye icon on Show answer; hint follows the button, outside the card"
 test("the front face is the shared PracticeFront component (read-aloud slot on the chip row)", () => {
   const reader = { speak: () => {}, cancel: () => {} };
   const html = renderToStaticMarkup(
-    createElement(PracticeView, { card, revealed: false, done: 0, total: 1, settings: DEFAULT_SETTINGS, onReveal: () => {}, reader }),
+    createElement(PracticeView, {
+      card,
+      revealed: false,
+      done: 0,
+      total: 1,
+      settings: DEFAULT_SETTINGS,
+      onReveal: () => {},
+      reader,
+    }),
   );
   const front = face(html, "front");
   expect(front).toContain("Read question aloud");
@@ -118,11 +139,20 @@ test("the front face is the shared PracticeFront component (read-aloud slot on t
 
 test("reveal triggers: the card tap is wired like the button, and Space is a shortcut", () => {
   let calls = 0;
-  const tree = PracticeView({ card, revealed: false, done: 0, total: 1, settings: DEFAULT_SETTINGS, onReveal: () => calls++ });
+  const tree = PracticeView({
+    card,
+    revealed: false,
+    done: 0,
+    total: 1,
+    settings: DEFAULT_SETTINGS,
+    onReveal: () => calls++,
+  });
   const scene = JSON.stringify(tree, (k, v) => (typeof v === "function" ? `fn:${k}` : v));
   expect(scene).toContain('"flip-scene"');
   expect(scene).toContain('"onClick":"fn:onClick"'); // the scene and Show answer both carry onClick
-  expect(shortcutFor({ key: " ", target: null }, { revealed: false, dialogOpen: false })).toEqual({ type: "reveal" });
+  expect(shortcutFor({ key: " ", target: null }, { revealed: false, dialogOpen: false })).toEqual({
+    type: "reveal",
+  });
   expect(calls).toBe(0);
 });
 
@@ -149,8 +179,18 @@ test("reduced motion applies no rotation and no transition, showing the live fac
 
 test("Undo last remounts the card scene (key includes done), so it returns to the front without a reverse flip", () => {
   const keyOf = (done: number) => {
-    const tree = PracticeView({ card, revealed: false, done, total: 3, settings: DEFAULT_SETTINGS, onReveal() {} });
-    const kids = (tree.props as { children: unknown[] }).children.flat() as { key?: string; props?: { className?: string } }[];
+    const tree = PracticeView({
+      card,
+      revealed: false,
+      done,
+      total: 3,
+      settings: DEFAULT_SETTINGS,
+      onReveal() {},
+    });
+    const kids = (tree.props as { children: unknown[] }).children.flat() as {
+      key?: string;
+      props?: { className?: string };
+    }[];
     return kids.find((c) => c?.props?.className === "flip-scene")?.key;
   };
   expect(keyOf(1)).toBeDefined();
@@ -160,7 +200,15 @@ test("Undo last remounts the card scene (key includes done), so it returns to th
 test("clicking Read question aloud speaks and does not bubble to the flip-scene reveal", () => {
   const spoken: string[] = [];
   const reader = { speak: (t: string) => void spoken.push(t), cancel: () => {} };
-  const tree = PracticeView({ card, revealed: false, done: 0, total: 1, settings: DEFAULT_SETTINGS, onReveal: () => {}, reader });
+  const tree = PracticeView({
+    card,
+    revealed: false,
+    done: 0,
+    total: 1,
+    settings: DEFAULT_SETTINGS,
+    onReveal: () => {},
+    reader,
+  });
   const find = (n: unknown): { props: { onClick: (e: unknown) => void } } | null => {
     if (!n || typeof n !== "object") return null;
     const el = n as { props?: Record<string, unknown> };

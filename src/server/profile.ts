@@ -133,7 +133,9 @@ export async function resolveHome(
   db: Db = getDb(),
 ): Promise<"library" | "picker"> {
   if (wantsSwitch || !cookieValue) return "picker";
-  const req = new Request("http://local/", { headers: { cookie: `${PROFILE_COOKIE}=${cookieValue}` } });
+  const req = new Request("http://local/", {
+    headers: { cookie: `${PROFILE_COOKIE}=${cookieValue}` },
+  });
   return getCurrentProfile(req, db).then(
     () => "library" as const,
     (e: unknown) => {
@@ -149,7 +151,9 @@ export async function profileFromCookie(
   db: Db = getDb(),
 ): Promise<Profile | null> {
   if (!cookieValue) return null;
-  const req = new Request("http://local/", { headers: { cookie: `${PROFILE_COOKIE}=${cookieValue}` } });
+  const req = new Request("http://local/", {
+    headers: { cookie: `${PROFILE_COOKIE}=${cookieValue}` },
+  });
   return getCurrentProfile(req, db).catch((e: unknown) => {
     if (e instanceof ApiError && e.status === 401) return null;
     throw e;

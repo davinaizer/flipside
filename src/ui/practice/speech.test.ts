@@ -9,7 +9,10 @@ import { browserSynth, createReader, SPEECH_RATES, textToRead } from "./speech";
 const card = { front: "Q?", back: "A!" };
 const mock = () => {
   const spoken: { text: string; rate: number }[] = [];
-  const synth = { speak: vi.fn((u: SpeechSynthesisUtterance) => spoken.push({ text: u.text, rate: u.rate })), cancel: vi.fn() };
+  const synth = {
+    speak: vi.fn((u: SpeechSynthesisUtterance) => spoken.push({ text: u.text, rate: u.rate })),
+    cancel: vi.fn(),
+  };
   const utter = (text: string) => ({ text, rate: 1 }) as SpeechSynthesisUtterance;
   return { synth, spoken, utter };
 };
@@ -41,9 +44,30 @@ test("cancel stops speech", () => {
 
 test("an unsupported browser gives no synth, and the view hides the button", () => {
   expect(browserSynth()).toBeNull(); // node: no window
-  const payload = { cardId: "c", deckId: "d", deckName: "D", answerStyle: "paragraph", topic: "T", front: "Q?", back: "A!", frontImage: null, backImage: null, labels: { not_yet: "a", nearly: "b", got_it: "c" } } as SessionCardPayload;
+  const payload = {
+    cardId: "c",
+    deckId: "d",
+    deckName: "D",
+    answerStyle: "paragraph",
+    topic: "T",
+    front: "Q?",
+    back: "A!",
+    frontImage: null,
+    backImage: null,
+    labels: { not_yet: "a", nearly: "b", got_it: "c" },
+  } as SessionCardPayload;
   const html = (reader: ReturnType<typeof createReader> | null, revealed: boolean) =>
-    renderToStaticMarkup(createElement(PracticeView, { card: payload, revealed, done: 0, total: 1, settings: DEFAULT_SETTINGS, onReveal: () => {}, reader }));
+    renderToStaticMarkup(
+      createElement(PracticeView, {
+        card: payload,
+        revealed,
+        done: 0,
+        total: 1,
+        settings: DEFAULT_SETTINGS,
+        onReveal: () => {},
+        reader,
+      }),
+    );
   expect(html(null, false)).not.toContain("aloud");
   const reader = createReader(mock().synth, "normal");
   expect(html(reader, false)).toContain("Read question aloud");

@@ -80,7 +80,9 @@ test("each deck card has a 44 px menu button named for the deck, closed by defau
 });
 
 test("the open menu lists Edit deck and Re-import with the deck id", () => {
-  const out = renderToStaticMarkup(createElement(DeckMenuItems, { deckId: "abc", onEdit: () => {} }));
+  const out = renderToStaticMarkup(
+    createElement(DeckMenuItems, { deckId: "abc", onEdit: () => {} }),
+  );
   expect(out).toContain("Edit deck");
   expect(out).toContain('href="/import?deckId=abc"');
   expect(out).toContain("Re-import");

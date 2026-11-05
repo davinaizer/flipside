@@ -6,7 +6,9 @@ export const E2E_PASSWORD = process.env.ADMIN_PASSWORD ?? "e2e-password";
 
 /** Signs a context in through the login endpoint; the auth cookie stays in its jar (AG2). */
 export async function signInContext(context: BrowserContext): Promise<void> {
-  const res = await context.request.post("/api/v1/auth/login", { data: { password: E2E_PASSWORD } });
+  const res = await context.request.post("/api/v1/auth/login", {
+    data: { password: E2E_PASSWORD },
+  });
   expect(res.status()).toBe(200);
 }
 
@@ -41,7 +43,14 @@ export async function expectTargetsAtLeast44(page: Page): Promise<number> {
       .map((el) => ({ el, r: el.getBoundingClientRect() }))
       .filter(({ r }) => r.width > 0 && r.height > 0)
       // A visually hidden file or radio input is operated through its 44 px label or swatch, which is the visible target.
-      .filter(({ el }) => !(el instanceof HTMLInputElement && (el.type === "file" || el.type === "radio") && el.closest("label")))
+      .filter(
+        ({ el }) =>
+          !(
+            el instanceof HTMLInputElement &&
+            (el.type === "file" || el.type === "radio") &&
+            el.closest("label")
+          ),
+      )
       .filter(({ r }) => r.width < 44 || r.height < 44)
       .map(
         ({ el, r }) => `${el.tagName.toLowerCase()} ${Math.round(r.width)}x${Math.round(r.height)}`,

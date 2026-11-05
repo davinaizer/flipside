@@ -9,7 +9,10 @@ export function ErrorState({ onRetry }: { onRetry: () => void }) {
       role="alert"
       className="flex max-w-lg flex-col items-center gap-4 rounded-card border border-card-edge bg-surface-card p-8 text-center shadow-card"
     >
-      <span aria-hidden="true" className="flex size-16 items-center justify-center rounded-full bg-surface-container-high text-primary">
+      <span
+        aria-hidden="true"
+        className="flex size-16 items-center justify-center rounded-full bg-surface-container-high text-primary"
+      >
         <Icon name="wifiOff" size={32} />
       </span>
       <h1 className="text-headline-lg font-semibold">We can&apos;t reach the home server</h1>

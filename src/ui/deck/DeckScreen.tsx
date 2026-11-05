@@ -35,11 +35,23 @@ export function DeckScreen({
     try {
       router.push(`/practice/${await startSession({ scope, length: sessionLength })}`);
     } catch {
-      setStartError("We could not start practice just now. Your cards are safe, so please try again.");
+      setStartError(
+        "We could not start practice just now. Your cards are safe, so please try again.",
+      );
       setBusy(false);
     }
   }
   return (
-    <DeckView deck={deck} leeches={leeches} ticked={ticked} onToggle={onToggle} onSelectAll={onSelectAll} onDeselectAll={onDeselectAll} busy={busy} startError={startError} onStart={onStart} />
+    <DeckView
+      deck={deck}
+      leeches={leeches}
+      ticked={ticked}
+      onToggle={onToggle}
+      onSelectAll={onSelectAll}
+      onDeselectAll={onDeselectAll}
+      busy={busy}
+      startError={startError}
+      onStart={onStart}
+    />
   );
 }

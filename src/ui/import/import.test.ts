@@ -20,7 +20,9 @@ const csv = [
 test("the browser preview shows columns, counts, three cards, and issues by row", async () => {
   const parsed = await parseImportFile(strToU8(csv));
   if (!parsed.ok) throw new Error("expected a preview");
-  const html = renderToStaticMarkup(createElement(ImportPreview, { preview: buildPreview(parsed), fileName: "d.csv" }));
+  const html = renderToStaticMarkup(
+    createElement(ImportPreview, { preview: buildPreview(parsed), fileName: "d.csv" }),
+  );
   expect(html).toContain("4 cards ready, 6 rows read, 2 skipped");
   expect(html).toContain("Columns found: id, topic, front, back");
   expect(html).toContain("Ignored: extra");
@@ -43,7 +45,16 @@ test("success names the deck with added and updated counts and two actions", () 
   const html = renderToStaticMarkup(
     createElement(ImportSuccess, {
       deckName: "Biology",
-      result: { deckId: "d1", added: 3, updated: 1, unchanged: 0, skipped: 0, missing: [], imageCount: 0, warnings: [] },
+      result: {
+        deckId: "d1",
+        added: 3,
+        updated: 1,
+        unchanged: 0,
+        skipped: 0,
+        missing: [],
+        imageCount: 0,
+        warnings: [],
+      },
     }),
   );
   expect(html).toContain("Saved to Biology");
@@ -67,8 +78,17 @@ test("success on re-import shows unchanged, missing ids kept, and commit warning
         missing: ["a9", "b3"],
         imageCount: 0,
         warnings: [
-          { severity: "warning", code: "missing_image", row: 4, message: "Image x.png was not supplied" },
-          { severity: "warning", code: "card_not_in_file", message: "Card a9 is in the deck but not in the file; it was kept" },
+          {
+            severity: "warning",
+            code: "missing_image",
+            row: 4,
+            message: "Image x.png was not supplied",
+          },
+          {
+            severity: "warning",
+            code: "card_not_in_file",
+            message: "Card a9 is in the deck but not in the file; it was kept",
+          },
         ],
       },
     }),
@@ -80,15 +100,21 @@ test("success on re-import shows unchanged, missing ids kept, and commit warning
 });
 
 test("the flow starts at file choice with the template link", () => {
-  const html = renderToStaticMarkup(createElement(ImportFlow, { decks: [{ id: "d1", name: "Biology" }], initialDeckId: "d1" }));
+  const html = renderToStaticMarkup(
+    createElement(ImportFlow, { decks: [{ id: "d1", name: "Biology" }], initialDeckId: "d1" }),
+  );
   expect(html).toContain("Choose CSV or zip");
   expect(html).toContain('href="/api/v1/imports/template"');
 });
 
 test("?deckId preselects the re-import target, and an unknown id is ignored", () => {
   const decks = [{ id: "d1", name: "Biology" }];
-  expect(renderToStaticMarkup(createElement(ImportFlow, { decks, initialDeckId: "d1" }))).toContain("Updating Biology");
-  expect(renderToStaticMarkup(createElement(ImportFlow, { decks, initialDeckId: "nope" }))).not.toContain("Updating");
+  expect(renderToStaticMarkup(createElement(ImportFlow, { decks, initialDeckId: "d1" }))).toContain(
+    "Updating Biology",
+  );
+  expect(
+    renderToStaticMarkup(createElement(ImportFlow, { decks, initialDeckId: "nope" })),
+  ).not.toContain("Updating");
 });
 
 test("ImportFlow is one column: no lg grid classes, sections in order 1, 2, 3", async () => {

@@ -11,7 +11,9 @@ type Json = Record<string, any>; // eslint-disable-line @typescript-eslint/no-ex
 /** Each scenario owns a profile (see e2e-seed.ts), so graded state never leaks between tests or projects. */
 async function signInWithDeck(page: Page, scenario: string, info: TestInfo) {
   await page.goto("/");
-  await page.getByRole("button", { name: `Practice ${scenario} ${info.project.name}`, exact: true }).click();
+  await page
+    .getByRole("button", { name: `Practice ${scenario} ${info.project.name}`, exact: true })
+    .click();
   await page.waitForURL("**/library");
   const res = await page.request.post("/api/v1/imports", {
     multipart: {
@@ -33,19 +35,28 @@ async function checkBothThemes(page: Page) {
   }
 }
 
-const question = (page: Page) => page.getByTestId("practice-card").getByRole("heading", { level: 1 });
+const question = (page: Page) =>
+  page.getByTestId("practice-card").getByRole("heading", { level: 1 });
 const reveal = (page: Page) => page.getByRole("button", { name: "Show answer" }).click();
 
 /** Reveals the current card, taps a grade and returns the PUT /reviews response body. */
 async function grade(page: Page, name: GradeName): Promise<Json> {
   await reveal(page);
-  const done = page.waitForResponse((r) => r.request().method() === "PUT" && r.url().includes("/api/v1/reviews/"));
+  const done = page.waitForResponse(
+    (r) => r.request().method() === "PUT" && r.url().includes("/api/v1/reviews/"),
+  );
   await page.getByRole("button", { name: new RegExp(`^${name}`) }).click();
   return (await done).json();
 }
 
-async function putSession(page: Page, length: number | "all", scope: Json = { kind: "all" }): Promise<Json> {
-  const res = await page.request.put(`/api/v1/sessions/${crypto.randomUUID()}`, { data: { scope, length } });
+async function putSession(
+  page: Page,
+  length: number | "all",
+  scope: Json = { kind: "all" },
+): Promise<Json> {
+  const res = await page.request.put(`/api/v1/sessions/${crypto.randomUUID()}`, {
+    data: { scope, length },
+  });
   expect(res.status()).toBe(200);
   return res.json();
 }
@@ -56,7 +67,9 @@ function learningDay(iso: string, plusDays = 0): string {
   return shifted.toLocaleDateString("en-CA", { timeZone: "Europe/London" });
 }
 
-test("Start practice, Weak cards and Deck Practise open real sessions; front, back and summary pass axe in both themes", async ({ page }, info) => {
+test("Start practice, Weak cards and Deck Practise open real sessions; front, back and summary pass axe in both themes", async ({
+  page,
+}, info) => {
   const deckId = await signInWithDeck(page, "open", info);
   await page.goto("/library");
 
@@ -97,7 +110,9 @@ test("Start practice, Weak cards and Deck Practise open real sessions; front, ba
   await expect(page.getByText(/^Card 1 of \d+$/)).toBeVisible();
 });
 
-test("a 5-card session shows sublabels, schedules per section 5 and shows images on the right side", async ({ page }, info) => {
+test("a 5-card session shows sublabels, schedules per section 5 and shows images on the right side", async ({
+  page,
+}, info) => {
   const deckId = await signInWithDeck(page, "grade", info);
   await page.goto("/library");
   await page.getByRole("button", { name: "Start practice" }).click();
@@ -108,10 +123,16 @@ test("a 5-card session shows sublabels, schedules per section 5 and shows images
   await expect(page.getByRole("button", { name: /^Not yet\s*Again today$/ })).toBeVisible();
   await expect(page.getByRole("button", { name: /^Nearly\s*Again today$/ })).toBeVisible();
   await expect(page.getByRole("button", { name: /^Got it\s*Tomorrow$/ })).toBeVisible();
-  let done = page.waitForResponse((r) => r.request().method() === "PUT" && r.url().includes("/api/v1/reviews/"));
+  let done = page.waitForResponse(
+    (r) => r.request().method() === "PUT" && r.url().includes("/api/v1/reviews/"),
+  );
   await page.getByRole("button", { name: /^Got it/ }).click();
   let body = await (await done).json();
-  expect(body.state).toMatchObject({ box: 2, lapses: 0, dueDate: learningDay(body.review.reviewedAt, 1) });
+  expect(body.state).toMatchObject({
+    box: 2,
+    lapses: 0,
+    dueDate: learningDay(body.review.reviewedAt, 1),
+  });
 
   // Card 2 has its picture on the back only.
   await expect(question(page)).toContainText("test for oxygen");
@@ -121,13 +142,23 @@ test("a 5-card session shows sublabels, schedules per section 5 and shows images
   const img = page.locator('[data-face="back"] img');
   await expect(img).toHaveCount(1);
   await expect.poll(() => img.evaluate((i: HTMLImageElement) => i.naturalWidth)).toBeGreaterThan(0);
-  done = page.waitForResponse((r) => r.request().method() === "PUT" && r.url().includes("/api/v1/reviews/"));
+  done = page.waitForResponse(
+    (r) => r.request().method() === "PUT" && r.url().includes("/api/v1/reviews/"),
+  );
   await page.getByRole("button", { name: /^Nearly/ }).click();
   body = await (await done).json();
-  expect(body.state).toMatchObject({ box: 1, lapses: 0, dueDate: learningDay(body.review.reviewedAt) });
+  expect(body.state).toMatchObject({
+    box: 1,
+    lapses: 0,
+    dueDate: learningDay(body.review.reviewedAt),
+  });
 
   body = await grade(page, "Not yet"); // card 3
-  expect(body.state).toMatchObject({ box: 1, lapses: 0, dueDate: learningDay(body.review.reviewedAt) });
+  expect(body.state).toMatchObject({
+    box: 1,
+    lapses: 0,
+    dueDate: learningDay(body.review.reviewedAt),
+  });
   expect(body.requeue).toBe(true);
   await grade(page, "Got it"); // card 4
   await grade(page, "Got it"); // card 5
@@ -136,7 +167,8 @@ test("a 5-card session shows sublabels, schedules per section 5 and shows images
   await expect(page.getByRole("heading", { name: "Session summary" })).toBeVisible();
 
   // A second session: the two box 1 cards due today (cards 2 and 3, shuffled) lead. Got it then undo restores box, due date and review count.
-  const reviewCount = async () => ((await (await page.request.get(`/api/v1/decks/${deckId}`)).json()) as Json).deck.reviewCount;
+  const reviewCount = async () =>
+    ((await (await page.request.get(`/api/v1/decks/${deckId}`)).json()) as Json).deck.reviewCount;
   await page.goto("/library");
   await page.getByRole("button", { name: "Start practice" }).click();
   await page.waitForURL("**/practice/*");
@@ -146,7 +178,9 @@ test("a 5-card session shows sublabels, schedules per section 5 and shows images
   body = await grade(page, "Got it");
   expect(body.state).toMatchObject({ box: 2 });
   expect(await reviewCount()).toBe(before + 1);
-  const undone = page.waitForResponse((r) => r.request().method() === "DELETE" && r.url().includes("/api/v1/reviews/"));
+  const undone = page.waitForResponse(
+    (r) => r.request().method() === "DELETE" && r.url().includes("/api/v1/reviews/"),
+  );
   await page.getByRole("button", { name: "Undo last" }).click();
   const restored = await (await undone).json();
   expect(restored.state).toMatchObject({ box: 1, lapses: 0 });
@@ -155,7 +189,9 @@ test("a 5-card session shows sublabels, schedules per section 5 and shows images
   await expect(question(page)).toHaveText(lead);
 });
 
-test("Not yet reappears after four other cards, at most twice; undo steps back through the session", async ({ page }, info) => {
+test("Not yet reappears after four other cards, at most twice; undo steps back through the session", async ({
+  page,
+}, info) => {
   await signInWithDeck(page, "requeue", info);
   const { session } = await putSession(page, 10);
   await page.goto(`/practice/${session.id}`);
@@ -182,13 +218,18 @@ test("Not yet reappears after four other cards, at most twice; undo steps back t
   await expect(page.getByRole("heading", { name: "Session summary" })).toBeVisible();
 });
 
-test("16 new cards with a cap of 10 give no more than 10 new cards in a local day; images sit on the right side", async ({ page }, info) => {
+test("16 new cards with a cap of 10 give no more than 10 new cards in a local day; images sit on the right side", async ({
+  page,
+}, info) => {
   await signInWithDeck(page, "cap", info);
   const first = await putSession(page, "all");
   expect(first.queue).toHaveLength(10);
 
   const byFront = (text: string) => first.queue.find((c: Json) => c.front.includes(text));
-  expect(byFront("test for oxygen")).toMatchObject({ frontImage: null, backImage: { url: expect.any(String) } });
+  expect(byFront("test for oxygen")).toMatchObject({
+    frontImage: null,
+    backImage: { url: expect.any(String) },
+  });
   expect(byFront("What direction will the particles move")).toMatchObject({
     frontImage: { url: expect.any(String) },
     backImage: null,
@@ -205,7 +246,9 @@ test("16 new cards with a cap of 10 give no more than 10 new cards in a local da
 });
 
 // AC17: three ways to reveal, and hover, pressed and focus-visible on the buttons, in both themes.
-test("reveal by button, card tap and Space; buttons show hover, pressed and focus states in both themes", async ({ page }, info) => {
+test("reveal by button, card tap and Space; buttons show hover, pressed and focus states in both themes", async ({
+  page,
+}, info) => {
   await signInWithDeck(page, "flip", info);
   const { session } = await putSession(page, 10);
   await page.goto(`/practice/${session.id}`);
@@ -245,7 +288,12 @@ test("reveal by button, card tap and Space; buttons show hover, pressed and focu
   const read = (loc: ReturnType<Page["locator"]>) =>
     loc.evaluate((el) => {
       const s = getComputedStyle(el);
-      return { bg: s.backgroundColor, filter: s.filter, scale: s.scale, outline: s.outlineStyle + " " + s.outlineWidth };
+      return {
+        bg: s.backgroundColor,
+        filter: s.filter,
+        scale: s.scale,
+        outline: s.outlineStyle + " " + s.outlineWidth,
+      };
     });
 
   for (const theme of ["light", "dark"] as const) {
@@ -275,7 +323,9 @@ test("reveal by button, card tap and Space; buttons show hover, pressed and focu
   }
 });
 
-test("AC18: the summary figures match the grades given, and Practise those now starts a session of the misses", async ({ page }, info) => {
+test("AC18: the summary figures match the grades given, and Practise those now starts a session of the misses", async ({
+  page,
+}, info) => {
   await signInWithDeck(page, "summary", info);
   await page.goto("/library");
   await page.getByRole("button", { name: "Start practice" }).click();

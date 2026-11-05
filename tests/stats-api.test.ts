@@ -56,7 +56,13 @@ test("GET /stats matches the hand-computed figures for the seeded history (AC8)"
   const fresh = await f.createProfile(db, { name: "Fresh" });
   const empty = statsSchema.parse(await getStats(fresh, "week", now, db));
   expect(empty.hasReviews).toBe(false);
-  expect(empty.current).toEqual({ cardsReviewed: 0, gotItRate: null, medianSeconds: null, daysPractised: 0, daysInWindow: 7 });
+  expect(empty.current).toEqual({
+    cardsReviewed: 0,
+    gotItRate: null,
+    medianSeconds: null,
+    daysPractised: 0,
+    daysInWindow: 7,
+  });
   expect(empty.bars.every((b) => b.cardsReviewed === 0)).toBe(true);
   expect(empty.focusNext).toEqual([]);
   expect(empty.byDeck).toEqual([]);

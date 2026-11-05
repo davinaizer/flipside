@@ -60,7 +60,8 @@ describe("uuidv7", () => {
 describe("updateProfileRequestSchema", () => {
   const ok = AVATAR_IDS[0];
   it("accepts every avatar id and a 1 to 24 char name, trimmed", () => {
-    for (const a of AVATAR_IDS) expect(upd.safeParse({ avatar: a, name: "Nicole" }).success).toBe(true);
+    for (const a of AVATAR_IDS)
+      expect(upd.safeParse({ avatar: a, name: "Nicole" }).success).toBe(true);
     expect(upd.parse({ avatar: ok, name: "  Zo  " }).name).toBe("Zo");
     expect(upd.safeParse({ name: "a".repeat(24) }).success).toBe(true);
     expect(upd.safeParse({ name: "a" }).success).toBe(true);

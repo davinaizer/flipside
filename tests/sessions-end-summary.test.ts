@@ -11,7 +11,8 @@ test("end keeps grades, the last grade completes, and the summary counts first g
   const f = await import("./factories");
   const { putReview, undoReview } = await import("@/server/reviews");
   const { endSession, getSummary } = await import("@/server/sessions");
-  const { sessionEndResponseSchema, sessionSummarySchema } = await import("@/shared/schemas/session");
+  const { sessionEndResponseSchema, sessionSummarySchema } =
+    await import("@/shared/schemas/session");
   const { sessions, reviewLog } = await import("@/server/db/schema");
   const { eq } = await import("drizzle-orm");
   const endRoute = await import("@/app/api/v1/sessions/[id]/end/route");
@@ -28,7 +29,14 @@ test("end keeps grades, the last grade completes, and the summary counts first g
   const session = async (cardIds: string[]) => {
     const [row] = await db
       .insert(sessions)
-      .values({ id: crypto.randomUUID(), profileId: me.id, scope: { kind: "all" }, plannedCount: cardIds.length, startedAt: at(0), meta: { length: "all", cardIds } })
+      .values({
+        id: crypto.randomUUID(),
+        profileId: me.id,
+        scope: { kind: "all" },
+        plannedCount: cardIds.length,
+        startedAt: at(0),
+        meta: { length: "all", cardIds },
+      })
       .returning();
     return row!.id;
   };
@@ -37,7 +45,8 @@ test("end keeps grades, the last grade completes, and the summary counts first g
     await putReview(me, id, { sessionId: sid, cardId, grade: g, durationMs: 1000 }, at(min), db);
     return id;
   };
-  const row = async (sid: string) => (await db.select().from(sessions).where(eq(sessions.id, sid)))[0]!;
+  const row = async (sid: string) =>
+    (await db.select().from(sessions).where(eq(sessions.id, sid)))[0]!;
 
   // Completion: a Not yet re-queues, so the session is open until the card is settled.
   const s1 = await session([c[0]!.id, c[1]!.id, c[2]!.id, c[3]!.id]);
@@ -60,17 +69,29 @@ test("end keeps grades, the last grade completes, and the summary counts first g
   expect(sum1.durationMs).toBe(7 * 60_000);
   expect(sum1.missIds).toEqual([c[1]!.id, c[3]!.id]);
   expect(sum1.goAgain.map((g) => g.cardId)).toEqual([c[1]!.id, c[3]!.id]);
-  expect(sum1.goAgain[0]).toMatchObject({ front: c[1]!.front, topic: c[1]!.topic, deckName: deck.name });
+  expect(sum1.goAgain[0]).toMatchObject({
+    front: c[1]!.front,
+    topic: c[1]!.topic,
+    deckName: deck.name,
+  });
   expect(sum1).toMatchObject({ deckName: deck.name, severalDecks: false });
   // Ending a completed session changes nothing.
-  expect((await endSession(me, s1, at(30), db)).session).toEqual({ id: s1, endedAt: at(7).toISOString(), endedReason: "completed" });
+  expect((await endSession(me, s1, at(30), db)).session).toEqual({
+    id: s1,
+    endedAt: at(7).toISOString(),
+    endedReason: "completed",
+  });
 
   // End early: grades stay, reason is ended_early, a repeat answers the stored end.
   const s2 = await session(c.map((x) => x.id));
   await grade(s2, c[0]!.id, "not_yet", 1);
   await grade(s2, c[1]!.id, "got_it", 2);
   const ended = sessionEndResponseSchema.parse(await endSession(me, s2, at(10), db));
-  expect(ended.session).toEqual({ id: s2, endedAt: at(10).toISOString(), endedReason: "ended_early" });
+  expect(ended.session).toEqual({
+    id: s2,
+    endedAt: at(10).toISOString(),
+    endedReason: "ended_early",
+  });
   expect(await endSession(me, s2, at(20), db)).toEqual(ended);
   expect((await db.select().from(reviewLog).where(eq(reviewLog.sessionId, s2))).length).toBe(2);
   const sum2 = await getSummary(me, s2, db);
@@ -110,12 +131,16 @@ test("end keeps grades, the last grade completes, and the summary counts first g
 
   // Routes: profile header, 404 for another profile or unknown id, 400-free bad id is 404.
   const ctx = (id: string) => ({ params: Promise.resolve({ id }) });
-  const req = (method: string, p: string | null) => new Request("http://x/", { method, headers: p ? { "x-profile-id": p } : {} });
+  const req = (method: string, p: string | null) =>
+    new Request("http://x/", { method, headers: p ? { "x-profile-id": p } : {} });
   const s5 = await session([c[0]!.id]);
   const res = await endRoute.POST(req("POST", me.id), ctx(s5));
   expect(res.status).toBe(200);
   expect(sessionEndResponseSchema.parse(await res.json()).session.endedReason).toBe("ended_early");
-  expect(sessionSummarySchema.parse(await (await summaryRoute.GET(req("GET", me.id), ctx(s5))).json()).session.id).toBe(s5);
+  expect(
+    sessionSummarySchema.parse(await (await summaryRoute.GET(req("GET", me.id), ctx(s5))).json())
+      .session.id,
+  ).toBe(s5);
   for (const id of [s1, crypto.randomUUID(), "nope"]) {
     expect((await endRoute.POST(req("POST", other.id), ctx(id))).status).toBe(404);
     expect((await summaryRoute.GET(req("GET", other.id), ctx(id))).status).toBe(404);

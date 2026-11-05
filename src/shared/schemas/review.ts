@@ -24,7 +24,11 @@ export const reviewStateSchema = z.object({
   status: z.enum(CARD_STATUSES),
 });
 
-const gradeLabelsSchema = z.object({ not_yet: z.string(), nearly: z.string(), got_it: z.string() }) satisfies z.ZodType<Record<Grade, string>>;
+const gradeLabelsSchema = z.object({
+  not_yet: z.string(),
+  nearly: z.string(),
+  got_it: z.string(),
+}) satisfies z.ZodType<Record<Grade, string>>;
 
 /** Response of PUT /reviews/{id}, identical on a retry. */
 export const reviewResponseSchema = z.object({

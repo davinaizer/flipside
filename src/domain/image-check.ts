@@ -15,8 +15,7 @@ export interface ImageInfo {
 }
 
 export type ImageCheck =
-  | { ok: true; image: ImageInfo }
-  | { ok: false; reason: ImageRejection; message: string };
+  { ok: true; image: ImageInfo } | { ok: false; reason: ImageRejection; message: string };
 
 export const EXTENSIONS: Record<ImageMime, string> = {
   "image/png": "png",
@@ -120,7 +119,11 @@ function looksLikeSvg(bytes: Uint8Array): boolean {
   return head.includes("<svg") || (head.includes("<?xml") && head.includes("svg"));
 }
 
-const reject = (reason: ImageRejection, message: string): ImageCheck => ({ ok: false, reason, message });
+const reject = (reason: ImageRejection, message: string): ImageCheck => ({
+  ok: false,
+  reason,
+  message,
+});
 
 /** Checks an image by its bytes (never its extension): size, type, dimensions; computes hash and key. */
 export async function checkImage(bytes: Uint8Array): Promise<ImageCheck> {

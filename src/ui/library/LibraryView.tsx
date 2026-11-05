@@ -59,7 +59,10 @@ export function LibraryView({
                 placeholder="Search decks and topics"
                 className="min-h-11 w-full rounded-full border border-outline-variant bg-surface-card pl-5 pr-11 text-on-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
               />
-              <span aria-hidden="true" className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant">
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant"
+              >
                 <Icon name="search" />
               </span>
             </label>
@@ -75,7 +78,10 @@ export function LibraryView({
           aria-labelledby="today"
           className="mb-8 max-w-6xl rounded-card border border-card-edge bg-surface-card p-6 shadow-card"
         >
-          <h2 id="today" className="inline-block rounded-full bg-surface-container-high px-3 py-1 text-label-md font-semibold text-primary">
+          <h2
+            id="today"
+            className="inline-block rounded-full bg-surface-container-high px-3 py-1 text-label-md font-semibold text-primary"
+          >
             Today
           </h2>
           <p className="mt-3 text-body-lg">
@@ -111,7 +117,10 @@ export function LibraryView({
       )}
       {noDecks ? (
         <section className="flex max-w-xl flex-col items-start gap-3 rounded-card border border-card-edge bg-surface-card p-8 shadow-card">
-          <span aria-hidden="true" className="flex size-14 items-center justify-center rounded-full bg-surface-container-high text-primary">
+          <span
+            aria-hidden="true"
+            className="flex size-14 items-center justify-center rounded-full bg-surface-container-high text-primary"
+          >
             <Icon name="cards" size={28} />
           </span>
           <h2 className="text-headline-md font-semibold">No decks yet</h2>
@@ -144,7 +153,10 @@ export function LibraryView({
             </div>
             <ul className="grid max-w-6xl gap-4 md:grid-cols-2">
               {g.decks.map((d) => (
-                <li key={d.id} className="rounded-card border border-card-edge bg-surface-card p-5 shadow-card">
+                <li
+                  key={d.id}
+                  className="rounded-card border border-card-edge bg-surface-card p-5 shadow-card"
+                >
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex items-center gap-3">
                       <DeckTile name={d.name} color={d.color} />
@@ -166,16 +178,16 @@ export function LibraryView({
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
-                    {d.dueCount > 0 ? (
-                      <span className="rounded-full bg-inverse-surface px-3 py-1 text-label-md font-semibold text-inverse-on-surface">
-                        {d.dueCount} due
-                      </span>
-                    ) : (
-                      <span className="rounded-full bg-surface-container-high px-3 py-1 text-label-md font-semibold text-primary">
-                        Up to date
-                      </span>
-                    )}
-                    <DeckMenu deckId={d.id} deckName={d.name} onEdit={() => setEditingId(d.id)} />
+                      {d.dueCount > 0 ? (
+                        <span className="rounded-full bg-inverse-surface px-3 py-1 text-label-md font-semibold text-inverse-on-surface">
+                          {d.dueCount} due
+                        </span>
+                      ) : (
+                        <span className="rounded-full bg-surface-container-high px-3 py-1 text-label-md font-semibold text-primary">
+                          Up to date
+                        </span>
+                      )}
+                      <DeckMenu deckId={d.id} deckName={d.name} onEdit={() => setEditingId(d.id)} />
                     </div>
                   </div>
                   {editingId === d.id && (

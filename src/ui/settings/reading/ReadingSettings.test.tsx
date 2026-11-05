@@ -15,12 +15,28 @@ test("the settings screen lists every T1 option and Reset to defaults", () => {
     </SettingsProvider>,
   );
   for (const t of [
-    "Atkinson Hyperlegible Next", "Lexend", "System Sans",
-    "Small", "Medium", "Large", "Extra large",
-    "Normal", "Wide", "Wider", "Roomy", "Extra roomy",
-    "Mist", "Cream", "Peach", "Sage", "Lavender", "Night",
-    "Reset to defaults", "Preview",
-  ]) expect(html).toContain(t);
+    "Atkinson Hyperlegible Next",
+    "Lexend",
+    "System Sans",
+    "Small",
+    "Medium",
+    "Large",
+    "Extra large",
+    "Normal",
+    "Wide",
+    "Wider",
+    "Roomy",
+    "Extra roomy",
+    "Mist",
+    "Cream",
+    "Peach",
+    "Sage",
+    "Lavender",
+    "Night",
+    "Reset to defaults",
+    "Preview",
+  ])
+    expect(html).toContain(t);
 });
 
 test("the preview shows the practice card elements and follows the settings (T8)", () => {
@@ -42,7 +58,11 @@ test("the preview shows the practice card elements and follows the settings (T8)
       settings: DEFAULT_SETTINGS,
       topic: "Caching",
       question: "Why use a cache?",
-      readAloud: createElement("span", { "aria-hidden": "true", className: iconButton }, createElement(Icon, { name: "volume" })),
+      readAloud: createElement(
+        "span",
+        { "aria-hidden": "true", className: iconButton },
+        createElement(Icon, { name: "volume" }),
+      ),
     }),
   );
   expect(mist).toContain(direct);

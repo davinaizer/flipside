@@ -1,6 +1,11 @@
 /** Loading placeholder: grey blocks instead of a spinner over text (PRD section 8). */
 export function Skeleton({ className = "h-6 w-full" }: { className?: string }) {
-  return <div aria-hidden="true" className={`animate-pulse rounded-xl bg-surface-container-high ${className}`} />;
+  return (
+    <div
+      aria-hidden="true"
+      className={`animate-pulse rounded-xl bg-surface-container-high ${className}`}
+    />
+  );
 }
 
 export function PageSkeleton() {

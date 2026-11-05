@@ -26,7 +26,10 @@ test("sidebar shows sections, profile and highlights the current one", async ({ 
   await page.getByRole("menuitem", { name: "Settings" }).click();
   await page.waitForURL("**/settings");
   await openMenu(page);
-  await expect(page.getByRole("menuitem", { name: "Settings" })).toHaveAttribute("aria-current", "page");
+  await expect(page.getByRole("menuitem", { name: "Settings" })).toHaveAttribute(
+    "aria-current",
+    "page",
+  );
   await page.keyboard.press("Escape");
   await expect(page.getByRole("menuitem", { name: "Settings" })).toHaveCount(0);
   await expect(page).toHaveTitle("Flipside"); // soft navigation can leave the title empty for a moment
@@ -61,7 +64,9 @@ test("an unknown or foreign deck URL shows not found inside the shell", async ({
   await expectNoSeriousA11y(page);
 });
 
-test("sidebar collapses to an icon rail, remembers it across reload, and stays usable", async ({ page }) => {
+test("sidebar collapses to an icon rail, remembers it across reload, and stays usable", async ({
+  page,
+}) => {
   await signIn(page, "Nicole");
   const aside = page.getByRole("complementary");
   // The toggle sits at the left of the main-area header, opposite the theme switch.

@@ -12,7 +12,13 @@ export function SidebarToggle() {
   return <SidebarToggleView collapsed={collapsed} onToggle={() => writeCollapsed(!collapsed)} />;
 }
 
-export function SidebarToggleView({ collapsed, onToggle }: { collapsed: boolean; onToggle: () => void }) {
+export function SidebarToggleView({
+  collapsed,
+  onToggle,
+}: {
+  collapsed: boolean;
+  onToggle: () => void;
+}) {
   return (
     <button
       type="button"

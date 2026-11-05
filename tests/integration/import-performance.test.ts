@@ -21,7 +21,9 @@ test("a 2,000-row CSV imports in under 30 s", async () => {
 
   const lines = ["id,topic,front,back,front_image,back_image"];
   for (let i = 1; i <= 2000; i++) {
-    lines.push(`perf-${i},Topic ${i % 10},"Question ${i}?","Point one ${i}\nPoint two ${i}\nPoint three ${i}",,`);
+    lines.push(
+      `perf-${i},Topic ${i % 10},"Question ${i}?","Point one ${i}\nPoint two ${i}\nPoint three ${i}",,`,
+    );
   }
   const form = new FormData();
   form.set("file", new File([lines.join("\n")], "perf.csv", { type: "text/csv" }));
@@ -31,7 +33,11 @@ test("a 2,000-row CSV imports in under 30 s", async () => {
 
   const t0 = performance.now();
   const res = await imports.POST(
-    new Request("http://x/api/v1/imports", { method: "POST", body: form, headers: { "x-profile-id": owner.id } }),
+    new Request("http://x/api/v1/imports", {
+      method: "POST",
+      body: form,
+      headers: { "x-profile-id": owner.id },
+    }),
   );
   const ms = Math.round(performance.now() - t0);
   console.log(`PERF import 2000 rows: ${ms} ms`);

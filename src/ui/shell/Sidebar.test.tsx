@@ -1,7 +1,10 @@
 import { renderToStaticMarkup } from "react-dom/server";
 import { expect, test, vi } from "vitest";
 
-vi.mock("next/navigation", () => ({ usePathname: () => "/library", useRouter: () => ({ push: () => {} }) }));
+vi.mock("next/navigation", () => ({
+  usePathname: () => "/library",
+  useRouter: () => ({ push: () => {} }),
+}));
 
 import { AVATAR_IDS } from "@/shared/avatars";
 import { SidebarView } from "./Sidebar";

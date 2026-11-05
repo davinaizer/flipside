@@ -71,14 +71,20 @@ describe("replay", () => {
   });
 
   it("skips a grade for a card that is not current at its turn, and keeps the rest", () => {
-    const { queue, applied } = replayQueue(["a", "b", "c"], [g("a", "got_it"), g("c", "got_it"), g("b", "nearly")]);
+    const { queue, applied } = replayQueue(
+      ["a", "b", "c"],
+      [g("a", "got_it"), g("c", "got_it"), g("b", "nearly")],
+    );
     expect(applied.map((x) => x.cardId)).toEqual(["a", "b"]);
     expect(currentEntry(queue)?.cardId).toBe("c");
   });
 
   it("a card deleted mid-session drops out: its grades are skipped and the rest can finish", () => {
     // "b" was graded Not yet, then deleted; replay runs over the live cards only.
-    const { queue } = replayQueue(["a", "c"], [g("a", "got_it"), g("b", "not_yet"), g("c", "got_it")]);
+    const { queue } = replayQueue(
+      ["a", "c"],
+      [g("a", "got_it"), g("b", "not_yet"), g("c", "got_it")],
+    );
     expect(isFinished(queue)).toBe(true);
     expect(queue.entries.map((e) => e.cardId)).toEqual(["a", "c"]);
   });
@@ -131,7 +137,8 @@ describe("session queue invariants", () => {
           expect(added).toBe(1);
           const remainingAfter = before.entries.length - before.position - 1;
           const idx = state.entries.findIndex(
-            (e, i) => i > before.position && e.cardId === graded.cardId && e.attempt === graded.attempt + 1,
+            (e, i) =>
+              i > before.position && e.cardId === graded.cardId && e.attempt === graded.attempt + 1,
           );
           const between = idx - before.position - 1;
           expect(between).toBe(Math.min(REQUEUE_GAP, remainingAfter));
