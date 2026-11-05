@@ -111,3 +111,4 @@ F20.7: profileNameSchema exported from the shared profile schema and used by nam
 F20.8: un-exported sha256Hex, imageStorageKey, readImageSize, readZipDirectory, baseName (tests go through checkImage/openZip); one-line invariant comments on the four OE-12 non-null assertions.
 REVIEW F20 round 1: GAPS at bcf48f2 (F20.7 ledger status left todo; fixed)
 REVIEW F20 round 2: PASS at 30438f1
+F20 done: PR 51. MANUAL PENDING: none
