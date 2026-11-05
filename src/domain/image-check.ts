@@ -92,7 +92,7 @@ function webpSize(b: Uint8Array): Dimensions | null {
 }
 
 /** Reads width and height from the file header; null when the header is unreadable. */
-export function readImageSize(bytes: Uint8Array, mime: ImageMime): Dimensions | null {
+function readImageSize(bytes: Uint8Array, mime: ImageMime): Dimensions | null {
   const size =
     mime === "image/png"
       ? pngSize(bytes)
@@ -105,12 +105,12 @@ export function readImageSize(bytes: Uint8Array, mime: ImageMime): Dimensions | 
   return size;
 }
 
-export async function sha256Hex(bytes: Uint8Array): Promise<string> {
+async function sha256Hex(bytes: Uint8Array): Promise<string> {
   const digest = await crypto.subtle.digest("SHA-256", bytes as BufferSource);
   return Array.from(new Uint8Array(digest), (v) => v.toString(16).padStart(2, "0")).join("");
 }
 
-export function imageStorageKey(sha256: string, mime: ImageMime): string {
+function imageStorageKey(sha256: string, mime: ImageMime): string {
   return `images/${sha256}.${EXTENSIONS[mime]}`;
 }
 

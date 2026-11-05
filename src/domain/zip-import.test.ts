@@ -1,8 +1,8 @@
 import { strToU8, zipSync, type Zippable } from "fflate";
 import { describe, expect, it } from "vitest";
 import { IMPORT_MAX_ZIP_ENTRIES, IMPORT_MAX_ZIP_UNCOMPRESSED_BYTES } from "../shared/constants";
-import { checkImage, readImageSize } from "./image-check";
-import { baseName, openZip, resolveImages } from "./zip-import";
+import { checkImage } from "./image-check";
+import { openZip, resolveImages } from "./zip-import";
 
 const be32 = (n: number) => [(n >>> 24) & 255, (n >>> 16) & 255, (n >>> 8) & 255, n & 255];
 const le16 = (n: number) => [n & 255, (n >> 8) & 255];
@@ -209,7 +209,6 @@ describe("image resolution", () => {
     const r = await run(["q02-back.png"], { "images/q02-back.png": png(10, 20) });
     expect(r.issues).toEqual([]);
     expect(r.images.get("q02-back.png")!.info).toMatchObject({ width: 10, height: 20 });
-    expect(baseName("a\\b/c.png")).toBe("c.png");
   });
 
   it("warns and drops a missing image", async () => {
@@ -276,7 +275,6 @@ describe("image check", () => {
     ["webp VP8", webpLossy(500, 300), "image/webp", 500, 300, "webp"],
     ["webp VP8L", webpLossless(70, 90), "image/webp", 70, 90, "webp"],
   ] as const)("reads %s dimensions, hash and key", async (_n, bytes, mime, w, h, ext) => {
-    expect(readImageSize(bytes, mime)).toEqual({ width: w, height: h });
     const r = await checkImage(bytes);
     if (!r.ok) throw new Error(r.message);
     const digest = await crypto.subtle.digest("SHA-256", bytes as BufferSource);
@@ -291,8 +289,9 @@ describe("image check", () => {
     expect(r.image.bytes).toBe(bytes.length);
   });
 
-  it("returns null for a truncated header", () => {
-    expect(readImageSize(new Uint8Array(5), "image/png")).toBeNull();
-    expect(readImageSize(Uint8Array.from([0xff, 0xd8, 0xff, 0xd9]), "image/jpeg")).toBeNull();
+  it("rejects a PNG whose header is cut short as unreadable", async () => {
+    const r = await checkImage(png(10, 10).slice(0, 20));
+    expect(r.ok).toBe(false);
+    if (!r.ok) expect(r.reason).toBe("unreadable");
   });
 });

@@ -338,6 +338,7 @@ export function computeStats(input: StatsInput): Stats {
       daysPractised: changeInWords("daysPractised", current, previous, range),
     },
     bars: practiceBars(reviews, range, today, ctx),
+    // deckName is built from the same decks the cards come from, so every card's deck is in it.
     focusNext: focusNext(cards).map((t) => ({ ...t, deckName: deckName.get(t.deckId)! })),
     byDeck,
   };

@@ -312,6 +312,7 @@ export async function endSession(
       .set({ endedAt: now, endedReason: "ended_early" })
       .where(and(eq(sessions.id, row.id), isNull(sessions.endedAt)))
       .returning();
+    // No update means a concurrent call ended it; the row was read above and sessions are never deleted here.
     ended = updated ?? (await findSessionRow(row.id, db))!;
   }
   return {

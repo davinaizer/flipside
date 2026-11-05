@@ -108,3 +108,4 @@ F20.4: profileById is the one lookup behind getCurrentProfile, resolveHome and p
 F20.5: deleted fromCsv/fromZip in import-file.ts; issues pass through uncopied.
 F20.6: api.deleteDeck added to the client (204 read as null); DeleteDeck calls it through an exported deleteDeck helper that returns the error message, no raw fetch or throw-to-catch.
 F20.7: profileNameSchema exported from the shared profile schema and used by nameError; ProfileForm avatar typed AvatarId, both casts gone.
+F20.8: un-exported sha256Hex, imageStorageKey, readImageSize, readZipDirectory, baseName (tests go through checkImage/openZip); one-line invariant comments on the four OE-12 non-null assertions.

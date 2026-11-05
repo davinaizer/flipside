@@ -50,6 +50,7 @@ function toResponse(profile: Profile, row: ReviewRow): ReviewResponse {
   return {
     review: {
       id: row.id,
+      // review_log.session_id is only nulled when its session is deleted, and then the row goes too.
       sessionId: row.sessionId!,
       cardId: row.cardId,
       grade: row.grade as Grade,

@@ -122,6 +122,7 @@ export async function commitImport(
     const imageId = (name: string | null, current: string | null) => {
       if (!name) return null;
       const found = images.get(name);
+      // Every image in `images` was stored or matched above and recorded in imageIds by sha256.
       return found ? imageIds.get(found.info.sha256)! : current;
     };
 

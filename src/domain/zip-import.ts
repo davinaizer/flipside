@@ -31,7 +31,7 @@ const EOCD_SIG = 0x06054b50;
 const CEN_SIG = 0x02014b50;
 
 /** Reads the central directory, which also carries the Unix mode that fflate does not expose. */
-export function readZipDirectory(zip: Uint8Array): ZipEntryInfo[] | null {
+function readZipDirectory(zip: Uint8Array): ZipEntryInfo[] | null {
   const view = new DataView(zip.buffer, zip.byteOffset, zip.byteLength);
   let eocd = -1;
   for (let i = zip.length - 22; i >= Math.max(0, zip.length - 22 - 0xffff); i--) {
@@ -152,7 +152,7 @@ export function openZip(zip: Uint8Array): ZipContents {
   return { blocked: false, issues: [], files: new Map(Object.entries(unpacked)) };
 }
 
-export const baseName = (path: string): string => path.split(/[\\/]/).pop() ?? path;
+const baseName = (path: string): string => path.split(/[\\/]/).pop() ?? path;
 
 export interface ResolvedImages {
   issues: ZipIssue[];

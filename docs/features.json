@@ -1371,7 +1371,7 @@
           ],
           "area": "src/domain/image-check.ts, src/domain/zip-import.ts, src/server/reviews.ts, src/server/sessions.ts, src/server/imports.ts, src/domain/stats.ts",
           "done_when": "sha256Hex, imageStorageKey, readZipDirectory, readImageSize and baseName are no longer exported (tests go through checkImage and openZip); each non-null assertion listed in OE-12 has a one-line comment naming why it cannot be null. No behaviour change. verify.sh green.",
-          "status": "todo"
+          "status": "done"
         }
       ],
       "branch": "feat/F20-audit-followups"
