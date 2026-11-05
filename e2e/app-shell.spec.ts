@@ -64,14 +64,21 @@ test("an unknown or foreign deck URL shows not found inside the shell", async ({
 test("sidebar collapses to an icon rail, remembers it across reload, and stays usable", async ({ page }) => {
   await signIn(page, "Nicole");
   const aside = page.getByRole("complementary");
-  const toggle = aside.getByRole("button", { name: "Sidebar" });
+  // The toggle sits at the left of the main-area header, opposite the theme switch.
+  const header = page.getByRole("banner");
+  const toggle = header.getByRole("button", { name: "Sidebar" });
   const nav = page.getByRole("navigation", { name: "Main" });
   await expect(toggle).toHaveAttribute("aria-expanded", "true");
   const wide = (await aside.boundingBox())!.width;
+  const themeSwitch = header.getByRole("switch");
+  expect((await toggle.boundingBox())!.x).toBeLessThan((await themeSwitch.boundingBox())!.x);
+  await expect(aside.getByRole("button", { name: "Sidebar" })).toHaveCount(0);
+  // The width animates (200 ms) and the transition is off under reduced motion.
+  expect(await aside.evaluate((el) => getComputedStyle(el).transitionDuration)).toBe("0.2s");
 
   await toggle.click();
   await expect(toggle).toHaveAttribute("aria-expanded", "false");
-  expect((await aside.boundingBox())!.width).toBeLessThan(wide);
+  await expect.poll(async () => (await aside.boundingBox())!.width).toBeLessThan(wide);
   await expect(aside).not.toContainText("Nicole");
   for (const theme of ["light", "dark"] as const) {
     await setTheme(page, theme);
@@ -81,6 +88,9 @@ test("sidebar collapses to an icon rail, remembers it across reload, and stays u
 
   await page.reload();
   await expect(toggle).toHaveAttribute("aria-expanded", "false");
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  expect(await aside.evaluate((el) => getComputedStyle(el).transitionDuration)).toBe("0s");
+  await page.emulateMedia({ reducedMotion: "no-preference" });
 
   // Navigation and the profile menu work collapsed.
   await nav.getByRole("link", { name: "Progress" }).click();

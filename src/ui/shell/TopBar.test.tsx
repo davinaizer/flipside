@@ -10,9 +10,12 @@ import { TopBar } from "./TopBar";
 
 const avatar = AVATAR_IDS[0];
 
-test("top bar has only the toggle: no avatar, no profile link, no product title", () => {
+test("top bar has the sidebar toggle on the left and the theme switch on the right: no avatar, no profile link, no product title", () => {
   const html = renderToStaticMarkup(<TopBar />);
   expect(html).toContain('role="switch"');
+  expect(html).toContain('aria-label="Sidebar"');
+  expect(html.indexOf('aria-label="Sidebar"')).toBeLessThan(html.indexOf('role="switch"'));
+  expect(html).toContain("justify-between");
   expect(html).not.toContain("/avatars/");
   expect(html).not.toContain("<a");
   expect(html).not.toContain("Flipside");

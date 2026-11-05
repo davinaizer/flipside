@@ -14,7 +14,9 @@ const ICONS = {
       <circle cx="9" cy="17" r="2" />
     </>
   ),
+  // Sidebar toggle: the chevron points the way the sidebar will move (left to collapse, right to expand).
   panelLeft: <path d="M4 5h16v14H4ZM9 5v14M15 10l-2 2 2 2" />,
+  panelLeftOpen: <path d="M4 5h16v14H4ZM9 5v14M13 10l2 2-2 2" />,
   more: (
     <>
       <circle cx="12" cy="5" r="1" />

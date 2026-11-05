@@ -6,7 +6,7 @@ import { useSyncExternalStore } from "react";
 import { FOCUS_RING, PRESSED } from "@/ui/button/button-class";
 import { Icon, Logo, type IconName } from "@/ui/icons/Icon";
 import { ProfileMenu } from "./ProfileMenu";
-import { readCollapsed, subscribeCollapsed, writeCollapsed } from "./sidebar-state";
+import { readCollapsed, subscribeCollapsed } from "./sidebar-state";
 
 const SECTIONS: { href: string; label: string; icon: IconName; match: string[] }[] = [
   { href: "/library", label: "Library", icon: "library", match: ["/library", "/decks", "/import"] },
@@ -17,43 +17,24 @@ const SECTIONS: { href: string; label: string; icon: IconName; match: string[] }
 export function Sidebar({ name, avatar }: { name: string; avatar: string }) {
   // The server snapshot is expanded, so hydration matches; the remembered choice applies right after.
   const collapsed = useSyncExternalStore(subscribeCollapsed, readCollapsed, () => false);
-  const toggle = () => writeCollapsed(!collapsed);
-  return <SidebarView name={name} avatar={avatar} collapsed={collapsed} onToggle={toggle} />;
+  return <SidebarView name={name} avatar={avatar} collapsed={collapsed} />;
 }
 
-/** Collapsed it is an icon rail: nav icons keep their name through aria-label and title (U4). */
-export function SidebarView({
-  name,
-  avatar,
-  collapsed,
-  onToggle,
-}: {
-  name: string;
-  avatar: string;
-  collapsed: boolean;
-  onToggle: () => void;
-}) {
+/**
+ * Collapsed it is an icon rail: nav icons keep their name through aria-label and title (U4).
+ * The toggle lives in the top bar. The width animates; labels are clipped (overflow-hidden, no wrap)
+ * while it moves. The aside itself must not clip, because the profile menu opens wider than the rail.
+ */
+export function SidebarView({ name, avatar, collapsed }: { name: string; avatar: string; collapsed: boolean }) {
   const path = usePathname();
   return (
     <aside
-      className={`sticky top-0 flex h-screen shrink-0 flex-col justify-between bg-surface-container-low p-4 ${collapsed ? "w-20" : "w-64"}`}
+      className={`sticky top-0 flex h-screen shrink-0 flex-col justify-between bg-surface-container-low p-4 transition-[width] duration-200 ease-out motion-reduce:transition-none ${collapsed ? "w-20" : "w-64"}`}
     >
       <div className="flex flex-col gap-6">
-        <div className={`flex items-center gap-3 pt-2 ${collapsed ? "flex-col" : "justify-between px-2"}`}>
-          <div className="flex items-center gap-3">
-            <Logo />
-            {!collapsed && <span className="font-semibold text-headline-sm">Flipside</span>}
-          </div>
-          <button
-            type="button"
-            onClick={onToggle}
-            aria-expanded={!collapsed}
-            aria-label="Sidebar"
-            title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-            className={`flex size-11 items-center justify-center rounded-full text-on-surface hover:bg-surface-container-high active:bg-surface-container-highest ${PRESSED} ${FOCUS_RING}`}
-          >
-            <Icon name="panelLeft" />
-          </button>
+        <div className={`flex items-center gap-3 overflow-hidden whitespace-nowrap pt-2 ${collapsed ? "justify-center" : "px-2"}`}>
+          <Logo />
+          {!collapsed && <span className="font-semibold text-headline-sm">Flipside</span>}
         </div>
         <nav aria-label="Main">
           <ul className="flex flex-col gap-2">
@@ -66,7 +47,7 @@ export function SidebarView({
                     aria-current={current ? "page" : undefined}
                     aria-label={collapsed ? s.label : undefined}
                     title={collapsed ? s.label : undefined}
-                    className={`flex min-h-11 items-center gap-3 rounded-full font-semibold ${collapsed ? "justify-center" : "px-4"} ${PRESSED} ${FOCUS_RING} ${
+                    className={`flex min-h-11 items-center gap-3 overflow-hidden whitespace-nowrap rounded-full font-semibold ${collapsed ? "justify-center" : "px-4"} ${PRESSED} ${FOCUS_RING} ${
                       current
                         ? "bg-primary-container text-on-primary-container active:bg-surface-container-highest"
                         : "text-on-surface hover:bg-surface-container-high active:bg-surface-container-highest"

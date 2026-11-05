@@ -110,7 +110,7 @@ export function ProfileMenu({ name, avatar, collapsed = false }: { name: string;
         // Collapsed there is no visible name, so the button carries it (and a tooltip).
         aria-label={collapsed ? name : undefined}
         title={collapsed ? name : undefined}
-        className={`flex min-h-11 w-full items-center gap-3 rounded-card border border-card-edge bg-surface-card text-left shadow-card ${collapsed ? "justify-center p-1" : "p-3"} ${PRESSED} ${FOCUS_RING}`}
+        className={`flex min-h-11 w-full items-center gap-3 overflow-hidden whitespace-nowrap rounded-card border border-card-edge bg-surface-card text-left shadow-card ${collapsed ? "justify-center p-1" : "p-3"} ${PRESSED} ${FOCUS_RING}`}
       >
         <Avatar id={avatar} size={44} />
         {!collapsed && <span className="font-semibold">{name}</span>}
