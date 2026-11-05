@@ -1338,7 +1338,7 @@
           ],
           "area": "src/domain/import-file.ts, src/domain/zip-import.ts, src/domain/csv-import.ts, src/shared/schemas/import.ts",
           "done_when": "fromCsv and fromZip are deleted; ZipIssue and CsvIssue are assignable to ImportIssue without a runtime copy. Existing import tests pass. verify.sh green.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F20.6",

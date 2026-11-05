@@ -105,3 +105,4 @@ F20.1: zip size bounded before unpack by max(compressed, uncompressed) declared 
 F20.2: parseOrThrow and readJson in src/server/http/parse.ts replace the issues.map blocks and body fallbacks in six services and six routes; imports details are now {path, message}. Left alone: auth/login and session/profile, which answer a bad body with their own neutral 401/invalid_request.
 F20.3: added handle/handleOpen in src/server/http/handle.ts and moved every route's try/catch onto them; responses unchanged, verify green.
 F20.4: profileById is the one lookup behind getCurrentProfile, resolveHome and profileFromCookie (no fabricated Request); requireProfileById removed, the session route throws the 404 itself.
+F20.5: deleted fromCsv/fromZip in import-file.ts; issues pass through uncopied.
