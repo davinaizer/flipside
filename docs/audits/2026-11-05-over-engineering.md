@@ -45,7 +45,7 @@ Line references are valid at commit `5129010`.
 #### OE-02 The `issues.map(...)` into `ApiError(400, ...)` block is repeated about 8 times
 
 - **Severity:** medium
-- **Status:** open
+- **Status:** accepted (F20.2)
 - **Where:** `src/server/decks.ts:223`, `src/server/settings.ts:28`, `src/server/profile.ts:80-85,111-116`, `src/server/sessions.ts:216-221`, `src/server/reviews.ts:71-76`, `src/server/imports.ts:52`.
 - **Why:** The same 6 to 8 lines are repeated. `imports.ts:52` is already inconsistent: it spreads the raw Zod issue (`{ ...i }`) instead of `{path, message}`, so its error `details` have a different shape from the rest of the API.
 - **Recommendation:** Add `parseOrThrow(schema, body, message, status = 400)` next to `ApiError` in `src/server/http/errors.ts`. This also fixes the `imports.ts` inconsistency.
@@ -53,7 +53,7 @@ Line references are valid at commit `5129010`.
 #### OE-03 Every route repeats `try { ... } catch (e) { return toErrorResponse(e) }`
 
 - **Severity:** medium
-- **Status:** open
+- **Status:** accepted (F20.3)
 - **Where:** 15 route files under `src/app/api/v1/**`, for example `decks/[id]/route.ts:10-36`, `library/route.ts:8-13`.
 - **Why:** Each handler carries about 4 lines of identical wrapper. `toErrorResponse` rethrows anything that is not an `ApiError`, so the try/catch exists only to translate one error type.
 - **Recommendation:** Add a `handle(fn)` wrapper that resolves the profile and maps `ApiError`. Best readability win in the repo; do it only if you accept touching all 15 routes.
@@ -61,7 +61,7 @@ Line references are valid at commit `5129010`.
 #### OE-04 JSON body parsing is done three different ways
 
 - **Severity:** medium
-- **Status:** open
+- **Status:** accepted (F20.2)
 - **Where:** `src/app/api/v1/sessions/[id]/route.ts:13-21`, `decks/[id]/route.ts:21-22`, `settings/route.ts:19`, `auth/login/route.ts:10`.
 - **Why:** Sessions reads text, trims it and nests a try/catch around `JSON.parse`. The deck route uses `.catch(() => undefined)` and a sentinel check. Login uses `.catch(() => null)` and hands the result to Zod.
 - **Recommendation:** Add one `readJson(request)` helper. The empty-body-means-resume behaviour of sessions can stay as a flag.
@@ -69,7 +69,7 @@ Line references are valid at commit `5129010`.
 #### OE-14 Identity "converters" copy objects for no reason
 
 - **Severity:** medium
-- **Status:** open
+- **Status:** accepted (F20.5)
 - **Where:** `src/domain/import-file.ts:22-23` (used at 58, 72, 79); related `src/server/imports.ts:52`.
 - **Why:** `fromCsv` and `fromZip` are `(i) => ({ ...i })`. Nothing is transformed. If the types are not assignable, the fix is to align the types, not to copy at runtime.
 - **Recommendation:** Delete both helpers and make `ImportIssue` the one shared issue type. If `ZipIssue.code` is too narrow, widen it to `string`.
@@ -85,7 +85,7 @@ Line references are valid at commit `5129010`.
 #### OE-16 `DeleteDeck` bypasses the API client
 
 - **Severity:** medium
-- **Status:** open
+- **Status:** accepted (F20.6)
 - **Where:** `src/ui/deck/delete-deck/DeleteDeck.tsx:26-27`.
 - **Why:** Raw `fetch` to `/api/v1/decks/...`, then `throw new Error("delete failed")` only to land in its own `catch`. Every other call goes through `api.*`, which adds schema parsing and typed errors.
 - **Recommendation:** Add `api.deleteDeck(id)` and drop the throw-to-catch.
@@ -95,7 +95,7 @@ Line references are valid at commit `5129010`.
 #### OE-05 `resolveHome` and `profileFromCookie` fabricate a `Request`
 
 - **Severity:** low
-- **Status:** open
+- **Status:** accepted (F20.4)
 - **Where:** `src/server/profile.ts:130-157`.
 - **Why:** Both build `new Request("http://local/", { headers: { cookie } })` to reuse `getCurrentProfile`, then catch its 401 `ApiError` to turn it back into a value. The two functions duplicate each other's catch logic.
 - **Recommendation:** Split a `profileById(id, db): Profile | null` out of `getCurrentProfile`. Then `profileFromCookie` is a one-liner and `resolveHome` is `profileFromCookie(...) ? "library" : "picker"`.
@@ -103,7 +103,7 @@ Line references are valid at commit `5129010`.
 #### OE-06 `requireProfileById` is a near-duplicate lookup
 
 - **Severity:** low
-- **Status:** open
+- **Status:** accepted (F20.4)
 - **Where:** `src/server/profile.ts:52-56` (compare lines 38-39).
 - **Why:** The same select as `getCurrentProfile`, with a different error.
 - **Recommendation:** Falls away once OE-05's `profileById` exists.
@@ -135,7 +135,7 @@ Line references are valid at commit `5129010`.
 #### OE-12 Non-null assertions that trust an unstated invariant
 
 - **Severity:** low
-- **Status:** open
+- **Status:** accepted (F20.8)
 - **Where:** `src/server/reviews.ts:43` (`row.sessionId!`), `src/server/sessions.ts:263` (`(await findSessionRow(...))!`), `src/domain/stats.ts:334` (`deckName.get(...)!`), `src/server/imports.ts:112` (`imageIds.get(...)!`).
 - **Why:** Not defensive checks but the opposite: each is safe by construction, and nothing says so.
 - **Recommendation:** Add a one-line "why this cannot be null" comment, or restructure the types. No extra runtime checks.
@@ -143,7 +143,7 @@ Line references are valid at commit `5129010`.
 #### OE-17 Exports used by nothing but tests, or by nothing
 
 - **Severity:** low
-- **Status:** open
+- **Status:** accepted (F20.8)
 - **Where:** `src/domain/image-check.ts` (`sha256Hex`, `imageStorageKey` used nowhere outside the file; `readImageSize` used only by `zip-import.test.ts`); `src/domain/zip-import.ts` (`readZipDirectory` used only inside the file; `baseName` only in its test).
 - **Why:** Public surface larger than any caller needs.
 - **Recommendation:** Un-export them and test through `checkImage` or `openZip`.
@@ -151,7 +151,7 @@ Line references are valid at commit `5129010`.
 #### OE-18 Hard-coded "200 MB" next to its own constant
 
 - **Severity:** low
-- **Status:** open
+- **Status:** accepted (F20.1)
 - **Where:** `src/domain/zip-import.ts:113,128`.
 - **Why:** The message says "200 MB" but the limit is `IMPORT_MAX_ZIP_UNCOMPRESSED_BYTES`; changing the constant makes the text wrong. The same message is also written twice.
 - **Recommendation:** Derive the text from the constant, as `image-check.ts:128` does for the image limit.
@@ -159,7 +159,7 @@ Line references are valid at commit `5129010`.
 #### OE-19 The zip is size-checked twice, and the second check runs after the cost is paid
 
 - **Severity:** low
-- **Status:** open
+- **Status:** accepted (F20.1)
 - **Where:** `src/domain/zip-import.ts:99-131`.
 - **Why:** Declared sizes then inflated sizes is justified (declared sizes can lie, line 124 says so). But `unzipSync` has already inflated everything when the second check runs, so it does not protect against a zip bomb. This is a risk question, not over-engineering.
 - **Recommendation:** Cap inflation up front with fflate's `filter` (it receives `originalSize`), or stop implying the second check protects memory.
@@ -175,7 +175,7 @@ Line references are valid at commit `5129010`.
 #### OE-21 The profile name rule lives twice
 
 - **Severity:** low
-- **Status:** open
+- **Status:** accepted (F20.7)
 - **Where:** `src/ui/profile/ProfileScreen.tsx:12-18`.
 - **Why:** `nameError` re-implements the server rule (trim, 1 to 24). The comment admits "the server stays the authority".
 - **Recommendation:** Import the Zod schema from `src/shared/schemas/profile` and take the message from its error.
@@ -183,7 +183,7 @@ Line references are valid at commit `5129010`.
 #### OE-22 Cast-heavy glue in the profile forms
 
 - **Severity:** low
-- **Status:** open
+- **Status:** accepted (F20.7)
 - **Where:** `src/ui/profile/ProfileScreen.tsx:144`, `src/ui/profile/ProfilePicker.tsx:151`.
 - **Why:** `avatar` is typed `string` in `ProfileForm`, then cast back with `as AvatarId` at both call sites.
 - **Recommendation:** Type `avatar` as `AvatarId` in the form props and remove both casts.
@@ -191,7 +191,7 @@ Line references are valid at commit `5129010`.
 #### OE-23 Formatting slips that lint did not catch
 
 - **Severity:** low
-- **Status:** open
+- **Status:** fixed (a18e544: Prettier run; `format:check` now in verify.sh)
 - **Where:** `src/ui/profile/ProfileScreen.tsx:78` (`id={...}role="alert"`, missing space), `src/ui/profile/ProfilePicker.tsx:110-124` (JSX over-indented by 4 spaces).
 - **Why:** Suggests no formatter runs, or it does not cover these files.
 - **Recommendation:** Run the formatter; if `verify.sh` already runs one, find out why these passed.
