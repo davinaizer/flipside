@@ -1282,7 +1282,7 @@
       ],
       "design_screens": [],
       "notes": "Source: docs/audits/2026-11-05-over-engineering.md. Refactors with no behaviour change except F20.1, which closes a possible memory-exhaustion path on import. No PRD requirement or AC is added; each task is verified by the existing tests plus the checks in done_when. F20.3 follows F20.2. Audit findings without a task stay open in the audit for now.",
-      "status": "todo",
+      "status": "in_progress",
       "tasks": [
         {
           "id": "F20.1",
@@ -1373,7 +1373,8 @@
           "done_when": "sha256Hex, imageStorageKey, readZipDirectory, readImageSize and baseName are no longer exported (tests go through checkImage and openZip); each non-null assertion listed in OE-12 has a one-line comment naming why it cannot be null. No behaviour change. verify.sh green.",
           "status": "todo"
         }
-      ]
+      ],
+      "branch": "feat/F20-audit-followups"
     }
   ]
 }
