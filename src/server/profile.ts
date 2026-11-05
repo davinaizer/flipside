@@ -24,6 +24,16 @@ function readCookie(header: string | null, name: string): string | null {
   return null;
 }
 
+/** The one profile lookup: null for a missing, malformed or unknown id. Ids match case-insensitively. */
+export async function profileById(
+  id: string | null | undefined,
+  db: Db = getDb(),
+): Promise<Profile | null> {
+  if (!id || !isUuid(id)) return null;
+  const [profile] = await db.select().from(profiles).where(eq(profiles.id, id.toLowerCase()));
+  return profile ?? null;
+}
+
 /**
  * Resolves the current profile from the X-Profile-Id header, else the cookie.
  * Missing, malformed or unknown ids throw a 401 ApiError. Every service scopes its
@@ -33,10 +43,8 @@ export async function getCurrentProfile(request: Request, db: Db = getDb()): Pro
   const id =
     request.headers.get(PROFILE_HEADER) ??
     readCookie(request.headers.get("cookie"), PROFILE_COOKIE);
-  const unauthorized = () => new ApiError(401, "unauthorized", "Choose a profile to continue.");
-  if (!id || !isUuid(id)) throw unauthorized();
-  const [profile] = await db.select().from(profiles).where(eq(profiles.id, id.toLowerCase()));
-  if (!profile) throw unauthorized();
+  const profile = await profileById(id, db);
+  if (!profile) throw new ApiError(401, "unauthorized", "Choose a profile to continue.");
   return profile;
 }
 
@@ -46,13 +54,6 @@ export async function listProfiles(db: Db = getDb()) {
     .select({ id: profiles.id, name: profiles.name, avatar: profiles.avatar })
     .from(profiles)
     .orderBy(profiles.name);
-}
-
-/** Confirms the profile exists before the route sets the cookie. */
-export async function requireProfileById(id: string, db: Db = getDb()): Promise<Profile> {
-  const [profile] = await db.select().from(profiles).where(eq(profiles.id, id));
-  if (!profile) throw new ApiError(404, "profile_not_found", "That profile does not exist.");
-  return profile;
 }
 
 /** The /me payload; stored settings are completed with defaults. */
@@ -122,30 +123,14 @@ export async function resolveHome(
   wantsSwitch: boolean,
   db: Db = getDb(),
 ): Promise<"library" | "picker"> {
-  if (wantsSwitch || !cookieValue) return "picker";
-  const req = new Request("http://local/", {
-    headers: { cookie: `${PROFILE_COOKIE}=${cookieValue}` },
-  });
-  return getCurrentProfile(req, db).then(
-    () => "library" as const,
-    (e: unknown) => {
-      if (e instanceof ApiError && e.status === 401) return "picker" as const;
-      throw e;
-    },
-  );
+  if (wantsSwitch) return "picker";
+  return (await profileById(cookieValue, db)) ? "library" : "picker";
 }
 
 /** For server-rendered pages: the profile named by the cookie value, or null when missing or unknown. */
-export async function profileFromCookie(
+export function profileFromCookie(
   cookieValue: string | undefined,
   db: Db = getDb(),
 ): Promise<Profile | null> {
-  if (!cookieValue) return null;
-  const req = new Request("http://local/", {
-    headers: { cookie: `${PROFILE_COOKIE}=${cookieValue}` },
-  });
-  return getCurrentProfile(req, db).catch((e: unknown) => {
-    if (e instanceof ApiError && e.status === 401) return null;
-    throw e;
-  });
+  return profileById(cookieValue, db);
 }

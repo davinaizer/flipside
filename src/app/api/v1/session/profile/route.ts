@@ -1,6 +1,6 @@
-import { errorResponse } from "@/server/http/errors";
+import { ApiError, errorResponse } from "@/server/http/errors";
 import { handleOpen } from "@/server/http/handle";
-import { PROFILE_COOKIE, requireProfileById } from "@/server/profile";
+import { PROFILE_COOKIE, profileById } from "@/server/profile";
 import { selectProfileRequestSchema } from "@/shared/schemas/profile";
 
 export const dynamic = "force-dynamic";
@@ -17,7 +17,8 @@ export const POST = handleOpen(async (request) => {
       body.error.issues,
     );
   }
-  const profile = await requireProfileById(body.data.profileId.toLowerCase());
+  const profile = await profileById(body.data.profileId);
+  if (!profile) throw new ApiError(404, "profile_not_found", "That profile does not exist.");
   const res = Response.json({ id: profile.id, name: profile.name, avatar: profile.avatar });
   // No Secure flag: the iPad reaches the app over plain HTTP on the home network.
   res.headers.append(

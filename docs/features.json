@@ -1327,7 +1327,7 @@
           ],
           "area": "src/server/profile.ts, src/app/page.tsx, src/app/api/v1/session/profile/route.ts, tests",
           "done_when": "getCurrentProfile, profileFromCookie and resolveHome share one profileById lookup; neither of the last two builds a Request; requireProfileById is removed or is a thin caller. Existing auth, profile and home-redirect tests pass unchanged. verify.sh green.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F20.5",
