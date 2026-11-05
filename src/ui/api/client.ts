@@ -75,6 +75,8 @@ export const api = {
       body: JSON.stringify({ password }),
     }),
   logout: () => call("/auth/logout", z.object({ ok: z.literal(true) }), { method: "POST" }),
+  /** The server answers 204 with no body, which `call` reads as null. */
+  deleteDeck: (id: string) => call(`/decks/${id}`, z.null(), { method: "DELETE" }),
   library: (): Promise<Library> => call("/library", librarySchema),
   stats: (range: "week" | "month"): Promise<Stats> => call(`/stats?range=${range}`, statsSchema),
   saveSettings: (settings: Settings): Promise<Settings> =>

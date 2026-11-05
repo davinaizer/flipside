@@ -137,3 +137,4 @@ ASSUMED: F20.1 a deflated entry whose real data is longer than its declared size
 ASSUMED: F20.2 auth/login and session/profile keep their own safeParse and null fallback (login must stay one neutral 401; session/profile maps bad JSON to invalid_request, not invalid_json); parseOrThrow without a message joins the issue messages (profile endpoints).
 ASSUMED: F20.3 handle() wraps routes that need a profile; handleOpen() is the same try/catch without the profile lookup for POST /profiles and POST /session/profile; GET /profiles stays unwrapped (no ApiError path).
 ASSUMED: F20.5 kept ZipIssue and CsvIssue as the precise domain types (narrow code unions); they are assignable to ImportIssue structurally, so only the fromCsv/fromZip copies were deleted.
+ASSUMED: F20.6 no jsdom, so the failed-delete test runs the exported deleteDeck helper with api.deleteDeck stubbed (asserts the existing message); the component only shows what it returns.

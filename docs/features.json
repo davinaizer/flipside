@@ -1349,7 +1349,7 @@
           ],
           "area": "src/ui/deck/delete-deck/DeleteDeck.tsx, src/ui/api/client.ts",
           "done_when": "api.deleteDeck(id) exists and DeleteDeck uses it; no raw fetch and no throw-to-catch remain in the component. Component test: a failed delete shows the existing error message and leaves the deck. verify.sh green.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F20.7",
