@@ -111,6 +111,14 @@ function webpLossless(w: number, h: number): Uint8Array {
 
 const csv = strToU8("id,topic,front,back\n1,a,b,c\n");
 const zip = (files: Zippable) => zipSync(files, { level: 0 });
+/** Overwrites a 32-bit size in the first central directory header (20 compressed, 24 uncompressed). */
+function setCentralSize(z: Uint8Array, field: 20 | 24, value: number): void {
+  const view = new DataView(z.buffer, z.byteOffset, z.byteLength);
+  for (let i = 0; i + 4 <= z.length; i++) {
+    if (view.getUint32(i, true) === 0x02014b50) return view.setUint32(i + field, value, true);
+  }
+  throw new Error("no central directory header");
+}
 const SYMLINK_ATTRS = (0o120777 << 16) >>> 0;
 
 describe("zip safety", () => {
@@ -163,8 +171,29 @@ describe("zip safety", () => {
     const r = openZip(zipSync({ "a.bin": big, "b.bin": big }, { level: 9 }));
     expect(r.blocked).toBe(true);
     expect(r.issues[0].code).toBe("too_large");
+    expect(r.issues[0].message).toBe(
+      `The zip is over ${IMPORT_MAX_ZIP_UNCOMPRESSED_BYTES / (1024 * 1024)} MB uncompressed`,
+    );
     expect(r.files.size).toBe(0);
   }, 20000);
+
+  it("never inflates a deflated entry past its declared size", () => {
+    // 10 MB of zeros declared as 100 bytes: fflate's output buffer is the declared size.
+    const z = zipSync({ "a.bin": new Uint8Array(10 * 1024 * 1024) }, { level: 9 });
+    setCentralSize(z, 24, 100);
+    const r = openZip(z);
+    expect(r.blocked).toBe(false);
+    expect(r.files.get("a.bin")!.length).toBe(100);
+  });
+
+  it("blocks a stored entry whose compressed size is over the limit before unpacking", () => {
+    // The data is not really there: unzipSync would read past the end, so too_large proves no unpack ran.
+    const z = zip({ "a.bin": strToU8("tiny") });
+    setCentralSize(z, 20, IMPORT_MAX_ZIP_UNCOMPRESSED_BYTES + 1);
+    const r = openZip(z);
+    expect(r.issues).toEqual([expect.objectContaining({ code: "too_large" })]);
+    expect(r.files.size).toBe(0);
+  });
 
   it("blocks bytes that are not a zip", () => {
     const r = openZip(strToU8("not a zip at all, just text padding"));

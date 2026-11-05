@@ -1293,7 +1293,7 @@
           ],
           "area": "src/domain/zip-import.ts, src/domain/zip-import.test.ts",
           "done_when": "First measure what fflate does when a deflated entry inflates past its declared size, and note the result in the commit body. Test: a zip whose central directory declares sizes under IMPORT_MAX_ZIP_UNCOMPRESSED_BYTES but whose data inflates past it is rejected as too_large, and the unpack stops without inflating every entry first (if fflate already bounds output at the declared size, the test proves that instead and the redundant check is removed). The too_large message is built from the constant, written once. verify.sh green.",
-          "status": "todo",
+          "status": "done",
           "model": "opus"
         },
         {

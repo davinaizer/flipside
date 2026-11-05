@@ -101,3 +101,4 @@ F19.2: Add User button below the picker list opens the shared ProfileForm; api.c
 F19.3: e2e/add-user.spec.ts covers open, cancel, invalid names, create, pick, empty Library, axe in both themes, and 401 without cookie; desktop and iPad pass.
 REVIEW F19 round 1: PASS at 9a947f3
 F19 done: add user from the picker, PR 46. MANUAL PENDING: none from the ledger.
+F20.1: zip size bounded before unpack by max(compressed, uncompressed) declared size per entry (fflate caps deflate output at the declared size); post-inflate check removed; too_large message built once from the constant.
