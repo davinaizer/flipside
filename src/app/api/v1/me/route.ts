@@ -1,23 +1,12 @@
-import { toErrorResponse } from "@/server/http/errors";
+import { handle } from "@/server/http/handle";
 import { readJson } from "@/server/http/parse";
-import { getCurrentProfile, toMe, updateProfile } from "@/server/profile";
+import { toMe, updateProfile } from "@/server/profile";
 
 export const dynamic = "force-dynamic";
 
-export async function GET(request: Request): Promise<Response> {
-  try {
-    return Response.json(toMe(await getCurrentProfile(request)));
-  } catch (e) {
-    return toErrorResponse(e);
-  }
-}
+export const GET = handle(async ({ profile }) => Response.json(toMe(profile)));
 
-export async function PATCH(request: Request): Promise<Response> {
-  try {
-    const profile = await getCurrentProfile(request);
-    const body = await readJson(request);
-    return Response.json(toMe(await updateProfile(profile.id, body)));
-  } catch (e) {
-    return toErrorResponse(e);
-  }
-}
+export const PATCH = handle(async ({ request, profile }) => {
+  const body = await readJson(request);
+  return Response.json(toMe(await updateProfile(profile.id, body)));
+});

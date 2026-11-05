@@ -1,17 +1,8 @@
 import { getLeeches } from "@/server/decks";
-import { toErrorResponse } from "@/server/http/errors";
-import { getCurrentProfile } from "@/server/profile";
+import { handle } from "@/server/http/handle";
 
 export const dynamic = "force-dynamic";
 
-export async function GET(
-  request: Request,
-  { params }: { params: Promise<{ id: string }> },
-): Promise<Response> {
-  try {
-    const profile = await getCurrentProfile(request);
-    return Response.json(await getLeeches(profile.id, (await params).id));
-  } catch (e) {
-    return toErrorResponse(e);
-  }
-}
+export const GET = handle<{ id: string }>(async ({ profile, params }) =>
+  Response.json(await getLeeches(profile.id, params.id)),
+);

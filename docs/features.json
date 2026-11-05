@@ -1316,7 +1316,7 @@
           ],
           "area": "src/server/http, src/app/api/v1/**/route.ts",
           "done_when": "Unit test: handle resolves the profile, maps an ApiError to its response and rethrows anything else. Every route file that repeated try/catch with toErrorResponse uses it; no route has its own try/catch for ApiError. Existing API tests pass with no change to responses. verify.sh green.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F20.4",
