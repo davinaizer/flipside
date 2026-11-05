@@ -1,4 +1,5 @@
-import { errorResponse, toErrorResponse } from "@/server/http/errors";
+import { toErrorResponse } from "@/server/http/errors";
+import { readJson } from "@/server/http/parse";
 import { getCurrentProfile } from "@/server/profile";
 import { putReview, undoReview } from "@/server/reviews";
 
@@ -10,12 +11,7 @@ type Ctx = { params: Promise<{ id: string }> };
 export async function PUT(request: Request, { params }: Ctx): Promise<Response> {
   try {
     const profile = await getCurrentProfile(request);
-    let body: unknown;
-    try {
-      body = await request.json();
-    } catch {
-      return errorResponse(400, "invalid_json", "The body must be JSON.");
-    }
+    const body = await readJson(request);
     return Response.json(await putReview(profile, (await params).id, body));
   } catch (e) {
     return toErrorResponse(e);

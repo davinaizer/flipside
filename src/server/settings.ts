@@ -2,7 +2,7 @@ import { eq } from "drizzle-orm";
 import type { Db } from "@/server/db/client";
 import { getDb } from "@/server/db/client";
 import { profiles } from "@/server/db/schema";
-import { ApiError } from "@/server/http/errors";
+import { parseOrThrow } from "@/server/http/parse";
 import { settingsSchema, type Settings } from "@/shared/settings";
 
 /** Stored values merged over defaults (the schema fills what is missing). */
@@ -19,15 +19,11 @@ export async function saveSettings(
   body: unknown,
   db: Db = getDb(),
 ): Promise<Settings> {
-  const parsed = settingsSchema.strict().safeParse(body);
-  if (!parsed.success) {
-    throw new ApiError(
-      400,
-      "invalid_request",
-      "The settings are not valid.",
-      parsed.error.issues.map((i) => ({ path: i.path.join("."), message: i.message })),
-    );
-  }
-  await db.update(profiles).set({ settings: parsed.data }).where(eq(profiles.id, profileId));
-  return parsed.data;
+  const data = parseOrThrow(settingsSchema.strict(), body, {
+    status: 400,
+    code: "invalid_request",
+    message: "The settings are not valid.",
+  });
+  await db.update(profiles).set({ settings: data }).where(eq(profiles.id, profileId));
+  return data;
 }

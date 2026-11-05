@@ -116,7 +116,13 @@ test("dry run previews CSV and zip input and saves nothing", async () => {
     (await post(strToU8(csv), "?dryRun=true", "00000000-0000-4000-8000-000000000000")).status,
   ).toBe(401);
   // A commit without deck details is a bad request (full commit tests: imports-commit.test.ts).
-  expect((await post(strToU8(csv), "")).status).toBe(400);
+  const noDetails = await post(strToU8(csv), "");
+  expect(noDetails.status).toBe(400);
+  // Details are {path, message} like the other services.
+  const { error } = await noDetails.json();
+  expect(error.code).toBe("invalid_request");
+  expect(error.details.length).toBeGreaterThan(0);
+  for (const d of error.details) expect(Object.keys(d).sort()).toEqual(["message", "path"]);
 
   expect(await snapshot()).toEqual(before);
   await sql.end();

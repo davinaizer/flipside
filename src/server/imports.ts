@@ -1,5 +1,6 @@
 import { buildPreview, parseImportFile } from "@/domain/import-file";
 import { ApiError } from "@/server/http/errors";
+import { parseOrThrow } from "@/server/http/parse";
 import { getDb, type Db } from "@/server/db/client";
 import { cards, decks, images as imagesTable, importRuns } from "@/server/db/schema";
 import { getImageStore } from "@/server/images/store";
@@ -56,16 +57,11 @@ export async function commitImport(
   if (deckId) {
     await ownedDeck(db, profileId, deckId);
   } else {
-    const parsed = importDeckDetailsSchema.safeParse(upload.details);
-    if (!parsed.success) {
-      throw new ApiError(
-        400,
-        "invalid_request",
-        "Check the deck details.",
-        parsed.error.issues.map((i) => ({ ...i })),
-      );
-    }
-    details = parsed.data;
+    details = parseOrThrow(importDeckDetailsSchema, upload.details, {
+      status: 400,
+      code: "invalid_request",
+      message: "Check the deck details.",
+    });
   }
   const { csv, issues, images } = await parseImport(upload.bytes);
   if (csv.cards.length === 0)

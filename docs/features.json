@@ -1305,7 +1305,7 @@
           ],
           "area": "src/server/http, src/server/{decks,imports,profile,sessions,reviews,settings}.ts, src/app/api/v1/**/route.ts that read a body",
           "done_when": "Unit tests for both helpers. Every 'issues.map' to ApiError block and every hand-rolled request.json() fallback is replaced; grep finds no 'issues.map' outside the helper. imports.ts now returns details as {path, message} like the other services (API test). Status codes and error codes of existing endpoints are unchanged (existing API tests pass; profile create keeps 400 and update keeps 422). verify.sh green.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F20.3",

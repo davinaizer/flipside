@@ -1,4 +1,5 @@
-import { errorResponse, toErrorResponse } from "@/server/http/errors";
+import { toErrorResponse } from "@/server/http/errors";
+import { readJson } from "@/server/http/parse";
 import { getCurrentProfile } from "@/server/profile";
 import { putSession } from "@/server/sessions";
 
@@ -10,15 +11,7 @@ type Ctx = { params: Promise<{ id: string }> };
 export async function PUT(request: Request, { params }: Ctx): Promise<Response> {
   try {
     const profile = await getCurrentProfile(request);
-    const text = await request.text();
-    let body: unknown = null;
-    if (text.trim() !== "") {
-      try {
-        body = JSON.parse(text);
-      } catch {
-        return errorResponse(400, "invalid_json", "The body must be JSON.");
-      }
-    }
+    const body = await readJson(request, { allowEmpty: true });
     return Response.json(await putSession(profile, (await params).id, body));
   } catch (e) {
     return toErrorResponse(e);

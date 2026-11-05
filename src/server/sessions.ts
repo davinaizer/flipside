@@ -6,6 +6,7 @@ import { cardState, cards, decks, images, reviewLog, sessions } from "@/server/d
 import { stateColumns, toSchedulerState } from "@/server/card-state";
 import { findDeck, newCardsRemaining } from "@/server/decks";
 import { ApiError } from "@/server/http/errors";
+import { parseOrThrow } from "@/server/http/parse";
 import type { Profile } from "@/server/profile";
 import { learningDay } from "@/domain/day";
 import { gradeLabels } from "@/domain/grade-labels";
@@ -261,26 +262,22 @@ export async function putSession(
   }
   if (body === null) throw notFound();
 
-  const parsed = sessionRequestSchema.safeParse(body);
-  if (!parsed.success) {
-    throw new ApiError(
-      400,
-      "invalid_request",
-      "The session request is not valid.",
-      parsed.error.issues.map((i) => ({ path: i.path.join("."), message: i.message })),
-    );
-  }
-  const cardIds = await buildQueue(profile, parsed.data, now, db, random);
+  const data = parseOrThrow(sessionRequestSchema, body, {
+    status: 400,
+    code: "invalid_request",
+    message: "The session request is not valid.",
+  });
+  const cardIds = await buildQueue(profile, data, now, db, random);
   // A concurrent retry may insert first; then both read back the one stored row.
   await db
     .insert(sessions)
     .values({
       id: sessionId,
       profileId: profile.id,
-      scope: parsed.data.scope,
+      scope: data.scope,
       plannedCount: cardIds.length,
       startedAt: now,
-      meta: { length: parsed.data.length, cardIds },
+      meta: { length: data.length, cardIds },
     })
     .onConflictDoNothing();
   const row = await findSessionRow(sessionId, db);

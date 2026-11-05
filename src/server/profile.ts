@@ -3,6 +3,7 @@ import type { Db } from "@/server/db/client";
 import { getDb } from "@/server/db/client";
 import { profiles } from "@/server/db/schema";
 import { ApiError } from "@/server/http/errors";
+import { parseOrThrow } from "@/server/http/parse";
 import { DEFAULT_ACCENT } from "@/shared/avatars";
 import { DEFAULT_DAY_START_HOUR, DEFAULT_TIMEZONE } from "@/shared/constants";
 import { createProfileRequestSchema, updateProfileRequestSchema } from "@/shared/schemas/profile";
@@ -74,19 +75,14 @@ export function toMe(profile: Profile) {
  * settings. Invalid input is a 400 naming the problem. Duplicates are allowed (P4).
  */
 export async function createProfile(body: unknown, db: Db = getDb()): Promise<Profile> {
-  const parsed = createProfileRequestSchema.safeParse(body);
-  if (!parsed.success) {
-    throw new ApiError(
-      400,
-      "validation_failed",
-      parsed.error.issues.map((i) => i.message).join(". "),
-      parsed.error.issues.map((i) => ({ path: i.path.join("."), message: i.message })),
-    );
-  }
+  const data = parseOrThrow(createProfileRequestSchema, body, {
+    status: 400,
+    code: "validation_failed",
+  });
   const [created] = await db
     .insert(profiles)
     .values({
-      ...parsed.data,
+      ...data,
       accent: DEFAULT_ACCENT,
       timezone: DEFAULT_TIMEZONE,
       dayStartHour: DEFAULT_DAY_START_HOUR,
@@ -105,18 +101,13 @@ export async function updateProfile(
   body: unknown,
   db: Db = getDb(),
 ): Promise<Profile> {
-  const parsed = updateProfileRequestSchema.safeParse(body);
-  if (!parsed.success) {
-    throw new ApiError(
-      422,
-      "validation_failed",
-      parsed.error.issues.map((i) => i.message).join(". "),
-      parsed.error.issues.map((i) => ({ path: i.path.join("."), message: i.message })),
-    );
-  }
+  const data = parseOrThrow(updateProfileRequestSchema, body, {
+    status: 422,
+    code: "validation_failed",
+  });
   const [updated] = await db
     .update(profiles)
-    .set(parsed.data)
+    .set(data)
     .where(eq(profiles.id, profileId))
     .returning();
   return updated;

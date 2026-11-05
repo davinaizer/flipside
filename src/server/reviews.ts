@@ -4,6 +4,7 @@ import type { Db } from "@/server/db/client";
 import { getDb } from "@/server/db/client";
 import { cardState, cards, decks, reviewLog, sessions } from "@/server/db/schema";
 import { ApiError } from "@/server/http/errors";
+import { parseOrThrow } from "@/server/http/parse";
 import type { Profile } from "@/server/profile";
 import { liveSessionCardIds, sessionMetaSchema } from "@/server/sessions";
 import { dayStartUtc, learningDay } from "@/domain/day";
@@ -76,16 +77,12 @@ export async function putReview(
   if (!z.string().uuid().safeParse(id).success)
     throw new ApiError(400, "invalid_id", "The review id must be a UUID.");
   const reviewId = id.toLowerCase();
-  const parsed = reviewRequestSchema.safeParse(body);
-  if (!parsed.success) {
-    throw new ApiError(
-      400,
-      "invalid_request",
-      "The review is not valid.",
-      parsed.error.issues.map((i) => ({ path: i.path.join("."), message: i.message })),
-    );
-  }
-  const { sessionId, cardId, grade, durationMs } = parsed.data;
+  const data = parseOrThrow(reviewRequestSchema, body, {
+    status: 400,
+    code: "invalid_request",
+    message: "The review is not valid.",
+  });
+  const { sessionId, cardId, grade, durationMs } = data;
 
   return db.transaction(async (tx) => {
     // Locking the session serialises grades within it, including concurrent retries of one id.

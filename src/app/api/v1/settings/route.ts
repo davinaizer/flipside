@@ -1,4 +1,5 @@
-import { errorResponse, toErrorResponse } from "@/server/http/errors";
+import { toErrorResponse } from "@/server/http/errors";
+import { readJson } from "@/server/http/parse";
 import { getCurrentProfile } from "@/server/profile";
 import { readSettings, saveSettings } from "@/server/settings";
 
@@ -16,8 +17,7 @@ export async function GET(request: Request): Promise<Response> {
 export async function PUT(request: Request): Promise<Response> {
   try {
     const profile = await getCurrentProfile(request);
-    const body: unknown = await request.json().catch(() => undefined);
-    if (body === undefined) return errorResponse(400, "invalid_json", "The body must be JSON.");
+    const body = await readJson(request);
     return Response.json({ settings: await saveSettings(profile.id, body) });
   } catch (e) {
     return toErrorResponse(e);
