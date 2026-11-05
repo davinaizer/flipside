@@ -5,6 +5,16 @@ Read-only reviews of the codebase that produce a ledger of findings. An audit ch
 - `TEMPLATE.md`: copy this to start a new audit.
 - `YYYY-MM-DD-<slug>.md`: one file per audit, named by the day it was created.
 
+## From finding to rule
+
+An audit is a feedback loop, not the rulebook. Move a finding to the cheapest layer that can enforce it:
+
+1. Fix it once and set its status to `fixed`, with the task or commit.
+2. If the same kind of finding appears in a second audit or a milestone review, add a check: first a lint rule or test (mechanical), else a question in `.claude/agents/reviewer.md`, else a line in `CLAUDE.md`.
+3. Record structural choices in `docs/adr/`. The ADR names the check.
+
+`/review-milestone` runs this loop after a group of features. Run a full audit rarely; the lint rules and the reviewer run on every feature.
+
 ## Standard
 
 ### Frontmatter

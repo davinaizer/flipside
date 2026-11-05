@@ -19,7 +19,8 @@
     "backup": "bash scripts/backup.sh",
     "restore": "bash scripts/restore.sh",
     "import:cli": "node --import ./scripts/register-alias.mjs scripts/import-cli.ts",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "dependencies": {
     "drizzle-orm": "^0.45.4",

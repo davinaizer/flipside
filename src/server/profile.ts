@@ -7,14 +7,13 @@ import { DEFAULT_ACCENT } from "@/shared/avatars";
 import { DEFAULT_DAY_START_HOUR, DEFAULT_TIMEZONE } from "@/shared/constants";
 import { createProfileRequestSchema, updateProfileRequestSchema } from "@/shared/schemas/profile";
 import { DEFAULT_SETTINGS, settingsSchema } from "@/shared/settings";
+import { isUuid } from "@/shared/uuid";
 
 /** The only module that knows the cookie name (PRD section 11); others import this constant. */
 export const PROFILE_COOKIE = "flipside_profile";
 export const PROFILE_HEADER = "x-profile-id";
 
 export type Profile = typeof profiles.$inferSelect;
-
-const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 function readCookie(header: string | null, name: string): string | null {
   for (const part of (header ?? "").split(";")) {
@@ -34,7 +33,7 @@ export async function getCurrentProfile(request: Request, db: Db = getDb()): Pro
     request.headers.get(PROFILE_HEADER) ??
     readCookie(request.headers.get("cookie"), PROFILE_COOKIE);
   const unauthorized = () => new ApiError(401, "unauthorized", "Choose a profile to continue.");
-  if (!id || !UUID.test(id)) throw unauthorized();
+  if (!id || !isUuid(id)) throw unauthorized();
   const [profile] = await db.select().from(profiles).where(eq(profiles.id, id.toLowerCase()));
   if (!profile) throw unauthorized();
   return profile;

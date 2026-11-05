@@ -19,8 +19,7 @@ import {
   type SessionResponse,
   type SessionSummary,
 } from "@/shared/schemas/session";
-
-const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+import { isUuid } from "@/shared/uuid";
 
 /**
  * What sessions.meta holds (no schema change): the length asked for and the ordered card
@@ -252,7 +251,7 @@ export async function putSession(
   db: Db = getDb(),
   random: () => number = Math.random,
 ): Promise<SessionResponse> {
-  if (!UUID.test(id)) throw new ApiError(400, "invalid_id", "The session id must be a UUID.");
+  if (!isUuid(id)) throw new ApiError(400, "invalid_id", "The session id must be a UUID.");
   const sessionId = id.toLowerCase();
 
   const existing = await findSessionRow(sessionId, db);
@@ -291,7 +290,7 @@ export async function putSession(
 
 /** Loads a session of this profile or throws 404 (another profile's session looks missing). */
 async function ownSession(profile: Profile, id: string, db: Db): Promise<SessionRow> {
-  if (!UUID.test(id)) throw notFound();
+  if (!isUuid(id)) throw notFound();
   const row = await findSessionRow(id.toLowerCase(), db);
   if (!row || row.profileId !== profile.id) throw notFound();
   return row;

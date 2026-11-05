@@ -1,11 +1,10 @@
-import { getDb } from "@/server/db/client";
 import { checkDatabase } from "@/server/health";
 import { errorResponse } from "@/server/http/errors";
 
 export const dynamic = "force-dynamic";
 
 export async function GET(): Promise<Response> {
-  const ok = await checkDatabase(getDb());
+  const ok = await checkDatabase();
   if (!ok) {
     return errorResponse(
       503,

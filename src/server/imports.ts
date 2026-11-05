@@ -10,6 +10,7 @@ import {
   type ImportResult,
 } from "@/shared/schemas/import";
 import { and, eq, isNull } from "drizzle-orm";
+import { isUuid } from "@/shared/uuid";
 
 const blocked = (issues: ImportIssue[]) =>
   new ApiError(
@@ -34,8 +35,6 @@ async function parseImport(bytes: Uint8Array) {
 export async function previewImport(bytes: Uint8Array): Promise<ImportPreview> {
   return buildPreview(await parseImport(bytes));
 }
-
-const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 /**
  * Commit (PRD section 6, step 4): revalidates the file, then saves the deck, images, cards and import
@@ -216,7 +215,7 @@ async function ownedDeck(
   deckId: string,
 ): Promise<string> {
   const notFound = new ApiError(404, "deck_not_found", "That deck does not exist.");
-  if (!UUID.test(deckId)) throw notFound;
+  if (!isUuid(deckId)) throw notFound;
   const [deck] = await db
     .select({ id: decks.id })
     .from(decks)

@@ -2,7 +2,7 @@
 title: Over-engineering, boilerplate, comments and defensive code
 id: AUD-20261105-over-engineering
 type: over-engineering
-status: open
+status: in-progress
 createdAt: 2026-11-05
 updatedAt: 2026-11-05
 author: Claude Sonnet 5.5
@@ -37,7 +37,7 @@ Line references are valid at commit `5129010`.
 #### OE-01 The UUID regex is copy-pasted six times, beside a second way of checking
 
 - **Severity:** medium
-- **Status:** open
+- **Status:** fixed (chore/quality-gates: `isUuid` in `src/shared/uuid.ts`; lint bans the literal; `reviews.ts` keeps Zod's `.uuid()` on purpose, it answers 400 and the ids it checks are v7)
 - **Where:** `src/server/decks.ts:16`, `src/server/imports.ts:28`, `src/server/profile.ts:17`, `src/server/images/service.ts:8`, `src/server/sessions.ts:23`; `src/server/reviews.ts:67,216` use `z.string().uuid().safeParse`.
 - **Why:** One domain rule written six times, which the DRY principle in `CLAUDE.md` says to avoid. The two styles also differ in behaviour: the regex versions answer 404 or 401, reviews answers 400 `invalid_id`.
 - **Recommendation:** Add one `isUuid(id)` helper in `src/shared`, built on Zod, and delete the copies. Keep the 404-versus-400 difference explicit at each call site.

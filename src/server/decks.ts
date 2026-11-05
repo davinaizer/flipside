@@ -12,8 +12,7 @@ import { masteryBuckets } from "@/domain/stats";
 import { ANSWER_STYLES, CARD_COLORS } from "@/shared/enums";
 import type { DeckSummary, Library } from "@/shared/schemas/library";
 import { settingsSchema } from "@/shared/settings";
-
-const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+import { isUuid } from "@/shared/uuid";
 
 const deckColumns = {
   id: decks.id,
@@ -134,7 +133,7 @@ export async function getLibrary(
 /** The deck row if this profile owns it and it is not deleted; otherwise 404 (same for unknown and other profiles' ids). */
 export async function findDeck(profileId: string, deckId: string, db: Db = getDb()) {
   const notFound = () => new ApiError(404, "deck_not_found", "That deck does not exist.");
-  if (!UUID.test(deckId)) throw notFound();
+  if (!isUuid(deckId)) throw notFound();
   const [deck] = await db
     .select(deckColumns)
     .from(decks)
