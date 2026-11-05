@@ -7,7 +7,7 @@ import { AVATAR_IDS } from "@/shared/avatars";
 import { SidebarView } from "./Sidebar";
 
 const render = (collapsed: boolean) =>
-  renderToStaticMarkup(<SidebarView name="Ada" avatar={AVATAR_IDS[0]} collapsed={collapsed} onToggle={() => {}} />);
+  renderToStaticMarkup(<SidebarView name="Ada" avatar={AVATAR_IDS[0]} collapsed={collapsed} />);
 
 test("collapsed: two nav icons with name and tooltip, avatar, no labels or profile name", () => {
   const html = render(true);
@@ -20,7 +20,7 @@ test("collapsed: two nav icons with name and tooltip, avatar, no labels or profi
   expect(html).not.toContain(">Ada<");
   expect(html).toContain('aria-label="Ada"');
   expect(html).toContain(`/avatars/${AVATAR_IDS[0]}.webp`);
-  expect(html).toContain('aria-expanded="false"');
+  expect(html).not.toContain('aria-label="Sidebar"');
 });
 
 test("expanded: labels and name shown, nav links carry no aria-label override", () => {
@@ -30,12 +30,13 @@ test("expanded: labels and name shown, nav links carry no aria-label override", 
   expect(html).toContain("Flipside");
   expect(html).toContain(">Ada<");
   expect(html).not.toContain('aria-label="Library"');
-  expect(html).toContain('aria-expanded="true"');
 });
 
-test("toggle has an accessible name and a 44 px target in both states", () => {
+test("the width animates unless the user prefers reduced motion, and the toggle is not in the sidebar", () => {
   for (const c of [true, false]) {
-    const btn = render(c).match(/<button[^>]*aria-label="Sidebar"[^>]*>/)?.[0] ?? "";
-    expect(btn).toContain("size-11");
+    const html = render(c);
+    expect(html).toContain("transition-[width]");
+    expect(html).toContain("motion-reduce:transition-none");
+    expect(html).not.toContain('aria-label="Sidebar"');
   }
 });
