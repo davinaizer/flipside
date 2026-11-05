@@ -1360,7 +1360,7 @@
           ],
           "area": "src/ui/profile/ProfileScreen.tsx, src/ui/profile/ProfilePicker.tsx, src/shared/schemas/profile.ts",
           "done_when": "nameError takes its messages from the shared profile schema (one rule); ProfileForm types avatar as AvatarId and both 'as AvatarId' casts are gone. Existing form and Add User tests pass with the same messages. verify.sh green.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F20.8",
