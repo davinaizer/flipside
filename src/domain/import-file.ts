@@ -1,6 +1,6 @@
 import type { ImportIssue, ImportPreview } from "../shared/schemas/import";
-import { parseCsv, type CsvIssue } from "./csv-import";
-import { openZip, resolveImages, type ResolvedImages, type ZipIssue } from "./zip-import";
+import { parseCsv } from "./csv-import";
+import { openZip, resolveImages, type ResolvedImages } from "./zip-import";
 
 const PREVIEW_CARDS = 3;
 
@@ -20,9 +20,6 @@ function findCsv(
     message: csvs.length === 0 ? "The zip has no CSV file" : "The zip has more than one CSV file",
   };
 }
-
-const fromCsv = (i: CsvIssue): ImportIssue => ({ ...i });
-const fromZip = (i: ZipIssue): ImportIssue => ({ ...i });
 
 /** One copy of an image warning per CSV row that references the file, so the preview can say Row N. */
 function withRows(
@@ -57,7 +54,7 @@ export async function parseImportFile(bytes: Uint8Array): Promise<ParsedImport> 
 
   if (kind === "zip") {
     const zip = openZip(bytes);
-    if (zip.blocked) return blockedBy(zip.issues.map(fromZip));
+    if (zip.blocked) return blockedBy(zip.issues);
     files = zip.files;
     const found = findCsv(files);
     if (!("bytes" in found)) return blockedBy([found]);
@@ -73,7 +70,7 @@ export async function parseImportFile(bytes: Uint8Array): Promise<ParsedImport> 
     ]);
   }
   const csv = parseCsv(text);
-  issues.push(...csv.issues.map(fromCsv));
+  issues.push(...csv.issues);
   if (csv.blocked) return blockedBy(issues.filter((i) => i.severity === "block"));
 
   let images: ResolvedImages["images"] = new Map();
@@ -82,7 +79,7 @@ export async function parseImportFile(bytes: Uint8Array): Promise<ParsedImport> 
     .filter((n): n is string => !!n);
   if (kind === "zip") {
     const resolved = await resolveImages(names, files);
-    issues.push(...resolved.issues.flatMap((i) => withRows(fromZip(i), csv.cards)));
+    issues.push(...resolved.issues.flatMap((i) => withRows(i, csv.cards)));
     images = resolved.images;
   } else {
     // A CSV alone cannot carry pictures: warn for each row that names one (re-import keeps the current image).

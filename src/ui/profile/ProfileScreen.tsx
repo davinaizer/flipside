@@ -3,25 +3,23 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { AVATAR_IDS, type AvatarId } from "@/shared/avatars";
-import { PROFILE_NAME_MAX } from "@/shared/constants";
+import { profileNameSchema } from "@/shared/schemas/profile";
 import { api } from "@/ui/api/client";
 import { Avatar } from "@/ui/avatars";
 import { buttonClass, FOCUS_RING } from "@/ui/button/button-class";
 import { Icon } from "@/ui/icons/Icon";
 
-/** Same rule as the server schema (trimmed, 1 to 24); the server stays the authority. */
+/** The shared schema's rule and messages; the server stays the authority. */
 export function nameError(name: string): string | null {
-  const n = name.trim();
-  if (n.length === 0) return "Name cannot be empty";
-  if (n.length > PROFILE_NAME_MAX) return `Name must be ${PROFILE_NAME_MAX} characters or fewer`;
-  return null;
+  const r = profileNameSchema.safeParse(name);
+  return r.success ? null : r.error.issues[0].message;
 }
 
 type Props = {
   name: string;
-  avatar: string;
+  avatar: AvatarId;
   /** Saves the change (PATCH /me). Rejects with an Error whose message is shown. */
-  onSave: (v: { name: string; avatar: string }) => Promise<void>;
+  onSave: (v: { name: string; avatar: AvatarId }) => Promise<void>;
   /** When set, a Cancel button is shown (the Add User form on the picker). */
   onCancel?: () => void;
   submitLabel?: string;
@@ -38,7 +36,7 @@ export function ProfileForm({
   idPrefix = "profile",
 }: Props) {
   const [name, setName] = useState(initialName);
-  const [avatar, setAvatar] = useState(initialAvatar);
+  const [avatar, setAvatar] = useState<AvatarId>(initialAvatar);
   const [touched, setTouched] = useState(false);
   const [status, setStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
   const [message, setMessage] = useState("");
@@ -140,8 +138,10 @@ export function ProfileForm({
 
 export function ProfileScreen({ name, avatar }: { name: string; avatar: string }) {
   const router = useRouter();
-  async function onSave(v: { name: string; avatar: string }) {
-    await api.updateProfile({ name: v.name, avatar: v.avatar as AvatarId });
+  // The stored avatar is a plain string; fall back to the first if it is not a known id.
+  const known = AVATAR_IDS.find((id) => id === avatar) ?? AVATAR_IDS[0];
+  async function onSave(v: { name: string; avatar: AvatarId }) {
+    await api.updateProfile(v);
     // Re-renders the layout so the sidebar and picker show the change at once.
     router.refresh();
   }
@@ -151,7 +151,7 @@ export function ProfileScreen({ name, avatar }: { name: string; avatar: string }
       <p className="text-on-surface-variant">
         Choose your avatar and the name shown around the app.
       </p>
-      <ProfileForm name={name} avatar={avatar} onSave={onSave} />
+      <ProfileForm name={name} avatar={known} onSave={onSave} />
     </>
   );
 }

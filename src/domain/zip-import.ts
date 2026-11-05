@@ -21,6 +21,7 @@ export interface ZipIssue {
 
 export interface ZipEntryInfo {
   name: string;
+  compressedSize: number;
   uncompressedSize: number;
   isDirectory: boolean;
   isSymlink: boolean;
@@ -30,7 +31,7 @@ const EOCD_SIG = 0x06054b50;
 const CEN_SIG = 0x02014b50;
 
 /** Reads the central directory, which also carries the Unix mode that fflate does not expose. */
-export function readZipDirectory(zip: Uint8Array): ZipEntryInfo[] | null {
+function readZipDirectory(zip: Uint8Array): ZipEntryInfo[] | null {
   const view = new DataView(zip.buffer, zip.byteOffset, zip.byteLength);
   let eocd = -1;
   for (let i = zip.length - 22; i >= Math.max(0, zip.length - 22 - 0xffff); i--) {
@@ -47,6 +48,7 @@ export function readZipDirectory(zip: Uint8Array): ZipEntryInfo[] | null {
   for (let n = 0; n < count; n++) {
     if (offset + 46 > zip.length || view.getUint32(offset, true) !== CEN_SIG) return null;
     const madeBy = view.getUint16(offset + 4, true);
+    const compressedSize = view.getUint32(offset + 20, true);
     const size = view.getUint32(offset + 24, true);
     const nameLen = view.getUint16(offset + 28, true);
     const extraLen = view.getUint16(offset + 30, true);
@@ -57,6 +59,7 @@ export function readZipDirectory(zip: Uint8Array): ZipEntryInfo[] | null {
     const unixMode = madeBy >>> 8 === 3 ? external >>> 16 : 0;
     entries.push({
       name,
+      compressedSize,
       uncompressedSize: size,
       isDirectory: name.endsWith("/"),
       isSymlink: (unixMode & 0xf000) === 0xa000,
@@ -70,6 +73,21 @@ function unsafePath(name: string): boolean {
   if (name.startsWith("/") || name.startsWith("\\") || /^[a-zA-Z]:/.test(name)) return true;
   return name.split(/[\\/]/).some((part) => part === "..");
 }
+
+const MB = 1024 * 1024;
+const TOO_LARGE: ZipIssue = {
+  severity: "block",
+  code: "too_large",
+  message: `The zip is over ${IMPORT_MAX_ZIP_UNCOMPRESSED_BYTES / MB} MB uncompressed`,
+};
+
+/**
+ * The most bytes fflate's unzipSync can produce for an entry, from the central directory alone.
+ * Measured on fflate 0.8.3: a deflated entry inflates into a buffer of its declared uncompressed
+ * size and output past it is dropped, so a lying size cannot inflate further; a stored entry is
+ * copied at its compressed size. The larger of the two bounds both methods.
+ */
+const outputBound = (e: ZipEntryInfo): number => Math.max(e.compressedSize, e.uncompressedSize);
 
 export interface ZipContents {
   blocked: boolean;
@@ -101,7 +119,7 @@ export function openZip(zip: Uint8Array): ZipContents {
   }
   let total = 0;
   for (const e of entries) {
-    total += e.uncompressedSize;
+    total += outputBound(e);
     if (unsafePath(e.name)) {
       issues.push({
         severity: "block",
@@ -119,13 +137,7 @@ export function openZip(zip: Uint8Array): ZipContents {
       });
     }
   }
-  if (total > IMPORT_MAX_ZIP_UNCOMPRESSED_BYTES) {
-    issues.push({
-      severity: "block",
-      code: "too_large",
-      message: "The zip is over 200 MB uncompressed",
-    });
-  }
+  if (total > IMPORT_MAX_ZIP_UNCOMPRESSED_BYTES) issues.push(TOO_LARGE);
   if (issues.length > 0) return blocked(issues);
 
   let unpacked: Record<string, Uint8Array>;
@@ -136,18 +148,11 @@ export function openZip(zip: Uint8Array): ZipContents {
       { severity: "block", code: "unreadable_zip", message: "The zip file could not be read" },
     ]);
   }
-  // Declared sizes can lie; check what was actually inflated.
-  let actual = 0;
-  for (const data of Object.values(unpacked)) actual += data.length;
-  if (actual > IMPORT_MAX_ZIP_UNCOMPRESSED_BYTES) {
-    return blocked([
-      { severity: "block", code: "too_large", message: "The zip is over 200 MB uncompressed" },
-    ]);
-  }
+  // No check after unpacking: outputBound already capped what unzipSync could produce.
   return { blocked: false, issues: [], files: new Map(Object.entries(unpacked)) };
 }
 
-export const baseName = (path: string): string => path.split(/[\\/]/).pop() ?? path;
+const baseName = (path: string): string => path.split(/[\\/]/).pop() ?? path;
 
 export interface ResolvedImages {
   issues: ZipIssue[];

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { api } from "@/ui/api/client";
 import { buttonClass, FOCUS_RING, PRESSED } from "@/ui/button/button-class";
 
 const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
@@ -12,6 +13,17 @@ export function deleteSummary(name: string, cardCount: number, reviewCount: numb
 
 /** The solid confirm button: hover and pressed go to the error container. Exported for tests. */
 export const CONFIRM_DELETE_CLASS = `min-h-11 rounded-full bg-error px-8 font-semibold text-on-error hover:bg-error-container hover:text-on-error-container active:bg-error-container active:text-on-error-container ${PRESSED} ${FOCUS_RING} disabled:opacity-60`;
+
+export const DELETE_ERROR =
+  "We could not delete the deck just now. It is still here, so please try again.";
+
+/** Deletes through the API client; returns the error message to show, or null on success. Exported for tests. */
+export async function deleteDeck(id: string): Promise<string | null> {
+  return api.deleteDeck(id).then(
+    () => null,
+    () => DELETE_ERROR,
+  );
+}
 
 /** D5: confirm, then DELETE /decks/{id}; the caller reloads the Library. */
 export function DeleteDeck({
@@ -28,14 +40,12 @@ export function DeleteDeck({
   async function onDelete() {
     setBusy(true);
     setError(null);
-    try {
-      const res = await fetch(`/api/v1/decks/${deck.id}`, { method: "DELETE" });
-      if (!res.ok) throw new Error("delete failed");
+    const failure = await deleteDeck(deck.id);
+    if (!failure) {
       onDeleted();
       return;
-    } catch {
-      setError("We could not delete the deck just now. It is still here, so please try again.");
     }
+    setError(failure);
     setBusy(false);
   }
 

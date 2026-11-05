@@ -7,7 +7,7 @@ import { Logo } from "@/ui/icons/Icon";
 import { Avatar } from "@/ui/avatars";
 import { AttributeThemeSwitch } from "@/ui/settings/AttributeThemeSwitch";
 import { Skeleton } from "@/ui/states/Skeleton";
-import { AVATAR_IDS, type AvatarId } from "@/shared/avatars";
+import { AVATAR_IDS } from "@/shared/avatars";
 import { ProfileForm } from "@/ui/profile/ProfileScreen";
 import type { ProfileSummary } from "@/shared/schemas/profile";
 import { buttonClass, TAPPABLE_CARD } from "@/ui/button/button-class";
@@ -142,7 +142,7 @@ export function AddUser({ onCreated }: { onCreated: (p: ProfileSummary) => void 
         submitLabel="Add"
         onCancel={() => setOpen(false)}
         onSave={async (v) => {
-          const created = await api.createProfile({ name: v.name, avatar: v.avatar as AvatarId });
+          const created = await api.createProfile(v);
           onCreated(created);
           setOpen(false);
         }}

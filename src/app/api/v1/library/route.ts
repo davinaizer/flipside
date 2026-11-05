@@ -1,14 +1,6 @@
 import { getLibrary } from "@/server/decks";
-import { toErrorResponse } from "@/server/http/errors";
-import { getCurrentProfile } from "@/server/profile";
+import { handle } from "@/server/http/handle";
 
 export const dynamic = "force-dynamic";
 
-export async function GET(request: Request): Promise<Response> {
-  try {
-    const profile = await getCurrentProfile(request);
-    return Response.json(await getLibrary(profile));
-  } catch (e) {
-    return toErrorResponse(e);
-  }
-}
+export const GET = handle(async ({ profile }) => Response.json(await getLibrary(profile)));

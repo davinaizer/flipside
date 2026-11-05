@@ -101,3 +101,14 @@ F19.2: Add User button below the picker list opens the shared ProfileForm; api.c
 F19.3: e2e/add-user.spec.ts covers open, cancel, invalid names, create, pick, empty Library, axe in both themes, and 401 without cookie; desktop and iPad pass.
 REVIEW F19 round 1: PASS at 9a947f3
 F19 done: add user from the picker, PR 46. MANUAL PENDING: none from the ledger.
+F20.1: zip size bounded before unpack by max(compressed, uncompressed) declared size per entry (fflate caps deflate output at the declared size); post-inflate check removed; too_large message built once from the constant.
+F20.2: parseOrThrow and readJson in src/server/http/parse.ts replace the issues.map blocks and body fallbacks in six services and six routes; imports details are now {path, message}. Left alone: auth/login and session/profile, which answer a bad body with their own neutral 401/invalid_request.
+F20.3: added handle/handleOpen in src/server/http/handle.ts and moved every route's try/catch onto them; responses unchanged, verify green.
+F20.4: profileById is the one lookup behind getCurrentProfile, resolveHome and profileFromCookie (no fabricated Request); requireProfileById removed, the session route throws the 404 itself.
+F20.5: deleted fromCsv/fromZip in import-file.ts; issues pass through uncopied.
+F20.6: api.deleteDeck added to the client (204 read as null); DeleteDeck calls it through an exported deleteDeck helper that returns the error message, no raw fetch or throw-to-catch.
+F20.7: profileNameSchema exported from the shared profile schema and used by nameError; ProfileForm avatar typed AvatarId, both casts gone.
+F20.8: un-exported sha256Hex, imageStorageKey, readImageSize, readZipDirectory, baseName (tests go through checkImage/openZip); one-line invariant comments on the four OE-12 non-null assertions.
+REVIEW F20 round 1: GAPS at bcf48f2 (F20.7 ledger status left todo; fixed)
+REVIEW F20 round 2: PASS at 30438f1
+F20 done: PR 51. MANUAL PENDING: none

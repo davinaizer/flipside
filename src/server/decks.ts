@@ -4,6 +4,7 @@ import type { Db } from "@/server/db/client";
 import { getDb } from "@/server/db/client";
 import { cardState, cards, decks, reviewLog } from "@/server/db/schema";
 import { ApiError } from "@/server/http/errors";
+import { parseOrThrow } from "@/server/http/parse";
 import type { Profile } from "@/server/profile";
 import { dayStartUtc, learningDay } from "@/domain/day";
 import { stateColumns, toSchedulerState } from "@/server/card-state";
@@ -224,16 +225,12 @@ export async function updateDeck(
   db: Db = getDb(),
 ) {
   const deck = await findDeck(profileId, deckId, db);
-  const parsed = deckPatchSchema.safeParse(body);
-  if (!parsed.success) {
-    throw new ApiError(
-      400,
-      "invalid_request",
-      "The deck changes are not valid.",
-      parsed.error.issues.map((i) => ({ path: i.path.join("."), message: i.message })),
-    );
-  }
-  const patch = { ...parsed.data };
+  const data = parseOrThrow(deckPatchSchema, body, {
+    status: 400,
+    code: "invalid_request",
+    message: "The deck changes are not valid.",
+  });
+  const patch = { ...data };
   if (patch.groupName === "") patch.groupName = null;
   const [row] = await db
     .update(decks)

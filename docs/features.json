@@ -1282,7 +1282,7 @@
       ],
       "design_screens": [],
       "notes": "Source: docs/audits/2026-11-05-over-engineering.md. Refactors with no behaviour change except F20.1, which closes a possible memory-exhaustion path on import. No PRD requirement or AC is added; each task is verified by the existing tests plus the checks in done_when. F20.3 follows F20.2. Audit findings without a task stay open in the audit for now.",
-      "status": "todo",
+      "status": "done",
       "tasks": [
         {
           "id": "F20.1",
@@ -1293,7 +1293,7 @@
           ],
           "area": "src/domain/zip-import.ts, src/domain/zip-import.test.ts",
           "done_when": "First measure what fflate does when a deflated entry inflates past its declared size, and note the result in the commit body. Test: a zip whose central directory declares sizes under IMPORT_MAX_ZIP_UNCOMPRESSED_BYTES but whose data inflates past it is rejected as too_large, and the unpack stops without inflating every entry first (if fflate already bounds output at the declared size, the test proves that instead and the redundant check is removed). The too_large message is built from the constant, written once. verify.sh green.",
-          "status": "todo",
+          "status": "done",
           "model": "opus"
         },
         {
@@ -1305,7 +1305,7 @@
           ],
           "area": "src/server/http, src/server/{decks,imports,profile,sessions,reviews,settings}.ts, src/app/api/v1/**/route.ts that read a body",
           "done_when": "Unit tests for both helpers. Every 'issues.map' to ApiError block and every hand-rolled request.json() fallback is replaced; grep finds no 'issues.map' outside the helper. imports.ts now returns details as {path, message} like the other services (API test). Status codes and error codes of existing endpoints are unchanged (existing API tests pass; profile create keeps 400 and update keeps 422). verify.sh green.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F20.3",
@@ -1316,7 +1316,7 @@
           ],
           "area": "src/server/http, src/app/api/v1/**/route.ts",
           "done_when": "Unit test: handle resolves the profile, maps an ApiError to its response and rethrows anything else. Every route file that repeated try/catch with toErrorResponse uses it; no route has its own try/catch for ApiError. Existing API tests pass with no change to responses. verify.sh green.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F20.4",
@@ -1327,7 +1327,7 @@
           ],
           "area": "src/server/profile.ts, src/app/page.tsx, src/app/api/v1/session/profile/route.ts, tests",
           "done_when": "getCurrentProfile, profileFromCookie and resolveHome share one profileById lookup; neither of the last two builds a Request; requireProfileById is removed or is a thin caller. Existing auth, profile and home-redirect tests pass unchanged. verify.sh green.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F20.5",
@@ -1338,7 +1338,7 @@
           ],
           "area": "src/domain/import-file.ts, src/domain/zip-import.ts, src/domain/csv-import.ts, src/shared/schemas/import.ts",
           "done_when": "fromCsv and fromZip are deleted; ZipIssue and CsvIssue are assignable to ImportIssue without a runtime copy. Existing import tests pass. verify.sh green.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F20.6",
@@ -1349,7 +1349,7 @@
           ],
           "area": "src/ui/deck/delete-deck/DeleteDeck.tsx, src/ui/api/client.ts",
           "done_when": "api.deleteDeck(id) exists and DeleteDeck uses it; no raw fetch and no throw-to-catch remain in the component. Component test: a failed delete shows the existing error message and leaves the deck. verify.sh green.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F20.7",
@@ -1360,7 +1360,7 @@
           ],
           "area": "src/ui/profile/ProfileScreen.tsx, src/ui/profile/ProfilePicker.tsx, src/shared/schemas/profile.ts",
           "done_when": "nameError takes its messages from the shared profile schema (one rule); ProfileForm types avatar as AvatarId and both 'as AvatarId' casts are gone. Existing form and Add User tests pass with the same messages. verify.sh green.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F20.8",
@@ -1371,9 +1371,11 @@
           ],
           "area": "src/domain/image-check.ts, src/domain/zip-import.ts, src/server/reviews.ts, src/server/sessions.ts, src/server/imports.ts, src/domain/stats.ts",
           "done_when": "sha256Hex, imageStorageKey, readZipDirectory, readImageSize and baseName are no longer exported (tests go through checkImage and openZip); each non-null assertion listed in OE-12 has a one-line comment naming why it cannot be null. No behaviour change. verify.sh green.",
-          "status": "todo"
+          "status": "done"
         }
-      ]
+      ],
+      "branch": "feat/F20-audit-followups",
+      "pr": 51
     }
   ]
 }
