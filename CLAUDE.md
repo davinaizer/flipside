@@ -1,7 +1,7 @@
 # Flipside
 
 Flashcard web app for school revision. Next.js (App Router), TypeScript strict, Postgres 17 + Drizzle, Tailwind, Vitest, Playwright, pnpm.
-Spec: `docs/PRD.md` (authoritative). How agents build it: `docs/WORKFLOW.md`. Build features with `/run-feature`, not ad hoc.
+Spec: `docs/PRD.md` (authoritative). Vocabulary: `docs/GLOSSARY.md`. How agents build it: `docs/WORKFLOW.md`. Build features with `/run-feature`, not ad hoc.
 
 ## Commands
 - `bash scripts/verify.sh`: typecheck, lint, tests. Must be green before any commit.
@@ -16,6 +16,7 @@ Spec: `docs/PRD.md` (authoritative). How agents build it: `docs/WORKFLOW.md`. Bu
 - Tunable values (day start hour, intervals, caps) live in `src/shared` constants.
 - The layer rules are enforced by lint (`eslint.config.mjs`, ADR-001): a failing import is a rule violation, not a style issue. `isUuid` in `src/shared/uuid.ts` is the one UUID check; do not write the pattern again.
 - Suppressions are local, temporary and explained at the point of use (`// eslint-disable-next-line <rule> -- why`). No file-wide or config-wide disables, and do not widen ignore lists to hide a failure. An unused suppression fails lint.
+- Vocabulary: use the terms in `docs/GLOSSARY.md` in code, docs, UI copy, commits, PRs and any artifact you write, and never a term from its Avoid column. A concept with no entry gets its row in the same change that introduces the word. Renaming a term means changing the glossary and every use together.
 - Look and feel: `docs/design/DESIGN.md` (light) and `DESIGN-DARK.md` (dark) are canonical. Use the tokens file and existing components; screens are reference only: build from the PRD, use the screen for layout, and apply the corrections in `docs/design/README.md` (never copy `code.html`). Semantic tokens only, no raw hex. Every screen works in both themes.
 - No dependency, service, queue or cache outside PRD section 9 without asking.
 - Never edit PRD acceptance criteria. In `docs/features.json` change only `status`, `commit`, `branch`, `pr`.
@@ -40,6 +41,7 @@ Every durable concept has one owner. Define it there; elsewhere summarise and li
 | Why a structural decision was made | `docs/adr/` (index in its README) |
 | Assumptions and answers while building | `docs/decisions.md` |
 | Review findings and the standard for them | `docs/audits/` |
+| Vocabulary: what each term means and which synonyms are rejected | `docs/GLOSSARY.md` |
 | Look and feel | `docs/design/` |
 | Checks | `scripts/verify.sh` (CI and the Stop hook call it) |
 
@@ -52,7 +54,7 @@ Workers report `STATUS: BLOCKED`; the orchestrator asks the user. Stop only when
 1. The PRD is ambiguous or contradicts itself on the point at hand.
 2. The task needs a deviation from a requirement or acceptance criterion.
 3. It needs a new dependency, service or schema change outside PRD section 10.
-4. A check still fails after two fix attempts.
+4. A check still fails after two fix attempts (the loop guard). An attempt is one change followed by a rerun of that check; the same failure means the same check failing with the same error. Report the check, both attempts and the options; do not try a third.
 5. The action is destructive or irreversible.
 
 Anything else: take the PRD-stated default, log it in `docs/decisions.md` as ASSUMED, and continue. An open question with an assumed default (PRD section 17) is not a reason to stop.
