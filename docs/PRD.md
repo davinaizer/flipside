@@ -985,20 +985,7 @@ These are the decisions taken so far; change one here first, then update the sec
 
 ### Glossary
 
-| Term | Meaning |
-| --- | --- |
-| Deck | A named set of cards on one subject, owned by one profile |
-| Topic | A label inside a deck that groups cards (for example "7F Chemical reactions") |
-| Card | A question (front) and answer (back), optionally with images |
-| Box | One of five steps in the schedule; higher boxes are reviewed less often |
-| Due | A card is due when its due date is today or earlier in the profile's calendar |
-| Session | One practice run over a queue of cards |
-| Grade | The learner's self-assessment: Not yet, Nearly or Got it |
-| Lapse | A drop from box 2 or higher back to box 1 |
-| Leech | A card whose lapses reach the threshold; flagged for rewording |
-| New card | A card the profile has never graded |
-| First attempt | A card's first review on a local day; the basis of statistics |
-| Mastery | Share of a deck's or topic's cards currently in boxes 4 and 5 |
+The glossary moved to [`docs/GLOSSARY.md`](GLOSSARY.md), the single owner of terms. Add and change terms there, not here.
 
 ### References
 
