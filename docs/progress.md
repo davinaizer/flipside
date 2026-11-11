@@ -118,3 +118,4 @@ F21.3 done: vercel-blob ImageStore driver (private, no suffix, no overwrite), en
 F21.4 done: IMAGE_MAX_BYTES and new WEB_IMPORT_MAX_BYTES are 4 MB; readUpload refuses a larger file with import_blocked/too_large naming 4 MB and pnpm import:cli; ImportFlow checks the size first through the shared webImportSizeIssue. The CLI does not go through readUpload, so it is unlimited.
 - F21.5: CLI already took the image driver from getEnv and bypasses the web limit (checked only in readUpload); added a >4 MB zip test (disk), a mocked-SDK vercel-blob test, and the hosted command in docs/operations.md. AC33 run is manual.
 F21.6 done: buildVersion in src/shared/build-version.ts (git, then vercel.<7 of VERCEL_GIT_COMMIT_SHA>, then dev), used by next.config.ts; unit tested.
+F21.7 done: Hosted environment runbook in operations.md (seed data only until F22, weekly usage check), hosted-only env vars in .env.example, AC32 and AC33 step lists in manual-checks.md.

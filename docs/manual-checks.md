@@ -23,5 +23,20 @@ Last updated 2026-11-04, after F14 (PR 35).
 ## Known flake to watch
 Full-suite e2e fails one or two timing tests per run (`deck.spec.ts` loading skeleton, `performance.spec.ts`). `main` shows it too, and both pass alone. If it keeps failing, it needs its own fix.
 
-## F21: hosted images (AC32)
-- [ ] Against a real private Vercel Blob store: set `IMAGE_STORE_DRIVER=vercel-blob` (token or OIDC), add a card image, reload the card and confirm it shows; open the blob URL directly and confirm it is refused; confirm `GET /images/{id}` still checks ownership.
+## F21: hosted deploys and images (AC32)
+Copy into the PR checklist. Needs the Vercel project from the Hosted environment runbook in `docs/operations.md`.
+- [ ] Push a commit to `main` and another branch: the Vercel dashboard shows no new deployment for either.
+- [ ] Push a `v*` tag on a commit on `main`: the `release` workflow succeeds and Vercel deploys that commit to production.
+- [ ] Push a `v*` tag on a commit not on `main`: the workflow fails and nothing deploys.
+- [ ] A release with a new migration: the build log shows the migration running, and the app has the new schema.
+- [ ] A release with a deliberately failing migration: the build fails and the previous deploy stays live (then remove the bad migration).
+- [ ] Footer on the hosted app shows the version and the commit (`vercel.` plus 7 characters when there is no git).
+- [ ] Against the private Blob store (`IMAGE_STORE_DRIVER=vercel-blob`): add a card image, reload the card, and it shows.
+- [ ] Open the blob URL directly: it is refused.
+- [ ] `GET /images/{id}` returns the image with the section 12 headers, and answers 404 for another profile's image.
+
+## F21: size limits and CLI import (AC33)
+- [ ] Hosted app: adding an image over 4 MB is refused with a message naming 4 MB.
+- [ ] Hosted app: choosing an import file over 4 MB is refused with a message naming 4 MB and `pnpm import:cli`.
+- [ ] Hosted app: the science deck zip (4 MB or less) imports through the web and its images show.
+- [ ] `pnpm import:cli` with the hosted command in `docs/operations.md` imports a zip larger than 4 MB; the deck and its images show on the hosted app.

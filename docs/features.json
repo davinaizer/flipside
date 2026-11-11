@@ -1511,7 +1511,7 @@
           ],
           "area": "docs/operations.md, docs/manual-checks.md, .env.example",
           "done_when": "docs/operations.md has a Hosted environment runbook: create the Vercel Hobby project from the personal repository, add Neon from the Marketplace, connect a private Blob store, set IMAGE_STORE_DRIVER=vercel-blob, check usage weekly for the first month (R11); it states that only seed data goes on the hosted app until F22 merges. .env.example documents DATABASE_URL_UNPOOLED and BLOB_READ_WRITE_TOKEN as hosted or CLI only. docs/manual-checks.md lists each AC32 and AC33 step with its expected result, for the PR checklist. verify.sh green.",
-          "status": "todo"
+          "status": "done"
         }
       ],
       "branch": "feat/F21-vercel-hosting"
