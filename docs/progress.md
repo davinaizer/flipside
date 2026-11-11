@@ -123,3 +123,4 @@ REVIEW F21 round 1: GAPS at bb60f85 (env not validated at start on Vercel; Blob 
 F21.8: register() validates env before the Vercel return; vercel-blob put tolerates a concurrent put of the same key; tests added. verify green.
 F21.9: AC32 image step, AC33 image-limit step and version step in manual-checks.md are now runnable as written.
 REVIEW F21 round 2: PASS at 816cc52
+F21 done: PR #55. MANUAL PENDING: AC32, AC33. Known pre-existing failure: e2e/performance.spec.ts next-card under 200 ms (fails on main too).

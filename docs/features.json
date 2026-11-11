@@ -1406,7 +1406,7 @@
       ],
       "design_screens": [],
       "notes": "ADR-002. New dependency @vercel/blob (approved with the v0.6 PRD). vercel.json with git.deploymentEnabled {\"*\": false, \"release\": true}; GitHub Actions workflow on v* tags moves release to the tag (refuse a tag not on main). Build command runs drizzle-kit migrate with DATABASE_URL_UNPOOLED before next build; instrumentation keeps migrations on start only outside Vercel (VERCEL env var). postgres client max 1 on Vercel. vercel-blob ImageStore driver (private store, no random suffix, no overwrite) added to the env enum; contract tests run for both drivers with the SDK mocked, plus one manual run against a real store. IMAGE_MAX_BYTES 4 MB and a 4 MB web import limit with a message naming the CLI; import:cli works against the hosted database and Blob store. Version stamp falls back to VERCEL_GIT_COMMIT_SHA. Local dev, verify and e2e unchanged. The first deploy holds seed data only: the shared password (AG) stays until F22, so no real data goes on the hosted app before F22 merges.",
-      "status": "in_progress",
+      "status": "done",
       "tasks": [
         {
           "id": "F21.1",
@@ -1545,7 +1545,8 @@
           "status": "done"
         }
       ],
-      "branch": "feat/F21-vercel-hosting"
+      "branch": "feat/F21-vercel-hosting",
+      "pr": "https://github.com/davinaizer/flipside/pull/55"
     },
     {
       "id": "F22",
