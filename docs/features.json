@@ -1526,7 +1526,7 @@
           ],
           "area": "src/instrumentation.ts, tests/hosted-runtime.test.ts, src/server/images/vercel-blob-driver.ts, tests/contract/image-store.test.ts, docs/decisions.md",
           "done_when": "register() calls getEnv() before the VERCEL early return, so invalid settings fail at start on Vercel too; a test expects register() to throw on Vercel with an invalid env. The vercel-blob put, when the SDK put rejects, re-checks the key and returns if it now exists (keys are content-addressed), else rethrows; a contract case runs two concurrent puts of the same key and both resolve. docs/decisions.md logs as ASSUMED: head before put, the disk driver key rules reused, and the Blob fake living in the contract test. verify.sh green.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F21.9",

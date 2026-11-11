@@ -80,6 +80,12 @@ describe.each(Object.entries(drivers))("ImageStore contract: %s", (_n, make) => 
     expect(await read(await s.get(key))).toEqual(bytes);
   });
 
+  it("concurrent puts of the same key both resolve", async () => {
+    const s = await make();
+    await Promise.all([s.put(key, bytes, "image/png"), s.put(key, bytes, "image/png")]);
+    expect(await read(await s.get(key))).toEqual(bytes);
+  });
+
   it("get of a missing key fails cleanly", async () => {
     const s = await make();
     await expect(s.get("images/missing.png")).rejects.toBeInstanceOf(ImageNotFoundError);

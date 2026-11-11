@@ -22,6 +22,7 @@ describe("register", () => {
   it("runs migrations when VERCEL is unset", async () => {
     vi.stubEnv("NEXT_RUNTIME", "nodejs");
     vi.stubEnv("VERCEL", "");
+    vi.stubEnv("DATABASE_URL", "postgres://x");
     const { register } = await import("@/instrumentation");
     await register();
     expect(runMigrations).toHaveBeenCalledOnce();
@@ -30,8 +31,20 @@ describe("register", () => {
   it("skips migrations when VERCEL is set", async () => {
     vi.stubEnv("NEXT_RUNTIME", "nodejs");
     vi.stubEnv("VERCEL", "1");
+    vi.stubEnv("DATABASE_URL", "postgres://x");
     const { register } = await import("@/instrumentation");
     await register();
+    expect(runMigrations).not.toHaveBeenCalled();
+  });
+});
+
+describe("register env check", () => {
+  it("throws on Vercel when the env is invalid", async () => {
+    vi.stubEnv("NEXT_RUNTIME", "nodejs");
+    vi.stubEnv("VERCEL", "1");
+    vi.stubEnv("DATABASE_URL", "");
+    const { register } = await import("@/instrumentation");
+    await expect(register()).rejects.toThrow();
     expect(runMigrations).not.toHaveBeenCalled();
   });
 });

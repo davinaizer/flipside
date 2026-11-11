@@ -30,12 +30,18 @@ export function createVercelBlobImageStore(): ImageStore {
       check(key);
       // Keys are content-addressed, so an existing blob already has these bytes.
       if (await exists(key)) return;
-      await put(key, Buffer.from(bytes), {
-        access: "private",
-        addRandomSuffix: false,
-        allowOverwrite: false,
-        contentType: mime,
-      });
+      try {
+        await put(key, Buffer.from(bytes), {
+          access: "private",
+          addRandomSuffix: false,
+          allowOverwrite: false,
+          contentType: mime,
+        });
+      } catch (e) {
+        // A concurrent put of the same key wins the race; same key means same bytes.
+        if (await exists(key)) return;
+        throw e;
+      }
     },
     async get(key) {
       const result = await get(check(key), { access: "private" });
