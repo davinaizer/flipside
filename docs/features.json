@@ -1493,7 +1493,7 @@
           ],
           "area": "next.config.ts (version function moved to a testable module, e.g. scripts or src/shared/version.ts)",
           "done_when": "Unit tests: with git available the stamp is unchanged (v<package>+<count>.<sha>); with git failing and VERCEL_GIT_COMMIT_SHA set it is v<package>+vercel.<first 7 of the SHA>; with neither it is v<package>+dev. The build never fails on git. verify.sh green.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F21.7",
