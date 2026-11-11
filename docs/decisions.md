@@ -140,3 +140,4 @@ ASSUMED: F20.3 handle() wraps routes that need a profile; handleOpen() is the sa
 ASSUMED: F20.5 kept ZipIssue and CsvIssue as the precise domain types (narrow code unions); they are assignable to ImportIssue structurally, so only the fromCsv/fromZip copies were deleted.
 ASSUMED: F20.6 no jsdom, so the failed-delete test runs the exported deleteDeck helper with api.deleteDeck stubbed (asserts the existing message); the component only shows what it returns.
 ASSUMED: F20.7 ProfileScreen keeps a string avatar prop and narrows it with AVATAR_IDS.find (first id if unknown) instead of a cast; nameError returns the first schema issue message.
+ANSWER (F23, planning 2026-11-11): Which artwork for the app icon (W1)? -> A placeholder for now: the letter F on the primary colour from the design tokens, at 192, 512, maskable and 180 px (Apple touch icon). The owner replaces it with final artwork later; do not stop F23 to ask for it.
