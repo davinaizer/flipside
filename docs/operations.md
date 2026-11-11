@@ -73,6 +73,20 @@ Restore
 - [ ] Start the app: `launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.flipside.app.plist`.
 - [ ] Decks, progress and images match the state at backup time.
 
+## Import against the hosted app (AC33)
+
+`pnpm import:cli` talks to the database and the image store directly, so it can import a zip larger than the 4 MB web limit (the zip limits still apply). Use the direct (unpooled) connection string and the Blob token from the Vercel project settings:
+
+```bash
+DATABASE_URL="$DATABASE_URL_UNPOOLED" \
+IMAGE_STORE_DRIVER=vercel-blob \
+BLOB_READ_WRITE_TOKEN=<token> \
+ADMIN_PASSWORD=<any non-empty value> \
+pnpm import:cli deck.zip --profile Davi --name "Science W2"
+```
+
+`ADMIN_PASSWORD` is only needed because the environment check requires it; the CLI does not use it. Without `IMAGE_STORE_DRIVER` the images go to the local disk, not the hosted store.
+
 ## Releasing
 
 Production deploys only from a version tag (H3). Vercel builds the `release` branch only; pushes to `main` and other branches build nothing.

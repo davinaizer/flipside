@@ -1,6 +1,8 @@
 // Usage: pnpm import:cli <file> --profile <name> [--name <deck>] [--group <g>] [--color <c>]
 //        [--answer-style <s>] [--deck <deckId>]   (--deck re-imports into that deck)
-// Goes through the same commitImport service as POST /imports. Needs DATABASE_URL.
+// Goes through the same commitImport service as POST /imports. Needs DATABASE_URL. The image driver
+// follows IMAGE_STORE_DRIVER (vercel-blob also needs BLOB_READ_WRITE_TOKEN). The 4 MB web limit does
+// not apply here: it is checked only when reading an HTTP upload.
 import { readFile } from "node:fs/promises";
 import { basename, extname } from "node:path";
 import { parseArgs } from "node:util";

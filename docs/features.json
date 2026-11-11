@@ -1480,7 +1480,7 @@
           ],
           "area": "scripts/import-cli.ts, src/server/imports.ts, docs/operations.md",
           "done_when": "Integration test: the CLI import path imports a zip larger than the 4 MB web limit (still within the zip limits) for a chosen profile with the disk driver, so the web limit applies only to HTTP uploads. The CLI picks the image driver from IMAGE_STORE_DRIVER and uses BLOB_READ_WRITE_TOKEN for vercel-blob (unit test with the SDK mocked). docs/operations.md shows the command with the hosted DATABASE_URL_UNPOOLED and the Blob token. The run against the hosted app is AC33, manual. verify.sh green.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F21.6",
