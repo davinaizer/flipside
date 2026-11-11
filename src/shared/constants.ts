@@ -40,7 +40,10 @@ export const IMPORT_MAX_ROWS = 2000;
 export const IMPORT_MAX_ZIP_ENTRIES = 2000;
 export const IMPORT_MAX_ZIP_UNCOMPRESSED_BYTES = 200 * 1024 * 1024;
 
-export const IMAGE_MAX_BYTES = 5 * 1024 * 1024;
+/** Fits Vercel's 4.5 MB request body limit (H5). */
+export const IMAGE_MAX_BYTES = 4 * 1024 * 1024;
+/** Largest CSV or zip accepted through the web import; bigger files use `pnpm import:cli` (H5). */
+export const WEB_IMPORT_MAX_BYTES = 4 * 1024 * 1024;
 export const IMAGE_MAX_DIMENSION_PX = 4096;
 export const IMAGE_MIME_TYPES = ["image/png", "image/jpeg", "image/webp", "image/gif"] as const;
 

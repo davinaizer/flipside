@@ -17,7 +17,8 @@ describe("constants", () => {
     expect(c.SESSION_LENGTHS).toEqual([5, 10, 20, "all"]);
     expect(c.IMPORT_MAX_ROWS).toBe(2000);
     expect(c.IMPORT_MAX_ZIP_UNCOMPRESSED_BYTES).toBe(200 * 1024 * 1024);
-    expect(c.IMAGE_MAX_BYTES).toBe(5 * 1024 * 1024);
+    expect(c.IMAGE_MAX_BYTES).toBe(4 * 1024 * 1024);
+    expect(c.WEB_IMPORT_MAX_BYTES).toBe(4 * 1024 * 1024);
     expect(c.IMAGE_MAX_DIMENSION_PX).toBe(4096);
     expect(c.DURATION_CAP_SECONDS).toBe(120);
   });

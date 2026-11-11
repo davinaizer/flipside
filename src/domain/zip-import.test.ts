@@ -247,8 +247,8 @@ describe("image resolution", () => {
     expect(r.images.size).toBe(0);
   });
 
-  it("warns on an image over 5 MB and accepts exactly 5 MB", async () => {
-    const limit = 5 * 1024 * 1024;
+  it("warns on an image over 4 MB and accepts exactly 4 MB", async () => {
+    const limit = 4 * 1024 * 1024;
     expect((await checkImage(png(2, 2, limit - 33))).ok).toBe(true);
     const r = await run(["a.png"], { "a.png": png(2, 2, limit - 32) });
     expect(r.issues[0].code).toBe("image_too_large");

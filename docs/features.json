@@ -1464,7 +1464,7 @@
           ],
           "area": "src/shared/constants.ts, src/server/imports.ts, src/app/api/v1/imports/route.ts, src/ui/import",
           "done_when": "IMAGE_MAX_BYTES is 4 MB and a new web import limit constant is 4 MB. API test: a CSV or zip upload one byte over the limit is refused with the existing too_large error shape and a message, built from the constant, that names 4 MB and pnpm import:cli; the science deck zip still imports. Unit test: an image over 4 MB in a zip is refused. The import screen checks the file size before upload and shows the same message (unit test of the check), so a file over the platform's 4.5 MB body limit never reaches Vercel's generic error. verify.sh green.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F21.5",
