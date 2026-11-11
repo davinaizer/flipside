@@ -1,0 +1,9 @@
+{
+  "buildCommand": "pnpm vercel-build",
+  "git": {
+    "deploymentEnabled": {
+      "*": false,
+      "release": true
+    }
+  }
+}

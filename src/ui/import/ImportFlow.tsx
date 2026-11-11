@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { buildPreview, parseImportFile } from "@/domain/import-file";
+import { buildPreview, parseImportFile, webImportSizeIssue } from "@/domain/import-file";
 import { ANSWER_STYLES, CARD_COLORS } from "@/shared/enums";
 import type { ImportIssue, ImportPreview as Preview, ImportResult } from "@/shared/schemas/import";
 import { ApiClientError, api } from "@/ui/api/client";
@@ -57,6 +57,11 @@ export function ImportFlow({
   async function choose(f: File | undefined) {
     if (!f) return;
     setFile(f);
+    const tooLarge = webImportSizeIssue(f.size);
+    if (tooLarge) {
+      setStep({ kind: "blocked", issues: [tooLarge] });
+      return;
+    }
     setStep({ kind: "reading" });
     try {
       const parsed = await parseImportFile(new Uint8Array(await f.arrayBuffer()));

@@ -72,3 +72,43 @@ Restore
 - [ ] `pnpm restore <backup-folder> --yes`.
 - [ ] Start the app: `launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.flipside.app.plist`.
 - [ ] Decks, progress and images match the state at backup time.
+
+## Hosted environment
+
+The hosted app runs on Vercel Hobby with Neon Postgres and a private Vercel Blob store (section 13). Until F22 (accounts) merges, put only seed data on the hosted app: the app password is the only gate.
+
+1. Create a Vercel Hobby project from the personal repository (not an organisation repository). `vercel.json` limits Git deployments to the `release` branch; see Releasing.
+2. Add Neon from the Vercel Marketplace. It sets `DATABASE_URL` (pooled) and `DATABASE_URL_UNPOOLED` (direct, used by the migration during the build).
+3. In the project Storage tab create a private Blob store and connect it. It sets `BLOB_READ_WRITE_TOKEN`.
+4. Set `IMAGE_STORE_DRIVER=vercel-blob` and `ADMIN_PASSWORD` in the project environment variables for Production.
+5. Tag a release (see Releasing). The first build runs the migrations; seed the profiles once with `pnpm db:seed` against the direct connection string.
+6. Check usage weekly for the first month (R11): Vercel (functions, bandwidth, Blob) and Neon (compute hours, storage) dashboards. If an allotment runs out, that feature stops until it resets; Vercel Pro or Neon Launch is the paid fallback.
+
+The manual checks for AC32 and AC33 are in `docs/manual-checks.md`.
+
+## Import against the hosted app (AC33)
+
+`pnpm import:cli` talks to the database and the image store directly, so it can import a zip larger than the 4 MB web limit (the zip limits still apply). Use the direct (unpooled) connection string and the Blob token from the Vercel project settings:
+
+```bash
+DATABASE_URL="$DATABASE_URL_UNPOOLED" \
+IMAGE_STORE_DRIVER=vercel-blob \
+BLOB_READ_WRITE_TOKEN=<token> \
+ADMIN_PASSWORD=<any non-empty value> \
+pnpm import:cli deck.zip --profile Davi --name "Science W2"
+```
+
+`ADMIN_PASSWORD` is only needed because the environment check requires it; the CLI does not use it. Without `IMAGE_STORE_DRIVER` the images go to the local disk, not the hosted store.
+
+## Releasing
+
+Production deploys only from a version tag (H3). Vercel builds the `release` branch only; pushes to `main` and other branches build nothing.
+
+1. Merge the work into `main` and pull it.
+2. Tag the commit and push the tag: `git tag v0.6.0 && git push origin v0.6.0`.
+3. The `release` workflow checks that the tagged commit is an ancestor of `origin/main`, then moves `release` to the tag. A tag on a commit outside `main` fails the workflow and deploys nothing.
+4. Vercel builds `release`: it runs the migrations, then the app.
+
+## Rolling back
+
+Either redeploy the previous production deploy in the Vercel dashboard (Deployments, the older one, Redeploy), or tag an older commit that is on `main` and push the tag. Migrations are not reverted by either; roll the database back from a backup if a migration is the cause.

@@ -103,6 +103,19 @@ test("dry run previews CSV and zip input and saves nothing", async () => {
     ).toContain(code);
   }
 
+  // One byte over the web limit is refused with the too_large shape; exactly the limit is read.
+  const { WEB_IMPORT_MAX_BYTES } = await import("@/shared/constants");
+  for (const query of ["?dryRun=true", ""]) {
+    const big = await post(new Uint8Array(WEB_IMPORT_MAX_BYTES + 1), query);
+    expect(big.status).toBe(422);
+    const bigError = (await big.json()).error;
+    expect(bigError.code).toBe("import_blocked");
+    expect(bigError.details[0].code).toBe("too_large");
+    expect(bigError.message).toContain("4 MB");
+    expect(bigError.message).toContain("pnpm import:cli");
+  }
+  expect((await post(new Uint8Array(WEB_IMPORT_MAX_BYTES))).status).toBe(422);
+
   // Request problems.
   const noFile = await route.POST(
     new Request("http://x/?dryRun=true", {

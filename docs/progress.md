@@ -112,3 +112,15 @@ F20.8: un-exported sha256Hex, imageStorageKey, readImageSize, readZipDirectory, 
 REVIEW F20 round 1: GAPS at bcf48f2 (F20.7 ledger status left todo; fixed)
 REVIEW F20 round 2: PASS at 30438f1
 F20 done: PR 51. MANUAL PENDING: none
+F21.1 done: postgres max 1 on Vercel, register() skips migrations on Vercel, drizzle.config prefers DATABASE_URL_UNPOOLED, vercel-build script runs drizzle-kit migrate && next build.
+F21.2 done: vercel.json (release-only Git deployments, vercel-build), release.yml (ancestor-of-main check, moves release to the tag), Releasing and Rolling back in operations.md. AC32 deploy behaviour is manual.
+F21.3 done: vercel-blob ImageStore driver (private, no suffix, no overwrite), env accepts vercel-blob and optional BLOB_READ_WRITE_TOKEN, contract suite runs both drivers with @vercel/blob faked. Real-store run listed in manual-checks.md.
+F21.4 done: IMAGE_MAX_BYTES and new WEB_IMPORT_MAX_BYTES are 4 MB; readUpload refuses a larger file with import_blocked/too_large naming 4 MB and pnpm import:cli; ImportFlow checks the size first through the shared webImportSizeIssue. The CLI does not go through readUpload, so it is unlimited.
+- F21.5: CLI already took the image driver from getEnv and bypasses the web limit (checked only in readUpload); added a >4 MB zip test (disk), a mocked-SDK vercel-blob test, and the hosted command in docs/operations.md. AC33 run is manual.
+F21.6 done: buildVersion in src/shared/build-version.ts (git, then vercel.<7 of VERCEL_GIT_COMMIT_SHA>, then dev), used by next.config.ts; unit tested.
+F21.7 done: Hosted environment runbook in operations.md (seed data only until F22, weekly usage check), hosted-only env vars in .env.example, AC32 and AC33 step lists in manual-checks.md.
+REVIEW F21 round 1: GAPS at bb60f85 (env not validated at start on Vercel; Blob put race; AC32/AC33 manual steps not runnable)
+F21.8: register() validates env before the Vercel return; vercel-blob put tolerates a concurrent put of the same key; tests added. verify green.
+F21.9: AC32 image step, AC33 image-limit step and version step in manual-checks.md are now runnable as written.
+REVIEW F21 round 2: PASS at 816cc52
+F21 done: PR #55. MANUAL PENDING: AC32, AC33. Known pre-existing failure: e2e/performance.spec.ts next-card under 200 ms (fails on main too).

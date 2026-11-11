@@ -1,7 +1,9 @@
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { afterAll, describe, expect, it } from "vitest";
+import { afterAll, describe, expect, it, vi } from "vitest";
+import { parseEnv } from "@/server/env";
+import { createVercelBlobImageStore } from "@/server/images/vercel-blob-driver";
 import { createDiskImageStore } from "@/server/images/disk-driver";
 import {
   getImageStore,
@@ -9,6 +11,38 @@ import {
   InvalidImageKeyError,
   type ImageStore,
 } from "@/server/images/store";
+
+// In-memory stand-in for @vercel/blob, reset per store. It refuses overwrites like the real one.
+const blobs = vi.hoisted(() => ({
+  files: new Map<string, Uint8Array>(),
+  puts: [] as { key: string; options: Record<string, unknown> }[],
+}));
+vi.mock("@vercel/blob", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@vercel/blob")>();
+  return {
+    ...actual,
+    put: async (key: string, body: Uint8Array, options: Record<string, unknown>) => {
+      blobs.puts.push({ key, options });
+      if (blobs.files.has(key) && !options.allowOverwrite) throw new Error("already exists");
+      blobs.files.set(key, new Uint8Array(body));
+      return { pathname: key };
+    },
+    head: async (key: string) => {
+      if (!blobs.files.has(key)) throw new actual.BlobNotFoundError();
+      return { pathname: key };
+    },
+    get: async (key: string) => {
+      const bytes = blobs.files.get(key);
+      if (!bytes) return null;
+      return {
+        statusCode: 200,
+        stream: new Response(bytes as BodyInit).body,
+        blob: { size: bytes.length },
+      };
+    },
+    del: async (key: string) => void blobs.files.delete(key),
+  };
+});
 
 async function read(stream: ReadableStream<Uint8Array>) {
   return new Uint8Array(await new Response(stream).arrayBuffer());
@@ -21,6 +55,10 @@ const drivers: Record<string, () => Promise<ImageStore>> = {
     const dir = await mkdtemp(join(tmpdir(), "flipside-img-"));
     dirs.push(dir);
     return createDiskImageStore(dir);
+  },
+  "vercel-blob": async () => {
+    blobs.files.clear();
+    return createVercelBlobImageStore();
   },
 };
 afterAll(() => Promise.all(dirs.map((d) => rm(d, { recursive: true, force: true }))));
@@ -39,6 +77,12 @@ describe.each(Object.entries(drivers))("ImageStore contract: %s", (_n, make) => 
     const s = await make();
     await s.put(key, bytes, "image/png");
     await s.put(key, bytes, "image/png");
+    expect(await read(await s.get(key))).toEqual(bytes);
+  });
+
+  it("concurrent puts of the same key both resolve", async () => {
+    const s = await make();
+    await Promise.all([s.put(key, bytes, "image/png"), s.put(key, bytes, "image/png")]);
     expect(await read(await s.get(key))).toEqual(bytes);
   });
 
@@ -85,5 +129,30 @@ describe("getImageStore", () => {
     const s = getImageStore();
     await s.put("images/x.png", new Uint8Array([1]), "image/png");
     expect(await s.exists("images/x.png")).toBe(true);
+  });
+});
+
+describe("vercel-blob driver", () => {
+  it("puts privately, without a random suffix and without overwrite", async () => {
+    blobs.files.clear();
+    blobs.puts.length = 0;
+    await createVercelBlobImageStore().put("images/k.png", new Uint8Array([1]), "image/png");
+    expect(blobs.puts).toEqual([
+      {
+        key: "images/k.png",
+        options: {
+          access: "private",
+          addRandomSuffix: false,
+          allowOverwrite: false,
+          contentType: "image/png",
+        },
+      },
+    ]);
+  });
+
+  it("is selected by IMAGE_STORE_DRIVER=vercel-blob, token optional", () => {
+    expect(
+      parseEnv({ DATABASE_URL: "x", ADMIN_PASSWORD: "x", IMAGE_STORE_DRIVER: "vercel-blob" }),
+    ).toMatchObject({ IMAGE_STORE_DRIVER: "vercel-blob" });
   });
 });

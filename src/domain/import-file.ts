@@ -1,8 +1,19 @@
+import { WEB_IMPORT_MAX_BYTES } from "../shared/constants";
 import type { ImportIssue, ImportPreview } from "../shared/schemas/import";
 import { parseCsv } from "./csv-import";
 import { openZip, resolveImages, type ResolvedImages } from "./zip-import";
 
 const PREVIEW_CARDS = 3;
+
+/** The too_large block for a web upload over the limit, or null. Shared by the route and the import screen (H5). */
+export function webImportSizeIssue(size: number): ImportIssue | null {
+  if (size <= WEB_IMPORT_MAX_BYTES) return null;
+  return {
+    severity: "block",
+    code: "too_large",
+    message: `The file is over ${WEB_IMPORT_MAX_BYTES / (1024 * 1024)} MB, the most the web import accepts. Import it with pnpm import:cli instead`,
+  };
+}
 
 const isZip = (b: Uint8Array) => b.length > 3 && b[0] === 0x50 && b[1] === 0x4b;
 

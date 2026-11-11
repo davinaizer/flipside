@@ -2,7 +2,7 @@ import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { strToU8 } from "fflate";
 import { expect, test } from "vitest";
-import { buildPreview, parseImportFile } from "@/domain/import-file";
+import { buildPreview, parseImportFile, webImportSizeIssue } from "@/domain/import-file";
 import { ImportFlow } from "./ImportFlow";
 import { ImportBlocked, ImportPreview } from "./ImportPreview";
 import { ImportSuccess } from "./ImportSuccess";
@@ -127,4 +127,13 @@ test("ImportFlow is one column: no lg grid classes, sections in order 1, 2, 3", 
   expect(at("<ImportPreview")).toBeLessThan(at('aria-label="Deck details"'));
   const preview = readFileSync(new URL("./ImportPreview.tsx", import.meta.url), "utf8");
   expect(preview).toContain('title="Check the cards"');
+});
+
+test("the import screen refuses a file over 4 MB before upload, naming the limit and the CLI", () => {
+  const limit = 4 * 1024 * 1024;
+  expect(webImportSizeIssue(limit)).toBeNull();
+  const issue = webImportSizeIssue(limit + 1);
+  expect(issue).toMatchObject({ severity: "block", code: "too_large" });
+  expect(issue?.message).toContain("4 MB");
+  expect(issue?.message).toContain("pnpm import:cli");
 });

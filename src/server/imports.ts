@@ -1,4 +1,4 @@
-import { buildPreview, parseImportFile } from "@/domain/import-file";
+import { buildPreview, parseImportFile, webImportSizeIssue } from "@/domain/import-file";
 import { ApiError } from "@/server/http/errors";
 import { parseOrThrow } from "@/server/http/parse";
 import { getDb, type Db } from "@/server/db/client";
@@ -246,6 +246,8 @@ export async function readUpload(request: Request): Promise<Upload> {
   if (!(file instanceof File)) {
     throw new ApiError(400, "invalid_request", "Choose a CSV or zip file to import.");
   }
+  const tooLarge = webImportSizeIssue(file.size);
+  if (tooLarge) throw blocked([tooLarge]);
   const details: Record<string, unknown> = {};
   for (const [k, v] of form) if (typeof v === "string") details[k] = v;
   return { bytes: new Uint8Array(await file.arrayBuffer()), filename: file.name, details };
