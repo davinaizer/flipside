@@ -1422,7 +1422,7 @@
           ],
           "area": "src/server/db/client.ts, src/instrumentation.ts, drizzle.config.ts, package.json (vercel-build script), src/server/env.ts",
           "done_when": "Unit tests: the postgres client options set max 1 when VERCEL is set and keep the default otherwise; register() runs migrations when VERCEL is unset and skips them when it is set (migrate mocked); drizzle.config uses DATABASE_URL_UNPOOLED when present, else DATABASE_URL. A build script (used as the Vercel build command) runs drizzle-kit migrate and then next build, joined with && so a failed migration stops the build; checked by running it with an unreachable DATABASE_URL_UNPOOLED and seeing a non-zero exit before next build starts (noted in the commit body). Local pnpm dev, pnpm build and e2e unchanged. verify.sh green.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F21.2",

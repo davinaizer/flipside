@@ -112,3 +112,4 @@ F20.8: un-exported sha256Hex, imageStorageKey, readImageSize, readZipDirectory, 
 REVIEW F20 round 1: GAPS at bcf48f2 (F20.7 ledger status left todo; fixed)
 REVIEW F20 round 2: PASS at 30438f1
 F20 done: PR 51. MANUAL PENDING: none
+F21.1 done: postgres max 1 on Vercel, register() skips migrations on Vercel, drizzle.config prefers DATABASE_URL_UNPOOLED, vercel-build script runs drizzle-kit migrate && next build.
