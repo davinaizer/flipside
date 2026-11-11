@@ -1542,7 +1542,7 @@
           ],
           "area": "docs/manual-checks.md",
           "done_when": "The AC32 image step reads: import the science deck zip on the hosted app, open a card with an image, reload, and the image shows. The AC33 image-limit step uses pnpm import:cli or a web zip under 4 MB holding a padded image just over 4 MB, expecting an image_too_large warning naming 4 MB and the card imported without that image. The version step accepts either v<package>+<count>.<sha> or v<package>+vercel.<sha>. verify.sh green.",
-          "status": "todo"
+          "status": "done"
         }
       ],
       "branch": "feat/F21-vercel-hosting"

@@ -30,13 +30,13 @@ Copy into the PR checklist. Needs the Vercel project from the Hosted environment
 - [ ] Push a `v*` tag on a commit not on `main`: the workflow fails and nothing deploys.
 - [ ] A release with a new migration: the build log shows the migration running, and the app has the new schema.
 - [ ] A release with a deliberately failing migration: the build fails and the previous deploy stays live (then remove the bad migration).
-- [ ] Footer on the hosted app shows the version and the commit (`vercel.` plus 7 characters when there is no git).
-- [ ] Against the private Blob store (`IMAGE_STORE_DRIVER=vercel-blob`): add a card image, reload the card, and it shows.
+- [ ] Footer on the hosted app shows `v<package>+<count>.<sha>` or, when the build has no git history, `v<package>+vercel.<sha>`; either is correct.
+- [ ] Import the science deck zip on the hosted app, open a card with an image, reload, and the image shows.
 - [ ] Open the blob URL directly: it is refused.
 - [ ] `GET /images/{id}` returns the image with the section 12 headers, and answers 404 for another profile's image.
 
 ## F21: size limits and CLI import (AC33)
-- [ ] Hosted app: adding an image over 4 MB is refused with a message naming 4 MB.
+- [ ] Image limit: make a zip with a padded image just over 4 MB (the zip itself under 4 MB, or use `pnpm import:cli`) and import it. Expect an `image_too_large` warning naming 4 MB, and the card imported without that image.
 - [ ] Hosted app: choosing an import file over 4 MB is refused with a message naming 4 MB and `pnpm import:cli`.
 - [ ] Hosted app: the science deck zip (4 MB or less) imports through the web and its images show.
 - [ ] `pnpm import:cli` with the hosted command in `docs/operations.md` imports a zip larger than 4 MB; the deck and its images show on the hosted app.
