@@ -1436,7 +1436,7 @@
           ],
           "area": "vercel.json, .github/workflows/release.yml, docs/operations.md",
           "done_when": "vercel.json sets git.deploymentEnabled {\"*\": false, \"release\": true} and the build command from F21.1 (a Vitest test parses it and asserts both). The workflow runs on push of v* tags, fails unless the tagged commit is an ancestor of origin/main (git merge-base --is-ancestor), then moves release to the tag; it has contents: write only. docs/operations.md gains Releasing and Rolling back (redeploy the previous production deploy, or tag an older commit). The deploy behaviour itself is AC32, manual. verify.sh green.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F21.3",

@@ -72,3 +72,16 @@ Restore
 - [ ] `pnpm restore <backup-folder> --yes`.
 - [ ] Start the app: `launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.flipside.app.plist`.
 - [ ] Decks, progress and images match the state at backup time.
+
+## Releasing
+
+Production deploys only from a version tag (H3). Vercel builds the `release` branch only; pushes to `main` and other branches build nothing.
+
+1. Merge the work into `main` and pull it.
+2. Tag the commit and push the tag: `git tag v0.6.0 && git push origin v0.6.0`.
+3. The `release` workflow checks that the tagged commit is an ancestor of `origin/main`, then moves `release` to the tag. A tag on a commit outside `main` fails the workflow and deploys nothing.
+4. Vercel builds `release`: it runs the migrations, then the app.
+
+## Rolling back
+
+Either redeploy the previous production deploy in the Vercel dashboard (Deployments, the older one, Redeploy), or tag an older commit that is on `main` and push the tag. Migrations are not reverted by either; roll the database back from a backup if a migration is the cause.

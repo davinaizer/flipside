@@ -1,0 +1,27 @@
+# Production deploys only from version tags (H3). Vercel builds the `release` branch only
+# (vercel.json), so moving `release` to a tag is what deploys. The tagged commit must already
+# be on main: a tag on an unmerged branch fails here and deploys nothing.
+name: release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Tagged commit must be on main
+        run: |
+          git fetch origin main
+          git merge-base --is-ancestor "$GITHUB_SHA" origin/main \
+            || { echo "::error::$GITHUB_REF_NAME is not on main; nothing deployed"; exit 1; }
+      - name: Move release to the tag
+        run: git push --force origin "$GITHUB_SHA:refs/heads/release"
