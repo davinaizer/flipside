@@ -119,3 +119,4 @@ F21.4 done: IMAGE_MAX_BYTES and new WEB_IMPORT_MAX_BYTES are 4 MB; readUpload re
 - F21.5: CLI already took the image driver from getEnv and bypasses the web limit (checked only in readUpload); added a >4 MB zip test (disk), a mocked-SDK vercel-blob test, and the hosted command in docs/operations.md. AC33 run is manual.
 F21.6 done: buildVersion in src/shared/build-version.ts (git, then vercel.<7 of VERCEL_GIT_COMMIT_SHA>, then dev), used by next.config.ts; unit tested.
 F21.7 done: Hosted environment runbook in operations.md (seed data only until F22, weekly usage check), hosted-only env vars in .env.example, AC32 and AC33 step lists in manual-checks.md.
+REVIEW F21 round 1: GAPS at bb60f85 (env not validated at start on Vercel; Blob put race; AC32/AC33 manual steps not runnable)

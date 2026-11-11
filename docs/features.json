@@ -1512,6 +1512,37 @@
           "area": "docs/operations.md, docs/manual-checks.md, .env.example",
           "done_when": "docs/operations.md has a Hosted environment runbook: create the Vercel Hobby project from the personal repository, add Neon from the Marketplace, connect a private Blob store, set IMAGE_STORE_DRIVER=vercel-blob, check usage weekly for the first month (R11); it states that only seed data goes on the hosted app until F22 merges. .env.example documents DATABASE_URL_UNPOOLED and BLOB_READ_WRITE_TOKEN as hosted or CLI only. docs/manual-checks.md lists each AC32 and AC33 step with its expected result, for the PR checklist. verify.sh green.",
           "status": "done"
+        },
+        {
+          "id": "F21.8",
+          "title": "Review fixes: validate env at start on Vercel; concurrent Blob puts are harmless",
+          "reqs": [
+            "H1",
+            "H4"
+          ],
+          "prd_sections": [
+            "9",
+            "12"
+          ],
+          "area": "src/instrumentation.ts, tests/hosted-runtime.test.ts, src/server/images/vercel-blob-driver.ts, tests/contract/image-store.test.ts, docs/decisions.md",
+          "done_when": "register() calls getEnv() before the VERCEL early return, so invalid settings fail at start on Vercel too; a test expects register() to throw on Vercel with an invalid env. The vercel-blob put, when the SDK put rejects, re-checks the key and returns if it now exists (keys are content-addressed), else rethrows; a contract case runs two concurrent puts of the same key and both resolve. docs/decisions.md logs as ASSUMED: head before put, the disk driver key rules reused, and the Blob fake living in the contract test. verify.sh green.",
+          "status": "todo"
+        },
+        {
+          "id": "F21.9",
+          "title": "Review fixes: make the AC32 and AC33 manual steps runnable",
+          "reqs": [
+            "H4",
+            "H5",
+            "H6"
+          ],
+          "prd_sections": [
+            "13",
+            "15"
+          ],
+          "area": "docs/manual-checks.md",
+          "done_when": "The AC32 image step reads: import the science deck zip on the hosted app, open a card with an image, reload, and the image shows. The AC33 image-limit step uses pnpm import:cli or a web zip under 4 MB holding a padded image just over 4 MB, expecting an image_too_large warning naming 4 MB and the card imported without that image. The version step accepts either v<package>+<count>.<sha> or v<package>+vercel.<sha>. verify.sh green.",
+          "status": "todo"
         }
       ],
       "branch": "feat/F21-vercel-hosting"
