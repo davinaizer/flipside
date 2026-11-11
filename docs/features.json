@@ -1450,7 +1450,7 @@
           ],
           "area": "src/server/images/vercel-blob-driver.ts, src/server/images/store.ts, src/server/env.ts, the ImageStore contract test, package.json (@vercel/blob, approved with the v0.6 PRD)",
           "done_when": "The section 12 contract suite runs for the disk driver and for the vercel-blob driver with @vercel/blob mocked by an in-memory fake: put then get returns the same bytes, a repeated put is harmless, a missing key fails cleanly, delete is idempotent. Unit tests: put uses private access, no random suffix and no overwrite; IMAGE_STORE_DRIVER accepts vercel-blob and the store factory selects it; BLOB_READ_WRITE_TOKEN is optional (OIDC on Vercel). GET /images/{id} headers unchanged (existing API test passes). The run against a real store is listed in docs/manual-checks.md for AC32. verify.sh green.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F21.4",

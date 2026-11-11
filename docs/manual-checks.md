@@ -22,3 +22,6 @@ Last updated 2026-11-04, after F14 (PR 35).
 
 ## Known flake to watch
 Full-suite e2e fails one or two timing tests per run (`deck.spec.ts` loading skeleton, `performance.spec.ts`). `main` shows it too, and both pass alone. If it keeps failing, it needs its own fix.
+
+## F21: hosted images (AC32)
+- [ ] Against a real private Vercel Blob store: set `IMAGE_STORE_DRIVER=vercel-blob` (token or OIDC), add a card image, reload the card and confirm it shows; open the blob URL directly and confirm it is refused; confirm `GET /images/{id}` still checks ownership.

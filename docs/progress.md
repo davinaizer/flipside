@@ -114,3 +114,4 @@ REVIEW F20 round 2: PASS at 30438f1
 F20 done: PR 51. MANUAL PENDING: none
 F21.1 done: postgres max 1 on Vercel, register() skips migrations on Vercel, drizzle.config prefers DATABASE_URL_UNPOOLED, vercel-build script runs drizzle-kit migrate && next build.
 F21.2 done: vercel.json (release-only Git deployments, vercel-build), release.yml (ancestor-of-main check, moves release to the tag), Releasing and Rolling back in operations.md. AC32 deploy behaviour is manual.
+F21.3 done: vercel-blob ImageStore driver (private, no suffix, no overwrite), env accepts vercel-blob and optional BLOB_READ_WRITE_TOKEN, contract suite runs both drivers with @vercel/blob faked. Real-store run listed in manual-checks.md.
