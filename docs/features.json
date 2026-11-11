@@ -1406,8 +1406,115 @@
       ],
       "design_screens": [],
       "notes": "ADR-002. New dependency @vercel/blob (approved with the v0.6 PRD). vercel.json with git.deploymentEnabled {\"*\": false, \"release\": true}; GitHub Actions workflow on v* tags moves release to the tag (refuse a tag not on main). Build command runs drizzle-kit migrate with DATABASE_URL_UNPOOLED before next build; instrumentation keeps migrations on start only outside Vercel (VERCEL env var). postgres client max 1 on Vercel. vercel-blob ImageStore driver (private store, no random suffix, no overwrite) added to the env enum; contract tests run for both drivers with the SDK mocked, plus one manual run against a real store. IMAGE_MAX_BYTES 4 MB and a 4 MB web import limit with a message naming the CLI; import:cli works against the hosted database and Blob store. Version stamp falls back to VERCEL_GIT_COMMIT_SHA. Local dev, verify and e2e unchanged. The first deploy holds seed data only: the shared password (AG) stays until F22, so no real data goes on the hosted app before F22 merges.",
-      "status": "todo",
-      "tasks": []
+      "status": "in_progress",
+      "tasks": [
+        {
+          "id": "F21.1",
+          "title": "Hosted runtime: one connection per instance, migrations in the build only",
+          "reqs": [
+            "H1",
+            "H2",
+            "X1"
+          ],
+          "prd_sections": [
+            "9",
+            "13"
+          ],
+          "area": "src/server/db/client.ts, src/instrumentation.ts, drizzle.config.ts, package.json (vercel-build script), src/server/env.ts",
+          "done_when": "Unit tests: the postgres client options set max 1 when VERCEL is set and keep the default otherwise; register() runs migrations when VERCEL is unset and skips them when it is set (migrate mocked); drizzle.config uses DATABASE_URL_UNPOOLED when present, else DATABASE_URL. A build script (used as the Vercel build command) runs drizzle-kit migrate and then next build, joined with && so a failed migration stops the build; checked by running it with an unreachable DATABASE_URL_UNPOOLED and seeing a non-zero exit before next build starts (noted in the commit body). Local pnpm dev, pnpm build and e2e unchanged. verify.sh green.",
+          "status": "todo"
+        },
+        {
+          "id": "F21.2",
+          "title": "Tag-only production deploys: vercel.json and the release workflow",
+          "reqs": [
+            "H3"
+          ],
+          "prd_sections": [
+            "9",
+            "13"
+          ],
+          "area": "vercel.json, .github/workflows/release.yml, docs/operations.md",
+          "done_when": "vercel.json sets git.deploymentEnabled {\"*\": false, \"release\": true} and the build command from F21.1 (a Vitest test parses it and asserts both). The workflow runs on push of v* tags, fails unless the tagged commit is an ancestor of origin/main (git merge-base --is-ancestor), then moves release to the tag; it has contents: write only. docs/operations.md gains Releasing and Rolling back (redeploy the previous production deploy, or tag an older commit). The deploy behaviour itself is AC32, manual. verify.sh green.",
+          "status": "todo"
+        },
+        {
+          "id": "F21.3",
+          "title": "Vercel Blob ImageStore driver",
+          "reqs": [
+            "H4"
+          ],
+          "prd_sections": [
+            "9",
+            "12"
+          ],
+          "area": "src/server/images/vercel-blob-driver.ts, src/server/images/store.ts, src/server/env.ts, the ImageStore contract test, package.json (@vercel/blob, approved with the v0.6 PRD)",
+          "done_when": "The section 12 contract suite runs for the disk driver and for the vercel-blob driver with @vercel/blob mocked by an in-memory fake: put then get returns the same bytes, a repeated put is harmless, a missing key fails cleanly, delete is idempotent. Unit tests: put uses private access, no random suffix and no overwrite; IMAGE_STORE_DRIVER accepts vercel-blob and the store factory selects it; BLOB_READ_WRITE_TOKEN is optional (OIDC on Vercel). GET /images/{id} headers unchanged (existing API test passes). The run against a real store is listed in docs/manual-checks.md for AC32. verify.sh green.",
+          "status": "todo"
+        },
+        {
+          "id": "F21.4",
+          "title": "4 MB limits for images and web imports",
+          "reqs": [
+            "H5"
+          ],
+          "prd_sections": [
+            "9",
+            "12"
+          ],
+          "area": "src/shared/constants.ts, src/server/imports.ts, src/app/api/v1/imports/route.ts, src/ui/import",
+          "done_when": "IMAGE_MAX_BYTES is 4 MB and a new web import limit constant is 4 MB. API test: a CSV or zip upload one byte over the limit is refused with the existing too_large error shape and a message, built from the constant, that names 4 MB and pnpm import:cli; the science deck zip still imports. Unit test: an image over 4 MB in a zip is refused. The import screen checks the file size before upload and shows the same message (unit test of the check), so a file over the platform's 4.5 MB body limit never reaches Vercel's generic error. verify.sh green.",
+          "status": "todo"
+        },
+        {
+          "id": "F21.5",
+          "title": "import:cli against the hosted database and Blob store",
+          "reqs": [
+            "H5",
+            "H4"
+          ],
+          "prd_sections": [
+            "9",
+            "12",
+            "13"
+          ],
+          "area": "scripts/import-cli.ts, src/server/imports.ts, docs/operations.md",
+          "done_when": "Integration test: the CLI import path imports a zip larger than the 4 MB web limit (still within the zip limits) for a chosen profile with the disk driver, so the web limit applies only to HTTP uploads. The CLI picks the image driver from IMAGE_STORE_DRIVER and uses BLOB_READ_WRITE_TOKEN for vercel-blob (unit test with the SDK mocked). docs/operations.md shows the command with the hosted DATABASE_URL_UNPOOLED and the Blob token. The run against the hosted app is AC33, manual. verify.sh green.",
+          "status": "todo"
+        },
+        {
+          "id": "F21.6",
+          "title": "Version stamp falls back to Vercel's commit SHA",
+          "reqs": [
+            "H6"
+          ],
+          "prd_sections": [
+            "9"
+          ],
+          "area": "next.config.ts (version function moved to a testable module, e.g. scripts or src/shared/version.ts)",
+          "done_when": "Unit tests: with git available the stamp is unchanged (v<package>+<count>.<sha>); with git failing and VERCEL_GIT_COMMIT_SHA set it is v<package>+vercel.<first 7 of the SHA>; with neither it is v<package>+dev. The build never fails on git. verify.sh green.",
+          "status": "todo"
+        },
+        {
+          "id": "F21.7",
+          "title": "Hosted setup runbook and manual checks for AC32 and AC33",
+          "reqs": [
+            "H1",
+            "H2",
+            "H3",
+            "H4",
+            "H5"
+          ],
+          "prd_sections": [
+            "13",
+            "15"
+          ],
+          "area": "docs/operations.md, docs/manual-checks.md, .env.example",
+          "done_when": "docs/operations.md has a Hosted environment runbook: create the Vercel Hobby project from the personal repository, add Neon from the Marketplace, connect a private Blob store, set IMAGE_STORE_DRIVER=vercel-blob, check usage weekly for the first month (R11); it states that only seed data goes on the hosted app until F22 merges. .env.example documents DATABASE_URL_UNPOOLED and BLOB_READ_WRITE_TOKEN as hosted or CLI only. docs/manual-checks.md lists each AC32 and AC33 step with its expected result, for the PR checklist. verify.sh green.",
+          "status": "todo"
+        }
+      ],
+      "branch": "feat/F21-vercel-hosting"
     },
     {
       "id": "F22",
@@ -1447,7 +1554,144 @@
       ],
       "notes": "ADR-003. Schema change in PRD section 10: accounts, sign_in_tokens, sign_in_attempts, profiles.account_id (nullable until adoption, then required). No new dependency: scrypt and randomBytes from node:crypto. Replaces AG1 to AG3: remove flipside_auth, ADMIN_PASSWORD and the shared-password code in the same feature, and update the glossary (drop the Access gate row). Every /api/v1 route except GET /health and POST /auth/login needs a valid sign-in token, including GET and POST /profiles and POST /session/profile, which do not call getCurrentProfile today. getCurrentProfile verifies the token and the profile's account (cookie and X-Profile-Id). proxy.ts redirects on a missing cookie only. Seed creates a development account with a known password from .env.example; e2e helpers sign in with it. CLI: account:create (with --adopt-profiles) and account:password. Opus for the sign-in token, rate-limit and getCurrentProfile tasks.",
       "status": "todo",
-      "tasks": []
+      "tasks": [
+        {
+          "id": "F22.1",
+          "title": "Accounts schema, migration and constants",
+          "reqs": [
+            "AU2",
+            "AU3",
+            "AU5",
+            "AU6"
+          ],
+          "prd_sections": [
+            "9",
+            "10"
+          ],
+          "area": "src/server/db/schema.ts, drizzle/ (new migration), src/shared/constants.ts",
+          "done_when": "New migration adds accounts (email unique), sign_in_tokens (token_hash unique, account_id, expires_at), sign_in_attempts with index (email, attempted_at), and profiles.account_id as a nullable foreign key to accounts. Integration test: the migration applies on a database that already holds the two seeded profiles and their decks, leaving account_id null. Constants: SIGN_IN_COOKIE_NAME flipside_sign_in, token bytes 32, PASSWORD_MIN_LENGTH 12, SIGN_IN_MAX_FAILURES 5, SIGN_IN_WINDOW_MINUTES 15, reusing the 30-day cookie lifetime. Glossary terms already exist; use them. verify.sh green.",
+          "status": "todo"
+        },
+        {
+          "id": "F22.2",
+          "title": "Password hashing and the account service",
+          "reqs": [
+            "AU3",
+            "AU4"
+          ],
+          "prd_sections": [
+            "2",
+            "9",
+            "10"
+          ],
+          "area": "src/server/passwords.ts, src/server/accounts.ts, src/shared/schemas/auth.ts",
+          "done_when": "Unit tests: hashPassword uses scrypt from node:crypto with a random salt and stores parameters, salt and hash in one string; two hashes of the same password differ; verifyPassword compares with timingSafeEqual and rejects a wrong password and a malformed hash. Integration tests: createAccount trims and lower-cases the email, refuses a duplicate (any case) and a password under PASSWORD_MIN_LENGTH; setPassword stores a new hash and deletes the account's sign-in tokens. No plain password is logged or returned. verify.sh green.",
+          "status": "todo"
+        },
+        {
+          "id": "F22.3",
+          "title": "account:create, account:password and adopting profiles",
+          "reqs": [
+            "AU4",
+            "AU6",
+            "P5"
+          ],
+          "prd_sections": [
+            "2",
+            "4",
+            "10",
+            "13"
+          ],
+          "area": "scripts/account-cli.ts, package.json scripts, src/server/accounts.ts, src/server/seed.ts, scripts/e2e-seed.ts, .env.example",
+          "done_when": "Integration tests for the CLI entry points (prompt injected): account:create <email> creates an account with a scrypt hash and refuses a duplicate or a short password; --adopt-profiles sets account_id on every profile without one, in one transaction, and the profiles keep their decks and progress; account:password <email> changes the hash and revokes tokens. The seed creates a development account from DEV_ACCOUNT_EMAIL and DEV_ACCOUNT_PASSWORD in .env.example and gives it the two seeded profiles; the e2e seed does the same. docs/operations.md explains creating the first hosted account with --adopt-profiles and resetting a forgotten password (R12). verify.sh green.",
+          "status": "todo"
+        },
+        {
+          "id": "F22.4",
+          "title": "Sign-in tokens: issue, resolve, revoke",
+          "reqs": [
+            "AU2",
+            "AU7"
+          ],
+          "prd_sections": [
+            "2",
+            "9",
+            "10"
+          ],
+          "area": "src/server/sign-in.ts",
+          "done_when": "Integration tests: issuing a token returns at least 32 random bytes encoded for a cookie and stores only its SHA-256 hash with the account and an expiry 30 days ahead; resolving the token returns the account, and returns nothing for an unknown, expired or revoked token; revoking deletes the row; revokeOthers keeps only the given token; issuing for an account deletes that account's expired tokens. The database never holds the raw token (asserted). verify.sh green.",
+          "status": "todo",
+          "model": "opus"
+        },
+        {
+          "id": "F22.5",
+          "title": "Sign-in with a per-email rate limit",
+          "reqs": [
+            "AU1",
+            "AU5"
+          ],
+          "prd_sections": [
+            "2",
+            "9",
+            "10"
+          ],
+          "area": "src/server/sign-in.ts, src/server/accounts.ts",
+          "done_when": "Integration tests with an injected clock: signIn(email, password) returns a token for the right pair; an unknown email, a wrong password and a malformed email all return the same failure; five failures for one email within 15 minutes make the sixth fail even with the right password; another email is unaffected; after the window the right password works again; attempts older than the window are deleted on the next attempt for that email; email matching is case and whitespace insensitive. The unknown-email path still runs a scrypt verify so timing does not reveal which emails exist. verify.sh green.",
+          "status": "todo",
+          "model": "opus"
+        },
+        {
+          "id": "F22.6",
+          "title": "Switch the gate to accounts and remove the shared password",
+          "reqs": [
+            "AU1",
+            "AU2",
+            "AU7"
+          ],
+          "prd_sections": [
+            "2",
+            "4",
+            "9",
+            "11"
+          ],
+          "area": "src/app/api/v1/auth/login, src/app/api/v1/auth/logout, src/app/login/page.tsx, src/proxy.ts, src/server/auth.ts, src/server/http/access.ts, src/server/env.ts, src/shared/constants.ts, .env.example, playwright.config.ts, e2e/helpers, e2e/auth.spec.ts, docs/GLOSSARY.md",
+          "done_when": "POST /auth/login takes email and password, calls signIn and sets flipside_sign_in (httpOnly, SameSite=Lax, Path=/, Secure except plain HTTP on localhost); every failure is one 401 with the neutral message. POST /auth/logout deletes the token and clears the cookie. src/proxy.ts redirects pages and returns 401 for /api/v1 when the cookie is missing, except GET /health and POST /auth/login. The Login page asks for email and password. flipside_auth, ADMIN_PASSWORD, the HMAC code and the Access gate glossary row are removed (grep finds none). API tests for the cookie flags and logout; e2e helpers sign in with the dev account; e2e/auth.spec.ts covers AC27 (redirect, 401, neutral message for all three failures, logout then replaying the old cookie returns 401) on desktop and iPad. verify.sh green.",
+          "status": "todo"
+        },
+        {
+          "id": "F22.7",
+          "title": "getCurrentProfile checks the account; profiles scoped to the account",
+          "reqs": [
+            "AU6",
+            "P5",
+            "P8"
+          ],
+          "prd_sections": [
+            "2",
+            "4",
+            "9",
+            "11"
+          ],
+          "area": "src/server/profile.ts, src/server/http/handle.ts, src/app/api/v1/profiles/route.ts, src/app/api/v1/session/profile/route.ts, src/app/(app)/layout.tsx, src/app/page.tsx, src/app/practice/[sessionId]/page.tsx",
+          "done_when": "getCurrentProfile resolves the sign-in token first and accepts a profile id from the cookie or X-Profile-Id only if it belongs to the token's account, else 401; nothing else reads flipside_sign_in. GET and POST /profiles and POST /session/profile require a valid token and use its account. Server-rendered layouts and pages that load the profile verify the token. Integration tests with two accounts (AC29): each lists only its own profiles; the other account's profile id as cookie or header returns 401; its decks, sessions, reviews and images return 404; a request with a profile cookie but no token returns 401 even if it bypasses the proxy. AC26 and the existing profile-scoping tests still pass. verify.sh green.",
+          "status": "todo",
+          "model": "opus"
+        },
+        {
+          "id": "F22.8",
+          "title": "Change password on the Profile page",
+          "reqs": [
+            "AU8"
+          ],
+          "prd_sections": [
+            "4",
+            "11"
+          ],
+          "area": "src/app/api/v1/auth/password/route.ts, src/server/accounts.ts, src/shared/schemas/auth.ts, src/ui/profile, src/ui/api/client.ts, e2e",
+          "done_when": "POST /auth/password takes current, new and confirm. API tests (AC31): a wrong current password returns the neutral message and changes nothing; a new password under 12 characters or a mismatched confirm is refused; success stores a new hash, deletes the account's other sign-in tokens and keeps the caller's (its cookie still works, another device's returns 401). The Profile page gains a Change password form with labelled fields; an e2e test changes the password and signs in with the new one, and axe passes in both themes. verify.sh green.",
+          "status": "todo"
+        }
+      ]
     },
     {
       "id": "F23",
@@ -1477,7 +1721,80 @@
       ],
       "notes": "src/app/manifest.ts with colours from the design tokens (no raw hex in components; the manifest needs literal colours, so read them from the tokens file or one constant), icons 192, 512, maskable and a 180 px Apple touch icon. The repository has no app icon or logo yet: ask the owner for artwork first; if none, build a placeholder (the letter F on the primary colour, from the design tokens) and log it as ASSUMED, iOS web-app meta tags and safe-area padding. No service worker. Add a 375 x 812 Playwright project to the e2e and axe runs and fix any screen that scrolls sideways or clips controls; no phone-specific layout. Installing on a real iPad and iPhone is the manual part of AC34.",
       "status": "todo",
-      "tasks": []
+      "tasks": [
+        {
+          "id": "F23.1",
+          "title": "Placeholder app icons from the design tokens",
+          "reqs": [
+            "W1"
+          ],
+          "prd_sections": [
+            "3",
+            "8"
+          ],
+          "area": "src/app/icon.tsx and src/app/apple-icon.tsx (next/og ImageResponse, no new dependency), src/shared/app-colours.ts or a tokens-derived constant, docs/decisions.md",
+          "done_when": "Icons at 192 and 512 px, a maskable 512 px icon with the letter inside the safe zone, and a 180 px Apple touch icon: the letter F in the bundled Lexend on the light theme's primary colour. The colours come from one constant, and a unit test checks it equals the values in src/ui/tokens.css. Route test or e2e: each icon URL returns image/png at the stated size. docs/decisions.md logs the placeholder as ASSUMED (the owner replaces it later, per the F23 ANSWER). verify.sh green.",
+          "status": "todo"
+        },
+        {
+          "id": "F23.2",
+          "title": "Web app manifest and iOS web-app meta tags",
+          "reqs": [
+            "W1",
+            "W2",
+            "W4"
+          ],
+          "prd_sections": [
+            "3",
+            "8"
+          ],
+          "area": "src/app/manifest.ts, src/app/layout.tsx",
+          "done_when": "Unit test of manifest(): name Flipside, a short name, start_url /, display standalone, background_color and theme_color from the F23.1 constant, icons 192, 512 and maskable. The root layout sets appleWebApp (capable, title, status bar style), the Apple touch icon, viewport-fit=cover and a theme colour per colour scheme. E2e: /manifest.webmanifest returns the manifest and the page head holds the Apple meta tags and touch icon link. No service worker is registered (e2e asserts navigator.serviceWorker has no registration; grep finds no serviceWorker.register). verify.sh green.",
+          "status": "todo"
+        },
+        {
+          "id": "F23.3",
+          "title": "Keep content inside the safe areas",
+          "reqs": [
+            "W2"
+          ],
+          "prd_sections": [
+            "3",
+            "8"
+          ],
+          "area": "src/ui/shell, src/app/practice/[sessionId], src/app/login, src/app/page.tsx (picker), src/app/globals.css",
+          "done_when": "The app shell, practice, summary, login and picker pad their outer edges with env(safe-area-inset-*) on top of their existing padding, in both orientations. E2e at the iPad and desktop sizes shows no layout change (insets are 0 there; existing tests pass), and a unit or e2e check finds the safe-area padding on each outer container. On-device behaviour is the manual part of AC34, listed in docs/manual-checks.md with installing from Safari on iPad and iPhone. verify.sh green.",
+          "status": "todo"
+        },
+        {
+          "id": "F23.4",
+          "title": "Phone viewport project; app shell, login, picker, Library and Deck at 375 px",
+          "reqs": [
+            "W3"
+          ],
+          "prd_sections": [
+            "3",
+            "8"
+          ],
+          "area": "playwright.config.ts, e2e/phone.spec.ts (new), e2e/a11y.spec.ts, src/ui/shell, src/ui/library, src/ui/deck, src/app/login, src/app/page.tsx",
+          "done_when": "A phone Playwright project at 375 x 812 with touch runs e2e/phone.spec.ts and the axe spec. For login, picker, Library and Deck, in both themes: the page has no horizontal scroll (scrollWidth equals clientWidth), every visible button, link and input is at least 44 px in both dimensions and inside the viewport, and axe reports no serious or critical issues. Screens that fail are fixed through the existing responsive layout with no phone-only design; the sidebar collapse and the profile menu still work at that width. Existing desktop and iPad e2e pass. verify.sh green.",
+          "status": "todo"
+        },
+        {
+          "id": "F23.5",
+          "title": "Practice, summary, Progress, Settings, Profile and Import at 375 px",
+          "reqs": [
+            "W3"
+          ],
+          "prd_sections": [
+            "3",
+            "8"
+          ],
+          "area": "e2e/phone.spec.ts, e2e/a11y.spec.ts, src/ui/practice, src/ui/progress, src/ui/settings, src/ui/profile, src/ui/import",
+          "done_when": "e2e/phone.spec.ts adds practice (question and answer side, grade bar), summary, Progress, Settings, Profile and Add or re-import with the same checks as F23.4 in both themes: no horizontal scroll, controls at least 44 px and inside the viewport, axe with no serious or critical issues. Failures are fixed through the existing responsive layout. Every screen in the PRD section 8 table is now covered at 375 x 812. Existing desktop and iPad e2e pass. verify.sh green.",
+          "status": "todo"
+        }
+      ]
     }
   ]
 }
