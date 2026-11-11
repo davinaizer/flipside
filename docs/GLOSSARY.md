@@ -41,8 +41,12 @@ The one owner of Flipside's vocabulary. Use these terms, and only these, in code
 | Import | Creating or updating a deck from a CSV or a zip (CSV plus images). | upload (for the operation), load | `imports`, `import_runs` | "Import" |
 | Re-import | Importing into an existing deck, matched by card id, keeping progress. | sync, update deck | `deckId` on import | "Re-import" |
 | Export | Writing a deck out as a zip (CSV plus images). | download, backup | `export` | "Export" |
-| Sign-in | The two steps that let someone use the app: passing the access gate, then selecting a profile. Never called a session. | session, auth session | see the two rows below | not shown as one word |
-| Access gate | The app-password check in front of the whole app (PRD section 4, AG). | auth, lock | `AUTH_COOKIE_NAME`, `flipside_auth`, `/login`, `/api/v1/auth` | "Login", "Log out" |
+| Sign-in | The two steps that let someone use the app: passing the access gate (from v0.6, signing in to an account), then selecting a profile. Never called a session. | session, auth session | see the rows below | not shown as one word |
+| Access gate | The app-password check in front of the whole app (PRD section 4, AG). Superseded by account sign-in in v0.6; the term goes when the AU feature removes the code. | auth, lock | `AUTH_COOKIE_NAME`, `flipside_auth`, `/login`, `/api/v1/auth` | "Login", "Log out" |
+| Account | A household's sign-in, one email and one password, that owns a set of profiles (PRD section 2, AU). Created only by the CLI. | user, household, login, tenant | `accounts`, `accountId` | "email", "password" on the Login page |
+| Sign-in token | The random secret a device holds after signing in to an account; the server stores only its hash and can revoke it (AU2). | session, auth session, JWT | `sign_in_tokens`, `flipside_sign_in` | not shown |
+| Release | A version tag `vX.Y.Z` on `main`; the only thing that deploys to production (PRD H3). | deploy (as a noun for the version), build | `release` branch, `v*` tags | not shown |
+| Installed web app | Flipside added to the Home Screen and opened standalone (PRD W1, W2). | PWA (in UI copy), native app, mobile app | `manifest.ts` | not shown |
 | Profile selection | Choosing a profile on the picker. Remembered by a cookie, not a credential. | login, sign in as, switch user | `flipside_profile`, `POST /session/profile` | "Switch profile" |
 
 ## Process terms

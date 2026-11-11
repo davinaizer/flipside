@@ -15,3 +15,5 @@ Use [000-template.md](000-template.md). Add the new record to the index below.
 | ADR | Title | Status |
 | --- | --- | --- |
 | [001](001-enforce-boundaries-in-lint.md) | Layer boundaries and shared helpers are enforced by lint | Accepted |
+| [002](002-host-on-vercel.md) | Host on Vercel Hobby with Neon and Vercel Blob | Proposed |
+| [003](003-own-email-password-auth.md) | Own email and password authentication over Node crypto | Proposed |
