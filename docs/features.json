@@ -1,7 +1,7 @@
 {
   "version": 2,
   "base_branch": "main",
-  "note": "Agents may change only status, commit, branch, pr. manual_acs cannot be verified by an agent and go on the PR checklist. v0.3 review backlog; the F0-F8 ledger is in docs/archive/v0.2/features.json.",
+  "note": "Agents may change only status, commit, branch, pr. manual_acs cannot be verified by an agent and go on the PR checklist. v0.3 review backlog; the F0-F8 ledger is in docs/archive/v0.2/features.json. v0.6 hosted plan adds F21 to F23 (tasks filled by /plan-backlog).",
   "features": [
     {
       "id": "F9",
@@ -1376,6 +1376,108 @@
       ],
       "branch": "feat/F20-audit-followups",
       "pr": 51
+    },
+    {
+      "id": "F21",
+      "name": "Hosting on Vercel: release deploys, Neon, Vercel Blob, upload limits",
+      "depends_on": [],
+      "reqs": [
+        "H1",
+        "H2",
+        "H3",
+        "H4",
+        "H5",
+        "H6",
+        "X1"
+      ],
+      "acs": [
+        "AC32",
+        "AC33"
+      ],
+      "manual_acs": [
+        "AC32",
+        "AC33"
+      ],
+      "prd_sections": [
+        "9",
+        "12",
+        "13",
+        "15"
+      ],
+      "design_screens": [],
+      "notes": "ADR-002. New dependency @vercel/blob (approved with the v0.6 PRD). vercel.json with git.deploymentEnabled {\"*\": false, \"release\": true}; GitHub Actions workflow on v* tags moves release to the tag (refuse a tag not on main). Build command runs drizzle-kit migrate with DATABASE_URL_UNPOOLED before next build; instrumentation keeps migrations on start only outside Vercel (VERCEL env var). postgres client max 1 on Vercel. vercel-blob ImageStore driver (private store, no random suffix, no overwrite) added to the env enum; contract tests run for both drivers with the SDK mocked, plus one manual run against a real store. IMAGE_MAX_BYTES 4 MB and a 4 MB web import limit with a message naming the CLI; import:cli works against the hosted database and Blob store. Version stamp falls back to VERCEL_GIT_COMMIT_SHA. Local dev, verify and e2e unchanged. The first deploy holds seed data only: the shared password (AG) stays until F22, so no real data goes on the hosted app before F22 merges.",
+      "status": "todo",
+      "tasks": []
+    },
+    {
+      "id": "F22",
+      "name": "Email and password accounts that own profiles",
+      "depends_on": [],
+      "reqs": [
+        "AU1",
+        "AU2",
+        "AU3",
+        "AU4",
+        "AU5",
+        "AU6",
+        "AU7",
+        "AU8",
+        "P5",
+        "P8"
+      ],
+      "acs": [
+        "AC27",
+        "AC28",
+        "AC29",
+        "AC30",
+        "AC31",
+        "AC26"
+      ],
+      "manual_acs": [],
+      "prd_sections": [
+        "2",
+        "4",
+        "9",
+        "10",
+        "11",
+        "17"
+      ],
+      "design_screens": [
+        "profile_picker"
+      ],
+      "notes": "ADR-003. Schema change in PRD section 10: accounts, sign_in_tokens, sign_in_attempts, profiles.account_id (nullable until adoption, then required). No new dependency: scrypt and randomBytes from node:crypto. Replaces AG1 to AG3: remove flipside_auth, ADMIN_PASSWORD and the shared-password code in the same feature, and update the glossary (drop the Access gate row). Every /api/v1 route except GET /health and POST /auth/login needs a valid sign-in token, including GET and POST /profiles and POST /session/profile, which do not call getCurrentProfile today. getCurrentProfile verifies the token and the profile's account (cookie and X-Profile-Id). proxy.ts redirects on a missing cookie only. Seed creates a development account with a known password from .env.example; e2e helpers sign in with it. CLI: account:create (with --adopt-profiles) and account:password. Opus for the sign-in token, rate-limit and getCurrentProfile tasks.",
+      "status": "todo",
+      "tasks": []
+    },
+    {
+      "id": "F23",
+      "name": "Installable web app and phone-width check",
+      "depends_on": [],
+      "reqs": [
+        "W1",
+        "W2",
+        "W3",
+        "W4"
+      ],
+      "acs": [
+        "AC34"
+      ],
+      "manual_acs": [
+        "AC34"
+      ],
+      "prd_sections": [
+        "3",
+        "8"
+      ],
+      "design_screens": [
+        "library",
+        "practice_session",
+        "settings",
+        "profile_picker"
+      ],
+      "notes": "src/app/manifest.ts with colours from the design tokens (no raw hex in components; the manifest needs literal colours, so read them from the tokens file or one constant), icons 192, 512, maskable and a 180 px Apple touch icon. The repository has no app icon or logo yet: ask the owner for artwork first; if none, build a placeholder (the letter F on the primary colour, from the design tokens) and log it as ASSUMED, iOS web-app meta tags and safe-area padding. No service worker. Add a 375 x 812 Playwright project to the e2e and axe runs and fix any screen that scrolls sideways or clips controls; no phone-specific layout. Installing on a real iPad and iPhone is the manual part of AC34.",
+      "status": "todo",
+      "tasks": []
     }
   ]
 }
