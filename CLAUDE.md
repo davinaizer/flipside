@@ -19,6 +19,7 @@ Spec: `docs/PRD.md` (authoritative). Vocabulary: `docs/GLOSSARY.md`. How agents 
 - Vocabulary: use the terms in `docs/GLOSSARY.md` in code, docs, UI copy, commits, PRs and any artifact you write, and never a term from its Avoid column. A concept with no entry gets its row in the same change that introduces the word. Renaming a term means changing the glossary and every use together.
 - Look and feel: `docs/design/DESIGN.md` (light) and `DESIGN-DARK.md` (dark) are canonical. Use the tokens file and existing components; screens are reference only: build from the PRD, use the screen for layout, and apply the corrections in `docs/design/README.md` (never copy `code.html`). Semantic tokens only, no raw hex. Every screen works in both themes.
 - No dependency, service, queue or cache outside PRD section 9 without asking.
+- Before any release tag, review `README.md` against what the release ships and update it (with `package.json` `version`) in a PR into `main`; the steps are in `docs/operations.md` Releasing.
 - Never edit PRD acceptance criteria. In `docs/features.json` change only `status`, `commit`, `branch`, `pr`.
 
 ## Engineering principles
