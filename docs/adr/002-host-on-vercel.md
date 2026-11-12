@@ -29,7 +29,7 @@ Assumptions: a household's traffic, storage and compute fit Vercel Hobby, Neon f
 
 Option 1. Concretely:
 
-- Production deploys come only from the `release` branch, which a GitHub Actions workflow moves to each `v*` tag; `vercel.json` sets `git.deploymentEnabled` to `{"*": false, "release": true}` (H3).
+- Production deploys come only from the `release` branch, which a GitHub Actions workflow moves to each `v*` tag; `vercel.json` sets `git.deploymentEnabled` to `{"**": false, "release": true}` (H3); `**` because `*` does not match branch names with a `/`.
 - The hosted build runs `drizzle-kit migrate` against `DATABASE_URL_UNPOOLED` before `next build`; the runtime uses the pooled `DATABASE_URL` with `max: 1` (H1, H2).
 - A `vercel-blob` `ImageStore` driver writes to a private store. Reads keep going through `GET /images/{id}`, so the ownership check is unchanged (H4).
 - Image and web import limits drop to 4 MB; larger imports use `import:cli` (H5).
