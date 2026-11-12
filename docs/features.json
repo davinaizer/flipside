@@ -1768,7 +1768,7 @@
           ],
           "area": "src/app/icon.tsx and src/app/apple-icon.tsx (next/og ImageResponse, no new dependency), src/shared/app-colours.ts or a tokens-derived constant, docs/decisions.md",
           "done_when": "Icons at 192 and 512 px, a maskable 512 px icon with the letter inside the safe zone, and a 180 px Apple touch icon: the letter F in the bundled Lexend on the light theme's primary colour. The colours come from one constant, and a unit test checks it equals the values in src/ui/tokens.css. Route test or e2e: each icon URL returns image/png at the stated size. docs/decisions.md logs the placeholder as ASSUMED (the owner replaces it later, per the F23 ANSWER). verify.sh green.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F23.2",

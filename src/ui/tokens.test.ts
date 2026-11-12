@@ -245,6 +245,7 @@ describe("tokens", () => {
         else if (
           /\.(tsx?|css|mjs)$/.test(f) &&
           !p.endsWith("tokens.css") &&
+          !p.endsWith("app-colours.ts") && // the one literal-colour constant (F23.1), kept equal to tokens.css by its own test
           !p.endsWith("tokens.test.ts")
         ) {
           if (/#[0-9a-fA-F]{3,8}\b/.test(readFileSync(p, "utf8"))) hits.push(p);

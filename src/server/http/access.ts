@@ -16,6 +16,9 @@ export function checkAccess(request: Request): Response | null {
   if (request.method === "GET" && pathname === "/api/v1/health") return null;
   if (request.method === "POST" && pathname === "/api/v1/auth/login") return null;
   if (!isApi && pathname === "/login") return null;
+  // App icons are fetched by the browser and iOS without the cookie (F23.1).
+  if (request.method === "GET" && (pathname === "/apple-icon" || pathname.startsWith("/icon/")))
+    return null;
 
   const hasCookie = request.headers
     .get("cookie")
