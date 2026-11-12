@@ -134,3 +134,4 @@ F22.7: getCurrentProfile resolves the sign-in token first and accepts a profile 
 - F22.8: POST /auth/password (changePassword in accounts.ts) keeps the caller's sign-in token and revokes the others; Change password form on the Profile page. e2e uses per-project accounts seeded in scripts/e2e-seed.ts so the shared e2e password never changes.
 REVIEW F22 round 1: GAPS at a89d2f4 (rate limit not safe under concurrent requests; changePassword not one transaction)
 REVIEW F22 round 2: PASS at 262f7f5
+F22 done: accounts own profiles, PR #57, review PASS (round 2), verify green; full e2e green except known flakes (deck skeleton iPad, performance under load), both pass alone. MANUAL PENDING: none from the ledger.

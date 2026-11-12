@@ -1585,7 +1585,7 @@
         "profile_picker"
       ],
       "notes": "ADR-003. Schema change in PRD section 10: accounts, sign_in_tokens, sign_in_attempts, profiles.account_id (nullable until adoption, then required). No new dependency: scrypt and randomBytes from node:crypto. Replaces AG1 to AG3: remove flipside_auth, ADMIN_PASSWORD and the shared-password code in the same feature, and update the glossary (drop the Access gate row). Every /api/v1 route except GET /health and POST /auth/login needs a valid sign-in token, including GET and POST /profiles and POST /session/profile, which do not call getCurrentProfile today. getCurrentProfile verifies the token and the profile's account (cookie and X-Profile-Id). proxy.ts redirects on a missing cookie only. Seed creates a development account with a known password from .env.example; e2e helpers sign in with it. CLI: account:create (with --adopt-profiles) and account:password. Opus for the sign-in token, rate-limit and getCurrentProfile tasks.",
-      "status": "in_progress",
+      "status": "done",
       "tasks": [
         {
           "id": "F22.1",
@@ -1724,7 +1724,8 @@
           "status": "done"
         }
       ],
-      "branch": "feat/F22-accounts"
+      "branch": "feat/F22-accounts",
+      "pr": 57
     },
     {
       "id": "F23",
