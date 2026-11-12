@@ -22,7 +22,7 @@ export function LoginForm({
 }) {
   return (
     <main className="relative flex min-h-screen flex-col items-center justify-center gap-10 bg-surface safe-area safe-t safe-r safe-b safe-l [--edge:2rem]">
-      <div className="absolute right-8 top-4">
+      <div className="absolute right-[calc(2rem+env(safe-area-inset-right))] top-[calc(1rem+env(safe-area-inset-top))]">
         <AttributeThemeSwitch />
       </div>
       <div className="flex items-center gap-3 rounded-full border border-card-edge bg-surface-card py-2 pl-2 pr-5 shadow-card">
@@ -67,7 +67,9 @@ export function LoginForm({
           Sign in
         </button>
       </form>
-      <p className="absolute bottom-4 text-sm text-on-surface-variant">{APP_VERSION}</p>
+      <p className="absolute bottom-[calc(1rem+env(safe-area-inset-bottom))] text-sm text-on-surface-variant">
+        {APP_VERSION}
+      </p>
     </main>
   );
 }

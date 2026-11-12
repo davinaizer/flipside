@@ -20,7 +20,7 @@ export function SettingsPopover({ onClose }: { onClose: () => void }) {
     return () => window.removeEventListener("keydown", onKey);
   }, [onClose]);
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-surface-container-high p-4">
+    <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-surface-container-high safe-area safe-t safe-r safe-b safe-l [--edge:1rem]">
       <div
         role="dialog"
         aria-modal="true"

@@ -68,6 +68,7 @@ test("picker, Library and Deck fit the phone; sidebar collapse and profile menu 
   await page.getByRole("button", { name: "Davi" }).click();
   await page.waitForURL("**/library");
   await expect(page.getByRole("heading", { name: "Today" })).toBeVisible();
+  await shellSettled(page);
   await checkPhone(page);
 
   // With no saved choice the sidebar starts as the icon rail at this width. Expanding it is the user's choice and
@@ -141,4 +142,24 @@ test("practice, summary, Progress, Settings, Profile and Import fit the phone", 
   await expect(page.getByLabel("Name")).toBeVisible();
   await shellSettled(page);
   await checkPhone(page);
+});
+
+// The expanded sidebar is the user's choice (see above). This measures it; if it overflows at 375 px, it is
+// reported rather than redesigned here. Measured: scrollWidth 538 against clientWidth 375, so it is fixme.
+test.fixme("expanded sidebar at 375 px has no horizontal scroll", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "Davi" }).click();
+  await page.waitForURL("**/library");
+  await shellSettled(page);
+  const toggle = page.getByRole("banner").getByRole("button", { name: "Sidebar" });
+  await toggle.click();
+  await expect(toggle).toHaveAttribute("aria-expanded", "true");
+  await expect
+    .poll(() => page.getByRole("complementary").evaluate((el) => el.getBoundingClientRect().width))
+    .toBe(256);
+  const { scrollWidth, clientWidth } = await page.evaluate(() => ({
+    scrollWidth: document.documentElement.scrollWidth,
+    clientWidth: document.documentElement.clientWidth,
+  }));
+  expect(scrollWidth).toBe(clientWidth);
 });

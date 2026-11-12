@@ -50,3 +50,4 @@ Copy into the PR checklist. Needs the Vercel project from the Hosted environment
 ## F23: installable web app (AC34)
 - [ ] Safari on iPad and iPhone: Share, Add to Home Screen. The app opens standalone with its icon and name.
 - [ ] In both orientations, content stays clear of the notch, status bar, home indicator and rounded corners on the shell, practice, summary, login and picker.
+- [ ] iPhone in landscape: the collapsed sidebar keeps its icons visible, the theme switch on login and the picker clears the notch and corners, and the practice reading settings overlay keeps its content clear of the insets.
