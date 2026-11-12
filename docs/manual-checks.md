@@ -36,7 +36,7 @@ Copy into the PR checklist. Needs the Vercel project from the Hosted environment
 - [ ] `GET /images/{id}` returns the image with the section 12 headers, and answers 404 for another profile's image.
 
 ## F21: size limits and CLI import (AC33)
-- [ ] Image limit: make a zip with a padded image just over 4 MB (the zip itself under 4 MB, or use `pnpm import:cli`) and import it. Expect an `image_too_large` warning naming 4 MB, and the card imported without that image.
-- [ ] Hosted app: choosing an import file over 4 MB is refused with a message naming 4 MB and `pnpm import:cli`.
-- [ ] Hosted app: the science deck zip (4 MB or less) imports through the web and its images show.
-- [ ] `pnpm import:cli` with the hosted command in `docs/operations.md` imports a zip larger than 4 MB; the deck and its images show on the hosted app.
+- [x] Image limit: make a zip with a padded image just over 4 MB (the zip itself under 4 MB, or use `pnpm import:cli`) and import it. Expect an `image_too_large` warning naming 4 MB, and the card imported without that image.
+- [x] Hosted app: choosing an import file over 4 MB is refused with a message naming 4 MB and `pnpm import:cli`.
+- [x] Hosted app: the science deck zip (4 MB or less) imports through the web and its images show.
+- [x] `pnpm import:cli` with the hosted command in `docs/operations.md` imports a zip larger than 4 MB; the deck and its images show on the hosted app.

@@ -463,7 +463,7 @@ They diffuse from an area of high concentration on the left to lower concentrati
 | `topic`, `front` or `back` empty on a row | Row error; the row is skipped and listed |
 | Duplicate `id` in the file | Row error; the later row is skipped |
 | Image file named but not in the zip | Warning; the card imports without that image |
-| Image not PNG, JPEG, WebP or GIF (checked by file bytes, not extension), or over 5 MB | Warning; the card imports without that image |
+| Image not PNG, JPEG, WebP or GIF (checked by file bytes, not extension), or over 4 MB | Warning; the card imports without that image |
 | More than 2,000 rows, or a zip over 200 MB uncompressed | Error, import blocked |
 | Zip entry with an absolute path, a `..` segment or a symlink | Error, import blocked |
 
