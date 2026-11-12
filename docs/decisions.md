@@ -158,3 +158,4 @@ ASSUMED: F23.4 below 640 px (Tailwind sm) the sidebar starts as the icon rail wh
 ASSUMED: F23.5 phone checks run on a dedicated seeded profile "Phone screens" because practice grades a card and Davi/Nicole are read-only in e2e.
 
 ANSWER (F23, review round 1, 2026-11-12): The expanded sidebar at 375 px made the page 538 px wide (W3 horizontal scroll). -> Below 640 px the expanded sidebar overlays the page instead of pushing it, using the same Sidebar component; at 640 px and up it keeps pushing the content as today. Fix task F23.7.
+ASSUMED: F23.7 below 640 px the aside is fixed (z-30) beside a spacer of the rail's width; the top bar rises above it (z-40) so the toggle stays reachable, and the expanded logo row drops 3rem to clear the toggle; choosing a nav link with the overlay open collapses it through writeCollapsed, which also saves the collapsed choice for the device (no separate in-memory close, YAGNI).

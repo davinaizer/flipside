@@ -49,6 +49,13 @@ describe("safe-area padding (W2)", () => {
     expect(src).toContain("w-[calc(16rem+env(safe-area-inset-left))]");
   });
 
+  it("overlays the page below 640 px with a rail-width spacer (F23.7)", () => {
+    const src = read("src/ui/shell/Sidebar.tsx");
+    expect(src).toContain("fixed left-0 top-0");
+    expect(src).toContain("sm:sticky");
+    expect(src).toContain("w-[calc(5rem+env(safe-area-inset-left))] shrink-0 sm:hidden");
+  });
+
   // The absolute items sit against the padding box, so the main element's padding does not move them.
   it.each(["src/ui/profile/LoginScreen.tsx", "src/ui/profile/ProfilePicker.tsx"])(
     "%s offsets the theme switch by the top and right insets",

@@ -1855,7 +1855,7 @@
           ],
           "area": "src/ui/shell (Sidebar, app shell layout), src/app/(app)/layout.tsx, e2e/phone.spec.ts, docs/decisions.md",
           "done_when": "Below 640 px the expanded sidebar sits over the page (fixed or absolute, above the content, with the safe-area insets kept) while the content keeps the collapsed rail's width, so the page never scrolls sideways; at 640 px and up the layout is unchanged. Same Sidebar component, no new phone-only design; expanding and collapsing, the profile menu and keyboard focus still work, and choosing a nav link with the overlay open lands on the page. The F23.6 'expanded sidebar at 375 px' test.fixme becomes a passing test (scrollWidth equals clientWidth with the sidebar expanded, both themes, axe with no serious or critical issues). Existing desktop and iPad e2e pass. verify.sh green.",
-          "status": "todo"
+          "status": "done"
         }
       ],
       "branch": "feat/F23-installable-web-app"

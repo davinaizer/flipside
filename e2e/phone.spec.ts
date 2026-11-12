@@ -144,9 +144,8 @@ test("practice, summary, Progress, Settings, Profile and Import fit the phone", 
   await checkPhone(page);
 });
 
-// The expanded sidebar is the user's choice (see above). This measures it; if it overflows at 375 px, it is
-// reported rather than redesigned here. Measured: scrollWidth 538 against clientWidth 375, so it is fixme.
-test.fixme("expanded sidebar at 375 px has no horizontal scroll", async ({ page }) => {
+// Below 640 px the expanded sidebar overlays the page (F23.7), so the page never scrolls sideways.
+test("expanded sidebar at 375 px overlays the page without horizontal scroll", async ({ page }) => {
   await page.goto("/");
   await page.getByRole("button", { name: "Davi" }).click();
   await page.waitForURL("**/library");
@@ -162,4 +161,15 @@ test.fixme("expanded sidebar at 375 px has no horizontal scroll", async ({ page 
     clientWidth: document.documentElement.clientWidth,
   }));
   expect(scrollWidth).toBe(clientWidth);
+  for (const theme of ["light", "dark"] as const) {
+    await setTheme(page, theme);
+    await expectNoSeriousA11y(page);
+  }
+  // The toggle stays reachable above the overlay, and choosing a link closes it on the new page.
+  await toggle.click();
+  await expect(toggle).toHaveAttribute("aria-expanded", "false");
+  await toggle.click();
+  await page.getByRole("link", { name: "Progress" }).click();
+  await page.waitForURL("**/progress");
+  await expect(toggle).toHaveAttribute("aria-expanded", "false");
 });
