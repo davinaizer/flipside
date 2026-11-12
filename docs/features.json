@@ -1842,6 +1842,20 @@
           "area": "src/ui/shell/Sidebar.tsx, src/ui/profile/LoginScreen.tsx, src/ui/profile/ProfilePicker.tsx, src/ui/practice/SettingsPopover.tsx, src/ui/safe-area.test.ts, e2e/phone.spec.ts, docs/manual-checks.md",
           "done_when": "(1) The sidebar widens by env(safe-area-inset-left) in both the collapsed and expanded states instead of the inset eating its fixed width, so the collapsed rail's icons stay visible in iPhone landscape. (2) The absolute theme switch on login and the picker, and the login version line, are offset by the matching insets (top, right, bottom) on top of their current offsets. (3) The practice reading-settings overlay pads its edges with the safe-area classes. safe-area.test.ts checks all three. (4) phone.spec.ts calls shellSettled before the Library check in the picker, Library and Deck test. (5) phone.spec.ts measures the expanded sidebar at 375 px for horizontal scroll; if it overflows, do not redesign it: leave the measurement as a test.fixme or skipped check with the numbers and report them. (6) docs/manual-checks.md AC34 gains an iPhone landscape step: collapsed sidebar, theme switch on login and picker, practice reading settings. verify.sh green; phone, a11y and safe-area related e2e pass on all projects.",
           "status": "done"
+        },
+        {
+          "id": "F23.7",
+          "title": "Expanded sidebar overlays the page below 640 px",
+          "reqs": [
+            "W3"
+          ],
+          "prd_sections": [
+            "3",
+            "8"
+          ],
+          "area": "src/ui/shell (Sidebar, app shell layout), src/app/(app)/layout.tsx, e2e/phone.spec.ts, docs/decisions.md",
+          "done_when": "Below 640 px the expanded sidebar sits over the page (fixed or absolute, above the content, with the safe-area insets kept) while the content keeps the collapsed rail's width, so the page never scrolls sideways; at 640 px and up the layout is unchanged. Same Sidebar component, no new phone-only design; expanding and collapsing, the profile menu and keyboard focus still work, and choosing a nav link with the overlay open lands on the page. The F23.6 'expanded sidebar at 375 px' test.fixme becomes a passing test (scrollWidth equals clientWidth with the sidebar expanded, both themes, axe with no serious or critical issues). Existing desktop and iPad e2e pass. verify.sh green.",
+          "status": "todo"
         }
       ],
       "branch": "feat/F23-installable-web-app"
