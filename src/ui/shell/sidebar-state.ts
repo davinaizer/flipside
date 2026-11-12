@@ -1,7 +1,7 @@
 /** The collapsed sidebar is a per-device choice (U4, D28), so it lives in localStorage, not on the profile. */
 export const SIDEBAR_STORAGE_KEY = "flipside.sidebar.collapsed";
 
-/** Storage can be missing or throw (private mode, blocked cookies); then the sidebar just stays expanded. */
+/** Storage can be missing or throw (private mode, blocked cookies); then the sidebar follows the viewport width. */
 type Store = Pick<Storage, "getItem" | "setItem">;
 function storage(): Store | null {
   try {
@@ -11,14 +11,20 @@ function storage(): Store | null {
   }
 }
 
-export function readCollapsed(store: Store | null = storage()): boolean {
+/** Below Tailwind's `sm` breakpoint the 16 rem sidebar would leave the page about 120 px (W3), so with no saved choice it starts collapsed. */
+const NARROW_QUERY = "(max-width: 639px)";
+function isNarrow(): boolean {
+  return typeof window !== "undefined" && window.matchMedia?.(NARROW_QUERY).matches === true;
+}
+
+export function readCollapsed(store: Store | null = storage(), narrow = isNarrow): boolean {
   try {
     const saved = store?.getItem(SIDEBAR_STORAGE_KEY);
     if (saved != null) return saved === "1";
   } catch {
     // fall through to the in-memory value
   }
-  return memory ?? false;
+  return memory ?? narrow();
 }
 
 // Storage may be unwritable, so the in-memory value keeps the toggle working for this page view.

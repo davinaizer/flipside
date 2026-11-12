@@ -18,7 +18,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
         <Sidebar name={profile.name} avatar={profile.avatar} />
         <div className="safe-area safe-t safe-r safe-b flex min-w-0 flex-1 flex-col [--edge:0px]">
           <TopBar />
-          <main className="flex-1 p-8">{children}</main>
+          <main className="flex-1 p-4 sm:p-8">{children}</main>
         </div>
       </div>
     </SettingsProvider>

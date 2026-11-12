@@ -1812,7 +1812,7 @@
           ],
           "area": "playwright.config.ts, e2e/phone.spec.ts (new), e2e/a11y.spec.ts, src/ui/shell, src/ui/library, src/ui/deck, src/app/login, src/app/page.tsx",
           "done_when": "A phone Playwright project at 375 x 812 with touch runs e2e/phone.spec.ts and the axe spec. For login, picker, Library and Deck, in both themes: the page has no horizontal scroll (scrollWidth equals clientWidth), every visible button, link and input is at least 44 px in both dimensions and inside the viewport, and axe reports no serious or critical issues. Screens that fail are fixed through the existing responsive layout with no phone-only design; the sidebar collapse and the profile menu still work at that width. Existing desktop and iPad e2e pass. verify.sh green.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F23.5",

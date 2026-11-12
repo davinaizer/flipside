@@ -18,11 +18,19 @@ export default defineConfig({
   projects: [
     {
       name: "desktop",
+      testIgnore: "**/phone.spec.ts",
       use: { ...devices["Desktop Chrome"], viewport: { width: 1440, height: 900 } },
     },
     {
       name: "ipad",
+      testIgnore: "**/phone.spec.ts",
       use: { ...devices["Desktop Chrome"], viewport: { width: 1180, height: 820 }, hasTouch: true },
+    },
+    {
+      // W3: phones run through the responsive layout only. Only the specs that check it run here.
+      name: "phone",
+      testMatch: ["**/phone.spec.ts", "**/a11y.spec.ts"],
+      use: { ...devices["Desktop Chrome"], viewport: { width: 375, height: 812 }, hasTouch: true },
     },
   ],
 });
