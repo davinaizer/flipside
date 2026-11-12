@@ -105,9 +105,10 @@ pnpm import:cli deck.zip --profile Davi --name "Science W2"
 Production deploys only from a version tag (H3). Vercel builds the `release` branch only; pushes to `main` and other branches build nothing.
 
 1. Merge the work into `main` and pull it.
-2. Tag the commit and push the tag: `git tag v0.6.0 && git push origin v0.6.0`.
-3. The `release` workflow checks that the tagged commit is an ancestor of `origin/main`, then moves `release` to the tag. A tag on a commit outside `main` fails the workflow and deploys nothing.
-4. Vercel builds `release`: it runs the migrations, then the app.
+2. Review `README.md` against what this release ships (status line, features, stack, commands, roadmap) and set `version` in `package.json` to the tag's version. Land any change through a PR into `main` before tagging.
+3. Tag the commit and push the tag: `git tag v0.6.0 && git push origin v0.6.0`.
+4. The `release` workflow checks that the tagged commit is an ancestor of `origin/main`, then moves `release` to the tag. A tag on a commit outside `main` fails the workflow and deploys nothing.
+5. Vercel builds `release`: it runs the migrations, then the app.
 
 ## Rolling back
 

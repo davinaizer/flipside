@@ -2,7 +2,7 @@
   "buildCommand": "pnpm vercel-build",
   "git": {
     "deploymentEnabled": {
-      "*": false,
+      "**": false,
       "release": true
     }
   }
