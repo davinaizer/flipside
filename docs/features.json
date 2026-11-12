@@ -1754,7 +1754,7 @@
         "profile_picker"
       ],
       "notes": "src/app/manifest.ts with colours from the design tokens (no raw hex in components; the manifest needs literal colours, so read them from the tokens file or one constant), icons 192, 512, maskable and a 180 px Apple touch icon. The repository has no app icon or logo yet: ask the owner for artwork first; if none, build a placeholder (the letter F on the primary colour, from the design tokens) and log it as ASSUMED, iOS web-app meta tags and safe-area padding. No service worker. Add a 375 x 812 Playwright project to the e2e and axe runs and fix any screen that scrolls sideways or clips controls; no phone-specific layout. Installing on a real iPad and iPhone is the manual part of AC34.",
-      "status": "in_progress",
+      "status": "done",
       "tasks": [
         {
           "id": "F23.1",
@@ -1858,7 +1858,8 @@
           "status": "done"
         }
       ],
-      "branch": "feat/F23-installable-web-app"
+      "branch": "feat/F23-installable-web-app",
+      "pr": 61
     }
   ]
 }

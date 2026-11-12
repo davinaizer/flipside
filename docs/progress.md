@@ -145,3 +145,4 @@ REVIEW F23 round 1: GAPS at 67b55c7 (iPhone landscape safe areas: collapsed rail
 - F23.6: sidebar widens by the left inset; login/picker theme switch and version line offset by insets; reading settings overlay uses safe-area classes. Expanded sidebar at 375 px overflows (scrollWidth 538 vs 375), left as test.fixme.
 F23.7: below 640 px the expanded sidebar overlays the page (fixed aside plus rail-width spacer, top bar above it, link click closes it); the F23.6 fixme test now passes in both themes with axe. Fixed a stale F23.6 PracticeHeader test. Full e2e: performance next-card flaked (known) under load.
 REVIEW F23 round 2: PASS at 1b85de8
+F23 done: installable web app and phone-width check, PR #61, review PASS (round 2), verify green; full e2e green except the known performance next-card flake under load (passes alone). MANUAL PENDING: AC34.
