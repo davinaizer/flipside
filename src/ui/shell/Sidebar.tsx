@@ -13,6 +13,11 @@ const SECTIONS: { href: string; label: string; icon: IconName; match: string[] }
   { href: "/progress", label: "Progress", icon: "progress", match: ["/progress"] },
 ];
 
+/** An overlay left open would cover the page a link just opened (W3). */
+function closeOverlay() {
+  if (window.matchMedia("(max-width: 639px)").matches) writeCollapsed(true);
+}
+
 /** Deck pages belong to the Library, so the Library stays highlighted there (README item 16). */
 export function Sidebar({ name, avatar }: { name: string; avatar: string }) {
   // The server snapshot is expanded, so hydration matches; the remembered choice applies right after.
@@ -63,11 +68,7 @@ export function SidebarView({
                       aria-current={current ? "page" : undefined}
                       aria-label={collapsed ? s.label : undefined}
                       title={collapsed ? s.label : undefined}
-                      onClick={() => {
-                        // An overlay left open would cover the page it just opened (W3).
-                        if (!collapsed && window.matchMedia("(max-width: 639px)").matches)
-                          writeCollapsed(true);
-                      }}
+                      onClick={closeOverlay}
                       className={`flex min-h-11 items-center gap-3 overflow-hidden whitespace-nowrap rounded-full font-semibold ${collapsed ? "justify-center" : "px-4"} ${PRESSED} ${FOCUS_RING} ${
                         current
                           ? "bg-primary-container text-on-primary-container active:bg-surface-container-highest"
