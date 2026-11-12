@@ -128,3 +128,4 @@ F22.1: accounts, sign_in_tokens, sign_in_attempts tables and nullable profiles.a
 F22.2: scrypt password hashing (src/server/passwords.ts) and account service (createAccount, setPassword) with unit and integration tests.
 F22.3: account:create (with --adopt-profiles), account:password, dev account in db:seed and the e2e seed; operations.md Accounts section.
 F22.4: sign-in tokens in src/server/sign-in.ts (issue, resolve, revoke, revokeOthers); only the SHA-256 hash is stored, expired tokens deleted on issue.
+F22.5: signIn in src/server/sign-in.ts with a per-email rate limit counted in sign_in_attempts; every failure returns null and runs a scrypt verify.
