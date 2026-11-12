@@ -37,7 +37,7 @@ export function SidebarView({
   const path = usePathname();
   return (
     <aside
-      className={`sticky top-0 flex h-screen shrink-0 flex-col justify-between bg-surface-container-low p-4 transition-[width] duration-200 ease-out motion-reduce:transition-none ${collapsed ? "w-20" : "w-64"}`}
+      className={`sticky top-0 flex h-screen shrink-0 flex-col justify-between bg-surface-container-low safe-area safe-t safe-b safe-l [--edge:1rem] transition-[width] duration-200 ease-out motion-reduce:transition-none ${collapsed ? "w-20" : "w-64"}`}
     >
       <div className="flex flex-col gap-6">
         <div

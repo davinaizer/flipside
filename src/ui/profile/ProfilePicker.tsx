@@ -44,7 +44,7 @@ export function ProfilePicker() {
   }
 
   return (
-    <main className="relative flex min-h-screen flex-col items-center justify-center gap-10 bg-surface p-8">
+    <main className="relative flex min-h-screen flex-col items-center justify-center gap-10 bg-surface safe-area safe-t safe-r safe-b safe-l [--edge:2rem]">
       <div className="absolute right-8 top-4">
         <AttributeThemeSwitch />
       </div>

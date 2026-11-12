@@ -16,6 +16,26 @@ h3 {
   font-family: var(--font-lexend), var(--font-atkinson), ui-sans-serif, system-ui, sans-serif;
 }
 
+/* Safe areas (W2): the installed app runs edge to edge (viewport-fit=cover), so outer containers add the
+   device insets to their own padding. An element sets its padding in --edge and names the sides it touches
+   with .safe-t/.safe-r/.safe-b/.safe-l (the app shell splits sides between sidebar and content). Insets are 0
+   in a normal browser tab, so nothing changes there. */
+.safe-area {
+  padding: var(--edge, 0px);
+}
+.safe-t {
+  padding-top: calc(var(--edge, 0px) + env(safe-area-inset-top));
+}
+.safe-r {
+  padding-right: calc(var(--edge, 0px) + env(safe-area-inset-right));
+}
+.safe-b {
+  padding-bottom: calc(var(--edge, 0px) + env(safe-area-inset-bottom));
+}
+.safe-l {
+  padding-left: calc(var(--edge, 0px) + env(safe-area-inset-left));
+}
+
 /* Reduced motion (PRD section 8): no animation or transition, including the Tailwind skeleton pulse. */
 @media (prefers-reduced-motion: reduce) {
   *,

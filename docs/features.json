@@ -1798,7 +1798,7 @@
           ],
           "area": "src/ui/shell, src/app/practice/[sessionId], src/app/login, src/app/page.tsx (picker), src/app/globals.css",
           "done_when": "The app shell, practice, summary, login and picker pad their outer edges with env(safe-area-inset-*) on top of their existing padding, in both orientations. E2e at the iPad and desktop sizes shows no layout change (insets are 0 there; existing tests pass), and a unit or e2e check finds the safe-area padding on each outer container. On-device behaviour is the manual part of AC34, listed in docs/manual-checks.md with installing from Safari on iPad and iPhone. verify.sh green.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F23.4",

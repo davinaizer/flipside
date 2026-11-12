@@ -46,3 +46,7 @@ Copy into the PR checklist. Needs the Vercel project from the Hosted environment
 - [x] A wrong password shows the neutral message; signing out returns to `/login`.
 - [x] After more than five wrong passwords, the right password is also refused with the same message (AU5); it works again after the window.
 - [x] Change password on the Profile page; other devices are signed out.
+
+## F23: installable web app (AC34)
+- [ ] Safari on iPad and iPhone: Share, Add to Home Screen. The app opens standalone with its icon and name.
+- [ ] In both orientations, content stays clear of the notch, status bar, home indicator and rounded corners on the shell, practice, summary, login and picker.

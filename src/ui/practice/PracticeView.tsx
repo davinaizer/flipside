@@ -141,7 +141,7 @@ export function PracticeView({
     ) : null;
 
   return (
-    <div className="mx-auto flex min-h-screen w-full max-w-3xl flex-col gap-6 p-6">
+    <div className="mx-auto flex min-h-screen w-full max-w-3xl flex-col gap-6 safe-area safe-t safe-r safe-b safe-l [--edge:1.5rem]">
       <header className="grid grid-cols-[1fr_auto_1fr] items-center gap-3">
         <div>
           {onEnd && (
