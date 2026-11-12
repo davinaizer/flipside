@@ -1618,7 +1618,7 @@
           ],
           "area": "src/server/passwords.ts, src/server/accounts.ts, src/shared/schemas/auth.ts",
           "done_when": "Unit tests: hashPassword uses scrypt from node:crypto with a random salt and stores parameters, salt and hash in one string; two hashes of the same password differ; verifyPassword compares with timingSafeEqual and rejects a wrong password and a malformed hash. Integration tests: createAccount trims and lower-cases the email, refuses a duplicate (any case) and a password under PASSWORD_MIN_LENGTH; setPassword stores a new hash and deletes the account's sign-in tokens. No plain password is logged or returned. verify.sh green.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F22.3",

@@ -125,3 +125,4 @@ F21.9: AC32 image step, AC33 image-limit step and version step in manual-checks.
 REVIEW F21 round 2: PASS at 816cc52
 F21 done: PR #55. MANUAL PENDING: AC32, AC33. Known pre-existing failure: e2e/performance.spec.ts next-card under 200 ms (fails on main too).
 F22.1: accounts, sign_in_tokens, sign_in_attempts tables and nullable profiles.account_id (migration 0001_accounts); AU constants in src/shared/constants.ts. Migration test runs over seeded profiles and decks.
+F22.2: scrypt password hashing (src/server/passwords.ts) and account service (createAccount, setPassword) with unit and integration tests.
