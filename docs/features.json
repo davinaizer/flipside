@@ -1652,7 +1652,7 @@
           ],
           "area": "src/server/sign-in.ts",
           "done_when": "Integration tests: issuing a token returns at least 32 random bytes encoded for a cookie and stores only its SHA-256 hash with the account and an expiry 30 days ahead; resolving the token returns the account, and returns nothing for an unknown, expired or revoked token; revoking deletes the row; revokeOthers keeps only the given token; issuing for an account deletes that account's expired tokens. The database never holds the raw token (asserted). verify.sh green.",
-          "status": "todo",
+          "status": "done",
           "model": "opus"
         },
         {
