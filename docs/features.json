@@ -1856,6 +1856,20 @@
           "area": "src/ui/shell (Sidebar, app shell layout), src/app/(app)/layout.tsx, e2e/phone.spec.ts, docs/decisions.md",
           "done_when": "Below 640 px the expanded sidebar sits over the page (fixed or absolute, above the content, with the safe-area insets kept) while the content keeps the collapsed rail's width, so the page never scrolls sideways; at 640 px and up the layout is unchanged. Same Sidebar component, no new phone-only design; expanding and collapsing, the profile menu and keyboard focus still work, and choosing a nav link with the overlay open lands on the page. The F23.6 'expanded sidebar at 375 px' test.fixme becomes a passing test (scrollWidth equals clientWidth with the sidebar expanded, both themes, axe with no serious or critical issues). Existing desktop and iPad e2e pass. verify.sh green.",
           "status": "done"
+        },
+        {
+          "id": "F23.8",
+          "title": "Sign-in cookie Secure by protocol; login never stays stuck",
+          "reqs": [
+            "W3"
+          ],
+          "prd_sections": [
+            "3",
+            "8"
+          ],
+          "area": "src/server/http/sign-in-cookie.ts (+test), src/ui/profile/LoginScreen.tsx (+test), src/ui/api/client.ts if needed, docs/GLOSSARY.md only if a new term appears",
+          "done_when": "(1) signInCookie and clearSignInCookie add Secure when the request URL is https or the x-forwarded-proto header's first value is https, and omit it over plain http on any host (localhost, 127.0.0.1, a LAN IP such as 10.129.224.39). Unit tests cover https URL, http localhost, http LAN IP, and http URL with x-forwarded-proto https. (2) After a successful POST /auth/login, the login screen confirms the sign-in took effect with one authenticated request that already exists (for example the profile list) before navigating. If that request answers 401, it shows a role=alert message that the browser did not keep the sign-in, and re-enables the button; it never stays disabled with no message. Unit test for both paths. Existing e2e sign-in paths still pass. verify.sh green.",
+          "status": "todo"
         }
       ],
       "branch": "feat/F23-installable-web-app",
