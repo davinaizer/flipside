@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { AUTH_COOKIE_MAX_AGE_SECONDS, AUTH_COOKIE_NAME } from "@/shared/constants";
+import { SIGN_IN_COOKIE_NAME, SIGN_IN_TOKEN_MAX_AGE_SECONDS } from "@/shared/constants";
 import { parseEnv } from "./env";
 
 describe("getEnv", () => {
@@ -15,37 +15,19 @@ describe("getEnv", () => {
   });
 });
 
-describe("getEnv without ADMIN_PASSWORD", () => {
-  afterEach(() => {
-    vi.unstubAllEnvs();
-    vi.resetModules();
-  });
-  it("fails to start", async () => {
-    vi.stubEnv("DATABASE_URL", "postgres://x");
-    vi.stubEnv("ADMIN_PASSWORD", "");
-    vi.resetModules();
-    const { getEnv } = await import("./env");
-    expect(() => getEnv()).toThrow(/ADMIN_PASSWORD/);
-  });
-});
-
-describe("auth constants", () => {
+describe("sign-in constants", () => {
   it("names the cookie and lasts 30 days", () => {
-    expect(AUTH_COOKIE_NAME).toBe("flipside_auth");
-    expect(AUTH_COOKIE_MAX_AGE_SECONDS).toBe(2_592_000);
+    expect(SIGN_IN_COOKIE_NAME).toBe("flipside_sign_in");
+    expect(SIGN_IN_TOKEN_MAX_AGE_SECONDS).toBe(2_592_000);
   });
 });
 
 describe("parseEnv", () => {
-  it("rejects a missing ADMIN_PASSWORD", () => {
-    expect(() => parseEnv({ DATABASE_URL: "postgres://x" })).toThrow(/ADMIN_PASSWORD/);
-    expect(() => parseEnv({ DATABASE_URL: "postgres://x", ADMIN_PASSWORD: "" })).toThrow();
-  });
   it("rejects a missing DATABASE_URL", () => {
     expect(() => parseEnv({})).toThrow();
   });
   it("applies defaults", () => {
-    const env = parseEnv({ DATABASE_URL: "postgres://x", ADMIN_PASSWORD: "pw" });
+    const env = parseEnv({ DATABASE_URL: "postgres://x" });
     expect(env.IMAGE_STORE_DRIVER).toBe("fs");
     expect(env.PORT).toBe(3000);
   });

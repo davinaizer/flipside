@@ -70,13 +70,11 @@ export const QUESTION_SCALE = 1.5;
 /** Display name length limit after trim (P7). */
 export const PROFILE_NAME_MAX = 24;
 
-/** Name of the signed sign-in cookie (AG2). */
-export const AUTH_COOKIE_NAME = "flipside_auth";
-/** How long a sign-in stays valid (AG2). */
-export const AUTH_COOKIE_MAX_AGE_DAYS = 30;
-export const AUTH_COOKIE_MAX_AGE_SECONDS = AUTH_COOKIE_MAX_AGE_DAYS * 24 * 60 * 60;
+/** How long a sign-in token, and its cookie, stay valid (AU2). */
+export const SIGN_IN_TOKEN_MAX_AGE_DAYS = 30;
+export const SIGN_IN_TOKEN_MAX_AGE_SECONDS = SIGN_IN_TOKEN_MAX_AGE_DAYS * 24 * 60 * 60;
 
-/** Name of the sign-in token cookie (AU2). Its lifetime is AUTH_COOKIE_MAX_AGE_SECONDS. */
+/** Name of the sign-in token cookie (AU2). */
 export const SIGN_IN_COOKIE_NAME = "flipside_sign_in";
 /** Random bytes in a sign-in token (AU2). */
 export const SIGN_IN_TOKEN_BYTES = 32;

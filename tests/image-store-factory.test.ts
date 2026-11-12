@@ -8,7 +8,6 @@ vi.mock("@/server/images/vercel-blob-driver", () => ({
 it("getImageStore returns the vercel-blob driver when IMAGE_STORE_DRIVER=vercel-blob", async () => {
   process.env.IMAGE_STORE_DRIVER = "vercel-blob";
   process.env.DATABASE_URL ??= "postgres://x";
-  process.env.ADMIN_PASSWORD ??= "x";
   const { getImageStore } = await import("@/server/images/store");
   expect(getImageStore()).toBe(sentinel);
 });

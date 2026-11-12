@@ -2,8 +2,6 @@ import { z } from "zod";
 
 export const envSchema = z.object({
   DATABASE_URL: z.string().min(1),
-  /** The shared app password (AG1); the cookie signing key derives from it (AG2). */
-  ADMIN_PASSWORD: z.string().min(1),
   IMAGE_STORE_DRIVER: z.enum(["fs", "vercel-blob"]).default("fs"),
   IMAGE_STORE_PATH: z.string().min(1).default("./data/images"),
   /** Optional: on Vercel the blob SDK authenticates with OIDC when this is unset. */

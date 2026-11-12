@@ -69,10 +69,10 @@ export const api = {
       method: "POST",
       body: JSON.stringify({ profileId }),
     }),
-  login: (password: string) =>
+  login: (email: string, password: string) =>
     call("/auth/login", z.object({ ok: z.literal(true) }), {
       method: "POST",
-      body: JSON.stringify({ password }),
+      body: JSON.stringify({ email, password }),
     }),
   logout: () => call("/auth/logout", z.object({ ok: z.literal(true) }), { method: "POST" }),
   /** The server answers 204 with no body, which `call` reads as null. */

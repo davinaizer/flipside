@@ -7,7 +7,7 @@ How to run Flipside on the Mac Mini and use it from the iPad. Agents never insta
 | Job (label) | Starts | Notes |
 | --- | --- | --- |
 | `com.flipside.db` | `podman machine start`, then `scripts/db.sh up` (Postgres 17 container) | Runs once at login. Starting an already running machine is ignored. If it exits with an error (for example the Podman machine was not ready), launchd retries every 30 s until it succeeds. |
-| `com.flipside.app` | `pnpm start` on `0.0.0.0:3000` | Waits (retries every 3 s) until `pg_isready` succeeds in the container, then loads `.env` (so `ADMIN_PASSWORD` and `DATABASE_URL` reach the app) and starts. Restarted if it exits. |
+| `com.flipside.app` | `pnpm start` on `0.0.0.0:3000` | Waits (retries every 3 s) until `pg_isready` succeeds in the container, then loads `.env` (so `DATABASE_URL` reaches the app) and starts. Restarted if it exits. |
 | `com.flipside.backup` | `scripts/backup.sh` | Every night at 02:30 into `~/flipside-backups`, 14 days kept. |
 
 These are user LaunchAgents, because the Podman machine belongs to your user. For "reboot with no manual steps", turn on automatic login for that user (System Settings, Users & Groups) so the agents load at boot.
@@ -42,11 +42,10 @@ Uninstall: `launchctl bootout gui/$(id -u)/com.flipside.<job>` and delete the pl
 2. In Safari on the iPad open `http://<address>:3000` (plain HTTP, home network only). The server must be the production one (`pnpm start`, which the launchd app job runs). `pnpm dev` does not work from another device: its scripts get a 403, so the picker stays on grey placeholders and taps do nothing.
 3. Share, Add to Home Screen. It is a shortcut to the page; there is no offline mode.
 
-## App password
+## Signing in
 
-- Every page and `/api/v1` route needs the app password, set as `ADMIN_PASSWORD` in `.env` (required: the app does not start without it; `.env.example` holds the placeholder `change-me`, so pick your own). The launchd app job sources `.env`, so no plist edit is needed.
-- Rotation: edit `ADMIN_PASSWORD` in `.env`, then `launchctl kickstart -k gui/$(id -u)/com.flipside.app`. The cookie is signed under a key derived from the password, so this signs every device out; each one must sign in again with the new password.
-- The sign-in lasts 30 days per device. Safari and the iPad home-screen shortcut keep separate cookies, so sign in once in each (the shortcut shows `/login` on its first open). Rotation signs out both.
+- Every page and `/api/v1` route needs a sign-in token (AU1). Sign in at `/login` with an account's email and password; create accounts with `pnpm account:create` (see Accounts below). There is no app password and no sign-up screen.
+- The sign-in lasts 30 days per device. Safari and the iPad home-screen shortcut keep separate cookies, so sign in once in each (the shortcut shows `/login` on its first open). `pnpm account:password` signs the account out of every device.
 - Log out in the sidebar profile menu ends the sign-in on that device only.
 
 ## Backup and restore
@@ -80,7 +79,7 @@ The hosted app runs on Vercel Hobby with Neon Postgres and a private Vercel Blob
 1. Create a Vercel Hobby project from the personal repository (not an organisation repository). `vercel.json` limits Git deployments to the `release` branch; see Releasing.
 2. Add Neon from the Vercel Marketplace. It sets `DATABASE_URL` (pooled) and `DATABASE_URL_UNPOOLED` (direct, used by the migration during the build).
 3. In the project Storage tab create a private Blob store and connect it. It sets `BLOB_READ_WRITE_TOKEN`.
-4. Set `IMAGE_STORE_DRIVER=vercel-blob` and `ADMIN_PASSWORD` in the project environment variables for Production.
+4. Set `IMAGE_STORE_DRIVER=vercel-blob` in the project environment variables for Production.
 5. Tag a release (see Releasing). The first build runs the migrations; seed the profiles once with `pnpm db:seed` against the direct connection string.
 6. Check usage weekly for the first month (R11): Vercel (functions, bandwidth, Blob) and Neon (compute hours, storage) dashboards. If an allotment runs out, that feature stops until it resets; Vercel Pro or Neon Launch is the paid fallback.
 
@@ -88,7 +87,7 @@ The manual checks for AC32 and AC33 are in `docs/manual-checks.md`.
 
 ## Accounts
 
-There is no sign-up screen (AU4). Both commands ask for the password twice (hidden; the minimum length is `PASSWORD_MIN_LENGTH` in `src/shared/constants.ts`) and need `DATABASE_URL`, plus `ADMIN_PASSWORD` set to any non-empty value (the environment check requires it). On the hosted app use the direct (unpooled) connection string, as for the import below.
+There is no sign-up screen (AU4). Both commands ask for the password twice (hidden; the minimum length is `PASSWORD_MIN_LENGTH` in `src/shared/constants.ts`) and need `DATABASE_URL`. On the hosted app use the direct (unpooled) connection string, as for the import below.
 
 - First hosted account: `pnpm account:create <email> --adopt-profiles`. It creates the account and, in one step, gives it every profile that has none, so Davi and Nicole keep their decks and progress (AU6). Run it once; later accounts start with no profiles.
 - Forgotten password (R12): `pnpm account:password <email>`. It stores the new password and signs the account out everywhere (its sign-in tokens are revoked).
@@ -102,11 +101,10 @@ There is no sign-up screen (AU4). Both commands ask for the password twice (hidd
 DATABASE_URL="$DATABASE_URL_UNPOOLED" \
 IMAGE_STORE_DRIVER=vercel-blob \
 BLOB_READ_WRITE_TOKEN=<token> \
-ADMIN_PASSWORD=<any non-empty value> \
 pnpm import:cli deck.zip --profile Davi --name "Science W2"
 ```
 
-`ADMIN_PASSWORD` is only needed because the environment check requires it; the CLI does not use it. Without `IMAGE_STORE_DRIVER` the images go to the local disk, not the hosted store.
+Without `IMAGE_STORE_DRIVER` the images go to the local disk, not the hosted store.
 
 ## Releasing
 

@@ -129,3 +129,4 @@ F22.2: scrypt password hashing (src/server/passwords.ts) and account service (cr
 F22.3: account:create (with --adopt-profiles), account:password, dev account in db:seed and the e2e seed; operations.md Accounts section.
 F22.4: sign-in tokens in src/server/sign-in.ts (issue, resolve, revoke, revokeOthers); only the SHA-256 hash is stored, expired tokens deleted on issue.
 F22.5: signIn in src/server/sign-in.ts with a per-email rate limit counted in sign_in_attempts; every failure returns null and runs a scrypt verify.
+F22.6: login takes email and password (signIn, flipside_sign_in cookie, Secure except plain HTTP on localhost); logout revokes the token; proxy checks cookie presence only. flipside_auth, ADMIN_PASSWORD, HMAC code and the Access gate term removed; e2e signs in with the dev account.

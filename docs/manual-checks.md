@@ -3,12 +3,12 @@
 Automated checks (verify.sh, e2e, axe) do not cover these. Tick them off here as you go.
 Last updated 2026-11-04, after F14 (PR 35).
 
-## F14: password sign-in (AC14)
-- [ ] Mac Mini: set a real `ADMIN_PASSWORD` in `.env`, then reload the launchd app job (`launchctl kickstart -k`). The edited plist was only linted (`plutil`), never loaded; the job now sources `.env` before `pnpm start`, so confirm the app comes up and `/login` loads.
-- [ ] iPad Safari: open the app, expect a redirect to `/login`. A wrong password shows the neutral error. The right password lands on the picker.
+## F14 and F22.6: account sign-in (AC14, AC27)
+- [ ] Mac Mini: create an account (`pnpm account:create`), then reload the launchd app job (`launchctl kickstart -k`). The edited plist was only linted (`plutil`), never loaded; the job now sources `.env` before `pnpm start`, so confirm the app comes up and `/login` loads.
+- [ ] iPad Safari: open the app, expect a redirect to `/login`. A wrong password shows the neutral error. The right email and password land on the picker.
 - [ ] iPad: restart the app (kickstart), reload. You should still be signed in (30-day cookie).
 - [ ] iPad: sidebar profile menu, Log out, expect `/login`. Then open `/library` directly and expect a redirect to `/login`.
-- [ ] Rotate `ADMIN_PASSWORD` in `.env`, kickstart. Every device is signed out; sign in again with the new password.
+- [ ] Run `pnpm account:password <email>`. Every device is signed out; sign in again with the new password.
 - [ ] The iPad home-screen shortcut and Safari keep separate cookies: sign in on each (documented in `docs/operations.md`).
 - [ ] With the sidebar profile menu open, rotate the password, then tap Log out: it should still go to `/login` (F14.9 fix).
 - [ ] The theme toggle on `/login` switches light and dark immediately (AC16).

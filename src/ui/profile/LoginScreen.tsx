@@ -8,15 +8,15 @@ import { AttributeThemeSwitch } from "@/ui/settings/AttributeThemeSwitch";
 import { buttonClass } from "@/ui/button/button-class";
 import { APP_VERSION } from "@/shared/version";
 
-const NEUTRAL_ERROR = "That password did not work. Please try again.";
+const NEUTRAL_ERROR = "That email and password did not work. Please try again.";
 
-/** Presentational form: the same layout as the picker, one password field, one neutral error (AG1). */
+/** Presentational form: the same layout as the picker, email and password fields, one neutral error (AU1). */
 export function LoginForm({
   onSubmit,
   error,
   busy = false,
 }: {
-  onSubmit: (password: string) => void;
+  onSubmit: (email: string, password: string) => void;
   error: string | null;
   busy?: boolean;
 }) {
@@ -29,14 +29,25 @@ export function LoginForm({
         <Logo size={36} />
         <span className="font-semibold text-headline-sm">Flipside</span>
       </div>
-      <h1 className="text-display-mobile font-bold text-on-surface">Enter the app password</h1>
+      <h1 className="text-display-mobile font-bold text-on-surface">Sign in</h1>
       <form
         className="flex w-full max-w-sm flex-col gap-4"
         onSubmit={(e) => {
           e.preventDefault();
-          onSubmit(String(new FormData(e.currentTarget).get("password") ?? ""));
+          const form = new FormData(e.currentTarget);
+          onSubmit(String(form.get("email") ?? ""), String(form.get("password") ?? ""));
         }}
       >
+        <label className="flex flex-col gap-2 text-on-surface">
+          <span className="font-semibold">Email</span>
+          <input
+            name="email"
+            type="email"
+            autoComplete="username"
+            required
+            className="min-h-11 rounded-xl border border-card-edge bg-surface-card px-4 text-on-surface"
+          />
+        </label>
         <label className="flex flex-col gap-2 text-on-surface">
           <span className="font-semibold">Password</span>
           <input
@@ -66,11 +77,11 @@ export function LoginScreen() {
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
-  async function submit(password: string) {
+  async function submit(email: string, password: string) {
     setBusy(true);
     setError(null);
     try {
-      await api.login(password);
+      await api.login(email, password);
       router.push("/");
     } catch (e) {
       setError(

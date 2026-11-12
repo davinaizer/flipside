@@ -39,7 +39,7 @@ test("POST /profiles creates a profile with defaults and validates input", async
   ).toBe(400);
 });
 
-test("POST /profiles is 401 without the auth cookie", () => {
-  const res = checkAccess(new Request("http://x/api/v1/profiles", { method: "POST" }), "pw");
+test("POST /profiles is 401 without the sign-in cookie", () => {
+  const res = checkAccess(new Request("http://x/api/v1/profiles", { method: "POST" }));
   expect(res?.status).toBe(401);
 });

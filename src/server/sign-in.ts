@@ -6,7 +6,8 @@ import { accounts, signInAttempts, signInTokens } from "@/server/db/schema";
 import { hashPassword, verifyPassword } from "@/server/passwords";
 import { emailSchema } from "@/shared/schemas/auth";
 import {
-  AUTH_COOKIE_MAX_AGE_SECONDS,
+  SIGN_IN_TOKEN_MAX_AGE_SECONDS,
+  SIGN_IN_COOKIE_NAME,
   SIGN_IN_MAX_FAILURES,
   SIGN_IN_TOKEN_BYTES,
   SIGN_IN_WINDOW_MINUTES,
@@ -30,7 +31,7 @@ export async function issueSignInToken(
   now: Date = new Date(),
 ): Promise<{ token: string; expiresAt: Date }> {
   const token = randomBytes(SIGN_IN_TOKEN_BYTES).toString("base64url");
-  const expiresAt = new Date(now.getTime() + AUTH_COOKIE_MAX_AGE_SECONDS * 1000);
+  const expiresAt = new Date(now.getTime() + SIGN_IN_TOKEN_MAX_AGE_SECONDS * 1000);
   await db.transaction(async (tx) => {
     await tx
       .delete(signInTokens)
@@ -38,6 +39,18 @@ export async function issueSignInToken(
     await tx.insert(signInTokens).values({ accountId, tokenHash: hashToken(token), expiresAt });
   });
   return { token, expiresAt };
+}
+
+/**
+ * The raw sign-in token in a request's cookie header, or null. The one reader of
+ * `flipside_sign_in` (PRD section 9); src/proxy.ts only checks that it is present.
+ */
+export function readSignInToken(request: Request): string | null {
+  for (const part of (request.headers.get("cookie") ?? "").split(";")) {
+    const i = part.indexOf("=");
+    if (i > 0 && part.slice(0, i).trim() === SIGN_IN_COOKIE_NAME) return part.slice(i + 1).trim();
+  }
+  return null;
 }
 
 /** The account a token belongs to, or null for an unknown, expired or revoked token. */

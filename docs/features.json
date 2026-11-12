@@ -1688,7 +1688,7 @@
           ],
           "area": "src/app/api/v1/auth/login, src/app/api/v1/auth/logout, src/app/login/page.tsx, src/proxy.ts, src/server/auth.ts, src/server/http/access.ts, src/server/env.ts, src/shared/constants.ts, .env.example, playwright.config.ts, e2e/helpers, e2e/auth.spec.ts, docs/GLOSSARY.md",
           "done_when": "POST /auth/login takes email and password, calls signIn and sets flipside_sign_in (httpOnly, SameSite=Lax, Path=/, Secure except plain HTTP on localhost); every failure is one 401 with the neutral message. POST /auth/logout deletes the token and clears the cookie. src/proxy.ts redirects pages and returns 401 for /api/v1 when the cookie is missing, except GET /health and POST /auth/login. The Login page asks for email and password. flipside_auth, ADMIN_PASSWORD, the HMAC code and the Access gate glossary row are removed (grep finds none). API tests for the cookie flags and logout; e2e helpers sign in with the dev account; e2e/auth.spec.ts covers AC27 (redirect, 401, neutral message for all three failures, logout then replaying the old cookie returns 401) on desktop and iPad. verify.sh green.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F22.7",
