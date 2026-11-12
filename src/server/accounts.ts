@@ -3,7 +3,8 @@ import type { Db } from "@/server/db/client";
 import { getDb } from "@/server/db/client";
 import { accounts, profiles, signInTokens } from "@/server/db/schema";
 import { ApiError } from "@/server/http/errors";
-import { hashPassword } from "@/server/passwords";
+import { hashPassword, verifyPassword } from "@/server/passwords";
+import { revokeOtherSignInTokens } from "@/server/sign-in";
 import { emailSchema, newPasswordSchema } from "@/shared/schemas/auth";
 import { PASSWORD_MIN_LENGTH } from "@/shared/constants";
 
@@ -51,6 +52,37 @@ export async function setPassword(
       .where(eq(accounts.id, accountId));
     await tx.delete(signInTokens).where(eq(signInTokens.accountId, accountId));
   });
+}
+
+/**
+ * Changes the signed-in account's password (AU8). A wrong current password is the same
+ * neutral 401 as a failed sign-in and changes nothing. On success the hash is replaced and
+ * every other sign-in token is deleted; the caller's own token stays, so this device remains
+ * signed in (setPassword would delete it too, which is right for the CLI but not here).
+ */
+export async function changePassword(
+  accountId: string,
+  token: string,
+  input: { current: string; new: string; confirm: string },
+  db: Db = getDb(),
+): Promise<void> {
+  const [account] = await db
+    .select({ passwordHash: accounts.passwordHash })
+    .from(accounts)
+    .where(eq(accounts.id, accountId));
+  if (!account || !(await verifyPassword(input.current, account.passwordHash))) {
+    throw new ApiError(401, "invalid_credentials", "That password did not work. Please try again.");
+  }
+  checkPassword(input.new);
+  if (input.new !== input.confirm) {
+    throw new ApiError(400, "invalid_request", "The new password and its confirmation differ.");
+  }
+  const passwordHash = await hashPassword(input.new);
+  await db
+    .update(accounts)
+    .set({ passwordHash, updatedAt: new Date() })
+    .where(eq(accounts.id, accountId));
+  await revokeOtherSignInTokens(token, db);
 }
 
 /** Finds an account by email (trimmed and lower-cased like createAccount); null when none. */

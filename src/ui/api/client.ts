@@ -74,6 +74,11 @@ export const api = {
       method: "POST",
       body: JSON.stringify({ email, password }),
     }),
+  changePassword: (body: { current: string; new: string; confirm: string }) =>
+    call("/auth/password", z.object({ ok: z.literal(true) }), {
+      method: "POST",
+      body: JSON.stringify(body),
+    }),
   logout: () => call("/auth/logout", z.object({ ok: z.literal(true) }), { method: "POST" }),
   /** The server answers 204 with no body, which `call` reads as null. */
   deleteDeck: (id: string) => call(`/decks/${id}`, z.null(), { method: "DELETE" }),

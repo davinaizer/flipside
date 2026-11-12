@@ -60,3 +60,11 @@ test("the screen has no Sign out button (it lives in the sidebar menu)", () => {
     "Sign out",
   );
 });
+
+test("the Profile page has a Change password form with three labelled fields", () => {
+  const html = renderToStaticMarkup(<ProfileScreen name="Nicole" avatar={second} />);
+  for (const label of ["Current password", "New password", "Confirm new password"]) {
+    expect(html).toContain(label);
+  }
+  expect(html).toContain("Change password");
+});

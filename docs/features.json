@@ -1721,7 +1721,7 @@
           ],
           "area": "src/app/api/v1/auth/password/route.ts, src/server/accounts.ts, src/shared/schemas/auth.ts, src/ui/profile, src/ui/api/client.ts, e2e",
           "done_when": "POST /auth/password takes current, new and confirm. API tests (AC31): a wrong current password returns the neutral message and changes nothing; a new password under 12 characters or a mismatched confirm is refused; success stores a new hash, deletes the account's other sign-in tokens and keeps the caller's (its cookie still works, another device's returns 401). The Profile page gains a Change password form with labelled fields; an e2e test changes the password and signs in with the new one, and axe passes in both themes. verify.sh green.",
-          "status": "todo"
+          "status": "done"
         }
       ],
       "branch": "feat/F22-accounts"

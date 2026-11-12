@@ -1,8 +1,9 @@
 // AC27: account sign-in (AU1, AU2, AU7). These tests use unsigned contexts on purpose.
-import { expect, test } from "@playwright/test";
+import { expect, test, type BrowserContext } from "@playwright/test";
 import { E2E_EMAIL, E2E_PASSWORD, expectNoSeriousA11y, setTheme, signInContext } from "./helpers";
 
 const NEUTRAL = "That email and password did not work";
+const NEUTRAL_PASSWORD = "That password did not work";
 
 test("without signing in pages redirect to /login and the API answers 401, except health and login", async ({
   page,
@@ -91,4 +92,50 @@ test("/login passes axe in both themes", async ({ page }) => {
     await setTheme(page, theme);
     await expectNoSeriousA11y(page);
   }
+});
+
+test("Change password on the Profile page: the old password stops working, the new one signs in (AC31)", async ({
+  browser,
+}, testInfo) => {
+  // Own account per project (scripts/e2e-seed.ts): the shared e2e account's password must not change.
+  const project = testInfo.project.name.includes("ipad") ? "ipad" : "desktop";
+  const email = `password-${project}@flipside.local`;
+  const next = "a brand new e2e password";
+  const signIn = async (context: BrowserContext, password: string) =>
+    context.request.post("/api/v1/auth/login", { data: { email, password } });
+
+  const context = await browser.newContext();
+  expect((await signIn(context, E2E_PASSWORD)).status()).toBe(200);
+  const other = await browser.newContext();
+  expect((await signIn(other, E2E_PASSWORD)).status()).toBe(200);
+  const page = await context.newPage();
+  await page.goto("/");
+  await page.getByRole("button", { name: `Password ${project}` }).click();
+  await page.waitForURL("**/library");
+  await page.goto("/profile");
+  await expect(page.getByRole("heading", { name: "Change password" })).toBeVisible();
+  for (const theme of ["light", "dark"] as const) {
+    await setTheme(page, theme);
+    await expectNoSeriousA11y(page);
+  }
+
+  await page.getByLabel("Current password").fill("wrong password here");
+  await page.getByLabel("New password", { exact: true }).fill(next);
+  await page.getByLabel("Confirm new password").fill(next);
+  await page.getByRole("button", { name: "Change password" }).click();
+  await expect(page.getByText(NEUTRAL_PASSWORD)).toBeVisible();
+
+  await page.getByLabel("Current password").fill(E2E_PASSWORD);
+  await page.getByRole("button", { name: "Change password" }).click();
+  await expect(page.getByText("Password changed")).toBeVisible();
+  // This device stays signed in; the other device's token is gone.
+  expect((await context.request.get("/api/v1/profiles")).status()).toBe(200);
+  expect((await other.request.get("/api/v1/profiles")).status()).toBe(401);
+
+  const fresh = await browser.newContext();
+  expect((await signIn(fresh, E2E_PASSWORD)).status()).toBe(401);
+  expect((await signIn(fresh, next)).status()).toBe(200);
+  await fresh.close();
+  await other.close();
+  await context.close();
 });
