@@ -2,7 +2,7 @@
 
 Flipside schedules flashcard reviews with a boxed (Leitner) system: a card you know moves up a box and comes back less often, a card you miss comes back the same day. It keeps the method behind Anki, in an interface built for young learners, with reading settings (font, size, spacing, card colour) the learner controls.
 
-> **Status: v0.1.0 (MVP).** The Phase 1 web app is built and in use. The product requirements are in [docs/PRD.md](docs/PRD.md).
+> **Status: v0.5.0.** The MVP web app is built and in use, and it runs on Vercel behind the app password. v0.6 (email accounts and an installable web app) is in progress. The product requirements are in [docs/PRD.md](docs/PRD.md).
 
 ## Who it is for
 
@@ -11,61 +11,76 @@ Flipside schedules flashcard reviews with a boxed (Leitner) system: a card you k
 | Student | School subjects and exam preparation, mostly on an iPad |
 | Engineer | System Design and other engineering topics for interview prep |
 
-Profiles are picked from a Netflix-style screen. There is no login in the MVP.
+The app password opens the app; then a profile is picked from a Netflix-style picker. Each profile keeps its own decks, progress and settings.
 
-## MVP at a glance
+## What it does
 
-- Profile picker; decks, progress and settings are separate per profile.
-- Library of decks with today's due count, deck pages with topic selection.
+- Profile picker with Add User, and a Profile page; decks, progress and settings are separate per profile.
+- Library of decks with today's due count and a deck menu; deck pages with topic selection.
 - Practice sessions: flip, grade (Not yet, Nearly, Got it), undo, read-aloud, summary.
 - Scheduler: five boxes; only Got it moves a card up; missed cards return within the session; a daily cap on new cards; cards that keep failing are flagged for rewording.
-- CSV import (with a zip of images), with preview, validation and updates that keep progress.
+- CSV import (with a zip of images), with preview, validation and updates that keep progress. Web imports and images are limited to 4 MB; `pnpm import:cli` imports larger zips.
 - Progress screen: cards practised, Got it rate, time per card, days practised, by-deck table.
-- Local only: Podman Postgres, backups, no third-party requests.
+- Settings per profile, a light and dark theme, and a collapsible sidebar.
 
-Out of scope for the MVP: deployment, authentication, offline use, notifications, an in-app card editor, voice and LLM features.
+Not built: offline use, notifications, an in-app card editor, voice and LLM features. Coming in v0.6: email and password accounts that own profiles (replacing the app password) and an installable web app for iPad and iPhone.
 
 ## Tech stack
 
 | Layer | Choice |
 | --- | --- |
 | App | Next.js (App Router) with Route Handlers, TypeScript |
-| Database | Postgres 17 in Podman, Drizzle ORM |
+| Database | Postgres 17: Podman locally, Neon when hosted. Drizzle ORM |
 | Validation | Zod schemas shared by UI and API |
-| Images | `ImageStore` interface: disk driver now, S3-compatible (for example Cloudflare R2) later |
+| Images | `ImageStore` interface: disk driver locally, private Vercel Blob store when hosted |
+| Hosting | Vercel Hobby, production deploys only from version tags |
 | Tests | Vitest, Playwright, axe |
 | Package manager | pnpm |
 
-## Repository layout (planned)
+## Repository layout
 
 ```text
-docs/        PRD and design links
+docs/        PRD, glossary, ADRs, design, operations, the feature ledger
 src/app      pages and Route Handlers (/api/v1)
-src/server   services: decks, imports, sessions, stats
+src/server   services: decks, imports, sessions, stats, image store
 src/domain   pure functions: scheduler, session builder, import rules
 src/shared   Zod schemas and constants
 src/ui       components and design tokens
 drizzle/     migrations
-scripts/     backup, restore, import tools
+scripts/     verify, seed, backup, restore, import CLI
+e2e/         Playwright tests
 fixtures/    test decks
+ops/         launchd templates for running at home
 ```
 
 ## Local development
 
-Specified in [PRD section 13](docs/PRD.md#13-local-environment-and-operations). Copy `.env.example` to `.env` first.
+Specified in [PRD section 13](docs/PRD.md#13-local-environment-and-operations). Copy `.env.example` to `.env` first. Local development uses Podman Postgres and the disk image driver, whatever runs in production.
 
 | Command | Purpose |
 | --- | --- |
-| `pnpm db:up` | Start Postgres in Podman |
+| `pnpm db:up` / `pnpm db:down` | Start or stop Postgres in Podman |
 | `pnpm db:migrate` / `pnpm db:seed` | Apply migrations, create the two profiles |
 | `pnpm dev` | Development server. Open it from this Mac only: Next's dev server refuses its scripts to other devices, so a tablet shows a page that never loads |
 | `pnpm build` then `pnpm start` | Production server on the home network. Use this for the iPad or any other tablet |
+| `bash scripts/verify.sh` | Typecheck, lint and tests; must be green before a commit |
 | `pnpm test` / `pnpm test:e2e` | Unit and integration tests, end-to-end tests |
+| `pnpm import:cli <zip> --profile <name> --name <deck>` | Import a deck from the command line, including zips over the 4 MB web limit |
 | `pnpm backup` / `pnpm restore <folder>` | Back up and restore the database and images. Set `IMAGE_STORE_PATH` in the shell if images are not in `./data/images`: these scripts do not read `.env` |
 
 ## Checks on pull requests
 
-`.github/workflows/checks.yml` runs `scripts/verify.sh` and the Playwright e2e suite on every pull request into `main`, against the merged result. Turn on branch protection for `main` to require both checks before a merge.
+`.github/workflows/checks.yml` runs `scripts/verify.sh` and the Playwright e2e suite on every pull request into `main`, against the merged result. Branch protection on `main` requires both checks before a merge.
+
+## Hosting and releases
+
+The hosted app runs on Vercel's Hobby plan with Neon Postgres and a private Vercel Blob store ([ADR-002](docs/adr/002-host-on-vercel.md)). Merging to `main` deploys nothing. To release, tag a commit on `main` and push the tag:
+
+```bash
+git tag vX.Y.Z && git push origin vX.Y.Z
+```
+
+`.github/workflows/release.yml` checks the tag is on `main` and moves the `release` branch to it; Vercel deploys `release` only, and its build runs the migrations before `next build`. Keep the version in `package.json` in step with the tag, since the footer stamp reads it. Setup, releasing, rolling back and importing into the hosted app are in [docs/operations.md](docs/operations.md).
 
 ## Running at home
 
@@ -76,14 +91,19 @@ Launchd templates for the app, Postgres and the nightly backup are in `ops/launc
 | Phase | Name | Gate to move on |
 | --- | --- | --- |
 | 1 | MVP: web app, local | Acceptance criteria pass; four weeks of real use |
-| 1.5 | Extras: confidence tap, per-point reveal, test-date cram mode | Native need confirmed |
-| 2 | SwiftUI app: study-plan reminders, offline, sync, login | LLM grading agrees with hand grading in a recorded test |
-| 3 | Experiment: spoken answers with LLM feedback, randomised | Owner decides to host, with an access gate ready |
-| 4 | Optional deployment | Hosted behind the access gate |
+| 1.5 | Extras: confidence tap, per-point reveal, test-date cram mode | None: can run before or after phase 2 |
+| 2 | Hosted web app (v0.6): Vercel, email accounts, installable web app | AC27 to AC34 pass; two weeks of hosted use within the free tiers |
+| 2.5 | Web Push reminders (optional) | Usage shows reminders are worth building |
+| 3 | Experiment: spoken answers with LLM feedback, randomised | LLM grading agrees with hand grading in a recorded test |
+
+The SwiftUI app is no longer planned (PRD decision D31). Details and gates are in [PRD section 3](docs/PRD.md#3-scope-and-phases).
 
 ## Documentation
 
 - [Product requirements (PRD)](docs/PRD.md): scope, requirements, learning model, import format, statistics, architecture, data model, API, testing, risks and the decision log.
+- [Glossary](docs/GLOSSARY.md): the terms used in code, docs and UI copy.
+- [Architecture decisions](docs/adr/) and [operations](docs/operations.md): hosting, releases, running at home, backups.
+- [How the app is built](docs/WORKFLOW.md): the agent workflow and feature ledger.
 - Design reference: the Stitch exports and the light and dark design files in [docs/design/](docs/design/README.md). The screens are reference only; the PRD and that README say where they differ.
 
 ## First fixture
