@@ -75,7 +75,7 @@ Restore
 
 ## Hosted environment
 
-The hosted app runs on Vercel Hobby with Neon Postgres and a private Vercel Blob store (section 13). Until F22 (accounts) merges, put only seed data on the hosted app: the app password is the only gate.
+The hosted app runs on Vercel Hobby with Neon Postgres and a private Vercel Blob store (section 13). Until the first account exists (below), put only seed data on the hosted app.
 
 1. Create a Vercel Hobby project from the personal repository (not an organisation repository). `vercel.json` limits Git deployments to the `release` branch; see Releasing.
 2. Add Neon from the Vercel Marketplace. It sets `DATABASE_URL` (pooled) and `DATABASE_URL_UNPOOLED` (direct, used by the migration during the build).
@@ -85,6 +85,14 @@ The hosted app runs on Vercel Hobby with Neon Postgres and a private Vercel Blob
 6. Check usage weekly for the first month (R11): Vercel (functions, bandwidth, Blob) and Neon (compute hours, storage) dashboards. If an allotment runs out, that feature stops until it resets; Vercel Pro or Neon Launch is the paid fallback.
 
 The manual checks for AC32 and AC33 are in `docs/manual-checks.md`.
+
+## Accounts
+
+There is no sign-up screen (AU4). Both commands ask for the password twice (hidden; the minimum length is `PASSWORD_MIN_LENGTH` in `src/shared/constants.ts`) and need `DATABASE_URL`, plus `ADMIN_PASSWORD` set to any non-empty value (the environment check requires it). On the hosted app use the direct (unpooled) connection string, as for the import below.
+
+- First hosted account: `pnpm account:create <email> --adopt-profiles`. It creates the account and, in one step, gives it every profile that has none, so Davi and Nicole keep their decks and progress (AU6). Run it once; later accounts start with no profiles.
+- Forgotten password (R12): `pnpm account:password <email>`. It stores the new password and signs the account out everywhere (its sign-in tokens are revoked).
+- Local development: `pnpm db:seed` creates the account from `DEV_ACCOUNT_EMAIL` and `DEV_ACCOUNT_PASSWORD` in `.env` and gives it the two seeded profiles. Leave both unset on the hosted app.
 
 ## Import against the hosted app (AC33)
 

@@ -78,6 +78,8 @@ const env = {
   ...process.env,
   DATABASE_URL: `postgres://flipside:flipside@127.0.0.1:${dbPort}/flipside_e2e`,
   PORT: appPort,
+  DEV_ACCOUNT_EMAIL: "e2e@flipside.local",
+  DEV_ACCOUNT_PASSWORD: "e2e-account-password",
 };
 writeFileSync(urlFile, env.DATABASE_URL);
 const run = (args) =>

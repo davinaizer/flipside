@@ -1,7 +1,7 @@
-import { eq } from "drizzle-orm";
+import { eq, isNull } from "drizzle-orm";
 import type { Db } from "@/server/db/client";
 import { getDb } from "@/server/db/client";
-import { accounts, signInTokens } from "@/server/db/schema";
+import { accounts, profiles, signInTokens } from "@/server/db/schema";
 import { ApiError } from "@/server/http/errors";
 import { hashPassword } from "@/server/passwords";
 import { emailSchema, newPasswordSchema } from "@/shared/schemas/auth";
@@ -51,4 +51,25 @@ export async function setPassword(
       .where(eq(accounts.id, accountId));
     await tx.delete(signInTokens).where(eq(signInTokens.accountId, accountId));
   });
+}
+
+/** Finds an account by email (trimmed and lower-cased like createAccount); null when none. */
+export async function findAccountId(email: string, db: Db = getDb()): Promise<string | null> {
+  const parsed = emailSchema.safeParse(email);
+  if (!parsed.success) return null;
+  const [row] = await db
+    .select({ id: accounts.id })
+    .from(accounts)
+    .where(eq(accounts.email, parsed.data));
+  return row?.id ?? null;
+}
+
+/** Gives every profile without an account to this one, keeping their decks and progress (AU6). */
+export async function adoptProfiles(accountId: string, db: Db = getDb()): Promise<number> {
+  const rows = await db
+    .update(profiles)
+    .set({ accountId })
+    .where(isNull(profiles.accountId))
+    .returning({ id: profiles.id });
+  return rows.length;
 }

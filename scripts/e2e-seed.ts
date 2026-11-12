@@ -1,5 +1,7 @@
 // e2e only: one deck per seeded profile (no create API exists yet). Run after db:seed.
 import { eq } from "drizzle-orm";
+import { adoptProfiles } from "@/server/accounts";
+import { seedDevAccount } from "@/server/seed";
 import { getDb } from "@/server/db/client";
 import { AVATAR_IDS, DEFAULT_ACCENT } from "@/shared/avatars";
 import { DEFAULT_DAY_START_HOUR, DEFAULT_TIMEZONE } from "@/shared/constants";
@@ -106,5 +108,8 @@ for (const scenario of ["main", "undo", "empty"]) {
     }
   }
 }
+// The development account owns every e2e profile too, so the signed-in picker lists them all.
+const accountId = await seedDevAccount(db);
+if (accountId) await adoptProfiles(accountId, db);
 console.log("Seeded e2e decks.");
 process.exit(0);

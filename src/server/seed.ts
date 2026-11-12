@@ -1,5 +1,6 @@
-import { eq } from "drizzle-orm";
+import { and, eq, inArray, isNull } from "drizzle-orm";
 import type { Db } from "@/server/db/client";
+import { createAccount, findAccountId } from "@/server/accounts";
 import { profiles } from "@/server/db/schema";
 import { AVATAR_IDS, DEFAULT_ACCENT } from "@/shared/avatars";
 import { DEFAULT_DAY_START_HOUR, DEFAULT_TIMEZONE } from "@/shared/constants";
@@ -34,4 +35,32 @@ export async function seedProfiles(db: Db): Promise<void> {
       settings: DEFAULT_SETTINGS,
     });
   }
+}
+
+/**
+ * Development only: creates the account named by DEV_ACCOUNT_EMAIL and DEV_ACCOUNT_PASSWORD (if
+ * missing) and gives it the seeded profiles that have no account. Returns the account id, or null
+ * when either variable is unset (the hosted seed then creates no account).
+ */
+export async function seedDevAccount(
+  db: Db,
+  env: Record<string, string | undefined> = process.env,
+): Promise<string | null> {
+  const email = env.DEV_ACCOUNT_EMAIL;
+  const password = env.DEV_ACCOUNT_PASSWORD;
+  if (!email || !password) return null;
+  const id = (await findAccountId(email, db)) ?? (await createAccount(email, password, db)).id;
+  await db
+    .update(profiles)
+    .set({ accountId: id })
+    .where(
+      and(
+        isNull(profiles.accountId),
+        inArray(
+          profiles.name,
+          SEED_PROFILES.map((p) => p.name),
+        ),
+      ),
+    );
+  return id;
 }

@@ -1636,7 +1636,7 @@
           ],
           "area": "scripts/account-cli.ts, package.json scripts, src/server/accounts.ts, src/server/seed.ts, scripts/e2e-seed.ts, .env.example",
           "done_when": "Integration tests for the CLI entry points (prompt injected): account:create <email> creates an account with a scrypt hash and refuses a duplicate or a short password; --adopt-profiles sets account_id on every profile without one, in one transaction, and the profiles keep their decks and progress; account:password <email> changes the hash and revokes tokens. The seed creates a development account from DEV_ACCOUNT_EMAIL and DEV_ACCOUNT_PASSWORD in .env.example and gives it the two seeded profiles; the e2e seed does the same. docs/operations.md explains creating the first hosted account with --adopt-profiles and resetting a forgotten password (R12). verify.sh green.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F22.4",
