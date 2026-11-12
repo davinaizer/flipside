@@ -78,11 +78,13 @@ export async function changePassword(
     throw new ApiError(400, "invalid_request", "The new password and its confirmation differ.");
   }
   const passwordHash = await hashPassword(input.new);
-  await db
-    .update(accounts)
-    .set({ passwordHash, updatedAt: new Date() })
-    .where(eq(accounts.id, accountId));
-  await revokeOtherSignInTokens(token, db);
+  await db.transaction(async (tx) => {
+    await tx
+      .update(accounts)
+      .set({ passwordHash, updatedAt: new Date() })
+      .where(eq(accounts.id, accountId));
+    await revokeOtherSignInTokens(token, tx);
+  });
 }
 
 /** Finds an account by email (trimmed and lower-cased like createAccount); null when none. */

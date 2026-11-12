@@ -85,9 +85,13 @@ export async function revokeSignInToken(token: string, db: Db = getDb()): Promis
 
 /**
  * Deletes every other sign-in token of the token's account and keeps this one
- * (password change, AU8). Does nothing for an unknown token.
+ * (password change, AU8). Does nothing for an unknown token. Takes a database or a
+ * transaction (changePassword runs it with the hash update).
  */
-export async function revokeOtherSignInTokens(token: string, db: Db = getDb()): Promise<void> {
+export async function revokeOtherSignInTokens(
+  token: string,
+  db: Pick<Db, "select" | "delete"> = getDb(),
+): Promise<void> {
   const tokenHash = hashToken(token);
   const [own] = await db
     .select({ accountId: signInTokens.accountId })
