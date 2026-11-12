@@ -1869,7 +1869,7 @@
           ],
           "area": "src/server/http/sign-in-cookie.ts (+test), src/ui/profile/LoginScreen.tsx (+test), src/ui/api/client.ts if needed, docs/GLOSSARY.md only if a new term appears",
           "done_when": "(1) signInCookie and clearSignInCookie add Secure when the request URL is https or the x-forwarded-proto header's first value is https, and omit it over plain http on any host (localhost, 127.0.0.1, a LAN IP such as 10.129.224.39). Unit tests cover https URL, http localhost, http LAN IP, and http URL with x-forwarded-proto https. (2) After a successful POST /auth/login, the login screen confirms the sign-in took effect with one authenticated request that already exists (for example the profile list) before navigating. If that request answers 401, it shows a role=alert message that the browser did not keep the sign-in, and re-enables the button; it never stays disabled with no message. Unit test for both paths. Existing e2e sign-in paths still pass. verify.sh green.",
-          "status": "todo"
+          "status": "done"
         }
       ],
       "branch": "feat/F23-installable-web-app",

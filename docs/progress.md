@@ -146,3 +146,4 @@ REVIEW F23 round 1: GAPS at 67b55c7 (iPhone landscape safe areas: collapsed rail
 F23.7: below 640 px the expanded sidebar overlays the page (fixed aside plus rail-width spacer, top bar above it, link click closes it); the F23.6 fixme test now passes in both themes with axe. Fixed a stale F23.6 PracticeHeader test. Full e2e: performance next-card flaked (known) under load.
 REVIEW F23 round 2: PASS at 1b85de8
 F23 done: installable web app and phone-width check, PR #61, review PASS (round 2), verify green; full e2e green except the known performance next-card flake under load (passes alone). MANUAL PENDING: AC34.
+F23.8: sign-in cookie is Secure only for https requests (URL or x-forwarded-proto); login screen confirms with the profile list and shows an alert if the browser dropped the cookie.

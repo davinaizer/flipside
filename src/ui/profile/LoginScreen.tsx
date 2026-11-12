@@ -10,6 +10,28 @@ import { APP_VERSION } from "@/shared/version";
 
 const NEUTRAL_ERROR = "That email and password did not work. Please try again.";
 
+const DROPPED_ERROR =
+  "Your browser did not keep the sign-in. Check that cookies are allowed for this address, then try again.";
+
+/** Returns an error message, or null when the sign-in took effect (login, then one authenticated request). */
+export async function signIn(email: string, password: string): Promise<string | null> {
+  try {
+    await api.login(email, password);
+  } catch (e) {
+    return e instanceof ApiClientError && e.status === 401
+      ? NEUTRAL_ERROR
+      : "Something went wrong. Please try again.";
+  }
+  try {
+    await api.listProfiles();
+    return null;
+  } catch (e) {
+    return e instanceof ApiClientError && e.status === 401
+      ? DROPPED_ERROR
+      : "Something went wrong. Please try again.";
+  }
+}
+
 /** Presentational form: the same layout as the picker, email and password fields, one neutral error (AU1). */
 export function LoginForm({
   onSubmit,
@@ -82,17 +104,13 @@ export function LoginScreen() {
   async function submit(email: string, password: string) {
     setBusy(true);
     setError(null);
-    try {
-      await api.login(email, password);
+    const message = await signIn(email, password);
+    if (message === null) {
       router.push("/");
-    } catch (e) {
-      setError(
-        e instanceof ApiClientError && e.status === 401
-          ? NEUTRAL_ERROR
-          : "Something went wrong. Please try again.",
-      );
-      setBusy(false);
+      return;
     }
+    setError(message);
+    setBusy(false);
   }
 
   return <LoginForm onSubmit={submit} error={error} busy={busy} />;
