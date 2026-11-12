@@ -106,7 +106,7 @@ export function SummaryView({
 }) {
   const vm = summaryViewModel(summary);
   return (
-    <div className="mx-auto flex w-full max-w-5xl flex-col gap-6 p-6 md:p-8">
+    <div className="mx-auto flex w-full max-w-5xl flex-col gap-6 safe-area safe-t safe-r safe-b safe-l [--edge:1.5rem] md:[--edge:2rem]">
       <h1 className="text-headline-lg font-semibold">Session summary</h1>
       <div className="grid items-start gap-6 md:grid-cols-2">
         <section

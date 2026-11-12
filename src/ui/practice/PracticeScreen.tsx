@@ -22,7 +22,7 @@ export function PracticeLoading() {
     <div
       role="status"
       aria-label="Loading"
-      className="mx-auto flex w-full max-w-3xl flex-col gap-6 p-6"
+      className="mx-auto flex w-full max-w-3xl flex-col gap-6 safe-area safe-t safe-r safe-b safe-l [--edge:1.5rem]"
     >
       <Skeleton className="h-8 w-full" />
       <Skeleton className="h-72 w-full rounded-3xl" />
@@ -51,7 +51,7 @@ export function LoadError({
   withTheme?: boolean;
 }) {
   const body = (
-    <div className="p-8">
+    <div className="safe-area safe-t safe-r safe-b safe-l [--edge:2rem]">
       <ErrorState onRetry={onRetry} />
     </div>
   );
@@ -60,7 +60,7 @@ export function LoadError({
 
 export function NoCards({ onEnd }: { onEnd: () => void }) {
   return (
-    <div className="mx-auto flex w-full max-w-3xl flex-col gap-6 p-8">
+    <div className="mx-auto flex w-full max-w-3xl flex-col gap-6 safe-area safe-t safe-r safe-b safe-l [--edge:2rem]">
       <p>This session has no cards.</p>
       <button
         type="button"

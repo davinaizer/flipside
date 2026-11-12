@@ -1,11 +1,13 @@
 import { SIGN_IN_COOKIE_NAME, SIGN_IN_TOKEN_MAX_AGE_SECONDS } from "@/shared/constants";
 
-const LOCAL_HOSTS = ["localhost", "127.0.0.1", "[::1]"];
-
-/** Secure everywhere except plain HTTP on localhost, where browsers would drop it (AU2). */
+/**
+ * Secure by protocol, not host name: over plain http (localhost or a LAN IP) browsers such as Safari
+ * drop a Secure cookie, so it is set only when the request is https, directly or behind a proxy (AU2, F23.8).
+ */
 function secureFlag(request: Request): string {
-  const { protocol, hostname } = new URL(request.url);
-  return protocol === "http:" && LOCAL_HOSTS.includes(hostname) ? "" : "; Secure";
+  const forwarded = request.headers.get("x-forwarded-proto")?.split(",")[0]?.trim().toLowerCase();
+  const https = new URL(request.url).protocol === "https:" || forwarded === "https";
+  return https ? "; Secure" : "";
 }
 
 /** Set-Cookie value that stores a sign-in token for 30 days (AU2). */

@@ -10,7 +10,7 @@ export function ImportSuccess({ deckName, result }: { deckName: string; result: 
   return (
     <div
       role="status"
-      className="flex max-w-lg flex-col gap-4 rounded-card border border-card-edge bg-surface-card p-8 shadow-card"
+      className="flex max-w-lg flex-col gap-4 rounded-card border border-card-edge bg-surface-card p-6 shadow-card sm:p-8"
     >
       <span
         aria-hidden="true"
@@ -42,7 +42,7 @@ export function ImportSuccess({ deckName, result }: { deckName: string; result: 
           </ul>
         </section>
       )}
-      <div className="flex gap-3">
+      <div className="flex flex-wrap gap-3">
         <Link href={`/decks/${result.deckId}`} className={buttonClass("primary")}>
           <Icon name="play" size={18} />
           Open deck

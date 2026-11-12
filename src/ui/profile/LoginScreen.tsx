@@ -10,6 +10,28 @@ import { APP_VERSION } from "@/shared/version";
 
 const NEUTRAL_ERROR = "That email and password did not work. Please try again.";
 
+const DROPPED_ERROR =
+  "Your browser did not keep the sign-in. Check that cookies are allowed for this address, then try again.";
+
+/** Returns an error message, or null when the sign-in took effect (login, then one authenticated request). */
+export async function signIn(email: string, password: string): Promise<string | null> {
+  try {
+    await api.login(email, password);
+  } catch (e) {
+    return e instanceof ApiClientError && e.status === 401
+      ? NEUTRAL_ERROR
+      : "Something went wrong. Please try again.";
+  }
+  try {
+    await api.listProfiles();
+    return null;
+  } catch (e) {
+    return e instanceof ApiClientError && e.status === 401
+      ? DROPPED_ERROR
+      : "Something went wrong. Please try again.";
+  }
+}
+
 /** Presentational form: the same layout as the picker, email and password fields, one neutral error (AU1). */
 export function LoginForm({
   onSubmit,
@@ -21,8 +43,8 @@ export function LoginForm({
   busy?: boolean;
 }) {
   return (
-    <main className="relative flex min-h-screen flex-col items-center justify-center gap-10 bg-surface p-8">
-      <div className="absolute right-8 top-4">
+    <main className="relative flex min-h-screen flex-col items-center justify-center gap-10 bg-surface safe-area safe-t safe-r safe-b safe-l [--edge:2rem]">
+      <div className="absolute right-[calc(2rem+env(safe-area-inset-right))] top-[calc(1rem+env(safe-area-inset-top))]">
         <AttributeThemeSwitch />
       </div>
       <div className="flex items-center gap-3 rounded-full border border-card-edge bg-surface-card py-2 pl-2 pr-5 shadow-card">
@@ -67,7 +89,9 @@ export function LoginForm({
           Sign in
         </button>
       </form>
-      <p className="absolute bottom-4 text-sm text-on-surface-variant">{APP_VERSION}</p>
+      <p className="absolute bottom-[calc(1rem+env(safe-area-inset-bottom))] text-sm text-on-surface-variant">
+        {APP_VERSION}
+      </p>
     </main>
   );
 }
@@ -80,17 +104,13 @@ export function LoginScreen() {
   async function submit(email: string, password: string) {
     setBusy(true);
     setError(null);
-    try {
-      await api.login(email, password);
+    const message = await signIn(email, password);
+    if (message === null) {
       router.push("/");
-    } catch (e) {
-      setError(
-        e instanceof ApiClientError && e.status === 401
-          ? NEUTRAL_ERROR
-          : "Something went wrong. Please try again.",
-      );
-      setBusy(false);
+      return;
     }
+    setError(message);
+    setBusy(false);
   }
 
   return <LoginForm onSubmit={submit} error={error} busy={busy} />;

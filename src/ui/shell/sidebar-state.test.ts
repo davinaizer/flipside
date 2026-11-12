@@ -1,4 +1,4 @@
-import { expect, test } from "vitest";
+import { expect, test, vi } from "vitest";
 import {
   readCollapsed,
   subscribeCollapsed,
@@ -46,4 +46,13 @@ test("tolerates storage being unavailable or throwing", () => {
   off();
   writeCollapsed(false);
   expect(calls).toBe(1);
+});
+
+test("with no saved choice the sidebar starts collapsed on a narrow viewport, and a saved choice wins", async () => {
+  vi.resetModules(); // an earlier test left a value in memory
+  const fresh = await import("./sidebar-state");
+  const s = fakeStore();
+  expect(fresh.readCollapsed(s, () => true)).toBe(true);
+  s.setItem(SIDEBAR_STORAGE_KEY, "0");
+  expect(fresh.readCollapsed(s, () => true)).toBe(false);
 });

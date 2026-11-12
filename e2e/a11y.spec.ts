@@ -63,7 +63,7 @@ async function mockedStates(page: Page) {
 }
 
 /** Screens that show real data once the profile has a deck and one graded card. */
-async function successScreens(page: Page) {
+async function libraryAndDeck(page: Page) {
   await page.goto("/library");
   await expect(page.getByRole("heading", { name: "Today" })).toBeVisible();
   await check(page);
@@ -78,6 +78,10 @@ async function successScreens(page: Page) {
   await page.goto("/decks/00000000-0000-4000-8000-000000000000");
   await expect(page.getByRole("heading", { name: "We can't find that deck" })).toBeVisible();
   await check(page);
+}
+
+async function successScreens(page: Page) {
+  await libraryAndDeck(page);
 
   await page.goto("/progress");
   await expect(
@@ -133,6 +137,24 @@ test("every screen and state passes axe and 44 px in both themes; toggle, reload
   await page.goto("/");
   await page.getByRole("button", { name: `A11y ${info.project.name}`, exact: true }).click();
   await page.waitForURL("**/library");
+
+  // W3: on the phone project this walk covers the picker (above), mocked states, Library and Deck; phone.spec.ts
+  // checks the other screens at 375 px, including the layout checks.
+  if (info.project.name === "phone") {
+    await mockedStates(page);
+    // Data first: import a deck, then the real-data screens.
+    await page.goto("/import");
+    await page.waitForLoadState("networkidle");
+    await page
+      .locator('input[type="file"]')
+      .setInputFiles({ name: "science-w2-deck.zip", mimeType: "application/zip", buffer: zip });
+    await expect(page.getByRole("region", { name: "Preview" })).toContainText("16 cards ready");
+    await page.getByLabel("Deck name").fill("A11y Science");
+    await page.getByRole("button", { name: /^Add \d+ cards?$/ }).click();
+    await expect(page.getByRole("status")).toContainText("16 cards added");
+    await libraryAndDeck(page);
+    return;
+  }
 
   // Import: form, preview, success.
   await page.goto("/import");

@@ -1754,7 +1754,7 @@
         "profile_picker"
       ],
       "notes": "src/app/manifest.ts with colours from the design tokens (no raw hex in components; the manifest needs literal colours, so read them from the tokens file or one constant), icons 192, 512, maskable and a 180 px Apple touch icon. The repository has no app icon or logo yet: ask the owner for artwork first; if none, build a placeholder (the letter F on the primary colour, from the design tokens) and log it as ASSUMED, iOS web-app meta tags and safe-area padding. No service worker. Add a 375 x 812 Playwright project to the e2e and axe runs and fix any screen that scrolls sideways or clips controls; no phone-specific layout. Installing on a real iPad and iPhone is the manual part of AC34.",
-      "status": "todo",
+      "status": "done",
       "tasks": [
         {
           "id": "F23.1",
@@ -1768,7 +1768,7 @@
           ],
           "area": "src/app/icon.tsx and src/app/apple-icon.tsx (next/og ImageResponse, no new dependency), src/shared/app-colours.ts or a tokens-derived constant, docs/decisions.md",
           "done_when": "Icons at 192 and 512 px, a maskable 512 px icon with the letter inside the safe zone, and a 180 px Apple touch icon: the letter F in the bundled Lexend on the light theme's primary colour. The colours come from one constant, and a unit test checks it equals the values in src/ui/tokens.css. Route test or e2e: each icon URL returns image/png at the stated size. docs/decisions.md logs the placeholder as ASSUMED (the owner replaces it later, per the F23 ANSWER). verify.sh green.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F23.2",
@@ -1784,7 +1784,7 @@
           ],
           "area": "src/app/manifest.ts, src/app/layout.tsx",
           "done_when": "Unit test of manifest(): name Flipside, a short name, start_url /, display standalone, background_color and theme_color from the F23.1 constant, icons 192, 512 and maskable. The root layout sets appleWebApp (capable, title, status bar style), the Apple touch icon, viewport-fit=cover and a theme colour per colour scheme. E2e: /manifest.webmanifest returns the manifest and the page head holds the Apple meta tags and touch icon link. No service worker is registered (e2e asserts navigator.serviceWorker has no registration; grep finds no serviceWorker.register). verify.sh green.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F23.3",
@@ -1798,7 +1798,7 @@
           ],
           "area": "src/ui/shell, src/app/practice/[sessionId], src/app/login, src/app/page.tsx (picker), src/app/globals.css",
           "done_when": "The app shell, practice, summary, login and picker pad their outer edges with env(safe-area-inset-*) on top of their existing padding, in both orientations. E2e at the iPad and desktop sizes shows no layout change (insets are 0 there; existing tests pass), and a unit or e2e check finds the safe-area padding on each outer container. On-device behaviour is the manual part of AC34, listed in docs/manual-checks.md with installing from Safari on iPad and iPhone. verify.sh green.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F23.4",
@@ -1812,7 +1812,7 @@
           ],
           "area": "playwright.config.ts, e2e/phone.spec.ts (new), e2e/a11y.spec.ts, src/ui/shell, src/ui/library, src/ui/deck, src/app/login, src/app/page.tsx",
           "done_when": "A phone Playwright project at 375 x 812 with touch runs e2e/phone.spec.ts and the axe spec. For login, picker, Library and Deck, in both themes: the page has no horizontal scroll (scrollWidth equals clientWidth), every visible button, link and input is at least 44 px in both dimensions and inside the viewport, and axe reports no serious or critical issues. Screens that fail are fixed through the existing responsive layout with no phone-only design; the sidebar collapse and the profile menu still work at that width. Existing desktop and iPad e2e pass. verify.sh green.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F23.5",
@@ -1826,9 +1826,54 @@
           ],
           "area": "e2e/phone.spec.ts, e2e/a11y.spec.ts, src/ui/practice, src/ui/progress, src/ui/settings, src/ui/profile, src/ui/import",
           "done_when": "e2e/phone.spec.ts adds practice (question and answer side, grade bar), summary, Progress, Settings, Profile and Add or re-import with the same checks as F23.4 in both themes: no horizontal scroll, controls at least 44 px and inside the viewport, axe with no serious or critical issues. Failures are fixed through the existing responsive layout. Every screen in the PRD section 8 table is now covered at 375 x 812. Existing desktop and iPad e2e pass. verify.sh green.",
-          "status": "todo"
+          "status": "done"
+        },
+        {
+          "id": "F23.6",
+          "title": "Review round 1 fixes: safe areas in iPhone landscape",
+          "reqs": [
+            "W2",
+            "W3"
+          ],
+          "prd_sections": [
+            "3",
+            "8"
+          ],
+          "area": "src/ui/shell/Sidebar.tsx, src/ui/profile/LoginScreen.tsx, src/ui/profile/ProfilePicker.tsx, src/ui/practice/SettingsPopover.tsx, src/ui/safe-area.test.ts, e2e/phone.spec.ts, docs/manual-checks.md",
+          "done_when": "(1) The sidebar widens by env(safe-area-inset-left) in both the collapsed and expanded states instead of the inset eating its fixed width, so the collapsed rail's icons stay visible in iPhone landscape. (2) The absolute theme switch on login and the picker, and the login version line, are offset by the matching insets (top, right, bottom) on top of their current offsets. (3) The practice reading-settings overlay pads its edges with the safe-area classes. safe-area.test.ts checks all three. (4) phone.spec.ts calls shellSettled before the Library check in the picker, Library and Deck test. (5) phone.spec.ts measures the expanded sidebar at 375 px for horizontal scroll; if it overflows, do not redesign it: leave the measurement as a test.fixme or skipped check with the numbers and report them. (6) docs/manual-checks.md AC34 gains an iPhone landscape step: collapsed sidebar, theme switch on login and picker, practice reading settings. verify.sh green; phone, a11y and safe-area related e2e pass on all projects.",
+          "status": "done"
+        },
+        {
+          "id": "F23.7",
+          "title": "Expanded sidebar overlays the page below 640 px",
+          "reqs": [
+            "W3"
+          ],
+          "prd_sections": [
+            "3",
+            "8"
+          ],
+          "area": "src/ui/shell (Sidebar, app shell layout), src/app/(app)/layout.tsx, e2e/phone.spec.ts, docs/decisions.md",
+          "done_when": "Below 640 px the expanded sidebar sits over the page (fixed or absolute, above the content, with the safe-area insets kept) while the content keeps the collapsed rail's width, so the page never scrolls sideways; at 640 px and up the layout is unchanged. Same Sidebar component, no new phone-only design; expanding and collapsing, the profile menu and keyboard focus still work, and choosing a nav link with the overlay open lands on the page. The F23.6 'expanded sidebar at 375 px' test.fixme becomes a passing test (scrollWidth equals clientWidth with the sidebar expanded, both themes, axe with no serious or critical issues). Existing desktop and iPad e2e pass. verify.sh green.",
+          "status": "done"
+        },
+        {
+          "id": "F23.8",
+          "title": "Sign-in cookie Secure by protocol; login never stays stuck",
+          "reqs": [
+            "W3"
+          ],
+          "prd_sections": [
+            "3",
+            "8"
+          ],
+          "area": "src/server/http/sign-in-cookie.ts (+test), src/ui/profile/LoginScreen.tsx (+test), src/ui/api/client.ts if needed, docs/GLOSSARY.md only if a new term appears",
+          "done_when": "(1) signInCookie and clearSignInCookie add Secure when the request URL is https or the x-forwarded-proto header's first value is https, and omit it over plain http on any host (localhost, 127.0.0.1, a LAN IP such as 10.129.224.39). Unit tests cover https URL, http localhost, http LAN IP, and http URL with x-forwarded-proto https. (2) After a successful POST /auth/login, the login screen confirms the sign-in took effect with one authenticated request that already exists (for example the profile list) before navigating. If that request answers 401, it shows a role=alert message that the browser did not keep the sign-in, and re-enables the button; it never stays disabled with no message. Unit test for both paths. Existing e2e sign-in paths still pass. verify.sh green.",
+          "status": "done"
         }
-      ]
+      ],
+      "branch": "feat/F23-installable-web-app",
+      "pr": 61
     }
   ]
 }

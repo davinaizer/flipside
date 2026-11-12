@@ -55,15 +55,16 @@ test(
   },
 );
 
-test("the cookie is Secure on https and on a non-local host", { timeout: 30_000 }, async () => {
+test("the cookie is Secure by protocol, not by host name", { timeout: 30_000 }, async () => {
   const { login } = await setup();
-  for (const url of [
-    "https://flipside.example/api/v1/auth/login",
-    "http://192.168.1.5/api/v1/auth/login",
-  ]) {
-    const res = await login(post(url, { email: EMAIL, password: PASSWORD }));
-    expect(res.headers.get("set-cookie"), url).toContain("; Secure");
-  }
+  const https = await login(
+    post("https://flipside.example/api/v1/auth/login", { email: EMAIL, password: PASSWORD }),
+  );
+  expect(https.headers.get("set-cookie")).toContain("; Secure");
+  const lan = await login(
+    post("http://192.168.1.5/api/v1/auth/login", { email: EMAIL, password: PASSWORD }),
+  );
+  expect(lan.headers.get("set-cookie")).not.toContain("; Secure");
 });
 
 test("every failure is the same 401 with no cookie", { timeout: 30_000 }, async () => {

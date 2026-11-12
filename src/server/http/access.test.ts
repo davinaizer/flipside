@@ -34,6 +34,11 @@ describe("checkAccess", () => {
     expect(call("/login")).toBeNull();
   });
 
+  it("leaves the app icons open", () => {
+    for (const path of ["/icon/192", "/icon/maskable", "/apple-icon", "/manifest.webmanifest"])
+      expect(call(path), path).toBeNull();
+  });
+
   it("passes pages and API routes that carry the cookie; the token is verified downstream", () => {
     expect(call("/library", withCookie("any"))).toBeNull();
     expect(call("/api/v1/decks", withCookie("any"))).toBeNull();

@@ -1,8 +1,10 @@
+import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import localFont from "next/font/local";
 import { cookies } from "next/headers";
 import { profileFromCookies } from "@/server/profile";
 import { readSettings } from "@/server/settings";
+import { APP_COLOURS } from "@/shared/app-colours";
 import "./globals.css";
 
 const atkinson = localFont({
@@ -18,7 +20,20 @@ const lexend = localFont({
   display: "swap",
 });
 
-export const metadata = { title: "Flipside" };
+export const metadata: Metadata = {
+  title: "Flipside",
+  appleWebApp: { capable: true, title: "Flipside", statusBarStyle: "default" },
+  icons: { apple: "/apple-icon" },
+};
+
+// viewport-fit=cover lets content reach the screen edges; F23.3 keeps it inside the safe areas.
+export const viewport: Viewport = {
+  viewportFit: "cover",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: APP_COLOURS.surface },
+    { media: "(prefers-color-scheme: dark)", color: APP_COLOURS.surfaceDark },
+  ],
+};
 
 export const dynamic = "force-dynamic";
 

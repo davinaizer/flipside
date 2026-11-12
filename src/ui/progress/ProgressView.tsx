@@ -97,8 +97,8 @@ export function ProgressView({
         </div>
       </div>
       {stats.hasReviews ? (
-        <div className="grid max-w-6xl gap-6">
-          <ul className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="grid max-w-6xl grid-cols-[minmax(0,1fr)] gap-6">
+          <ul className="grid grid-cols-[minmax(0,1fr)] gap-4 sm:grid-cols-2 xl:grid-cols-4">
             <Tile
               label="Cards reviewed"
               value={String(current.cardsReviewed)}
@@ -128,7 +128,7 @@ export function ProgressView({
               tone="peach"
             />
           </ul>
-          <div className="grid items-start gap-6 lg:grid-cols-[3fr_2fr]">
+          <div className="grid grid-cols-[minmax(0,1fr)] items-start gap-6 lg:grid-cols-[3fr_2fr]">
             <PracticeChart bars={stats.bars} range={range} />
             <FocusNext
               topics={stats.focusNext}

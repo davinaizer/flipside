@@ -50,7 +50,7 @@ export function LibraryView({
         <h1 className="text-headline-lg font-semibold">Library</h1>
         {!noDecks && (
           <div className="flex flex-wrap items-center gap-3">
-            <label className="relative block w-72">
+            <label className="relative block w-full sm:w-72">
               <span className="sr-only">Search decks and topics</span>
               <input
                 type="search"
@@ -155,7 +155,7 @@ export function LibraryView({
               {g.decks.map((d) => (
                 <li
                   key={d.id}
-                  className="rounded-card border border-card-edge bg-surface-card p-5 shadow-card"
+                  className="min-w-0 rounded-card border border-card-edge bg-surface-card p-5 shadow-card"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex items-center gap-3">

@@ -13,7 +13,12 @@ export function ByDeckTable({ decks }: { decks: Stats["byDeck"] }) {
         By deck
       </h2>
       <p className="text-base text-on-surface-variant">Sorted by lowest mastery</p>
-      <div className="mt-4 overflow-x-auto rounded-card border border-card-edge bg-surface-card shadow-card">
+      <div
+        tabIndex={0}
+        role="region"
+        aria-label="Decks table, scrolls sideways"
+        className="mt-4 overflow-x-auto rounded-card border border-card-edge bg-surface-card shadow-card"
+      >
         <table className="w-full min-w-[32rem] text-base">
           <thead>
             <tr>

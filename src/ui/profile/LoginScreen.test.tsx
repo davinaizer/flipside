@@ -57,3 +57,28 @@ test("stamps the app version at the bottom of the page", async () => {
   expect(html).toContain(stamp);
   vi.unstubAllEnvs();
 });
+
+test("signIn confirms with the profile list and returns null when the cookie was kept", async () => {
+  const fetchMock = vi.fn(async (url: string) =>
+    url.endsWith("/auth/login") ? Response.json({ ok: true }) : Response.json({ profiles: [] }),
+  );
+  vi.stubGlobal("fetch", fetchMock);
+  const { signIn } = await import("./LoginScreen");
+  expect(await signIn("a@b.co", "pw")).toBeNull();
+  expect(fetchMock).toHaveBeenCalledTimes(2);
+  vi.unstubAllGlobals();
+});
+
+test("signIn returns an alert message when the profile list answers 401 after login", async () => {
+  vi.stubGlobal(
+    "fetch",
+    vi.fn(async (url: string) =>
+      url.endsWith("/auth/login")
+        ? Response.json({ ok: true })
+        : Response.json({ error: { code: "unauthorized", message: "no" } }, { status: 401 }),
+    ),
+  );
+  const { signIn } = await import("./LoginScreen");
+  expect(await signIn("a@b.co", "pw")).toMatch(/did not keep the sign-in/);
+  vi.unstubAllGlobals();
+});

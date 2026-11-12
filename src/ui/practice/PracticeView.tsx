@@ -141,8 +141,9 @@ export function PracticeView({
     ) : null;
 
   return (
-    <div className="mx-auto flex min-h-screen w-full max-w-3xl flex-col gap-6 p-6">
-      <header className="grid grid-cols-[1fr_auto_1fr] items-center gap-3">
+    <div className="mx-auto flex min-h-screen w-full max-w-3xl flex-col gap-6 safe-area safe-t safe-r safe-b safe-l [--edge:1.5rem]">
+      {/* Below sm the count pill drops to its own row; three controls and the pill do not fit 327 px side by side. */}
+      <header className="grid grid-cols-[1fr_auto] items-center gap-3 sm:grid-cols-[1fr_auto_1fr]">
         <div>
           {onEnd && (
             <button
@@ -155,8 +156,10 @@ export function PracticeView({
             </button>
           )}
         </div>
-        <SessionCount deckName={card.deckName} done={done} total={total} />
-        <div className="flex items-center justify-end gap-2">
+        <div className="col-span-2 row-start-2 justify-self-center sm:col-span-1 sm:row-start-1">
+          <SessionCount deckName={card.deckName} done={done} total={total} />
+        </div>
+        <div className="flex items-center justify-end gap-2 sm:col-start-3 sm:row-start-1">
           {readAloud(true)}
           {headerAction}
         </div>

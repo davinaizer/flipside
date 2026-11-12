@@ -13,7 +13,9 @@ test("profile picker: the same named switch sits top-right", () => {
   const html = renderToStaticMarkup(<ProfilePicker />);
   expect(html).toContain('role="switch"');
   expect(html).toContain('aria-label="Dark theme"');
-  expect(html).toMatch(/absolute right-8 top-4/);
+  expect(html).toContain(
+    "absolute right-[calc(2rem+env(safe-area-inset-right))] top-[calc(1rem+env(safe-area-inset-top))]",
+  );
 });
 
 test("practice load error and no-cards state have no theme switch; the summary load error keeps it", async () => {
