@@ -28,8 +28,39 @@ const updatedAt = () =>
     .$onUpdate(() => new Date());
 const deletedAt = () => timestamp("deleted_at", { withTimezone: true });
 
+export const accounts = pgTable("accounts", {
+  id: id(),
+  email: text("email").notNull().unique(),
+  passwordHash: text("password_hash").notNull(),
+  createdAt: createdAt(),
+  updatedAt: updatedAt(),
+});
+
+export const signInTokens = pgTable("sign_in_tokens", {
+  id: id(),
+  accountId: uuid("account_id")
+    .notNull()
+    .references(() => accounts.id),
+  tokenHash: text("token_hash").notNull().unique(),
+  expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+  createdAt: createdAt(),
+});
+
+export const signInAttempts = pgTable(
+  "sign_in_attempts",
+  {
+    id: id(),
+    email: text("email").notNull(),
+    succeeded: boolean("succeeded").notNull(),
+    attemptedAt: timestamp("attempted_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index("sign_in_attempts_email_attempted_at_idx").on(t.email, t.attemptedAt)],
+);
+
 export const profiles = pgTable("profiles", {
   id: id(),
+  // Nullable until existing profiles are adopted by an account (AU6).
+  accountId: uuid("account_id").references(() => accounts.id),
   name: text("name").notNull(),
   avatar: text("avatar").notNull(),
   accent: text("accent").notNull(),

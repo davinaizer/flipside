@@ -1,3 +1,4 @@
+import { asProfile } from "./factories";
 import { expect, test, vi, inject } from "vitest";
 import { mkdtemp } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -35,7 +36,7 @@ test("re-import matches cards by id, keeps progress and reports added, updated, 
       new Request("http://x/api/v1/imports", {
         method: "POST",
         body: form,
-        headers: { "x-profile-id": profile },
+        headers: asProfile(profile),
       }),
     );
   };

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { AVATAR_IDS, type AvatarId } from "@/shared/avatars";
 import { profileNameSchema } from "@/shared/schemas/profile";
-import { api } from "@/ui/api/client";
+import { api, ApiClientError } from "@/ui/api/client";
 import { Avatar } from "@/ui/avatars";
 import { buttonClass, FOCUS_RING } from "@/ui/button/button-class";
 import { Icon } from "@/ui/icons/Icon";
@@ -136,6 +136,88 @@ export function ProfileForm({
   );
 }
 
+const FIELD_CLASS = `min-h-11 rounded-xl bg-surface-container-low px-3 outline outline-1 outline-outline ${FOCUS_RING}`;
+
+/** Change password (AU8): the server checks the length, the match and the current password. */
+export function ChangePasswordForm() {
+  const [status, setStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
+  const [message, setMessage] = useState("");
+
+  async function submit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const data = new FormData(form);
+    setStatus("saving");
+    try {
+      await api.changePassword({
+        current: String(data.get("current") ?? ""),
+        new: String(data.get("new") ?? ""),
+        confirm: String(data.get("confirm") ?? ""),
+      });
+      form.reset();
+      setStatus("saved");
+    } catch (err) {
+      setMessage(
+        err instanceof ApiClientError ? err.message : "That did not save. Please try again.",
+      );
+      setStatus("error");
+    }
+  }
+
+  return (
+    <form onSubmit={submit} className="mt-12 flex max-w-xs flex-col gap-4">
+      <h2 className="text-headline-sm font-semibold">Change password</h2>
+      <label className="flex flex-col gap-2">
+        <span className="font-semibold">Current password</span>
+        <input
+          name="current"
+          type="password"
+          autoComplete="current-password"
+          required
+          className={FIELD_CLASS}
+        />
+      </label>
+      <label className="flex flex-col gap-2">
+        <span className="font-semibold">New password</span>
+        <input
+          name="new"
+          type="password"
+          autoComplete="new-password"
+          minLength={12}
+          required
+          className={FIELD_CLASS}
+        />
+      </label>
+      <label className="flex flex-col gap-2">
+        <span className="font-semibold">Confirm new password</span>
+        <input
+          name="confirm"
+          type="password"
+          autoComplete="new-password"
+          minLength={12}
+          required
+          className={FIELD_CLASS}
+        />
+      </label>
+      <div className="flex items-center gap-4">
+        <button type="submit" disabled={status === "saving"} className={buttonClass("primary")}>
+          Change password
+        </button>
+        {status === "saved" && (
+          <p role="status" className="text-on-surface-variant">
+            Password changed
+          </p>
+        )}
+        {status === "error" && (
+          <p role="alert" className="text-error">
+            {message}
+          </p>
+        )}
+      </div>
+    </form>
+  );
+}
+
 export function ProfileScreen({ name, avatar }: { name: string; avatar: string }) {
   const router = useRouter();
   // The stored avatar is a plain string; fall back to the first if it is not a known id.
@@ -152,6 +234,7 @@ export function ProfileScreen({ name, avatar }: { name: string; avatar: string }
         Choose your avatar and the name shown around the app.
       </p>
       <ProfileForm name={name} avatar={known} onSave={onSave} />
+      <ChangePasswordForm />
     </>
   );
 }

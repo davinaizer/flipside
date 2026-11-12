@@ -1,3 +1,4 @@
+import { asProfile } from "./factories";
 import { expect, test, vi, inject } from "vitest";
 import { mkdtemp, readdir } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -42,7 +43,7 @@ test("commit saves a new deck, cards, images and an import run in one transactio
       new Request("http://x/api/v1/imports", {
         method: "POST",
         body: form,
-        headers: { "x-profile-id": profile },
+        headers: asProfile(profile),
       }),
     );
   };

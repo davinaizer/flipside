@@ -1,3 +1,4 @@
+import { asProfile } from "./factories";
 import { expect, test, vi, inject } from "vitest";
 import { freshDatabase } from "./helpers/db";
 
@@ -14,7 +15,7 @@ async function setup() {
 const as = (id: string, body?: unknown) =>
   new Request("http://x/", {
     method: body === undefined ? "GET" : "PUT",
-    headers: { "x-profile-id": id },
+    headers: asProfile(id),
     body: body === undefined ? undefined : JSON.stringify(body),
   });
 
@@ -58,7 +59,7 @@ test("settings: defaults merge, validation, per-profile isolation, persistence",
   expect(
     (
       await route.PUT(
-        new Request("http://x/", { method: "PUT", headers: { "x-profile-id": a.id }, body: "{" }),
+        new Request("http://x/", { method: "PUT", headers: asProfile(a.id), body: "{" }),
       )
     ).status,
   ).toBe(400);

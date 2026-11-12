@@ -1,3 +1,4 @@
+import { asProfile } from "./factories";
 import { expect, test, vi, inject } from "vitest";
 import { freshDatabase } from "./helpers/db";
 
@@ -132,7 +133,7 @@ test("end keeps grades, the last grade completes, and the summary counts first g
   // Routes: profile header, 404 for another profile or unknown id, 400-free bad id is 404.
   const ctx = (id: string) => ({ params: Promise.resolve({ id }) });
   const req = (method: string, p: string | null) =>
-    new Request("http://x/", { method, headers: p ? { "x-profile-id": p } : {} });
+    new Request("http://x/", { method, headers: p ? asProfile(p) : {} });
   const s5 = await session([c[0]!.id]);
   const res = await endRoute.POST(req("POST", me.id), ctx(s5));
   expect(res.status).toBe(200);

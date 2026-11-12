@@ -1,13 +1,14 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test as base, type BrowserContext, type Page } from "@playwright/test";
 
-/** Same default as playwright.config.ts, which exports it to the app servers. */
-export const E2E_PASSWORD = process.env.ADMIN_PASSWORD ?? "e2e-password";
+/** The development account scripts/e2e-server.mjs seeds into the e2e database. */
+export const E2E_EMAIL = "e2e@flipside.local";
+export const E2E_PASSWORD = "e2e-account-password";
 
-/** Signs a context in through the login endpoint; the auth cookie stays in its jar (AG2). */
+/** Signs a context in through the login endpoint; the sign-in cookie stays in its jar (AU2). */
 export async function signInContext(context: BrowserContext): Promise<void> {
   const res = await context.request.post("/api/v1/auth/login", {
-    data: { password: E2E_PASSWORD },
+    data: { email: E2E_EMAIL, password: E2E_PASSWORD },
   });
   expect(res.status()).toBe(200);
 }

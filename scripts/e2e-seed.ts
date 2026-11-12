@@ -1,5 +1,7 @@
 // e2e only: one deck per seeded profile (no create API exists yet). Run after db:seed.
 import { eq } from "drizzle-orm";
+import { adoptProfiles, createAccount } from "@/server/accounts";
+import { seedDevAccount } from "@/server/seed";
 import { getDb } from "@/server/db/client";
 import { AVATAR_IDS, DEFAULT_ACCENT } from "@/shared/avatars";
 import { DEFAULT_DAY_START_HOUR, DEFAULT_TIMEZONE } from "@/shared/constants";
@@ -44,6 +46,21 @@ const PROFILE = ["Profile desktop", "Profile ipad"];
 for (const name of ["Settings Desktop", "Settings iPad", ...PRACTICE, ...JOURNEY, ...A11Y, ...PERF, ...PROFILE]) {
   await db.insert(profiles).values({
     name,
+    avatar: AVATAR_IDS[2] ?? AVATAR_IDS[0],
+    accent: DEFAULT_ACCENT,
+    timezone: DEFAULT_TIMEZONE,
+    dayStartHour: DEFAULT_DAY_START_HOUR,
+    settings: DEFAULT_SETTINGS,
+  });
+}
+
+// auth.spec.ts changes an account's password (AC31), so each project gets its own account and profile; the
+// shared e2e account must keep its password for the specs running in parallel.
+for (const project of ["desktop", "ipad"]) {
+  const account = await createAccount(`password-${project}@flipside.local`, "e2e-account-password", db);
+  await db.insert(profiles).values({
+    accountId: account.id,
+    name: `Password ${project}`,
     avatar: AVATAR_IDS[2] ?? AVATAR_IDS[0],
     accent: DEFAULT_ACCENT,
     timezone: DEFAULT_TIMEZONE,
@@ -106,5 +123,8 @@ for (const scenario of ["main", "undo", "empty"]) {
     }
   }
 }
+// The development account owns every e2e profile too, so the signed-in picker lists them all.
+const accountId = await seedDevAccount(db);
+if (accountId) await adoptProfiles(accountId, db);
 console.log("Seeded e2e decks.");
 process.exit(0);

@@ -151,8 +151,8 @@ describe("vercel-blob driver", () => {
   });
 
   it("is selected by IMAGE_STORE_DRIVER=vercel-blob, token optional", () => {
-    expect(
-      parseEnv({ DATABASE_URL: "x", ADMIN_PASSWORD: "x", IMAGE_STORE_DRIVER: "vercel-blob" }),
-    ).toMatchObject({ IMAGE_STORE_DRIVER: "vercel-blob" });
+    expect(parseEnv({ DATABASE_URL: "x", IMAGE_STORE_DRIVER: "vercel-blob" })).toMatchObject({
+      IMAGE_STORE_DRIVER: "vercel-blob",
+    });
   });
 });

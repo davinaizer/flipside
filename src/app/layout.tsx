@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import localFont from "next/font/local";
 import { cookies } from "next/headers";
-import { PROFILE_COOKIE, profileFromCookie } from "@/server/profile";
+import { profileFromCookies } from "@/server/profile";
 import { readSettings } from "@/server/settings";
 import "./globals.css";
 
@@ -24,7 +24,7 @@ export const dynamic = "force-dynamic";
 
 /** The profile's stored theme is rendered here so a reload shows it from the first paint; no profile means light. */
 export default async function RootLayout({ children }: { children: ReactNode }) {
-  const profile = await profileFromCookie((await cookies()).get(PROFILE_COOKIE)?.value);
+  const profile = await profileFromCookies(await cookies());
   const theme = profile ? readSettings(profile.settings).theme : "light";
   return (
     <html lang="en" data-theme={theme} className={`${atkinson.variable} ${lexend.variable}`}>

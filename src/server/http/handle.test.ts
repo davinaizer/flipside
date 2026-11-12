@@ -1,13 +1,17 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const getCurrentProfile = vi.fn();
-vi.mock("@/server/profile", () => ({ getCurrentProfile }));
+const getCurrentAccount = vi.fn();
+vi.mock("@/server/profile", () => ({ getCurrentProfile, getCurrentAccount }));
 
 const { ApiError } = await import("./errors");
-const { handle, handleOpen } = await import("./handle");
+const { handle, handleAccount } = await import("./handle");
 const req = new Request("http://localhost/x");
 
-beforeEach(() => getCurrentProfile.mockReset());
+beforeEach(() => {
+  getCurrentProfile.mockReset();
+  getCurrentAccount.mockReset();
+});
 
 describe("handle", () => {
   it("passes the request, resolved profile and awaited params to the body", async () => {
@@ -41,12 +45,23 @@ describe("handle", () => {
   });
 });
 
-describe("handleOpen", () => {
-  it("maps an ApiError without resolving a profile", async () => {
-    const res = await handleOpen(async () => {
+describe("handleAccount", () => {
+  it("passes the signed-in account and maps an ApiError without resolving a profile", async () => {
+    getCurrentAccount.mockResolvedValue({ id: "a1", email: "a@b.co" });
+    const ok = await handleAccount(async ({ account }) => Response.json(account.id))(req);
+    expect(await ok.json()).toBe("a1");
+    const res = await handleAccount(async () => {
       throw new ApiError(400, "bad", "Bad");
     })(req);
     expect(res.status).toBe(400);
     expect(getCurrentProfile).not.toHaveBeenCalled();
+  });
+
+  it("answers 401 when there is no valid sign-in token", async () => {
+    getCurrentAccount.mockRejectedValue(new ApiError(401, "unauthorized", "Please sign in first."));
+    const fn = vi.fn();
+    const res = await handleAccount(fn)(req);
+    expect(res.status).toBe(401);
+    expect(fn).not.toHaveBeenCalled();
   });
 });

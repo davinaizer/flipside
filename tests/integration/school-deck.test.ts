@@ -1,3 +1,4 @@
+import { asProfile } from "../factories";
 import { expect, test, vi, inject } from "vitest";
 import { mkdtemp, readFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -33,7 +34,7 @@ test("importing the school zip creates 16 cards, 4 topics and 7 correct images",
     new Request("http://x/api/v1/imports", {
       method: "POST",
       body: form,
-      headers: { "x-profile-id": owner.id },
+      headers: asProfile(owner.id),
     }),
   );
   expect(res.status).toBe(201);
@@ -61,12 +62,9 @@ test("importing the school zip creates 16 cards, 4 topics and 7 correct images",
 
   const serve = async (imageId: string | null, expected: Uint8Array) => {
     expect(imageId).not.toBeNull();
-    const r = await imageRoute.GET(
-      new Request("http://x/", { headers: { "x-profile-id": owner.id } }),
-      {
-        params: Promise.resolve({ id: imageId! }),
-      },
-    );
+    const r = await imageRoute.GET(new Request("http://x/", { headers: asProfile(owner.id) }), {
+      params: Promise.resolve({ id: imageId! }),
+    });
     expect(r.status).toBe(200);
     expect(Buffer.from(await r.arrayBuffer()).equals(Buffer.from(expected))).toBe(true);
   };

@@ -19,6 +19,8 @@
     "db:seed": "node --import ./scripts/register-alias.mjs scripts/seed.ts",
     "backup": "bash scripts/backup.sh",
     "restore": "bash scripts/restore.sh",
+    "account:create": "node --import ./scripts/register-alias.mjs scripts/account-cli.ts create",
+    "account:password": "node --import ./scripts/register-alias.mjs scripts/account-cli.ts password",
     "import:cli": "node --import ./scripts/register-alias.mjs scripts/import-cli.ts",
     "format": "prettier --write .",
     "format:check": "prettier --check ."

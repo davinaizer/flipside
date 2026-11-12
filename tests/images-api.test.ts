@@ -1,3 +1,4 @@
+import { asProfile } from "./factories";
 import { expect, test, vi, inject } from "vitest";
 import { mkdtemp } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -45,7 +46,7 @@ test("images are served to their owner with cache headers and 304", async () => 
 
   const route = await import("@/app/api/v1/images/[id]/route");
   const req = (p: string, h: Record<string, string> = {}) =>
-    new Request("http://x/", { headers: { "x-profile-id": p, ...h } });
+    new Request("http://x/", { headers: asProfile(p, h) });
   const ctx = (id: string) => ({ params: Promise.resolve({ id }) });
 
   const ok = await route.GET(req(a.id), ctx(img.id));

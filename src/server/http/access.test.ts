@@ -1,23 +1,20 @@
 import { describe, expect, it } from "vitest";
-import { signAuthToken } from "@/server/auth";
 import { checkAccess } from "./access";
 
-const PW = "test-password";
 const call = (path: string, init: RequestInit = {}) =>
-  checkAccess(new Request(`http://localhost${path}`, init), PW);
-const withCookie = (value: string) => ({ headers: { cookie: `a=b; flipside_auth=${value}` } });
-const valid = withCookie(signAuthToken(PW));
+  checkAccess(new Request(`http://localhost${path}`, init));
+const withCookie = (value: string) => ({ headers: { cookie: `a=b; flipside_sign_in=${value}` } });
 
 describe("checkAccess", () => {
-  it("redirects pages to /login without a valid cookie", () => {
-    for (const init of [{}, withCookie("junk"), withCookie(signAuthToken("other"))]) {
+  it("redirects pages to /login without a sign-in cookie", () => {
+    for (const init of [{}, withCookie(""), { headers: { cookie: "other=x" } }]) {
       const res = call("/library", init)!;
       expect(res.status).toBe(307);
       expect(new URL(res.headers.get("location")!).pathname).toBe("/login");
     }
   });
 
-  it("returns 401 on /api/v1 routes without a valid cookie", async () => {
+  it("returns 401 on /api/v1 routes without a sign-in cookie", async () => {
     for (const [path, method] of [
       ["/api/v1/decks", "GET"],
       ["/api/v1/me", "GET"],
@@ -37,14 +34,8 @@ describe("checkAccess", () => {
     expect(call("/login")).toBeNull();
   });
 
-  it("passes pages and API routes with a valid cookie", () => {
-    expect(call("/library", valid)).toBeNull();
-    expect(call("/api/v1/decks", valid)).toBeNull();
-  });
-
-  it("rejects an expired cookie", () => {
-    const token = signAuthToken(PW, 0);
-    const res = call("/api/v1/decks", withCookie(token));
-    expect(res?.status).toBe(401);
+  it("passes pages and API routes that carry the cookie; the token is verified downstream", () => {
+    expect(call("/library", withCookie("any"))).toBeNull();
+    expect(call("/api/v1/decks", withCookie("any"))).toBeNull();
   });
 });

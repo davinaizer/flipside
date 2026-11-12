@@ -124,3 +124,14 @@ F21.8: register() validates env before the Vercel return; vercel-blob put tolera
 F21.9: AC32 image step, AC33 image-limit step and version step in manual-checks.md are now runnable as written.
 REVIEW F21 round 2: PASS at 816cc52
 F21 done: PR #55. MANUAL PENDING: AC32, AC33. Known pre-existing failure: e2e/performance.spec.ts next-card under 200 ms (fails on main too).
+F22.1: accounts, sign_in_tokens, sign_in_attempts tables and nullable profiles.account_id (migration 0001_accounts); AU constants in src/shared/constants.ts. Migration test runs over seeded profiles and decks.
+F22.2: scrypt password hashing (src/server/passwords.ts) and account service (createAccount, setPassword) with unit and integration tests.
+F22.3: account:create (with --adopt-profiles), account:password, dev account in db:seed and the e2e seed; operations.md Accounts section.
+F22.4: sign-in tokens in src/server/sign-in.ts (issue, resolve, revoke, revokeOthers); only the SHA-256 hash is stored, expired tokens deleted on issue.
+F22.5: signIn in src/server/sign-in.ts with a per-email rate limit counted in sign_in_attempts; every failure returns null and runs a scrypt verify.
+F22.6: login takes email and password (signIn, flipside_sign_in cookie, Secure except plain HTTP on localhost); logout revokes the token; proxy checks cookie presence only. flipside_auth, ADMIN_PASSWORD, HMAC code and the Access gate term removed; e2e signs in with the dev account.
+F22.7: getCurrentProfile resolves the sign-in token first and accepts a profile id only within its account (401 otherwise); /profiles and /session/profile act on the account (handleAccount); pages verify the token (profileFromCookies, resolveHome sends a stale token to /login). Two-account AC29 test; e2e replays a revoked cookie on data routes.
+- F22.8: POST /auth/password (changePassword in accounts.ts) keeps the caller's sign-in token and revokes the others; Change password form on the Profile page. e2e uses per-project accounts seeded in scripts/e2e-seed.ts so the shared e2e password never changes.
+REVIEW F22 round 1: GAPS at a89d2f4 (rate limit not safe under concurrent requests; changePassword not one transaction)
+REVIEW F22 round 2: PASS at 262f7f5
+F22 done: accounts own profiles, PR #57, review PASS (round 2), verify green; full e2e green except known flakes (deck skeleton iPad, performance under load), both pass alone. MANUAL PENDING: none from the ledger.

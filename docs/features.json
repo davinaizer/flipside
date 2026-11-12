@@ -1585,7 +1585,7 @@
         "profile_picker"
       ],
       "notes": "ADR-003. Schema change in PRD section 10: accounts, sign_in_tokens, sign_in_attempts, profiles.account_id (nullable until adoption, then required). No new dependency: scrypt and randomBytes from node:crypto. Replaces AG1 to AG3: remove flipside_auth, ADMIN_PASSWORD and the shared-password code in the same feature, and update the glossary (drop the Access gate row). Every /api/v1 route except GET /health and POST /auth/login needs a valid sign-in token, including GET and POST /profiles and POST /session/profile, which do not call getCurrentProfile today. getCurrentProfile verifies the token and the profile's account (cookie and X-Profile-Id). proxy.ts redirects on a missing cookie only. Seed creates a development account with a known password from .env.example; e2e helpers sign in with it. CLI: account:create (with --adopt-profiles) and account:password. Opus for the sign-in token, rate-limit and getCurrentProfile tasks.",
-      "status": "todo",
+      "status": "done",
       "tasks": [
         {
           "id": "F22.1",
@@ -1602,7 +1602,7 @@
           ],
           "area": "src/server/db/schema.ts, drizzle/ (new migration), src/shared/constants.ts",
           "done_when": "New migration adds accounts (email unique), sign_in_tokens (token_hash unique, account_id, expires_at), sign_in_attempts with index (email, attempted_at), and profiles.account_id as a nullable foreign key to accounts. Integration test: the migration applies on a database that already holds the two seeded profiles and their decks, leaving account_id null. Constants: SIGN_IN_COOKIE_NAME flipside_sign_in, token bytes 32, PASSWORD_MIN_LENGTH 12, SIGN_IN_MAX_FAILURES 5, SIGN_IN_WINDOW_MINUTES 15, reusing the 30-day cookie lifetime. Glossary terms already exist; use them. verify.sh green.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F22.2",
@@ -1618,7 +1618,7 @@
           ],
           "area": "src/server/passwords.ts, src/server/accounts.ts, src/shared/schemas/auth.ts",
           "done_when": "Unit tests: hashPassword uses scrypt from node:crypto with a random salt and stores parameters, salt and hash in one string; two hashes of the same password differ; verifyPassword compares with timingSafeEqual and rejects a wrong password and a malformed hash. Integration tests: createAccount trims and lower-cases the email, refuses a duplicate (any case) and a password under PASSWORD_MIN_LENGTH; setPassword stores a new hash and deletes the account's sign-in tokens. No plain password is logged or returned. verify.sh green.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F22.3",
@@ -1636,7 +1636,7 @@
           ],
           "area": "scripts/account-cli.ts, package.json scripts, src/server/accounts.ts, src/server/seed.ts, scripts/e2e-seed.ts, .env.example",
           "done_when": "Integration tests for the CLI entry points (prompt injected): account:create <email> creates an account with a scrypt hash and refuses a duplicate or a short password; --adopt-profiles sets account_id on every profile without one, in one transaction, and the profiles keep their decks and progress; account:password <email> changes the hash and revokes tokens. The seed creates a development account from DEV_ACCOUNT_EMAIL and DEV_ACCOUNT_PASSWORD in .env.example and gives it the two seeded profiles; the e2e seed does the same. docs/operations.md explains creating the first hosted account with --adopt-profiles and resetting a forgotten password (R12). verify.sh green.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F22.4",
@@ -1652,7 +1652,7 @@
           ],
           "area": "src/server/sign-in.ts",
           "done_when": "Integration tests: issuing a token returns at least 32 random bytes encoded for a cookie and stores only its SHA-256 hash with the account and an expiry 30 days ahead; resolving the token returns the account, and returns nothing for an unknown, expired or revoked token; revoking deletes the row; revokeOthers keeps only the given token; issuing for an account deletes that account's expired tokens. The database never holds the raw token (asserted). verify.sh green.",
-          "status": "todo",
+          "status": "done",
           "model": "opus"
         },
         {
@@ -1669,7 +1669,7 @@
           ],
           "area": "src/server/sign-in.ts, src/server/accounts.ts",
           "done_when": "Integration tests with an injected clock: signIn(email, password) returns a token for the right pair; an unknown email, a wrong password and a malformed email all return the same failure; five failures for one email within 15 minutes make the sixth fail even with the right password; another email is unaffected; after the window the right password works again; attempts older than the window are deleted on the next attempt for that email; email matching is case and whitespace insensitive. The unknown-email path still runs a scrypt verify so timing does not reveal which emails exist. verify.sh green.",
-          "status": "todo",
+          "status": "done",
           "model": "opus"
         },
         {
@@ -1688,7 +1688,7 @@
           ],
           "area": "src/app/api/v1/auth/login, src/app/api/v1/auth/logout, src/app/login/page.tsx, src/proxy.ts, src/server/auth.ts, src/server/http/access.ts, src/server/env.ts, src/shared/constants.ts, .env.example, playwright.config.ts, e2e/helpers, e2e/auth.spec.ts, docs/GLOSSARY.md",
           "done_when": "POST /auth/login takes email and password, calls signIn and sets flipside_sign_in (httpOnly, SameSite=Lax, Path=/, Secure except plain HTTP on localhost); every failure is one 401 with the neutral message. POST /auth/logout deletes the token and clears the cookie. src/proxy.ts redirects pages and returns 401 for /api/v1 when the cookie is missing, except GET /health and POST /auth/login. The Login page asks for email and password. flipside_auth, ADMIN_PASSWORD, the HMAC code and the Access gate glossary row are removed (grep finds none). API tests for the cookie flags and logout; e2e helpers sign in with the dev account; e2e/auth.spec.ts covers AC27 (redirect, 401, neutral message for all three failures, logout then replaying the old cookie returns 401) on desktop and iPad. verify.sh green.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F22.7",
@@ -1706,7 +1706,7 @@
           ],
           "area": "src/server/profile.ts, src/server/http/handle.ts, src/app/api/v1/profiles/route.ts, src/app/api/v1/session/profile/route.ts, src/app/(app)/layout.tsx, src/app/page.tsx, src/app/practice/[sessionId]/page.tsx",
           "done_when": "getCurrentProfile resolves the sign-in token first and accepts a profile id from the cookie or X-Profile-Id only if it belongs to the token's account, else 401; nothing else reads flipside_sign_in. GET and POST /profiles and POST /session/profile require a valid token and use its account. Server-rendered layouts and pages that load the profile verify the token. Integration tests with two accounts (AC29): each lists only its own profiles; the other account's profile id as cookie or header returns 401; its decks, sessions, reviews and images return 404; a request with a profile cookie but no token returns 401 even if it bypasses the proxy. AC26 and the existing profile-scoping tests still pass. verify.sh green.",
-          "status": "todo",
+          "status": "done",
           "model": "opus"
         },
         {
@@ -1721,9 +1721,11 @@
           ],
           "area": "src/app/api/v1/auth/password/route.ts, src/server/accounts.ts, src/shared/schemas/auth.ts, src/ui/profile, src/ui/api/client.ts, e2e",
           "done_when": "POST /auth/password takes current, new and confirm. API tests (AC31): a wrong current password returns the neutral message and changes nothing; a new password under 12 characters or a mismatched confirm is refused; success stores a new hash, deletes the account's other sign-in tokens and keeps the caller's (its cookie still works, another device's returns 401). The Profile page gains a Change password form with labelled fields; an e2e test changes the password and signs in with the new one, and axe passes in both themes. verify.sh green.",
-          "status": "todo"
+          "status": "done"
         }
-      ]
+      ],
+      "branch": "feat/F22-accounts",
+      "pr": 57
     },
     {
       "id": "F23",

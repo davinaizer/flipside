@@ -1,3 +1,4 @@
+import { asProfile } from "./factories";
 import { expect, test, vi, inject } from "vitest";
 import { freshDatabase } from "./helpers/db";
 
@@ -68,7 +69,7 @@ test("GET /stats matches the hand-computed figures for the seeded history (AC8)"
   expect(empty.byDeck).toEqual([]);
 
   // Route: range parsing, default week, 400 for a bad range, 401 without a profile.
-  const get = (query: string, headers: Record<string, string> = { "x-profile-id": me.id }) =>
+  const get = (query: string, headers: Record<string, string> = asProfile(me.id)) =>
     route.GET(new Request(`http://local/api/v1/stats${query}`, { headers }));
   const month = await get("?range=month");
   expect(month.status).toBe(200);

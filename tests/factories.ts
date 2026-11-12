@@ -1,11 +1,60 @@
+import { createHash } from "node:crypto";
+import { eq } from "drizzle-orm";
 import type { Db } from "@/server/db/client";
-import { cardState, cards, decks, profiles, reviewLog } from "@/server/db/schema";
+import {
+  accounts,
+  cardState,
+  cards,
+  decks,
+  profiles,
+  reviewLog,
+  signInTokens,
+} from "@/server/db/schema";
+
+/** Raw sign-in token of the default test account; every factory profile belongs to that account. */
+export const TEST_SIGN_IN_TOKEN = "test-sign-in-token";
+
+/**
+ * The default test account and a live sign-in token for it (AU6), created once per database.
+ * The token value is fixed so request builders can stay synchronous.
+ */
+export async function defaultTestAccount(db: Db): Promise<string> {
+  await db
+    .insert(accounts)
+    .values({ email: "test@flipside.local", passwordHash: "not-a-hash" })
+    .onConflictDoNothing();
+  const [account] = await db
+    .select({ id: accounts.id })
+    .from(accounts)
+    .where(eq(accounts.email, "test@flipside.local"));
+  await db
+    .insert(signInTokens)
+    .values({
+      accountId: account.id,
+      tokenHash: createHash("sha256").update(TEST_SIGN_IN_TOKEN).digest("hex"),
+      expiresAt: new Date("2100-01-01T00:00:00Z"),
+    })
+    .onConflictDoNothing();
+  return account.id;
+}
+
+/** Request headers that act as the profile, signed in to the default test account. */
+export function asProfile(profileId: string, extra: Record<string, string> = {}) {
+  return { "x-profile-id": profileId, cookie: `flipside_sign_in=${TEST_SIGN_IN_TOKEN}`, ...extra };
+}
+
+/** Cookie header with the default test sign-in token and the profile cookie. */
+export function signedInCookie(profileId: string): string {
+  return `flipside_sign_in=${TEST_SIGN_IN_TOKEN}; flipside_profile=${profileId}`;
+}
 
 /** Test data builders; each inserts one row with sensible defaults and returns it. */
 export async function createProfile(db: Db, over: Partial<typeof profiles.$inferInsert> = {}) {
+  const accountId = "accountId" in over ? over.accountId : await defaultTestAccount(db);
   const [row] = await db
     .insert(profiles)
     .values({
+      accountId,
       name: "Test",
       avatar: "fox",
       accent: "primary",

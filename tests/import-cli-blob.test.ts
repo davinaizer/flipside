@@ -18,7 +18,6 @@ it("the image store the CLI uses follows IMAGE_STORE_DRIVER=vercel-blob and the 
   process.env.IMAGE_STORE_DRIVER = "vercel-blob";
   process.env.BLOB_READ_WRITE_TOKEN = "test-token";
   process.env.DATABASE_URL ??= "postgres://x";
-  process.env.ADMIN_PASSWORD ??= "x";
   const { getImageStore } = await import("@/server/images/store");
   await getImageStore().put("a/b.png", new Uint8Array([1, 2]), "image/png");
   expect(put).toHaveBeenCalledWith(
