@@ -31,8 +31,8 @@ export async function runAccountCli(
   const accountId = command === "password" ? await findAccountId(email, db) : null;
   if (command === "password" && !accountId) throw new Error(`No account with email "${email}".`);
 
-  const password = await prompt("Password: ");
-  if ((await prompt("Repeat password: ")) !== password) throw new Error("The passwords differ.");
+  const password = await prompt("Type the password: ");
+  if ((await prompt("Confirm the password: ")) !== password) throw new Error("The passwords differ.");
 
   if (command === "password") {
     await setPassword(accountId!, password, db);
@@ -45,23 +45,36 @@ export async function runAccountCli(
   return `Created account ${account.email} and adopted ${n} profile(s).`;
 }
 
-/** Reads a line from the terminal without echoing it. */
-const terminalPrompt: Prompt = (question) =>
-  new Promise((resolve) => {
-    const rl = createInterface({ input: process.stdin, output: process.stdout, terminal: true });
-    const out = rl as unknown as { _writeToOutput: (s: string) => void };
-    process.stdout.write(question);
-    out._writeToOutput = () => {};
-    rl.question("", (answer) => {
-      rl.close();
-      process.stdout.write("\n");
-      resolve(answer);
+/**
+ * Reads a line without echoing it. The question goes through rl.question so readline's own line
+ * refresh keeps it on screen; only the typed characters are muted (the flag is set after the
+ * question is written). Input and output are parameters so a test can drive it with a fake TTY.
+ */
+export function terminalPrompt(
+  input: NodeJS.ReadableStream = process.stdin,
+  output: NodeJS.WritableStream = process.stdout,
+): Prompt {
+  return (question) =>
+    new Promise((resolve) => {
+      const rl = createInterface({ input, output, terminal: (output as { isTTY?: boolean }).isTTY === true });
+      const hook = rl as unknown as { _writeToOutput: (s: string) => void };
+      const write = hook._writeToOutput.bind(rl);
+      let muted = false;
+      hook._writeToOutput = (s) => {
+        if (!muted) write(s);
+      };
+      rl.question(question, (answer) => {
+        rl.close();
+        output.write("\n");
+        resolve(answer);
+      });
+      muted = true;
     });
-  });
+}
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   try {
-    console.log(await runAccountCli(process.argv.slice(2), terminalPrompt));
+    console.log(await runAccountCli(process.argv.slice(2), terminalPrompt()));
     process.exit(0);
   } catch (e) {
     console.error(e instanceof Error ? e.message : String(e));

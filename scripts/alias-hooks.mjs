@@ -12,7 +12,7 @@ function withExt(path) {
   return null;
 }
 
-export async function resolve(specifier, context, next) {
+export function resolve(specifier, context, next) {
   let target = null;
   if (specifier.startsWith("@/")) target = withExt(resolvePath(src, specifier.slice(2)));
   else if (specifier.startsWith(".") && context.parentURL?.startsWith("file:")) {

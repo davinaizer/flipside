@@ -70,3 +70,18 @@ test("account:create makes a scrypt account, refuses duplicates and short passwo
     runAccountCli(["password", "nobody@example.com"], answers(PASSWORD, PASSWORD), db),
   ).rejects.toThrow(/No account/);
 });
+
+test("terminalPrompt prints the question and hides the typed password", async () => {
+  const { PassThrough } = await import("node:stream");
+  const { terminalPrompt } = await import("../scripts/account-cli");
+  const input = Object.assign(new PassThrough(), { isTTY: true, setRawMode: () => input });
+  const output = Object.assign(new PassThrough(), { isTTY: true, columns: 80 });
+  let written = "";
+  output.on("data", (c) => (written += c));
+  const answer = terminalPrompt(input, output)("Type the password: ");
+  input.write("s3cret-pw\r");
+  expect(await answer).toBe("s3cret-pw");
+  expect(written).toContain("Type the password: ");
+  expect(written).not.toContain("s3cret");
+  expect(written.endsWith("\n")).toBe(true);
+});
