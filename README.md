@@ -2,7 +2,7 @@
 
 Flipside schedules flashcard reviews with a boxed (Leitner) system: a card you know moves up a box and comes back less often, a card you miss comes back the same day. It keeps the method behind Anki, in an interface built for young learners, with reading settings (font, size, spacing, card colour) the learner controls.
 
-> **Status: v0.5.0.** The MVP web app is built and in use, and it runs on Vercel behind the app password. v0.6 (email accounts and an installable web app) is in progress. The product requirements are in [docs/PRD.md](docs/PRD.md).
+> **Status: v0.6.0.** The MVP web app is built and in use. It runs on Vercel, and you sign in with an email and password. The installable web app for iPad and iPhone is the rest of phase 2 and comes next. The product requirements are in [docs/PRD.md](docs/PRD.md).
 
 ## Who it is for
 
@@ -11,11 +11,12 @@ Flipside schedules flashcard reviews with a boxed (Leitner) system: a card you k
 | Student | School subjects and exam preparation, mostly on an iPad |
 | Engineer | System Design and other engineering topics for interview prep |
 
-The app password opens the app; then a profile is picked from a Netflix-style picker. Each profile keeps its own decks, progress and settings.
+You sign in once per device with an account's email and password; then a profile is picked from a Netflix-style picker. An account owns its profiles, and each profile keeps its own decks, progress and settings.
 
 ## What it does
 
-- Profile picker with Add User, and a Profile page; decks, progress and settings are separate per profile.
+- Email and password accounts that own profiles: sign-in limited to 5 failed attempts per email in 15 minutes, sign-out, and Change password on the Profile page. Accounts are created from the command line; there is no sign-up screen.
+- Profile picker with Add User, and a Profile page; decks, progress and settings are separate per profile, and nothing is shared across accounts.
 - Library of decks with today's due count and a deck menu; deck pages with topic selection.
 - Practice sessions: flip, grade (Not yet, Nearly, Got it), undo, read-aloud, summary.
 - Scheduler: five boxes; only Got it moves a card up; missed cards return within the session; a daily cap on new cards; cards that keep failing are flagged for rewording.
@@ -23,7 +24,7 @@ The app password opens the app; then a profile is picked from a Netflix-style pi
 - Progress screen: cards practised, Got it rate, time per card, days practised, by-deck table.
 - Settings per profile, a light and dark theme, and a collapsible sidebar.
 
-Not built: offline use, notifications, an in-app card editor, voice and LLM features. Coming in v0.6: email and password accounts that own profiles (replacing the app password) and an installable web app for iPad and iPhone.
+Not built: offline use, notifications, an in-app card editor, password reset by email, voice and LLM features. Coming next: an installable web app for iPad and iPhone.
 
 ## Tech stack
 
@@ -47,7 +48,7 @@ src/domain   pure functions: scheduler, session builder, import rules
 src/shared   Zod schemas and constants
 src/ui       components and design tokens
 drizzle/     migrations
-scripts/     verify, seed, backup, restore, import CLI
+scripts/     verify, seed, backup, restore, import CLI, account CLI
 e2e/         Playwright tests
 fixtures/    test decks
 ops/         launchd templates for running at home
@@ -60,7 +61,8 @@ Specified in [PRD section 13](docs/PRD.md#13-local-environment-and-operations). 
 | Command | Purpose |
 | --- | --- |
 | `pnpm db:up` / `pnpm db:down` | Start or stop Postgres in Podman |
-| `pnpm db:migrate` / `pnpm db:seed` | Apply migrations, create the two profiles |
+| `pnpm db:migrate` / `pnpm db:seed` | Apply migrations, create the two profiles and a development account from `DEV_ACCOUNT_EMAIL` and `DEV_ACCOUNT_PASSWORD` in `.env` |
+| `pnpm account:create <email> [--adopt-profiles]` / `pnpm account:password <email>` | Create an account (optionally taking every profile that has none), or set a new password and sign the account out everywhere |
 | `pnpm dev` | Development server. Open it from this Mac only: Next's dev server refuses its scripts to other devices, so a tablet shows a page that never loads |
 | `pnpm build` then `pnpm start` | Production server on the home network. Use this for the iPad or any other tablet |
 | `bash scripts/verify.sh` | Typecheck, lint and tests; must be green before a commit |
@@ -80,7 +82,7 @@ The hosted app runs on Vercel's Hobby plan with Neon Postgres and a private Verc
 git tag vX.Y.Z && git push origin vX.Y.Z
 ```
 
-`.github/workflows/release.yml` checks the tag is on `main` and moves the `release` branch to it; Vercel deploys `release` only, and its build runs the migrations before `next build`. Keep the version in `package.json` in step with the tag, since the footer stamp reads it. Setup, releasing, rolling back and importing into the hosted app are in [docs/operations.md](docs/operations.md).
+`.github/workflows/release.yml` checks the tag is on `main` and moves the `release` branch to it; Vercel deploys `release` only, and its build runs the migrations before `next build`. After the first release with accounts, create the first account against the hosted database with `pnpm account:create <email> --adopt-profiles`; until then nobody can sign in. Keep the version in `package.json` in step with the tag, since the footer stamp reads it. Setup, releasing, rolling back and importing into the hosted app are in [docs/operations.md](docs/operations.md).
 
 ## Running at home
 
