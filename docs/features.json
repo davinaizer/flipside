@@ -1826,7 +1826,7 @@
           ],
           "area": "e2e/phone.spec.ts, e2e/a11y.spec.ts, src/ui/practice, src/ui/progress, src/ui/settings, src/ui/profile, src/ui/import",
           "done_when": "e2e/phone.spec.ts adds practice (question and answer side, grade bar), summary, Progress, Settings, Profile and Add or re-import with the same checks as F23.4 in both themes: no horizontal scroll, controls at least 44 px and inside the viewport, axe with no serious or critical issues. Failures are fixed through the existing responsive layout. Every screen in the PRD section 8 table is now covered at 375 x 812. Existing desktop and iPad e2e pass. verify.sh green.",
-          "status": "todo"
+          "status": "done"
         }
       ],
       "branch": "feat/F23-installable-web-app"

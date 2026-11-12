@@ -138,11 +138,11 @@ test("every screen and state passes axe and 44 px in both themes; toggle, reload
   await page.getByRole("button", { name: `A11y ${info.project.name}`, exact: true }).click();
   await page.waitForURL("**/library");
 
-  // W3, F23.4: on the phone project the walk covers the picker (above), Library and Deck only; the other screens join
-  // it as later F23 tasks bring them to 375 px.
+  // W3: on the phone project this walk covers the picker (above), mocked states, Library and Deck; phone.spec.ts
+  // checks the other screens at 375 px, including the layout checks.
   if (info.project.name === "phone") {
     await mockedStates(page);
-    // Data only: the Import screen itself is not checked at this width yet.
+    // Data first: import a deck, then the real-data screens.
     await page.goto("/import");
     await page.waitForLoadState("networkidle");
     await page

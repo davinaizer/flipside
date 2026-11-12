@@ -1,10 +1,24 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { expect, type Page } from "@playwright/test";
 import { expectNoSeriousA11y, expectTargetsAtLeast44, setTheme, test } from "./helpers";
 
-// W3: login, picker, Library and Deck at 375 x 812 through the existing responsive layout, in both themes. Read-only on
+// W3: every screen in PRD section 8: login, picker, Library, Deck, practice, summary, Progress, Settings, Profile, Import at 375 x 812 through the existing responsive layout, in both themes. Read-only on
 // the seeded Davi and Nicole profiles.
 
 /** No horizontal page scroll, every control inside the viewport, axe and 44 px, in both themes. */
+/** The sidebar starts expanded on the server and collapses after hydration; measure only once it has finished. */
+async function shellSettled(page: Page) {
+  await expect(page.getByRole("banner").getByRole("button", { name: "Sidebar" })).toHaveAttribute(
+    "aria-expanded",
+    "false",
+  );
+  // The rail narrows over 200 ms; measuring mid-transition shows a false overflow.
+  await expect
+    .poll(() => page.getByRole("complementary").evaluate((el) => el.getBoundingClientRect().width))
+    .toBe(80);
+}
+
 async function checkPhone(page: Page) {
   for (const theme of ["light", "dark"] as const) {
     await setTheme(page, theme);
@@ -73,5 +87,58 @@ test("picker, Library and Deck fit the phone; sidebar collapse and profile menu 
   await page.getByRole("link", { name: /Davi (Science|Biology)/ }).click();
   await page.waitForURL("**/decks/*");
   await expect(page.getByRole("heading", { name: /Davi (Science|Biology)/ })).toBeVisible();
+  await checkPhone(page);
+});
+
+// Practice grades a card, so this test owns the "Phone screens" profile that only e2e-seed.ts creates.
+test("practice, summary, Progress, Settings, Profile and Import fit the phone", async ({
+  page,
+}) => {
+  test.setTimeout(120_000);
+  const zip = readFileSync(join(process.cwd(), "fixtures/science-w2-deck.zip"));
+  await page.goto("/");
+  await page.getByRole("button", { name: "Phone screens", exact: true }).click();
+  await page.waitForURL("**/library");
+
+  await page.goto("/import");
+  await page.waitForLoadState("networkidle"); // choosing before hydration would drop the change event
+  await shellSettled(page);
+  await checkPhone(page);
+  await page
+    .locator('input[type="file"]')
+    .setInputFiles({ name: "science-w2-deck.zip", mimeType: "application/zip", buffer: zip });
+  await expect(page.getByRole("region", { name: "Preview" })).toContainText("16 cards ready");
+  await checkPhone(page);
+  await page.getByLabel("Deck name").fill("Phone Science");
+  await page.getByRole("button", { name: /^Add \d+ cards?$/ }).click();
+  await expect(page.getByRole("status")).toContainText("16 cards added");
+  await checkPhone(page);
+
+  await page.goto("/library");
+  await page.getByRole("button", { name: "Start practice" }).click();
+  await page.waitForURL("**/practice/*");
+  await expect(page.getByText("Card 1 of 5")).toBeVisible();
+  await checkPhone(page); // question side
+  await page.getByRole("button", { name: "Show answer" }).click();
+  await expect(page.getByRole("button", { name: /^Got it/ })).toBeVisible();
+  await checkPhone(page); // answer side with the grade bar
+  await page.getByRole("button", { name: /^Got it/ }).click();
+  await page.getByRole("button", { name: "End session" }).click();
+  await expect(page.getByRole("heading", { name: "Session summary" })).toBeVisible();
+  await checkPhone(page);
+
+  await page.goto("/progress");
+  await expect(
+    page.getByRole("listitem").filter({ hasText: "Cards reviewed" }).first(),
+  ).toBeVisible();
+  await shellSettled(page);
+  await checkPhone(page);
+  await page.goto("/settings");
+  await expect(page.getByRole("heading", { name: "Settings" }).first()).toBeVisible();
+  await shellSettled(page);
+  await checkPhone(page);
+  await page.goto("/profile");
+  await expect(page.getByLabel("Name")).toBeVisible();
+  await shellSettled(page);
   await checkPhone(page);
 });
