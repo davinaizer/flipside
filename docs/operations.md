@@ -106,6 +106,31 @@ pnpm import:cli deck.zip --profile Davi --name "Science W2"
 
 Without `IMAGE_STORE_DRIVER` the images go to the local disk, not the hosted store.
 
+## Copy local data to the hosted app
+
+This replaces everything in the hosted database (accounts, profiles, decks, progress, settings) with the local data. Use it when the local database holds the data you want to keep. Practice done only on the hosted app since the last copy is lost; nothing is merged. Both databases must be on the same migrations.
+
+1. Back up the hosted database: in the Neon console create a branch from `main` (an instant snapshot), or dump it with `podman exec flipside-postgres pg_dump "<DATABASE_URL_UNPOOLED>" --format=custom > ~/flipside-backups/neon-before-copy.dump`.
+2. Back up the local data: `pnpm backup`.
+3. Upload the local images to the hosted Blob store, so the copied rows find them. Check first with `--dry-run`, which only reads:
+
+   ```bash
+   set -a; . ./.env; set +a
+   BLOB_READ_WRITE_TOKEN=<token> pnpm images:to-blob --dry-run
+   BLOB_READ_WRITE_TOKEN=<token> pnpm images:to-blob
+   ```
+
+   It reads the image rows from `DATABASE_URL` (the local database here) and the files from `IMAGE_STORE_PATH`, and skips keys already in Blob, so a rerun is safe. It exits 1 and lists any key missing from the local folder.
+4. Restore the local dump into Neon over the direct connection string:
+
+   ```bash
+   podman exec -i flipside-postgres pg_restore -d "<DATABASE_URL_UNPOOLED>" \
+     --clean --if-exists --no-owner --no-privileges --exit-on-error \
+     < ~/flipside-backups/flipside-<date>/database.dump
+   ```
+
+5. Every device is signed out, and the hosted account now has the local password (`DEV_ACCOUNT_PASSWORD` for the development account). Set the password you want with `pnpm account:password <email>` against the direct connection string, then sign in and open a deck with images.
+
 ## Releasing
 
 Production deploys only from a version tag (H3). Vercel builds the `release` branch only; pushes to `main` and other branches build nothing.

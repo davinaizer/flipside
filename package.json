@@ -22,6 +22,7 @@
     "account:create": "node --import ./scripts/register-alias.mjs scripts/account-cli.ts create",
     "account:password": "node --import ./scripts/register-alias.mjs scripts/account-cli.ts password",
     "import:cli": "node --import ./scripts/register-alias.mjs scripts/import-cli.ts",
+    "images:to-blob": "node --import ./scripts/register-alias.mjs scripts/images-to-blob.ts",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },
