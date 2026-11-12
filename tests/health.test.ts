@@ -22,7 +22,7 @@ test("migrations are safe to run twice and health returns 200", async () => {
   const sql = postgres(url, { max: 1 });
   const [r] = await sql`select count(*)::int as n from public.schema_migrations`;
   await sql.end();
-  expect(r.n).toBe(1);
+  expect(r.n).toBe(2); // one row per migration, not doubled by the second run
 
   vi.resetModules();
   const { GET } = await loadRoute(url);

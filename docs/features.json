@@ -1602,7 +1602,7 @@
           ],
           "area": "src/server/db/schema.ts, drizzle/ (new migration), src/shared/constants.ts",
           "done_when": "New migration adds accounts (email unique), sign_in_tokens (token_hash unique, account_id, expires_at), sign_in_attempts with index (email, attempted_at), and profiles.account_id as a nullable foreign key to accounts. Integration test: the migration applies on a database that already holds the two seeded profiles and their decks, leaving account_id null. Constants: SIGN_IN_COOKIE_NAME flipside_sign_in, token bytes 32, PASSWORD_MIN_LENGTH 12, SIGN_IN_MAX_FAILURES 5, SIGN_IN_WINDOW_MINUTES 15, reusing the 30-day cookie lifetime. Glossary terms already exist; use them. verify.sh green.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F22.2",

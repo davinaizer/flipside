@@ -25,7 +25,17 @@ async function columns(table: string): Promise<string[]> {
 }
 
 const expected: Record<string, string[]> = {
-  profiles: ["id", "name", "avatar", "accent", "timezone", "day_start_hour", "settings"],
+  profiles: [
+    "id",
+    "account_id",
+    "name",
+    "avatar",
+    "accent",
+    "timezone",
+    "day_start_hour",
+    "settings",
+  ],
+  accounts: ["id", "email", "password_hash"],
   decks: ["id", "owner_profile_id", "name", "group_name", "color", "answer_style", "deleted_at"],
   cards: [
     "id",
@@ -92,12 +102,14 @@ const expected: Record<string, string[]> = {
   ],
 };
 
-test("all nine tables exist, journal named schema_migrations", async () => {
+test("all tables exist, journal named schema_migrations", async () => {
   const r = await rows<{ table_name: string }>(
     sql`select table_name from information_schema.tables where table_schema='public'`,
   );
   const names = r.map((x) => x.table_name).sort();
-  expect(names).toEqual([...Object.keys(expected), "schema_migrations"].sort());
+  expect(names).toEqual(
+    [...Object.keys(expected), "sign_in_tokens", "sign_in_attempts", "schema_migrations"].sort(),
+  );
   expect((await sql`select count(*)::int as n from public.schema_migrations`)[0].n).toBeGreaterThan(
     0,
   );

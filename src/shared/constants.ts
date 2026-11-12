@@ -75,3 +75,14 @@ export const AUTH_COOKIE_NAME = "flipside_auth";
 /** How long a sign-in stays valid (AG2). */
 export const AUTH_COOKIE_MAX_AGE_DAYS = 30;
 export const AUTH_COOKIE_MAX_AGE_SECONDS = AUTH_COOKIE_MAX_AGE_DAYS * 24 * 60 * 60;
+
+/** Name of the sign-in token cookie (AU2). Its lifetime is AUTH_COOKIE_MAX_AGE_SECONDS. */
+export const SIGN_IN_COOKIE_NAME = "flipside_sign_in";
+/** Random bytes in a sign-in token (AU2). */
+export const SIGN_IN_TOKEN_BYTES = 32;
+/** Shortest accepted account password (AU3). */
+export const PASSWORD_MIN_LENGTH = 12;
+/** Failed sign-ins per email within the window before further attempts fail (AU5). */
+export const SIGN_IN_MAX_FAILURES = 5;
+/** Length of the failure window, and of the lockout that follows it (AU5). */
+export const SIGN_IN_WINDOW_MINUTES = 15;
