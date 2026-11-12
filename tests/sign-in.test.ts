@@ -122,3 +122,13 @@ test("email matching ignores case and surrounding whitespace, for sign-in and th
   await fail(5, ` ${email.toUpperCase()}`);
   expect(await signIn(email, PASSWORD, db, at(1))).toBeNull();
 });
+
+test("a parallel burst of wrong attempts records at most five and then blocks the right password", async () => {
+  const { db, email, signIn } = await account();
+  const { signInAttempts } = await import("@/server/db/schema");
+  const results = await Promise.all(Array.from({ length: 10 }, () => signIn(email, WRONG, db, T0)));
+  expect(results.every((r) => r === null)).toBe(true);
+  const rows = await db.select().from(signInAttempts).where(eq(signInAttempts.email, email));
+  expect(rows.length).toBeLessThanOrEqual(5);
+  expect(await signIn(email, PASSWORD, db, at(1))).toBeNull();
+});

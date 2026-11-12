@@ -1,5 +1,5 @@
 import { createHash, randomBytes } from "node:crypto";
-import { and, count, eq, gt, lte, ne } from "drizzle-orm";
+import { and, count, eq, gt, lte, ne, sql } from "drizzle-orm";
 import type { Db } from "@/server/db/client";
 import { getDb } from "@/server/db/client";
 import { accounts, signInAttempts, signInTokens } from "@/server/db/schema";
@@ -131,29 +131,41 @@ export async function signIn(
   const normalised = parsed.data;
   const windowStart = new Date(now.getTime() - SIGN_IN_WINDOW_MINUTES * 60 * 1000);
 
-  await db
-    .delete(signInAttempts)
-    .where(and(eq(signInAttempts.email, normalised), lte(signInAttempts.attemptedAt, windowStart)));
-  const [{ failures }] = await db
-    .select({ failures: count() })
-    .from(signInAttempts)
-    .where(
-      and(
-        eq(signInAttempts.email, normalised),
-        eq(signInAttempts.succeeded, false),
-        gt(signInAttempts.attemptedAt, windowStart),
-      ),
-    );
+  // One transaction per email, serialised by an advisory lock on the email: a parallel
+  // request for the same email waits here until this one has recorded its attempt, so a
+  // burst cannot all read the count before any insert (AU5, across serverless instances).
+  // The scrypt verify runs inside on every path, blocked ones too, so timing stays neutral.
+  const accountId = await db.transaction(async (tx) => {
+    await tx.execute(sql`select pg_advisory_xact_lock(hashtext(${normalised}))`);
+    await tx
+      .delete(signInAttempts)
+      .where(
+        and(eq(signInAttempts.email, normalised), lte(signInAttempts.attemptedAt, windowStart)),
+      );
+    const [{ failures }] = await tx
+      .select({ failures: count() })
+      .from(signInAttempts)
+      .where(
+        and(
+          eq(signInAttempts.email, normalised),
+          eq(signInAttempts.succeeded, false),
+          gt(signInAttempts.attemptedAt, windowStart),
+        ),
+      );
 
-  const [account] = await db
-    .select({ id: accounts.id, passwordHash: accounts.passwordHash })
-    .from(accounts)
-    .where(eq(accounts.email, normalised));
-  const matches = await verifyPassword(password, account?.passwordHash ?? (await getDummyHash()));
+    const [account] = await tx
+      .select({ id: accounts.id, passwordHash: accounts.passwordHash })
+      .from(accounts)
+      .where(eq(accounts.email, normalised));
+    const matches = await verifyPassword(password, account?.passwordHash ?? (await getDummyHash()));
 
-  if (failures >= SIGN_IN_MAX_FAILURES) return null;
-  const succeeded = Boolean(account) && matches;
-  await db.insert(signInAttempts).values({ email: normalised, succeeded, attemptedAt: now });
-  if (!account || !succeeded) return null;
-  return issueSignInToken(account.id, db, now);
+    if (failures >= SIGN_IN_MAX_FAILURES) return null;
+    const succeeded = Boolean(account) && matches;
+    await tx.insert(signInAttempts).values({ email: normalised, succeeded, attemptedAt: now });
+    return account && succeeded ? account.id : null;
+  });
+  if (!accountId) return null;
+  // Issued after the commit: with one connection per instance (H1) a second transaction
+  // opened inside the first would wait for a connection that never frees.
+  return issueSignInToken(accountId, db, now);
 }
