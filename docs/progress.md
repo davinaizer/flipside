@@ -135,3 +135,4 @@ F22.7: getCurrentProfile resolves the sign-in token first and accepts a profile 
 REVIEW F22 round 1: GAPS at a89d2f4 (rate limit not safe under concurrent requests; changePassword not one transaction)
 REVIEW F22 round 2: PASS at 262f7f5
 F22 done: accounts own profiles, PR #57, review PASS (round 2), verify green; full e2e green except known flakes (deck skeleton iPad, performance under load), both pass alone. MANUAL PENDING: none from the ledger.
+- 2026-11-12: v0.6.0 released (tag on cfd94ca, release workflow green, Vercel production deploy). Manual checks run by the owner: AC32 and the F22 hosted account checks pass, as do the home checks (AC10, AC11, AC12, F14 iPad sign-in). MANUAL PENDING: AC34 (F23).
