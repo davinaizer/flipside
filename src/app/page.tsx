@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { PROFILE_COOKIE, resolveHome } from "@/server/profile";
+import { resolveHome } from "@/server/profile";
 import { ProfilePicker } from "@/ui/profile/ProfilePicker";
 
 export const dynamic = "force-dynamic";
@@ -11,7 +11,9 @@ export default async function Home({
   searchParams: Promise<{ switch?: string | string[] }>;
 }) {
   const [{ switch: sw }, jar] = await Promise.all([searchParams, cookies()]);
-  const target = await resolveHome(jar.get(PROFILE_COOKIE)?.value, sw === "1");
+  const target = await resolveHome(jar, sw === "1");
+  // A stale sign-in cookie passes the proxy; the token is checked here (AU6).
+  if (target === "login") redirect("/login");
   if (target === "library") redirect("/library");
   return <ProfilePicker />;
 }

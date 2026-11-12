@@ -1,3 +1,4 @@
+import { asProfile } from "../factories";
 import { expect, test, vi, inject } from "vitest";
 import { mkdtemp } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -36,7 +37,7 @@ test("a 2,000-row CSV imports in under 30 s", async () => {
     new Request("http://x/api/v1/imports", {
       method: "POST",
       body: form,
-      headers: { "x-profile-id": owner.id },
+      headers: asProfile(owner.id),
     }),
   );
   const ms = Math.round(performance.now() - t0);

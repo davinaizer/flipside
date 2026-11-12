@@ -1,3 +1,4 @@
+import { asProfile } from "./factories";
 import { expect, test, vi, inject } from "vitest";
 import { freshDatabase } from "./helpers/db";
 
@@ -211,7 +212,7 @@ test("PUT /sessions/{id} builds, stores and resumes the queue", async () => {
   const req = (p: string, body?: string) =>
     new Request("http://x/", {
       method: "PUT",
-      headers: { "x-profile-id": p, "content-type": "application/json" },
+      headers: asProfile(p, { "content-type": "application/json" }),
       body,
     });
   const ctx = (id: string) => ({ params: Promise.resolve({ id }) });

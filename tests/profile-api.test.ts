@@ -1,3 +1,4 @@
+import { TEST_SIGN_IN_TOKEN, signedInCookie } from "./factories";
 import { expect, test, vi, inject } from "vitest";
 import { freshDatabase } from "./helpers/db";
 
@@ -19,7 +20,8 @@ test("profiles list, select sets the cookie, me returns profile and settings", a
   await createProfile(db, { name: "Bo" });
 
   const list = await import("@/app/api/v1/profiles/route");
-  const listed = await (await list.GET()).json();
+  const signedIn = { cookie: `flipside_sign_in=${TEST_SIGN_IN_TOKEN}` };
+  const listed = await (await list.GET(new Request("http://x/", { headers: signedIn }))).json();
   const parsed = schemas.profileListSchema.parse(listed);
   expect(parsed.profiles.map((p) => Object.keys(p).sort())).toEqual([
     ["avatar", "id", "name"],
@@ -28,7 +30,9 @@ test("profiles list, select sets the cookie, me returns profile and settings", a
 
   const sel = await import("@/app/api/v1/session/profile/route");
   const post = (body: unknown) =>
-    sel.POST(new Request("http://x/", { method: "POST", body: JSON.stringify(body) }));
+    sel.POST(
+      new Request("http://x/", { method: "POST", headers: signedIn, body: JSON.stringify(body) }),
+    );
   const ok = await post({ profileId: a.id });
   expect(ok.status).toBe(200);
   const cookie = ok.headers.get("set-cookie")!;
@@ -43,9 +47,7 @@ test("profiles list, select sets the cookie, me returns profile and settings", a
   expect((await post({ profileId: "nope" })).status).toBe(400);
 
   const me = await import("@/app/api/v1/me/route");
-  const res = await me.GET(
-    new Request("http://x/", { headers: { cookie: `flipside_profile=${a.id}` } }),
-  );
+  const res = await me.GET(new Request("http://x/", { headers: { cookie: signedInCookie(a.id) } }));
   const body = schemas.meSchema.parse(await res.json());
   expect(body.profile.name).toBe("Ada");
   expect(body.settings.theme).toBe("dark");

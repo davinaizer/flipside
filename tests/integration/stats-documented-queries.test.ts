@@ -1,3 +1,4 @@
+import { asProfile } from "../factories";
 import { afterEach, expect, test, vi, inject } from "vitest";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
@@ -54,7 +55,7 @@ test("the documented statistics queries reproduce GET /stats on the seeded histo
     for (const range of ["week", "month"] as const) {
       const res = await route.GET(
         new Request(`http://local/api/v1/stats?range=${range}`, {
-          headers: { "x-profile-id": profile.id },
+          headers: asProfile(profile.id),
         }),
       );
       expect(res.status).toBe(200);

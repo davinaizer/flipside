@@ -1,3 +1,4 @@
+import { asProfile } from "./factories";
 import { expect, test, vi, inject } from "vitest";
 import { mkdtemp } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -35,7 +36,7 @@ test("export is a zip of CSV plus images, 404 for another profile, and re-import
       new Request("http://x/api/v1/imports", {
         method: "POST",
         body: form,
-        headers: { "x-profile-id": a.id },
+        headers: asProfile(a.id),
       }),
     );
   };
@@ -49,7 +50,7 @@ test("export is a zip of CSV plus images, 404 for another profile, and re-import
   const { deckId } = await first.json();
 
   const get = (id: string, profile: string) =>
-    exporter.GET(new Request("http://x", { headers: { "x-profile-id": profile } }), {
+    exporter.GET(new Request("http://x", { headers: asProfile(profile) }), {
       params: Promise.resolve({ id }),
     });
 

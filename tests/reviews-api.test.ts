@@ -1,3 +1,4 @@
+import { asProfile } from "./factories";
 import { expect, test, vi, inject } from "vitest";
 import { freshDatabase } from "./helpers/db";
 
@@ -263,7 +264,9 @@ test("PUT /reviews/{id} applies the scheduler, logs every field, re-queues at mo
   const req = (p: string | null, body: string) =>
     new Request("http://x/", {
       method: "PUT",
-      headers: { "content-type": "application/json", ...(p ? { "x-profile-id": p } : {}) },
+      headers: p
+        ? asProfile(p, { "content-type": "application/json" })
+        : { "content-type": "application/json" },
       body,
     });
   const ctx = (id: string) => ({ params: Promise.resolve({ id }) });

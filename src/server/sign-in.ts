@@ -3,6 +3,7 @@ import { and, count, eq, gt, lte, ne } from "drizzle-orm";
 import type { Db } from "@/server/db/client";
 import { getDb } from "@/server/db/client";
 import { accounts, signInAttempts, signInTokens } from "@/server/db/schema";
+import { type CookieJar, readCookie } from "@/server/http/cookies";
 import { hashPassword, verifyPassword } from "@/server/passwords";
 import { emailSchema } from "@/shared/schemas/auth";
 import {
@@ -42,15 +43,24 @@ export async function issueSignInToken(
 }
 
 /**
- * The raw sign-in token in a request's cookie header, or null. The one reader of
- * `flipside_sign_in` (PRD section 9); src/proxy.ts only checks that it is present.
+ * The raw sign-in token in a request's cookie header or a page's cookie jar, or null.
+ * The one reader of `flipside_sign_in` (PRD section 9); src/proxy.ts only checks that it is present.
  */
-export function readSignInToken(request: Request): string | null {
-  for (const part of (request.headers.get("cookie") ?? "").split(";")) {
-    const i = part.indexOf("=");
-    if (i > 0 && part.slice(0, i).trim() === SIGN_IN_COOKIE_NAME) return part.slice(i + 1).trim();
-  }
-  return null;
+export function readSignInToken(source: Request | CookieJar): string | null {
+  return readCookie(source, SIGN_IN_COOKIE_NAME) || null;
+}
+
+/**
+ * The signed-in account of a request or page: its sign-in token resolved, or null for a
+ * missing, unknown, expired or revoked token (AU6).
+ */
+export async function signedInAccount(
+  source: Request | CookieJar,
+  db: Db = getDb(),
+  now: Date = new Date(),
+): Promise<{ id: string; email: string } | null> {
+  const token = readSignInToken(source);
+  return token ? resolveSignInToken(token, db, now) : null;
 }
 
 /** The account a token belongs to, or null for an unknown, expired or revoked token. */

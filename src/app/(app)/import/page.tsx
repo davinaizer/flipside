@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { getLibrary } from "@/server/decks";
-import { PROFILE_COOKIE, profileFromCookie } from "@/server/profile";
+import { profileFromCookies } from "@/server/profile";
 import { ImportFlow } from "@/ui/import/ImportFlow";
 
 export default async function ImportPage({
@@ -9,7 +9,7 @@ export default async function ImportPage({
 }: {
   searchParams: Promise<{ deckId?: string | string[] }>;
 }) {
-  const profile = await profileFromCookie((await cookies()).get(PROFILE_COOKIE)?.value);
+  const profile = await profileFromCookies(await cookies());
   if (!profile) redirect("/");
   const decks = (await getLibrary(profile)).groups.flatMap((g) => g.decks);
   const { deckId } = await searchParams;

@@ -1,3 +1,4 @@
+import { asProfile } from "./factories";
 import { expect, test, vi, inject } from "vitest";
 import { mkdtemp, readFile, readdir } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -39,7 +40,7 @@ test("dry run previews CSV and zip input and saves nothing", async () => {
       new Request(`http://x/api/v1/imports${query}`, {
         method: "POST",
         body: form,
-        headers: { "x-profile-id": profile },
+        headers: asProfile(profile),
       }),
     );
   };
@@ -121,7 +122,7 @@ test("dry run previews CSV and zip input and saves nothing", async () => {
     new Request("http://x/?dryRun=true", {
       method: "POST",
       body: new FormData(),
-      headers: { "x-profile-id": p.id },
+      headers: asProfile(p.id),
     }),
   );
   expect(noFile.status).toBe(400);

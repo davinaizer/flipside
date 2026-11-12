@@ -1706,7 +1706,7 @@
           ],
           "area": "src/server/profile.ts, src/server/http/handle.ts, src/app/api/v1/profiles/route.ts, src/app/api/v1/session/profile/route.ts, src/app/(app)/layout.tsx, src/app/page.tsx, src/app/practice/[sessionId]/page.tsx",
           "done_when": "getCurrentProfile resolves the sign-in token first and accepts a profile id from the cookie or X-Profile-Id only if it belongs to the token's account, else 401; nothing else reads flipside_sign_in. GET and POST /profiles and POST /session/profile require a valid token and use its account. Server-rendered layouts and pages that load the profile verify the token. Integration tests with two accounts (AC29): each lists only its own profiles; the other account's profile id as cookie or header returns 401; its decks, sessions, reviews and images return 404; a request with a profile cookie but no token returns 401 even if it bypasses the proxy. AC26 and the existing profile-scoping tests still pass. verify.sh green.",
-          "status": "todo",
+          "status": "done",
           "model": "opus"
         },
         {

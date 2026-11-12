@@ -1,3 +1,4 @@
+import { signedInCookie } from "./factories";
 import { expect, test, vi, inject } from "vitest";
 import { AVATAR_IDS } from "@/shared/avatars";
 import { freshDatabase } from "./helpers/db";
@@ -22,7 +23,7 @@ test("PATCH /me updates the current profile only, 422 on bad input, duplicate av
     me.PATCH(
       new Request("http://x/", {
         method: "PATCH",
-        headers: { cookie: `flipside_profile=${id}` },
+        headers: { cookie: signedInCookie(id) },
         body: JSON.stringify(body),
       }),
     );
@@ -34,11 +35,11 @@ test("PATCH /me updates the current profile only, 422 on bad input, duplicate av
   expect(got.profile).toMatchObject({ name: "Ada L", avatar: AVATAR_IDS[2] });
 
   const again = await me.GET(
-    new Request("http://x/", { headers: { cookie: `flipside_profile=${a.id}` } }),
+    new Request("http://x/", { headers: { cookie: signedInCookie(a.id) } }),
   );
   expect((await again.json()).profile).toMatchObject({ name: "Ada L", avatar: AVATAR_IDS[2] });
   const other = await me.GET(
-    new Request("http://x/", { headers: { cookie: `flipside_profile=${b.id}` } }),
+    new Request("http://x/", { headers: { cookie: signedInCookie(b.id) } }),
   );
   expect((await other.json()).profile).toMatchObject({ name: "Bo", avatar: AVATAR_IDS[1] });
 
@@ -54,7 +55,7 @@ test("PATCH /me updates the current profile only, 422 on bad input, duplicate av
   const nonJson = await me.PATCH(
     new Request("http://x/", {
       method: "PATCH",
-      headers: { cookie: `flipside_profile=${a.id}` },
+      headers: { cookie: signedInCookie(a.id) },
       body: "no",
     }),
   );

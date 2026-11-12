@@ -8,10 +8,13 @@ test("POST /profiles creates a profile with defaults and validates input", async
   const { runMigrations } = await import("@/server/db/migrate");
   const { getDb } = await import("@/server/db/client");
   await runMigrations(getDb());
+  const { defaultTestAccount, TEST_SIGN_IN_TOKEN } = await import("./factories");
+  await defaultTestAccount(getDb());
+  const headers = { cookie: `flipside_sign_in=${TEST_SIGN_IN_TOKEN}` };
   const route = await import("@/app/api/v1/profiles/route");
   const { AVATAR_IDS } = await import("@/shared/avatars");
   const post = (body: unknown) =>
-    route.POST(new Request("http://x/", { method: "POST", body: JSON.stringify(body) }));
+    route.POST(new Request("http://x/", { method: "POST", headers, body: JSON.stringify(body) }));
 
   const ok = await post({ name: "  Mia  ", avatar: AVATAR_IDS[0] });
   expect(ok.status).toBe(201);
@@ -21,7 +24,7 @@ test("POST /profiles creates a profile with defaults and validates input", async
     timezone: "Europe/London",
     dayStartHour: 7,
   });
-  const listed = (await (await route.GET()).json()).profiles;
+  const listed = (await (await route.GET(new Request("http://x/", { headers }))).json()).profiles;
   expect(listed.map((p: { name: string }) => p.name)).toContain("Mia");
 
   const bad = [
@@ -35,7 +38,8 @@ test("POST /profiles creates a profile with defaults and validates input", async
   for (const b of bad) expect((await post(b)).status).toBe(400);
   expect((await post({ name: "x".repeat(24), avatar: AVATAR_IDS[1] })).status).toBe(201);
   expect(
-    (await route.POST(new Request("http://x/", { method: "POST", body: "not json" }))).status,
+    (await route.POST(new Request("http://x/", { method: "POST", headers, body: "not json" })))
+      .status,
   ).toBe(400);
 });
 

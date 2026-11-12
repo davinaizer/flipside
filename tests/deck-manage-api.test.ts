@@ -1,3 +1,4 @@
+import { asProfile } from "./factories";
 import { expect, test, vi, inject } from "vitest";
 import { freshDatabase } from "./helpers/db";
 
@@ -42,7 +43,7 @@ test("deck read, edit, delete and leeches", async () => {
   const req = (p: string, init: RequestInit = {}) =>
     new Request("http://x/", {
       ...init,
-      headers: { "x-profile-id": p, "content-type": "application/json" },
+      headers: asProfile(p, { "content-type": "application/json" }),
     });
   const ctx = (id: string) => ({ params: Promise.resolve({ id }) });
   const patch = (p: string, id: string, body: unknown) =>

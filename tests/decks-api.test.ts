@@ -1,3 +1,4 @@
+import { asProfile } from "./factories";
 import { expect, test, vi, inject } from "vitest";
 import { freshDatabase } from "./helpers/db";
 
@@ -25,7 +26,7 @@ test("library and deck reads are scoped to the current profile", async () => {
 
   const lib = await import("@/app/api/v1/library/route");
   const deck = await import("@/app/api/v1/decks/[id]/route");
-  const req = (p: string) => new Request("http://x/", { headers: { "x-profile-id": p } });
+  const req = (p: string) => new Request("http://x/", { headers: asProfile(p) });
   const ctx = (id: string) => ({ params: Promise.resolve({ id }) });
 
   const names = (body: { groups: { decks: { name: string }[] }[] }) =>

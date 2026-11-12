@@ -1,5 +1,5 @@
-import type { Profile } from "@/server/profile";
-import { getCurrentProfile } from "@/server/profile";
+import type { Account, Profile } from "@/server/profile";
+import { getCurrentAccount, getCurrentProfile } from "@/server/profile";
 import { toErrorResponse } from "./errors";
 
 type Ctx<P> = { params: Promise<P> };
@@ -21,11 +21,17 @@ export function handle<P = Record<string, never>>(
   };
 }
 
-/** Same as `handle` for the two routes that run before a profile is chosen. */
-export function handleOpen(fn: (request: Request) => Promise<Response>) {
+/**
+ * Same as `handle` for the routes that run before a profile is chosen (the picker's list,
+ * Add User and profile selection): resolves the signed-in account instead (AU6).
+ */
+export function handleAccount(
+  fn: (c: { request: Request; account: Account }) => Promise<Response>,
+) {
   return async (request: Request): Promise<Response> => {
     try {
-      return await fn(request);
+      const account = await getCurrentAccount(request);
+      return await fn({ request, account });
     } catch (e) {
       return toErrorResponse(e);
     }

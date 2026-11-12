@@ -1,3 +1,4 @@
+import { asProfile } from "../factories";
 import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
@@ -87,7 +88,7 @@ it("restores card_state, review_log, stats and image bytes after the data is des
   vi.setSystemTime(new Date(history.now));
   const snapshot = async () => {
     const res = await route.GET(
-      new Request("http://local/api/v1/stats?range=month", { headers: { "x-profile-id": me.id } }),
+      new Request("http://local/api/v1/stats?range=month", { headers: asProfile(me.id) }),
     );
     expect(res.status).toBe(200);
     return {

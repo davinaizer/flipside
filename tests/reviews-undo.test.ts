@@ -1,3 +1,4 @@
+import { asProfile } from "./factories";
 import { expect, test, vi, inject } from "vitest";
 import { freshDatabase } from "./helpers/db";
 
@@ -199,7 +200,7 @@ test("DELETE /reviews/{id} undoes the latest grade, steps back through the sessi
 
   // Through the route: header profile, the restored state and labels, auth and scoping.
   const req = (p: string | null) =>
-    new Request("http://x/", { method: "DELETE", headers: p ? { "x-profile-id": p } : {} });
+    new Request("http://x/", { method: "DELETE", headers: p ? asProfile(p) : {} });
   const ctx = (id: string) => ({ params: Promise.resolve({ id }) });
   const res = await route.DELETE(req(me.id), ctx(rRequeued));
   expect(res.status).toBe(200);

@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { PROFILE_COOKIE, profileFromCookie } from "@/server/profile";
+import { profileFromCookies } from "@/server/profile";
 import { readSettings } from "@/server/settings";
 import { SettingsProvider } from "@/ui/settings/SettingsProvider";
 import { Sidebar } from "@/ui/shell/Sidebar";
@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 
 /** Every screen inside the app shell needs a profile; without one the picker is the only way in. */
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
-  const profile = await profileFromCookie((await cookies()).get(PROFILE_COOKIE)?.value);
+  const profile = await profileFromCookies(await cookies());
   if (!profile) redirect("/");
   return (
     <SettingsProvider key={profile.id} initial={readSettings(profile.settings)}>

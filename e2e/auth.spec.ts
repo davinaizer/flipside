@@ -62,17 +62,25 @@ test("Log out revokes the token: the old cookie is refused", async ({ browser })
   await page.getByRole("button", { name: "Davi" }).click();
   await page.waitForURL("**/library");
   await page.getByRole("complementary").getByRole("button", { expanded: false }).click();
+  const profileCookie = (await context.cookies()).find((c) => c.name === "flipside_profile")!;
   await page.getByRole("menuitem", { name: "Log out" }).click();
   await expect(page).toHaveURL(/\/login$/);
   await page.goto("/library");
   await expect(page).toHaveURL(/\/login$/);
   expect((await page.request.get("/api/v1/decks")).status()).toBe(401);
 
-  // Replay the old cookie from a fresh context: the proxy lets it through, the server must not.
+  // Replay the old cookie, with the profile cookie, from a fresh context: the proxy lets it
+  // through, the server must not, on data routes as well as log out (AU6, AU7).
   const replay = await browser.newContext({
-    storageState: { cookies: [oldCookie], origins: [] },
+    storageState: { cookies: [oldCookie, profileCookie], origins: [] },
   });
   expect((await replay.request.post("/api/v1/auth/logout")).status()).toBe(401);
+  expect((await replay.request.get("/api/v1/library")).status()).toBe(401);
+  expect((await replay.request.get("/api/v1/me")).status()).toBe(401);
+  expect((await replay.request.get("/api/v1/profiles")).status()).toBe(401);
+  const replayPage = await replay.newPage();
+  await replayPage.goto("/library");
+  await expect(replayPage).toHaveURL(/\/login$/);
   await replay.close();
   await context.close();
 });

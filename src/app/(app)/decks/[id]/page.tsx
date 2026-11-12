@@ -4,10 +4,10 @@ import { settingsSchema } from "@/shared/settings";
 import { DeckScreen } from "@/ui/deck/DeckScreen";
 import { getDeck, getLeeches } from "@/server/decks";
 import { ApiError } from "@/server/http/errors";
-import { PROFILE_COOKIE, profileFromCookie } from "@/server/profile";
+import { profileFromCookies } from "@/server/profile";
 
 export default async function DeckPage({ params }: { params: Promise<{ id: string }> }) {
-  const profile = await profileFromCookie((await cookies()).get(PROFILE_COOKIE)?.value);
+  const profile = await profileFromCookies(await cookies());
   if (!profile) redirect("/");
   const id = (await params).id;
   const [{ deck }, { leeches }] = await Promise.all([
