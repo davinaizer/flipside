@@ -1784,7 +1784,7 @@
           ],
           "area": "src/app/manifest.ts, src/app/layout.tsx",
           "done_when": "Unit test of manifest(): name Flipside, a short name, start_url /, display standalone, background_color and theme_color from the F23.1 constant, icons 192, 512 and maskable. The root layout sets appleWebApp (capable, title, status bar style), the Apple touch icon, viewport-fit=cover and a theme colour per colour scheme. E2e: /manifest.webmanifest returns the manifest and the page head holds the Apple meta tags and touch icon link. No service worker is registered (e2e asserts navigator.serviceWorker has no registration; grep finds no serviceWorker.register). verify.sh green.",
-          "status": "todo"
+          "status": "done"
         },
         {
           "id": "F23.3",

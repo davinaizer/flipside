@@ -35,7 +35,7 @@ describe("checkAccess", () => {
   });
 
   it("leaves the app icons open", () => {
-    for (const path of ["/icon/192", "/icon/maskable", "/apple-icon"])
+    for (const path of ["/icon/192", "/icon/maskable", "/apple-icon", "/manifest.webmanifest"])
       expect(call(path), path).toBeNull();
   });
 

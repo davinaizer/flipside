@@ -9,4 +9,9 @@ test("APP_COLOURS equals the light theme tokens", () => {
   const token = (name: string) => new RegExp(`--${name}:\\s*(#[0-9a-fA-F]{6});`).exec(light)?.[1];
   expect(token("primary")).toBe(APP_COLOURS.primary);
   expect(token("on-primary")).toBe(APP_COLOURS.onPrimary);
+  expect(token("surface")).toBe(APP_COLOURS.surface);
+  const dark = css.slice(css.indexOf('[data-theme="dark"] {'));
+  expect(new RegExp("--surface:\\s*(#[0-9a-fA-F]{6});").exec(dark)?.[1]).toBe(
+    APP_COLOURS.surfaceDark,
+  );
 });
